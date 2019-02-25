@@ -1,10 +1,11 @@
 import React from "react";
 
-import { getSVG } from "src/assets/svg";
 import { createStore } from "../store/createStore";
 import { StoreProvider } from "../store/injectStore";
 import { Store } from "../store/Store";
 
+import { Footer } from "./layout/Footer/Footer";
+import { Header } from "./layout/Header/Header";
 import { MainContainer } from "./layout/MainContainer";
 
 type AppState = {
@@ -47,17 +48,9 @@ export class App extends React.PureComponent<{}, AppState> {
 	 */
 	public render(): JSX.Element {
 		return (
-			<div>
-				{ getSVG("logo", {fillHoverColor: "red", transitionDuration: 1000}) }
-
+			<React.Fragment>
 				{ this.state.store && this.renderProviders() }
-
-				<style jsx>{`
-					div {
-						font-size: 50px;
-					}
-				`}</style>
-			</div>
+			</React.Fragment>
 		);
 	}
 
@@ -68,7 +61,9 @@ export class App extends React.PureComponent<{}, AppState> {
 	protected renderProviders(): React.ReactNode {
 		return (
 			<StoreProvider value={this.state.store}>
+				<Header />
 				<MainContainer />
+				<Footer />
 			</StoreProvider>
 		);
 	}
