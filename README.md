@@ -9,12 +9,16 @@ to be written.
 To build the PolloPollo frontend you should follow the process below.
 
 1. Ensure that you have both NodeJS and Yarn/NPM available
+   1. *(Optional)* If you'd like to be able to fix linting issues, then you need to have the following available globally:
+        * TSLint
+        * TypeScript
+        * To get these, simply run the command `yarn global add tslint typescript`
 2. Clone the project
 3. Run the command `yarn install` in a terminal located at the project root
 4. You can now use either of the two following commands to interact with the project:
    * `yarn run start` to start a development server, OR
    * `yarn run build` to create an optimized build that is suitable for production.
-
+   * `yarn run fix` to attempt to automatically fix linting issues. *(This requires that you've completed step 1.1)*
 
 ## Architecture of the project
 
