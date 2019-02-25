@@ -8,7 +8,6 @@ import { Store } from "src/ts/store/Store";
 import benefactors from "../../../assets/data/benefactors.json";
 
 import { FrontPage } from "../pages/FrontPage/FrontPage";
-import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
 
 type MainContainerProps = {
     /**
@@ -34,7 +33,6 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
                 <p>Title: {dummy.title}</p>
                 <p>UserId: {dummy.userId}</p>
                 <p>Counter from store: {dummy.incrementingValue}</p>
-                <RegisterForm />
                 <FrontPage />
 
                 <Router>

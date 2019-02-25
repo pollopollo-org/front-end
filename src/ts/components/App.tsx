@@ -1,6 +1,5 @@
 import React from "react";
 
-import { getSVG } from "src/assets/svg";
 import { createStore } from "../store/createStore";
 import { StoreProvider } from "../store/injectStore";
 import { Store } from "../store/Store";
@@ -48,7 +47,6 @@ export class App extends React.PureComponent<{}, AppState> {
 	public render(): JSX.Element {
 		return (
 			<div>
-				{ getSVG("logo", {fillHoverColor: "red", transitionDuration: 1000}) }
 
 				{ this.state.store && this.renderProviders() }
 

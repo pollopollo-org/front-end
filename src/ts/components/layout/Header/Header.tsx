@@ -39,6 +39,7 @@ export class Header extends React.PureComponent {
                     .phantom-header {
                         width: 100%;
                         height: 60px;
+                        background-color: ${ colors.white }
                     }
 
 					i {
