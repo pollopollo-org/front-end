@@ -1,6 +1,6 @@
 import React from "react";
-import { FrontPage } from './pages/FrontPage/FrontPage';
 import { getSVG } from 'src/assets/svg';
+import { RegisterForm } from './pages/RegisterForm/RegisterForm';
 
 
 export class App extends React.PureComponent {
@@ -8,6 +8,7 @@ export class App extends React.PureComponent {
 
 		return (
 			<div>
+				<RegisterForm/>
 				Hello World
 				{ getSVG("logo", {fillHoverColor: "red", transitionDuration: 1000}) }
 
