@@ -24,7 +24,7 @@ export class DummyModel {
             // Actually fetch data from backend.. :-)
             return new DummyModel({ title: "invalid", userId: "invalid" });
         } else {
-            const data = await require("../../assets/dummy/dummy.json");
+            const data = await import("../../assets/dummy/dummy.json");
 
             return new DummyModel(data);
         }
