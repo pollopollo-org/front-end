@@ -1,6 +1,7 @@
 import React from "react";
-import { Footer } from '../../layout/Footer/Footer';
-import { Header } from '../../layout/Header/Header';
+
+import { Footer } from "../../layout/Footer/Footer";
+import { Header } from "../../layout/Header/Header";
 
 export class FrontPage extends React.Component{
     public render() : JSX.Element{
@@ -11,7 +12,7 @@ export class FrontPage extends React.Component{
                     <h1>0byte</h1>
                 </div>
                 <div className="list-of-applications">
-                    
+
                 </div>
 
                 <Footer/>
@@ -19,10 +20,10 @@ export class FrontPage extends React.Component{
                 <style jsx>{`
                     h1{
                         color: purple;
-                        
+
                     }
                 `}</style>
             </div>
-        );    
+        );
     }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { colors } from 'src/ts/config/colors';
+import { colors } from "src/ts/config/colors";
 
 export class Footer extends React.PureComponent {
 	public render(): JSX.Element {
