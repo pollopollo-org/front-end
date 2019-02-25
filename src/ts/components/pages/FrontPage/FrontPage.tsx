@@ -1,6 +1,7 @@
 import React from "react";
-import { Footer } from '../../layout/Footer/Footer';
-import { Header } from '../../layout/Header/Header';
+
+import { Footer } from "../../layout/Footer/Footer";
+import { Header } from "../../layout/Header/Header";
 
 import { colors } from 'src/ts/config/colors';
 
@@ -18,7 +19,7 @@ export class FrontPage extends React.Component{
                 </div>
 
                 <div className="list-of-applications">
-                    
+
                 </div>
 
                 <Footer/>
@@ -30,6 +31,6 @@ export class FrontPage extends React.Component{
                     }
                 `}</style>
             </div>
-        );    
+        );
     }
 }

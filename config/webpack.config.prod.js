@@ -195,13 +195,23 @@ module.exports = {
                   // contain all basic transpilation required (and is auto
                   // updated by babel themselves)
                   presets: [
-                    ["@babel/preset-env", { modules: false, useBuiltIns: "usage" }],
+                    "@babel/preset-env",
+                    "@babel/react",
+                    "@babel/typescript"
                   ],
 
                   // Next up, push the list of custom plugins we're going to
                   // need in order to properly transform our input
                   plugins: [
                     "@babel/plugin-syntax-dynamic-import",
+                    "@babel/proposal-class-properties",
+                    "@babel/proposal-object-rest-spread",
+                    [
+                      "@babel/transform-runtime",
+                      {
+                        "regenerator": true,
+                      },
+                    ],
                     [
                       "styled-jsx/babel",
                       {
@@ -227,6 +237,21 @@ module.exports = {
               },
               "ts-loader",
             ]
+          },
+          {
+            test: /\.svg$/i,
+            use: [
+              { loader: "raw-loader" },
+              {
+                loader: "svgo-loader",
+                options: {
+                  plugins: [
+                    { convertStyleToAttrs: false },
+                    { inlineStyles: false },
+                  ],
+                },
+              },
+            ],
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.

@@ -1,6 +1,6 @@
 import React from "react";
-import { getSVG } from 'src/assets/svg';
-import { colors } from 'src/ts/config/colors';
+import { getSVG } from "src/assets/svg";
+import { colors } from "src/ts/config/colors";
 
 
 
