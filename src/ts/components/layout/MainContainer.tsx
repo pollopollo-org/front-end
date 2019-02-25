@@ -34,7 +34,6 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
                 <p>Title: {dummy.title}</p>
                 <p>UserId: {dummy.userId}</p>
                 <p>Counter from store: {dummy.incrementingValue}</p>
-                <FrontPage />
 
                 <Switch>
                     <Route exact path={routes.root} component={FrontPage} />
