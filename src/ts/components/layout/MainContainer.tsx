@@ -7,8 +7,8 @@ import { Store } from "src/ts/store/Store";
 
 import benefactors from "../../../assets/data/benefactors.json";
 
-import { FrontPage } from "../pages/FrontPage/FrontPage.jsx";
-import { RegisterForm } from "../pages/RegisterForm/RegisterForm.jsx";
+import { FrontPage } from "../pages/FrontPage/FrontPage";
+import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
 
 type MainContainerProps = {
     /**
