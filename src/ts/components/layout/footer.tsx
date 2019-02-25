@@ -16,7 +16,7 @@ export class Footer extends React.PureComponent {
 
 				<style jsx>{`
 					.footer {
-						background-color: lightgray;
+						background-color: black;
 						border-top:	1px solid #E7E7E7;
 						padding: 20px;
 						position: fixed;
@@ -28,6 +28,7 @@ export class Footer extends React.PureComponent {
 
 					.footerInfo {
 						margin-left: 20px;
+						color: white;
 					}
 				`}</style>
 			</div>
