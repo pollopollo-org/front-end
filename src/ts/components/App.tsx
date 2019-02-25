@@ -25,6 +25,9 @@ export class App extends React.PureComponent<{}, AppState> {
 	 */
 	public state: AppState = {};
 
+	/**
+	 * really complicated async method
+	 */
 	public async componentDidMount(): Promise<void> {
 		// Wait for all required bundles and data to become available before
 		// moving on to render the actual page

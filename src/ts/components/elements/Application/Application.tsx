@@ -1,6 +1,14 @@
 import React from "react";
 
+/**
+ * Application template to contain information about the donation
+ * of a single application
+ */
 export class Application extends React.PureComponent {
+
+    /**
+     * Main render method, used to render Application
+     */
 	public render(): JSX.Element {
 
 		return (

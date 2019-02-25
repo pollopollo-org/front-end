@@ -1,7 +1,14 @@
 import React from "react";
 import { colors } from "src/ts/config/colors";
 
+/**
+ * Footer to be placed at the bottom of all pages
+ */
 export class Footer extends React.PureComponent {
+
+	/**
+	 * Main render method, used to render Footer
+	 */
 	public render(): JSX.Element {
 		return (
 			<div>

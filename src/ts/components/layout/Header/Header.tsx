@@ -3,8 +3,14 @@ import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
 
 
-
+/**
+ * Header to be placed at the top of all pages
+ */
 export class Header extends React.PureComponent {
+
+    /**
+     * Main render method, used to render Header
+     */
 	public render(): JSX.Element {
 		return (
 			<div>

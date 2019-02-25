@@ -1,6 +1,13 @@
 import React from "react";
 
+/**
+ * register form
+ */
 export class RegisterForm extends React.PureComponent{
+
+    /**
+     * Main render method, used to render RegisterForm
+     */
     public render(): JSX.Element {
         return(
             <div>
