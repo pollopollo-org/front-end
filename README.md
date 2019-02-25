@@ -35,7 +35,24 @@ This could be files such as .html-files, manifests and images.
 
 ### Components
 
-to be written...
+Components within the application is split into three different folders, that
+should contain components handling a specific responsibility.
+
+The purpose of these folders are described in the sections below.
+
+#### pages
+
+The `pages` folder contains components that the router should be able to navigate to.
+
+#### layout
+
+The `layout` folder contains components that are reuseable on several pages. E.g.
+a header or footer.
+
+#### utils
+
+The `utils` folder contains components that are reuseable on several layouts and pages.
+E.g. Dropdowns, Chevrons or similar content.
 
 ### Models
 
@@ -55,3 +72,4 @@ application via the use of function called `injectStore()`.
 
 All configurations should be located under the `src/ts/config` folder and exported
 via the `index.ts` file located within.
+Todo..
