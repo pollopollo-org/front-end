@@ -3,14 +3,26 @@ import React from "react";
 import { Footer } from "../../layout/Footer/Footer";
 import { Header } from "../../layout/Header/Header";
 
+import { colors } from "src/ts/config/colors";
+
+
+/**
+ * Frontpage 
+ */
 export class FrontPage extends React.Component{
+
+
+    /**
+     * Main render method, used to render Frontpage
+     */
     public render() : JSX.Element{
         return(
             <div>
                 <Header />
                 <div>
-                    <h1>0byte</h1>
+                    <h1>Welcome to Obyte!</h1>
                 </div>
+
                 <div className="list-of-applications">
 
                 </div>
@@ -19,8 +31,8 @@ export class FrontPage extends React.Component{
 
                 <style jsx>{`
                     h1{
-                        color: purple;
-
+                        font-size: 75%;
+                        color: ${ colors.secondaryColor };
                     }
                 `}</style>
             </div>

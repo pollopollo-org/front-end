@@ -3,8 +3,14 @@ import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
 
 
-
+/**
+ * Header to be placed at the top of all pages
+ */
 export class Header extends React.PureComponent {
+
+    /**
+     * Main render method, used to render Header
+     */
 	public render(): JSX.Element {
 		return (
 			<div>
@@ -14,6 +20,8 @@ export class Header extends React.PureComponent {
                         { getSVG("logo_full") }
                     </i>
                 </div>
+
+                <div className="phantom-header" />
 				
 				<style jsx>{`
 
@@ -27,7 +35,14 @@ export class Header extends React.PureComponent {
                         flex-direction: row;
                         border-bottom: 1px solid ${ colors.primaryColor }
                     }
+
+                    .phantom-header {
+                        width: 100%;
+                        height: 60px;
+                    }
+
 					i {
+                        margin-left: 10px;
                         width: 200px;
                         height: 60px;
                     }

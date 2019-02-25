@@ -1,12 +1,19 @@
 import React from "react";
 import { colors } from "src/ts/config/colors";
 
+/**
+ * Footer to be placed at the bottom of all pages
+ */
 export class Footer extends React.PureComponent {
+
+	/**
+	 * Main render method, used to render Footer
+	 */
 	public render(): JSX.Element {
 		return (
 			<div>
 				
-				<div className="phantom"></div>
+				<div className="phantom-footer"></div>
 				<footer className="footer">
 					<div className="footerInfo">
 						<p>pollopollo.org</p>
@@ -18,7 +25,10 @@ export class Footer extends React.PureComponent {
 
 				<style jsx>{`
 					
-
+					.phantom-footer {
+						height: 100px;
+						width: 100%;
+					}
 					.footer {
 						background-color: ${ colors.primaryColor };
 						padding: 20px;
