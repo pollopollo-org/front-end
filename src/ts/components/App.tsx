@@ -1,4 +1,5 @@
 import React from "react";
+import { Footer } from './layout/footer';
 
 export class App extends React.PureComponent {
 	public render(): JSX.Element {
@@ -6,9 +7,10 @@ export class App extends React.PureComponent {
 			<div>
 				Hello World
 
+				<Footer />
 				<style jsx>{`
 					div {
-						font-size: 1000px;
+						height: 1000px;
 					}
 				`}</style>
 			</div>
