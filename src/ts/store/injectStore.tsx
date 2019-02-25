@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
 
-import { Store } from './Store';
+import { Store } from "./Store";
 
 /**
  * Creates a React context (ie. a Provider / Consumer pair), which allows us to
@@ -32,7 +32,7 @@ export function injectStore<T extends {}, P extends {}>(
     WrappedComponent: React.ComponentType<P>, // tslint:disable-line variable-name
 ): React.SFC<Omit<P, keyof T>> {
     // Wrap the renderer in our consumer, so store will be propagated to it
-    // tslint:disable-next-line variable-name
+    // tslint:disable-next-line variable-name completed-docs
     const InjectStore: React.SFC<Omit<P, keyof T>> & { WrappedComponent: React.ComponentType<P> } = (props) => (
         <StoreContext.Consumer>
             {

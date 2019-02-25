@@ -2,7 +2,12 @@
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
     "interface-over-type-literal": false,
-    "completed-docs": true
+    "completed-docs": true,
+    "quotemark": [
+      true,
+      "double"
+    ],
+    "no-console": false
   },
   "linterOptions": {
     "exclude": [

@@ -202,6 +202,12 @@ module.exports = {
                     "@babel/proposal-class-properties",
                     "@babel/proposal-object-rest-spread",
                     [
+                      "@babel/transform-runtime",
+                      {
+                        "regenerator": true,
+                      },
+                    ],
+                    [
                       "styled-jsx/babel",
                       {
                         // Add support for use of postcss within the
