@@ -3,7 +3,7 @@ import React from "react";
 import { Footer } from "../../layout/Footer/Footer";
 import { Header } from "../../layout/Header/Header";
 
-import { colors } from 'src/ts/config/colors';
+import { colors } from "src/ts/config/colors";
 
 
 /**
