@@ -20,6 +20,10 @@ To build the PolloPollo frontend you should follow the process below.
    * `yarn run build` to create an optimized build that is suitable for production.
    * `yarn run fix` to attempt to automatically fix linting issues. *(This requires that you've completed step 1.1)*
 
+## Deployment of project
+
+todo..
+
 ## Architecture of the project
 
 ### Static content

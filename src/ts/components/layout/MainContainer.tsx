@@ -1,8 +1,11 @@
 import { observer } from "mobx-react";
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
+
+import benefactors from "../../../assets/data/benefactors.json";
 
 type MainContainerProps = {
     /**
@@ -23,11 +26,14 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
     public render(): JSX.Element {
         const { dummy } = this.props.store;
         return (
-            <main>
-                <p>Title: { dummy.title }</p>
-                <p>UserId: { dummy.userId }</p>
-                <p>Counter from store: { dummy.incrementingValue }</p>
-            </main>
+            <Router>
+                <main>
+                    <p>Imported data: {benefactors.someKindOfFormat}</p>
+                    <p>Title: {dummy.title}</p>
+                    <p>UserId: {dummy.userId}</p>
+                    <p>Counter from store: {dummy.incrementingValue}</p>
+                </main>
+            </Router>
         );
     }
 }
