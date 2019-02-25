@@ -14,6 +14,8 @@ export class Header extends React.PureComponent {
                         { getSVG("logo_full") }
                     </i>
                 </div>
+
+                <div className="phantom-header" />
 				
 				<style jsx>{`
 
@@ -27,7 +29,14 @@ export class Header extends React.PureComponent {
                         flex-direction: row;
                         border-bottom: 1px solid ${ colors.primaryColor }
                     }
+
+                    .phantom-header {
+                        width: 100%;
+                        height: 60px;
+                    }
+
 					i {
+                        margin-left: 10px;
                         width: 200px;
                         height: 60px;
                     }
