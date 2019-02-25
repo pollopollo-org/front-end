@@ -7,6 +7,9 @@ import { Store } from "src/ts/store/Store";
 
 import benefactors from "../../../assets/data/benefactors.json";
 
+import { FrontPage } from "../pages/FrontPage/FrontPage.jsx";
+import { RegisterForm } from "../pages/RegisterForm/RegisterForm.jsx";
+
 type MainContainerProps = {
     /**
      * Contains a reference to the root store.
@@ -27,6 +30,9 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
         const { dummy } = this.props.store;
         return (
             <Router>
+                <RegisterForm />
+                <FrontPage />
+
                 <main>
                     <p>Imported data: {benefactors.someKindOfFormat}</p>
                     <p>Title: {dummy.title}</p>

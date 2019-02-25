@@ -1,4 +1,9 @@
 import React from "react";
+<<<<<<< HEAD
+=======
+import { getSVG } from 'src/assets/svg';
+import { RegisterForm } from './pages/RegisterForm/RegisterForm';
+>>>>>>> register-form/task/markup-css
 
 import { getSVG } from "src/assets/svg";
 import { createStore } from "../store/createStore";
