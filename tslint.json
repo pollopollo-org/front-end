@@ -1,13 +1,28 @@
 {
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
-    "interface-over-type-literal": false
+    "interface-over-type-literal": false,
+    "completed-docs": [
+      true,
+      "classes",
+      "enums",
+      "functions",
+      "methods",
+      "namespaces"
+    ],
+    "quotemark": [
+      true,
+      "double"
+    ],
+    "no-console": false
   },
   "linterOptions": {
     "exclude": [
       "config/**/*.js",
       "node_modules/**/*.ts",
-      "coverage/lcov-report/*.js"
+      "coverage/lcov-report/*.js",
+      "*.json",
+      "**/*.json"
     ]
   }
 }
