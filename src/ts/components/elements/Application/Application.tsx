@@ -32,11 +32,12 @@ export class Application extends React.PureComponent {
                         height: 120px;
                         width: 400px;
                         padding: 10px 10px 0px 10px;
-                        border: 1px solid lightgrey;
+                        border: 1px solid lightgray;
+                        transition: 0.3s;
                     }
 
                     .application-border:hover {
-                        background-color: lightgrey
+                        background-color: lightgray;
                     }
 
 					.application {
