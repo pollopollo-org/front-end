@@ -1,6 +1,15 @@
 import React from "react";
 
 export class RegisterForm extends React.PureComponent{
+    constructor(props: Readonly<{}>){
+        super(props);
+        this.producerClick = this.producerClick.bind(this);
+        this.receiverClick = this.receiverClick.bind(this);
+        this.state = {
+            producer: false,
+            receiver: false,
+        };
+    }
     public render(): JSX.Element {
         return(
             <div>
@@ -21,16 +30,17 @@ export class RegisterForm extends React.PureComponent{
                     <div>
                         <div className="userTypeSection">
                             <label>
-                                <input type="radio" name="userTypeProducer"/>
+                                <input type="radio" name="userTypeProducer" onClick={this.producerClick}/>
                                 I am a producer
                             </label>
                             <label>
-                                <input type="radio" name="userTypeReceiver"/>
+                                <input type="radio" name="userTypeReceiver" onClick={this.receiverClick}/>
                                 I am a receiver
                             </label>
                         </div>
                     </div>
                     <div className="conditionalSection">
+                        
                         <button className="registerButton">Register</button>
                     </div>
                 </div>
@@ -61,5 +71,17 @@ export class RegisterForm extends React.PureComponent{
 
             </div>
         );
+    }
+    private producerClick(){
+        this.setState({
+            producer: true,
+            receiver: false,
+        });
+    }
+    private receiverClick(){
+        this.setState({
+            producer: false,
+            receiver: true,
+        });
     }
 }

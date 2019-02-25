@@ -8,7 +8,7 @@ export class App extends React.PureComponent {
 
 		return (
 			<div>
-				<RegisterForm/>
+				<RegisterForm></RegisterForm>
 				Hello World
 				{ getSVG("logo", {fillHoverColor: "red", transitionDuration: 1000}) }
 
