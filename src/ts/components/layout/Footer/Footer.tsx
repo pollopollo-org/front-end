@@ -1,10 +1,12 @@
 import React from "react";
+import { colors } from 'src/ts/config/colors';
 
 export class Footer extends React.PureComponent {
 	public render(): JSX.Element {
 		return (
 			<div>
 				
+				<div className="phantom"></div>
 				<footer className="footer">
 					<div className="footerInfo">
 						<p>pollopollo.org</p>
@@ -15,9 +17,10 @@ export class Footer extends React.PureComponent {
 				</footer>
 
 				<style jsx>{`
+					
+
 					.footer {
-						background-color: black;
-						border-top:	1px solid #E7E7E7;
+						background-color: ${ colors.primaryColor };
 						padding: 20px;
 						position: fixed;
 						left: 0;
@@ -27,7 +30,8 @@ export class Footer extends React.PureComponent {
 					}
 
 					.footerInfo {
-						margin-left: 20px;
+						margin-left: 30px;
+						font-size: 15px;
 						color: white;
 					}
 				`}</style>
