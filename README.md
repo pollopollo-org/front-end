@@ -12,13 +12,16 @@ To build the PolloPollo frontend you should follow the process below.
    1. *(Optional)* If you'd like to be able to fix linting issues, then you need to have the following available globally:
         * TSLint
         * TypeScript
-        * To get these, simply run the command `yarn global add tslint typescript`
+        * To get these, simply run the command `yarn global add tslint typescript`/`npm i -g tslint typescript`
 2. Clone the project
 3. Run the command `yarn install` in a terminal located at the project root
 4. You can now use either of the two following commands to interact with the project:
    * `yarn run start` to start a development server, OR
    * `yarn run build` to create an optimized build that is suitable for production.
+   * `yarn run lint` to lint the application and determine potential culprits that should be fixed before push.
+     * `yarn run lintWindows` can be used on Windows in case `yarn run lint` fails
    * `yarn run fix` to attempt to automatically fix linting issues. *(This requires that you've completed step 1.1)*
+     * `yarn run fixWindows` can be used on Windows in case `yarn run fix` fails
 
 ## Deployment of project
 
