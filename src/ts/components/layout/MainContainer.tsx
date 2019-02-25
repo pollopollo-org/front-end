@@ -21,9 +21,12 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
      * Main render method
      */
     public render(): JSX.Element {
+        const { dummy } = this.props.store;
         return (
             <main>
-                Counter from store: { this.props.store.dummy.incrementingValue }
+                <p>Title: { dummy.title }</p>
+                <p>UserId: { dummy.userId }</p>
+                <p>Counter from store: { dummy.incrementingValue }</p>
             </main>
         );
     }

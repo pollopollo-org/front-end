@@ -24,10 +24,7 @@ export class DummyModel {
             // Actually fetch data from backend.. :-)
             return new DummyModel({ title: "invalid", userId: "invalid" });
         } else {
-            const data = {
-                title: "hej",
-                userId: "hej",
-            }
+            const data = await require("../../assets/dummy/dummy.json");
 
             return new DummyModel(data);
         }
@@ -63,7 +60,6 @@ export class DummyModel {
     private autoIncrement(): void {
         setTimeout(
             () => {
-                console.log(this.incrementingValue);
                 this.incrementingValue++;
                 this.autoIncrement();
             },
