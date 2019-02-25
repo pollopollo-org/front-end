@@ -1,5 +1,4 @@
 import React from "react";
-import { hot } from "react-hot-loader";
 
 import { getSVG } from "src/assets/svg";
 import { createStore } from "../store/createStore";
@@ -20,7 +19,7 @@ type AppState = {
  * Root component of the React application, which has the responsibility of setting
  * up stores, routing and creating all required contexts.
  */
-export class AppUnwrapped extends React.PureComponent<{}, AppState> {
+export class App extends React.PureComponent<{}, AppState> {
 	/**
 	 * Setup initial state
 	 */
@@ -71,6 +70,3 @@ export class AppUnwrapped extends React.PureComponent<{}, AppState> {
 		);
 	}
 }
-
-// tslint:disable-next-line variable-name
-export const App = hot(module)(AppUnwrapped);

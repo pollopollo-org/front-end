@@ -1,3 +1,4 @@
+import { DummyModel } from "../models/DummyModel";
 import { Store } from "./Store";
 
 /**
@@ -15,7 +16,9 @@ export const createStore = () => {
             try {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
-                resolve(new Store());
+                const dummyModel = await DummyModel.CREATE(false);
+
+                resolve(new Store({dummyModel}));
             } catch (err) {
                 reject(err);
             }

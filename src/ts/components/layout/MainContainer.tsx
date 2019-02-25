@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
+
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
@@ -22,8 +23,7 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
     public render(): JSX.Element {
         return (
             <main>
-                Is application ready????
-                { this.props.store.didMount ? "ready" : "not-ready" }
+                Counter from store: { this.props.store.dummy.incrementingValue }
             </main>
         );
     }
