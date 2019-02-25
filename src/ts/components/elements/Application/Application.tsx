@@ -1,5 +1,7 @@
 import React from "react";
 
+import { colors } from "src/ts/config/colors";
+
 /**
  * Application template to contain information about the donation
  * of a single application
@@ -37,22 +39,22 @@ export class Application extends React.PureComponent {
 
 				<style jsx>{`
                     .application-border {
-                        height: 120px;
+                        height: 100px;
                         width: 400px;
                         padding: 10px 10px 0px 10px;
-                        border: 1px solid lightgray;
+                        border: 1px solid ${ colors.secondaryColor };
                         transition: 0.3s;
                     }
 
                     .application-border:hover {
-                        background-color: lightgray;
+                        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
                     }
 
 					.application {
                         display: flex;
                         flex-direction: row;
                         justify-content: space-between;
-                        font-size: 30px;
+                        font-size: 25px;
 					}
 
                     .section-thumbnail {
@@ -70,8 +72,8 @@ export class Application extends React.PureComponent {
 
                     .thumbnail {
                         margin-bottom: 10px;
-                        height: 75px;
-                        width: 75px;
+                        height: 60px;
+                        width: 60px;
                         background-color: #555;
                         border-radius: 50%;
                     }
