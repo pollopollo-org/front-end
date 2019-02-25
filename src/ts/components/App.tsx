@@ -8,7 +8,7 @@ export class App extends React.PureComponent {
 
 				<style jsx>{`
 					div {
-						font-size: 50px;
+						font-size: 1000px;
 					}
 				`}</style>
 			</div>
