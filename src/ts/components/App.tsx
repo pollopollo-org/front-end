@@ -1,9 +1,11 @@
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import { createStore } from "../store/createStore";
 import { StoreProvider } from "../store/injectStore";
 import { Store } from "../store/Store";
 
+import { CSS } from "./layout/CSS";
 import { Footer } from "./layout/Footer/Footer";
 import { Header } from "./layout/Header/Header";
 import { MainContainer } from "./layout/MainContainer";
@@ -48,9 +50,12 @@ export class App extends React.PureComponent<{}, AppState> {
 	 */
 	public render(): JSX.Element {
 		return (
-			<React.Fragment>
-				{ this.state.store && this.renderProviders() }
-			</React.Fragment>
+			<Router>
+				<>
+					<CSS />
+					{ this.state.store && this.renderProviders() }
+				</>
+			</Router>
 		);
 	}
 

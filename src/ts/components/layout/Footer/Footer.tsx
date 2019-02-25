@@ -12,7 +12,6 @@ export class Footer extends React.PureComponent {
 	public render(): JSX.Element {
 		return (
 			<div>
-				
 				<div className="phantom-footer"></div>
 				<footer className="footer">
 					<div className="footerInfo">
@@ -20,15 +19,16 @@ export class Footer extends React.PureComponent {
 						<p>Stumpedal 3, 1.th</p>
 						<p>2730, Herlev</p>
 					</div>
-				
+
 				</footer>
 
 				<style jsx>{`
-					
+
 					.phantom-footer {
 						height: 100px;
 						width: 100%;
 					}
+
 					.footer {
 						background-color: ${ colors.primaryColor };
 						padding: 20px;

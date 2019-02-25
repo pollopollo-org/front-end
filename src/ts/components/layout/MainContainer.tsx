@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 import { routes } from "src/ts/config/routes";
 import { injectStore } from "src/ts/store/injectStore";
@@ -37,13 +37,10 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
                 <p>UserId: {dummy.userId}</p>
                 <p>Counter from store: {dummy.incrementingValue}</p>
 
-                <Router>
-                    <Switch>
-                        <Route exact path={routes.root} component={FrontPage} />
-                        <Route exact path={routes.register} component={RegisterForm} />
-                    </Switch>
-
-                </Router>
+                <Switch>
+                    <Route exact path={routes.root} component={FrontPage} />
+                    <Route exact path={routes.register} component={RegisterForm} />
+                </Switch>
             </main>
         );
     }

@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
+import { routes } from "src/ts/config/routes";
 
 
 /**
@@ -14,15 +17,17 @@ export class Header extends React.PureComponent {
 	public render(): JSX.Element {
 		return (
 			<div>
-
                 <div className="header">
                     <i>
                         { getSVG("logo_full") }
                     </i>
+
+                    <Link to={routes.root}>Root</Link>
+                    <Link to={routes.register}>Register</Link>
                 </div>
 
                 <div className="phantom-header" />
-				
+
 				<style jsx>{`
 
                     .header {
