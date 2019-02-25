@@ -20,8 +20,14 @@ export class RegisterForm extends React.PureComponent{
                     </div>
                     <div>
                         <div className="userTypeSection">
-                            <input type="radio" name="userType" value="producer"></input><label>I am a producer</label>
-                            <input type="radio" name="userType" value="receiver"></input><label>I am a receiver</label>
+                            <label>
+                                <input type="radio" name="userTypeProducer"/>
+                                I am a producer
+                            </label>
+                            <label>
+                                <input type="radio" name="userTypeReceiver"/>
+                                I am a receiver
+                            </label>
                         </div>
                     </div>
                     <div className="conditionalSection">
