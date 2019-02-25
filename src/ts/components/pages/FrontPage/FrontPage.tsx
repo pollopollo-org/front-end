@@ -4,7 +4,12 @@ export class FrontPage extends React.Component{
     public render() : JSX.Element{
         return(
             <div>
-                <h1>0byte</h1>
+                <div>
+                    <h1>0byte</h1>
+                </div>
+                <div>
+                    
+                </div>
 
                 <style jsx>{`
                     h1{
