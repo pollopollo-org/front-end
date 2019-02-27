@@ -19,19 +19,19 @@ export class RegisterForm extends React.PureComponent{
      */
     public render(): JSX.Element {
         return(
-            <div>
+            <div className="allSection">
 
                 <h1 className="headerText">Register as new user</h1>
                 <div>
                     <div className="nameAndCountrySection">
-                        <input className="nameInput" placeholder="  Name"></input>
-                        <input className="countryInput" placeholder="  Country"></input>
+                        <input className="nameInput" placeholder="   Name"></input>
+                        <input className="countryInput" placeholder="   Country"></input>
                     </div>
                     <div className="emailSection">
-                        <input className="emailInput" placeholder="  email"></input>
+                        <input className="emailInput" placeholder="   email"></input>
                     </div>
                     <div className="passwordSection">
-                        <input className="firstPasswordInput" placeholder="  Password"></input>
+                        <input className="firstPasswordInput" placeholder="   Password"></input>
                         <input className="secondPasswordInput" placeholder="   Password, again"></input>
                     </div>
                     <div>
@@ -47,8 +47,7 @@ export class RegisterForm extends React.PureComponent{
                         </div>
                     </div>
                     <div className="conditionalSection">
-
-                        <button className="registerButton">Register</button>
+                        <div/>
                     </div>
                 </div>
 
@@ -56,6 +55,7 @@ export class RegisterForm extends React.PureComponent{
                 <style jsx>{`
                     .headerText{
                         color: #8C489F;
+                        margin: 30px auto;
                     }
 
                     input{
@@ -67,32 +67,37 @@ export class RegisterForm extends React.PureComponent{
                     input.userType{
                         height: 17px;
                         width: 17px;
-                        padding: 10px;
+                        margin: 0px 10px;
                     }
 
                     .nameAndCountrySection{
-                        margin: 10px auto;
+                        margin: 20px auto;
                     }
 
                     .emailSection{
-                        margin: 10px auto;
+                        margin: 20px auto;
                     }
 
                     .passwordSection{
-                        margin: 10px auto;
+                        margin: 20px auto;
                     }
 
                     .userTypeSection{
-                        margin: 10px auto;
+                        margin: 20px auto;
                     }
 
                     .registerButton{
                         height: 30px;
                         width: 100px;
-                        
                     }
 
                     label{
+                        font-size: 20px;
+                        margin-right: 30px;
+                    }
+
+                    .allSection{
+                        margin-left: 50px;
                     }
 
                 `}</style>
