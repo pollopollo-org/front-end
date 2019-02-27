@@ -3,7 +3,7 @@
  * based on the actual colors used in the original layouts).
  */
 export const colors = {
-    black: "#313136",
+    black: "#393939",
     primaryColor: "#443266",
     secondaryColor: "#8C489F",
     white: "#fff",
