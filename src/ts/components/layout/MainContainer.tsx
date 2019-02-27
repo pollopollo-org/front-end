@@ -6,8 +6,6 @@ import { routes } from "src/ts/config/routes";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
-import benefactors from "../../../assets/data/benefactors.json";
-
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
 
@@ -30,9 +28,9 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
      */
     public render(): JSX.Element {
         const { dummy } = this.props.store;
+
         return (
             <main>
-                <p>Imported data: {benefactors.someKindOfFormat}</p>
                 <p>Title: {dummy.title}</p>
                 <p>UserId: {dummy.userId}</p>
                 <p>Counter from store: {dummy.incrementingValue}</p>

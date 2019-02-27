@@ -1,6 +1,8 @@
 import React from "react";
 import { colors } from "src/ts/config/colors";
 
+import footer from "../../../../assets/data/footer.json";
+
 /**
  * Footer to be placed at the bottom of all pages
  */
@@ -15,9 +17,9 @@ export class Footer extends React.PureComponent {
 				<div className="phantom-footer"></div>
 				<footer className="footer">
 					<div className="footerInfo">
-						<p>pollopollo.org</p>
-						<p>Stumpedal 3, 1.th</p>
-						<p>2730, Herlev</p>
+						<p>{footer.url}</p>
+						<p>{footer.street}</p>
+						<p>{footer.zipcode}, {footer.city}</p>
 					</div>
 
 				</footer>
