@@ -25,7 +25,6 @@ export class FrontPage extends React.PureComponent{
 
                 <style jsx>{`
                     h1{
-                        font-size: 75%;
                         color: ${ colors.secondaryColor };
                     }
 
