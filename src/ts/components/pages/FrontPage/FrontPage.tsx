@@ -1,5 +1,6 @@
 import React from "react";
 
+import { getSVG } from "src/assets/svg";
 import { Chevron } from "src/ts/utils/Chevron";
 import { Application } from "../../elements/Application/Application";
 
@@ -23,10 +24,20 @@ export class FrontPage extends React.PureComponent{
 
                 <Chevron size={20} lineWidthRatio={0.5} inversed={true} vertical={true}/>
 
+                <i>
+                    { getSVG("scrumwise") }
+                </i>
+
                 <style jsx>{`
                     h1 {
                         margin: 0;
                         line-height: 1;
+                    }
+
+                    i {
+                        display: block;
+                        width: 50px;
+                        height: 50px;
                     }
                     .list-of-application {
                         margin-left: auto;
