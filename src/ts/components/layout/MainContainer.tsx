@@ -6,6 +6,7 @@ import { routes } from "src/ts/config/routes";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
+import { Throbber } from "src/ts/utils";
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
 
@@ -34,6 +35,8 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
                 <p>Title: {dummy.title}</p>
                 <p>UserId: {dummy.userId}</p>
                 <p>Counter from store: {dummy.incrementingValue}</p>
+
+                <Throbber />
 
                 <Switch>
                     <Route exact path={routes.root} component={FrontPage} />
