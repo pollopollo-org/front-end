@@ -2,7 +2,8 @@
     "name": "Sif Kristensen",
     "product": "Do my thesis pls",
     "amount": "1",
-    "price": "$20",
+    "price": "20",
+    "description": "I want someone to write my thesis, because fuck that",
     "country": "Norge",
     "thumbnail": "src/assets/dummy/sif.PNG"
 }
