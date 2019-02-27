@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "outDir": "build/dist",
     "module": "esnext",
-    "target": "es6",
+    "target": "esnext",
     "lib": [
       "dom",
       "es6",
@@ -33,6 +33,7 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "config/*",
   ]
 }
