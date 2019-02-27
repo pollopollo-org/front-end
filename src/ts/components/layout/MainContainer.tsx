@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
 import { routes } from "src/ts/config/routes";
 
@@ -11,7 +11,7 @@ import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
  * The main container is responsible for wrapper all pages within it, while also
  * taking care of routing.
  */
-export class MainContainer extends React.PureComponent {
+export class UnwrappedMainContainer extends React.PureComponent<RouteComponentProps> {
     /**
      * Main render method
      */
@@ -22,7 +22,15 @@ export class MainContainer extends React.PureComponent {
                     <Route exact path={routes.root} component={FrontPage} />
                     <Route exact path={routes.register} component={RegisterForm} />
                 </Switch>
+
+                <style jsx>{`
+                    main {
+                        padding: 20px 30px;
+                    }
+                `}</style>
             </main>
         );
     }
 }
+
+export const MainContainer = withRouter(UnwrappedMainContainer);
