@@ -1,15 +1,27 @@
+import { observer } from "mobx-react";
 import React from "react";
 
 import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
 
 import { Application } from "../../elements/Application/Application";
 import { Chevron } from "../../utils";
 
+export type FrontPageProps = {
+    /**
+     * Contains a reference to the root sotre
+     */
+    store: Store;
+}
+
 /**
- * Frontpage
+ * Frontpage responsible for rendered the welcome page that the user should be
+ * presented to when navigation to the root of the application.
  */
-export class FrontPage extends React.PureComponent{
+@observer
+class UnwrappedFrontPage extends React.Component<FrontPageProps> {
     /**
      * Main render method, used to render Frontpage
      */
@@ -21,7 +33,7 @@ export class FrontPage extends React.PureComponent{
 
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
-                    <Application />
+                    <Application application={this.props.store.application} />
                 </div>
 
                 <Chevron size={20} lineWidthRatio={0.5} inversed={true} vertical={true}/>
@@ -51,3 +63,5 @@ export class FrontPage extends React.PureComponent{
         );
     }
 }
+
+export const FrontPage = injectStore((store) => ({store}), UnwrappedFrontPage);

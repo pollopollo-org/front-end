@@ -1,13 +1,6 @@
 import { ApplicationModel } from "../models/ApplicationModel";
-import { Store } from "./Store";
 
-/**
- * Specifies where the created models should fetch their data from.
- */
-export enum DataProviders {
-    DUMMY = "dummy",
-    BACKEND = "backend",
-};
+import { DataProviders, Store } from "./Store";
 
 /**
  * Cache used to prevent re-creating a store over and over again.

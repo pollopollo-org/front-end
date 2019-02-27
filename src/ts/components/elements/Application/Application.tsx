@@ -1,12 +1,22 @@
 import React from "react";
 
-
 import { colors } from "src/ts/config/colors";
+import { ApplicationModel } from "src/ts/models/ApplicationModel";
 
-import dummyApplication from "src/assets/dummy/dummyApplication.json";
 import { easings } from "src/ts/config/easings";
+import { Button } from "../../utils";
+
+export type ApplicationProps = {
+    /**
+     * Contains a reference to the applicaiton model that should be rendered
+     */
+    application: ApplicationModel;
+}
 
 export type ApplicationState = {
+    /**
+     * A boolean that tracks whether the application is expanded, and should
+     */
     expanded: boolean;
 };
 
@@ -14,12 +24,18 @@ export type ApplicationState = {
  * Application template to contain information about the donation
  * of a single application
  */
-export class Application extends React.PureComponent<{}, ApplicationState> {
+export class Application extends React.PureComponent<ApplicationProps, ApplicationState> {
+    /**
+     * State of the component
+     */
     public state: ApplicationState = {
-        expanded: true,
+        expanded: true
     };
 
+    /** Reference to the div tag with class name description */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+    /** Reference to the div tag with class name application-border */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
@@ -31,6 +47,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
         const desc = this.descriptionRef.current;
         const border = this.borderRef.current;
 
+        // Check if null
         if(!desc || !border ) {
             return;
         }
@@ -39,16 +56,18 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
             desc.style.maxHeight = null;
         } else {
             desc.style.maxHeight = desc.scrollHeight + "px";
+
+            // The border should expand with both description size and its own
+            // size
             border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
         }
     }
-
-
 
     /**
      * Main render method, used to render Application
      */
 	public render(): JSX.Element {
+        const { application } = this.props;
 
 		return (
 			<div>
@@ -56,16 +75,16 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                 <div className="application-border" ref={ this.borderRef }>
                     <div className="application" onClick={ () => { this.toggleCollapsible(); } }>
                         <div className="section-user">
-                            <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
-                            <div className="name">{ dummyApplication.name }</div>
+                            <img className="thumbnail" src={require("src/assets/dummy/sif.PNG")} />
+                            <div className="name">{ application.name }</div>
                         </div>
 
                         <div className="section-product">
-                            <div className="product">{ dummyApplication.amount } { dummyApplication.product }</div>
+                            <div className="product">{ application.amount } { application.product }</div>
                         </div>
                         <div className="section-donate">
-                            <div className="price">${ dummyApplication.price }</div>
-                            <button className="donateButton">Donate</button>
+                            <div className="price">${ application.price }</div>
+                            <Button text={ "Donate" } />
                         </div>
                     </div>
 
@@ -73,7 +92,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         <div className="description-content">
                             <h3>Motivation</h3>
                             <p>
-                                { dummyApplication.description }
+                                { application.motivation }
                             </p>
                         </div>
                     </div>
@@ -84,6 +103,8 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
 
                     /** Draws a border around the application */
                     .application-border {
+
+                        /** temp margin */
                         margin-left: 100px;
 
                         height: 100%;

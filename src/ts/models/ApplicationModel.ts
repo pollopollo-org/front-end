@@ -1,4 +1,4 @@
-import { DataProviders } from "../store/createStore.js";
+import { DataProviders } from "../store/Store";
 
 /**
  * Defines the data required to create an application model.

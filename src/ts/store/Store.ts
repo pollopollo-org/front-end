@@ -3,6 +3,14 @@ import { observable } from "mobx";
 import { ApplicationModel } from "../models/ApplicationModel";
 
 /**
+ * Specifies where the created models should fetch their data from.
+ */
+export enum DataProviders {
+    DUMMY = "dummy",
+    BACKEND = "backend",
+};
+
+/**
  * Specifies the arguments required to create a store.
  * The specific arguments are described both in their respective classes,
  * and in the fields within the store that they're exposed upon.
