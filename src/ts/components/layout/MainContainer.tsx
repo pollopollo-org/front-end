@@ -30,16 +30,25 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
         const { dummy } = this.props.store;
 
         return (
-            <main>
-                <p>Title: {dummy.title}</p>
-                <p>UserId: {dummy.userId}</p>
-                <p>Counter from store: {dummy.incrementingValue}</p>
+            <div>
+                <main>
+                    {/*
+                    <p>Title: {dummy.title}</p>
+                    <p>UserId: {dummy.userId}</p>*/}
+                    <p>Counter from store: {dummy.incrementingValue}</p>
 
-                <Switch>
-                    <Route exact path={routes.root} component={FrontPage} />
-                    <Route exact path={routes.register} component={RegisterForm} />
-                </Switch>
-            </main>
+                    <Switch>
+                        <Route exact path={routes.root} component={FrontPage} />
+                        <Route exact path={routes.register} component={RegisterForm} />
+                    </Switch>
+                </main>
+
+                <style jsx>{`
+                    main {
+                        margin: 5% 5% 5% 5%;
+                    }
+                `}</style>
+            </div>
         );
     }
 }
