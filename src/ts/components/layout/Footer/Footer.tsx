@@ -34,12 +34,15 @@ export class Footer extends React.PureComponent {
 						<div className="col">
 							<div className="contributorsInfo">
 								<p className="title">Contributers:</p>
-								{/* <i>
-									{ getSVG("obyte") }
+								<i className="obyte">
+									{ getSVG("obyte", {fillColor: "white"}) }
 								</i>
-								<i>
+								<i className="itu">
+									{ getSVG("itu") }
+								</i>
+								<i className="scrumwise">
 									{ getSVG("scrumwise") }
-								</i> */}
+								</i>
 							</div>
 						</div>
 					</div>
@@ -80,8 +83,13 @@ export class Footer extends React.PureComponent {
 
 					.contributorsInfo i {
 						display: block;
-						height: 30px;
-						margin: 0;
+						height: 25px;
+						margin: 5px;
+						margin-left: auto;
+					}
+
+					.obyte {
+						width: 45px;
 					}
 
 					.logo {
@@ -98,6 +106,11 @@ export class Footer extends React.PureComponent {
 					.title {
 						font-weight: 700;
 					}
+
+					p {
+						margin: 15px 0;
+					}
+
 				`}</style>
 			</div>
 		);
