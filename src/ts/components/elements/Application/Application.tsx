@@ -7,6 +7,9 @@ import dummyApplication from "src/assets/dummy/dummyApplication.json";
 import { easings } from "src/ts/config/easings";
 
 export type ApplicationState = {
+    /**
+     * A boolean that tracks whether the application is expanded, and should 
+     */
     expanded: boolean;
 };
 
@@ -15,11 +18,18 @@ export type ApplicationState = {
  * of a single application
  */
 export class Application extends React.PureComponent<{}, ApplicationState> {
+
+    /**
+     * State of the component
+     */
     public state: ApplicationState = {
-        expanded: true,
+        expanded: true
     };
 
+    /** Reference to the div tag with class name description */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
+    
+    /** Reference to the div tag with class name application-border */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
@@ -31,6 +41,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
         const desc = this.descriptionRef.current;
         const border = this.borderRef.current;
         
+        // Check if null
         if(!desc || !border ) {
             return;
         } 
@@ -39,6 +50,9 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
             desc.style.maxHeight = null;
         } else {
             desc.style.maxHeight = desc.scrollHeight + "px";
+
+            // The border should expand with both description size and its own 
+            // size
             border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
         } 
     }
