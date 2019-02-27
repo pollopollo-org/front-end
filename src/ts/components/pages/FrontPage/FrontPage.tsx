@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Chevron } from "src/ts/utils/Chevron";
 import { Application } from "../../elements/Application/Application";
 
 /**
@@ -19,6 +20,8 @@ export class FrontPage extends React.PureComponent{
                 <div className="list-of-applications">
                     <Application />
                 </div>
+
+                <Chevron size={20} lineWidthRatio={0.5} inversed={true} vertical={true}/>
 
                 <style jsx>{`
                     h1 {
