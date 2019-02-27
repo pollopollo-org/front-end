@@ -6,6 +6,7 @@ import { DummyModel } from "../models/DummyModel";
  *
  * This store combines all data models, allowing for easy access down the
  */
+// tslint:disable completed-docs
 export class Store {
     /**
      * Contains a reference to the DummyModel making it accessible from the RootStore
