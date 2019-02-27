@@ -32,6 +32,11 @@ export const CSS: React.SFC = () => (
                 line-height: 1em;
             }
 
+            h1 {
+                font-size: 30px;
+                color: ${ colors.primaryColor };
+            }
+
             #root {
                 /** Fill up the viewport */
                 width: 100%;
