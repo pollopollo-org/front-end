@@ -1,7 +1,8 @@
 import React from "react";
+import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
 
-import footer from "../../../../assets/data/footer.json";
+import footer from "src/assets/data/footer.json";
 
 /**
  * Footer to be placed at the bottom of all pages
@@ -15,36 +16,87 @@ export class Footer extends React.PureComponent {
 		return (
 			<div>
 				<div className="phantom-footer"></div>
-				<footer className="footer">
-					<div className="footerInfo">
-						<p>{footer.url}</p>
-						<p>{footer.street}</p>
-						<p>{footer.zipcode}, {footer.city}</p>
+				<footer>
+					<div className="grid">
+						<div className="col">
+							<div className="contactInfo">
+								<p className="title">{footer.title}</p>
+								<p>{footer.url}</p>
+								<p>{footer.street}</p>
+								<p>{footer.zipcode}, {footer.city}</p>
+							</div>
+						</div>
+						<div className="col">
+							<div className="logo"><i>
+								{ getSVG("logo", {fillColor: "white"}) }
+							</i></div>
+						</div>
+						<div className="col">
+							<div className="contributorsInfo">
+								<p className="title">Contributers:</p>
+								{/* <i>
+									{ getSVG("obyte") }
+								</i>
+								<i>
+									{ getSVG("scrumwise") }
+								</i> */}
+							</div>
+						</div>
 					</div>
-
 				</footer>
 
 				<style jsx>{`
 
-					.phantom-footer {
-						height: 100px;
-						width: 100%;
-					}
-
-					.footer {
+					footer {
 						background-color: ${ colors.primaryColor };
-						padding: 20px;
+						box-sizing: border-box;
+						padding: 20px 60px;
 						position: fixed;
 						left: 0;
 						bottom: 0;
-						height: 100px;
+						height: 179px;
 						width: 100%;
 					}
 
-					.footerInfo {
-						margin-left: 30px;
+					.grid {
+						display: flex;
+						margin: 0 auto;
+					}
+
+					.grid .col {
+						flex: 1;
+					}
+
+					.contactInfo {
 						font-size: 15px;
-						color: white;
+						color: ${colors.white};
+					}
+
+					.contributorsInfo {
+						font-size: 15px;
+						color: ${colors.white};
+						text-align: right;
+					}
+
+					.contributorsInfo i {
+						display: block;
+						height: 30px;
+						margin: 0;
+					}
+
+					.logo {
+						display: flex;
+    					align-items: center;
+						height: 100%;
+					}
+
+					.logo i {
+						margin: 0 auto;
+						height: 100px;
+					}
+
+					.title {
+						font-weight: 700;
 					}
 				`}</style>
 			</div>
