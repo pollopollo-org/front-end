@@ -1,3 +1,8 @@
 {
-    
+    "name": "Sif Kristensen",
+    "product": "Do my thesis pls",
+    "amount": "1",
+    "price": "$20",
+    "country": "Norge",
+    "thumbnail": "src/assets/dummy/sif.PNG"
 }
