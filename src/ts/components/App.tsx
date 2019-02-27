@@ -6,13 +6,13 @@ import { createStore } from "../store/createStore";
 import { StoreProvider } from "../store/injectStore";
 import { Store } from "../store/Store";
 
+import { asyncTimeout } from "../utils";
 import { CSS } from "./layout/CSS";
 import { Footer } from "./layout/Footer/Footer";
 import { Header } from "./layout/Header/Header";
 import { HeaderFade } from "./layout/Header/HeaderFade";
 import { MainContainer } from "./layout/MainContainer";
 import { InitialFade } from "./transitions/InitialFade";
-import { asyncTimeout } from "./utils";
 
 type AppState = {
 	/**

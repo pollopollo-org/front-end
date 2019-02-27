@@ -1,13 +1,16 @@
 import { observable } from "mobx";
+import { DataProviders } from "../store/createStore.js";
+import { DummyModel } from "./DummyModel.js";
 
-import { DataProviders } from "../store/createStore";
-
-type DummyModelData = {
+type ApplicationModelData = {
     /**
      * Specifies the amount of times the user wish to buy a given product
      */
     amount: string;
 
+    /**
+     * Defines the country the applicant is coming from
+     */
     country: string;
 
     /**
@@ -16,6 +19,10 @@ type DummyModelData = {
      */
     motivation: string;
 
+
+    /**
+     * Defines the name of the application applying for the product
+     */
     name: string;
 
     /**
@@ -37,7 +44,7 @@ type DummyModelData = {
 /**
  * Exmaple of a model, and how to implement one.
  */
-export class DummyModel {
+export class ApplicationModel {
     /**
      * Helper that instantiates a dummy model, populated with required data.
      */
@@ -68,9 +75,9 @@ export class DummyModel {
     @observable
     public incrementingValue: number = 0;
 
-    constructor(data: DummyModelData) {
-        this.title = data.title;
-        this.userId = data.userId;
+    constructor(data: ApplicationModelData) {
+        this.title = data.amount;
+        this.userId = data.country;
 
         this.autoIncrement();
     }
