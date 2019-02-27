@@ -1,5 +1,7 @@
 import { observable } from "mobx";
 
+import { DataProviders } from "../store/createStore.js";
+
 type DummyModelData = {
     /**
      * Specifies the data of the dummy model.
@@ -19,8 +21,8 @@ export class DummyModel {
     /**
      * Helper that instantiates a dummy model, populated with required data.
      */
-    public static async CREATE(fetchActualData: boolean): Promise<DummyModel> {
-        if (fetchActualData) {
+    public static async CREATE(dataProivder: DataProviders): Promise<DummyModel> {
+        if (dataProivder === DataProviders.BACKEND) {
             // Actually fetch data from backend.. :-)
             return new DummyModel({ title: "invalid", userId: "invalid" });
         } else {
