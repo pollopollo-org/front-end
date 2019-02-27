@@ -2,6 +2,17 @@ import { observable } from "mobx";
 import { DummyModel } from "../models/DummyModel";
 
 /**
+ * Specifies the arguments required to create a store.
+ * The specific arguments are described both in their respective classes,
+ * and in the fields within the store that they're exposed upon.
+ */
+// tslint:disable completed-docs
+type StoreArgs = {
+    dummyModel: DummyModel;
+}
+// tslint:enable completed-docs
+
+/**
  * Root data store for the application lifecycle
  *
  * This store combines all data models, allowing for easy access down the
@@ -20,9 +31,7 @@ export class Store {
     @observable
     public didMount: boolean = false;
 
-    constructor(initial: {
-        dummyModel: DummyModel,
-    }) {
+    constructor(initial: StoreArgs) {
         this.dummy = initial.dummyModel;
     }
 }
