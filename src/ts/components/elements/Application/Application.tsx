@@ -5,6 +5,7 @@ import { colors } from "src/ts/config/colors";
 
 import dummyApplication from "src/assets/dummy/dummyApplication.json";
 import { easings } from "src/ts/config/easings";
+import { Button } from "../../utils";
 
 export type ApplicationState = {
     /**
@@ -28,7 +29,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
 
     /** Reference to the div tag with class name description */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
-    
+
     /** Reference to the div tag with class name application-border */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -79,7 +80,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         </div>
                         <div className="section-donate">
                             <div className="price">${ dummyApplication.price }</div>
-                            <button className="donateButton">Donate</button>
+                            <Button text={ "Donate" } />
                         </div>
                     </div>
 
@@ -98,6 +99,8 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
 
                     /** Draws a border around the application */
                     .application-border {
+
+                        /** temp margin */
                         margin-left: 100px;
 
                         height: 100%;
