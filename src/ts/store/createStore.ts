@@ -2,6 +2,14 @@ import { DummyModel } from "../models/DummyModel";
 import { Store } from "./Store";
 
 /**
+ * Specifies where the created models should fetch their data from.
+ */
+export enum DataProviders {
+    DUMMY = "dummy",
+    BACKEND = "backend",
+};
+
+/**
  * Cache used to prevent re-creating a store over and over again.
  */
 let cache: Promise<Store>;
@@ -16,7 +24,7 @@ export const createStore = () => {
             try {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
-                const dummyModel = await DummyModel.CREATE(false);
+                const dummyModel = await DummyModel.CREATE(DataProviders.DUMMY);
 
                 resolve(new Store({dummyModel}));
             } catch (err) {
