@@ -190,13 +190,23 @@ module.exports = {
                   // contain all basic transpilation required (and is auto
                   // updated by babel themselves)
                   presets: [
-                    ["@babel/preset-env", { modules: false, useBuiltIns: "usage" }],
+                    "@babel/preset-env",
+                    "@babel/react",
+                    "@babel/typescript"
                   ],
 
                   // Next up, push the list of custom plugins we're going to
                   // need in order to properly transform our input
                   plugins: [
                     "@babel/plugin-syntax-dynamic-import",
+                    "@babel/proposal-class-properties",
+                    "@babel/proposal-object-rest-spread",
+                    [
+                      "@babel/transform-runtime",
+                      {
+                        "regenerator": true,
+                      },
+                    ],
                     [
                       "styled-jsx/babel",
                       {
@@ -222,6 +232,21 @@ module.exports = {
               },
               "ts-loader",
             ]
+          },
+          {
+            test: /\.svg$/i,
+            use: [
+              { loader: "raw-loader" },
+              {
+                loader: "svgo-loader",
+                options: {
+                  plugins: [
+                    { convertStyleToAttrs: false },
+                    { inlineStyles: false },
+                  ],
+                },
+              },
+            ],
           },
           // "postcss" loader applies autoprefixer to our CSS.
           // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -283,16 +308,16 @@ module.exports = {
     ],
   },
   plugins: [
-    // Makes some environment variables available in index.html.
-    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    // In development, this will be an empty string.
-    new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
     }),
+    // Makes some environment variables available in index.html.
+    // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
+    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    // In development, this will be an empty string.
+    new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),
     // Makes some environment variables available to the JS code, for example:
@@ -338,4 +363,5 @@ module.exports = {
   performance: {
     hints: false,
   },
+  mode: "development",
 };
