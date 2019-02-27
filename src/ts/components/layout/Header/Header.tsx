@@ -25,8 +25,6 @@ export class Header extends React.PureComponent {
                     <Link to={routes.register}>Register</Link>
                 </div>
 
-                <div className="phantom-header" />
-
                 <style jsx>{`
 
                     .header {
@@ -38,12 +36,6 @@ export class Header extends React.PureComponent {
                         display: flex;
                         flex-direction: row;
                         border-bottom: 1px solid ${ colors.primaryColor }
-                    }
-
-                    .phantom-header {
-                        width: 100%;
-                        height: 60px;
-                        background-color: ${ colors.white }
                     }
 
                     i {

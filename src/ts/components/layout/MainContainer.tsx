@@ -25,7 +25,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
 
                 <style jsx>{`
                     main {
-                        padding: 20px 30px;
+                        padding: 80px 30px;
                     }
                 `}</style>
             </main>
