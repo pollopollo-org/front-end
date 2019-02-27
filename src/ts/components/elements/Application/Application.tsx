@@ -27,23 +27,23 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
      */
     public toggleCollapsible() {
         this.setState( {expanded: !this.state.expanded} );
-        
+
         const desc = this.descriptionRef.current;
         const border = this.borderRef.current;
-        
+
         if(!desc || !border ) {
             return;
-        } 
+        }
 
         if (!this.state.expanded){
             desc.style.maxHeight = null;
         } else {
             desc.style.maxHeight = desc.scrollHeight + "px";
             border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
-        } 
+        }
     }
-            
-    
+
+
 
     /**
      * Main render method, used to render Application
@@ -52,14 +52,14 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
 
 		return (
 			<div>
-				
+
                 <div className="application-border" ref={ this.borderRef }>
                     <div className="application" onClick={ () => { this.toggleCollapsible(); } }>
                         <div className="section-user">
                             <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
                             <div className="name">{ dummyApplication.name }</div>
                         </div>
-                        
+
                         <div className="section-product">
                             <div className="product">{ dummyApplication.amount } { dummyApplication.product }</div>
                         </div>
@@ -78,7 +78,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         </div>
                     </div>
                 </div>
-                
+
 
 				<style jsx>{`
 
@@ -93,7 +93,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         border: 1px solid ${ colors.secondaryColor };
                         color: ${ colors.primaryColor };
                     }
-                    
+
 					.application {
                         margin: 0 10px;
                         display: flex;
@@ -142,7 +142,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         width: 60px;
                         border-radius: 50%;
                     }
-                    
+
                     .name {
                         font-size: 75%;
                     }
