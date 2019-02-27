@@ -44,8 +44,8 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                      */
                     position: relative;
                     display: block;
-                    width: ${ size }px;
-                    height: ${ size }px;
+                    width: ${ BASE_SIZE }px;
+                    height: ${ BASE_SIZE }px;
 
                     /** Translate to desired dimensions */
                     transform: scale(${scale});
