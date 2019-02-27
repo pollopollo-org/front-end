@@ -24,24 +24,24 @@ export class RegisterForm extends React.PureComponent{
                 <h1 className="headerText">Register as new user</h1>
                 <div>
                     <div className="nameAndCountrySection">
-                        <input className="nameInput" placeholder="Name"></input>
-                        <input className="countryInput" placeholder="Country"></input>
+                        <input className="nameInput" placeholder="  Name"></input>
+                        <input className="countryInput" placeholder="  Country"></input>
                     </div>
                     <div className="emailSection">
-                        <input className="emailInput" placeholder="email"></input>
+                        <input className="emailInput" placeholder="  email"></input>
                     </div>
                     <div className="passwordSection">
-                        <input className="firstpassword" placeholder="Password"></input>
-                        <input className="secondPassword" placeholder="Password, again"></input>
+                        <input className="firstPasswordInput" placeholder="  Password"></input>
+                        <input className="secondPasswordInput" placeholder="   Password, again"></input>
                     </div>
                     <div>
                         <div className="userTypeSection">
                             <label>
-                                <input type="radio" name="userTypeProducer" onClick={this.producerClick}/>
+                                <input type="radio" className="userType" onClick={this.producerClick}/>
                                 I am a producer
                             </label>
                             <label>
-                                <input type="radio" name="userTypeReceiver" onClick={this.receiverClick}/>
+                                <input type="radio" className="userType" onClick={this.receiverClick}/>
                                 I am a receiver
                             </label>
                         </div>
@@ -55,23 +55,44 @@ export class RegisterForm extends React.PureComponent{
 
                 <style jsx>{`
                     .headerText{
+                        color: #8C489F;
+                    }
 
+                    input{
+                        height: 30px;
+                        width: 250px;
+                        margin-right: 30px;
+                    }
+
+                    input.userType{
+                        height: 17px;
+                        width: 17px;
+                        padding: 10px;
                     }
 
                     .nameAndCountrySection{
-
+                        margin: 10px auto;
                     }
 
                     .emailSection{
-
+                        margin: 10px auto;
                     }
 
                     .passwordSection{
-
+                        margin: 10px auto;
                     }
 
                     .userTypeSection{
+                        margin: 10px auto;
+                    }
 
+                    .registerButton{
+                        height: 30px;
+                        width: 100px;
+                        
+                    }
+
+                    label{
                     }
 
                 `}</style>
