@@ -65,15 +65,18 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                         bottom: 0;
 
                         /** Render the actual circle */
-                        border: 7px solid ${ colors.primaryColor };
+                        border: 8px solid ${ colors.white };
                         border-radius: 50%;
 
                         /**
                          * Color parts of the circle in another color to
                          * make rotation visible
+                         * 
                          */
-                        border-left-color: #dc4320;
-                        border-right-color: #dc4320;
+                        border-left-color: ${colors.primaryColor};
+                        border-top-color: #D1B7D9; 
+                        border-right-color: #D1B7D9;  
+                        border-bottom-color: #D1B7D9;
 
                         /** Visually indicate that things are happening! */
                         animation: spin 0.9s linear infinite;

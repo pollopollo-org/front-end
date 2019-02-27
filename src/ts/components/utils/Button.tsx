@@ -3,6 +3,9 @@ import React from "react";
 import { colors } from "src/ts/config/colors";
 
 type ButtonProps = {
+    /**
+     * Temp Sif  
+     */
     text: string;
 };
 
