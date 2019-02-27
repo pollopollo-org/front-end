@@ -18,7 +18,7 @@ export class FrontPage extends React.PureComponent{
                     <h1>Welcome to Obyte!</h1>
                 </div>
 
-                
+
                 <div className="list-of-applications">
                     <Application />
                 </div>
