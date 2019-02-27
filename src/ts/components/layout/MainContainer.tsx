@@ -6,6 +6,7 @@ import { routes } from "src/ts/config/routes";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
+import { Throbber } from "src/ts/utils";
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
 
@@ -45,7 +46,7 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
 
                 <style jsx>{`
                     main {
-                        margin: 5% 5% 5% 5%;
+                        margin: 5%;
                     }
                 `}</style>
             </div>
