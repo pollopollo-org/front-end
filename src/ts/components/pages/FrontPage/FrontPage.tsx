@@ -3,8 +3,8 @@ import React from "react";
 import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
 
-import { Chevron } from "src/ts/utils/Chevron";
 import { Application } from "../../elements/Application/Application";
+import { Chevron } from "../../utils";
 
 /**
  * Frontpage

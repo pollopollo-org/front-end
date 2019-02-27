@@ -1,6 +1,6 @@
 import React from "react";
 
-import { easings } from "../config/easings";
+import { easings } from "src/ts/config";
 
 type ChevronProps = {
     /**
