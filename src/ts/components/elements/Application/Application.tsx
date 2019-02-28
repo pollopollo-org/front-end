@@ -5,7 +5,7 @@ import { colors } from "src/ts/config/colors";
 
 import dummyApplication from "src/assets/dummy/dummyApplication.json";
 import { easings } from "src/ts/config/easings";
-import { Button } from "../../utils";
+import { Button, Chevron } from "../../utils";
 
 export type ApplicationState = {
     /**
@@ -69,20 +69,30 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
 			<div>
 				
                 <div className="application-border" ref={ this.borderRef }>
-                    <div className="application" onClick={ () => { this.toggleCollapsible(); } }>
-                        <div className="section-user">
-                            <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
-                            <div className="name">{ dummyApplication.name }</div>
+                    <div className="application">
+                        <div className="sections">
+                            <div className="section-user">
+                                <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
+                                <div className="name">{ dummyApplication.name }</div>
+                            </div>
+                            
+                            <div className="section-product">
+                                <div className="product">{ dummyApplication.amount } { dummyApplication.product }</div>
+                                
+                            </div>
+                            <div className="section-donate">
+                                <div className="price">${ dummyApplication.price }</div>
+                                <Button text={ "Donate" } />
+                            </div>
                         </div>
+
+                        <i onClick={ () => { this.toggleCollapsible(); } }>
+                            <Chevron size={20} lineWidthRatio={0.5} inversed={!this.state.expanded} vertical={true} />
+                        </i>
                         
-                        <div className="section-product">
-                            <div className="product">{ dummyApplication.amount } { dummyApplication.product }</div>
-                        </div>
-                        <div className="section-donate">
-                            <div className="price">${ dummyApplication.price }</div>
-                            <Button text={ "Donate" } />
-                        </div>
                     </div>
+
+                    
 
                     <div className="description" ref={ this.descriptionRef }>
                         <div className="description-content">
@@ -111,7 +121,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         color: ${ colors.primaryColor };
                     }
                     
-					.application {
+					.sections {
                         margin: 0 10px;
                         display: flex;
                         flex-direction: row;
@@ -151,6 +161,7 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         flex-direction: column;
                         justify-content: space-between;
                         margin-left: auto;
+                        padding-top: 5px;
                     }
 
                     .thumbnail {
@@ -162,6 +173,18 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                     
                     .name {
                         font-size: 75%;
+                    }
+
+                    i {
+                        width: 20px;
+                        height: 20px;
+                        margin-left: 48%;
+                        position: relative;
+                        cursor: pointer;
+                    }
+
+                    i:hover {
+                        color: ${ colors.secondaryColor }
                     }
 
                     .price {
