@@ -154,7 +154,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                     /** Placement of the chevron in the right-bottom corner */
                     .section-chevron {
-                        margin: auto 15px 5px auto;
+                        margin: auto 0 0 auto;
                     }
 
                     /**  */
@@ -192,11 +192,17 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     /** The name placed under the thumbnail in the .section-user */
                     .name {
                         font-size: 75%;
+                        white-space: nowrap;
                     }
 
                     /** The wrapper around the chevron arrow */
                     i {
-                        display: block; 
+                        /** The chevron have to overlap the .section-donate to 
+                        have the correct position */
+                        margin-left: -20px;
+                        margin-top: -25px;
+
+                        display: block;
                         width: 28px;
                         height: 20px;
 
