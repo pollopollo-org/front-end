@@ -71,28 +71,22 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                 <div className="application-border" ref={ this.borderRef }>
                     <div className="application">
                         <div className="sections">
-                            <div className="section-user">
+                            <section className="section-user">
                                 <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
                                 <div className="name">{ dummyApplication.name }</div>
-                            </div>
+                            </section>
                             
-                            <div className="section-product">
-                                <div className="product">{ dummyApplication.amount } { dummyApplication.product }</div>
-                                
-                            </div>
-                            <div className="section-donate">
-                                <div className="price">${ dummyApplication.price }</div>
-                                <Button text={ "Donate" } />
-                            </div>
+                            <section className="section-donate">
+                                <div className="product" title={ dummyApplication.product }>{ dummyApplication.amount } { dummyApplication.product }</div>
+                                <Button text={ "Donate $" + dummyApplication.price }   />
+                            </section>
+                            <section className="section-chevron">
+                                <i onClick={ () => { this.toggleCollapsible(); } }>
+                                    <Chevron size={20} lineWidthRatio={0.5} inversed={!this.state.expanded} vertical={true} />
+                                </i>
+                            </section>
                         </div>
-
-                        <i onClick={ () => { this.toggleCollapsible(); } }>
-                            <Chevron size={20} lineWidthRatio={0.5} inversed={!this.state.expanded} vertical={true} />
-                        </i>
-                        
                     </div>
-
-                    
 
                     <div className="description" ref={ this.descriptionRef }>
                         <div className="description-content">
@@ -111,22 +105,26 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                     .application-border {
 
                         /** temp margin */
+                        margin-top: 20px;
                         margin-left: 100px;
 
                         height: 100%;
+                        width: 100%;
                         max-height: 100px;
-                        width: 400px;
+                        max-width: 400px;
                         padding: 10px;
                         border: 1px solid ${ colors.secondaryColor };
                         color: ${ colors.primaryColor };
                     }
                     
+                    /** Contans different sections to manage placement with flexbox */
 					.sections {
                         margin: 0 10px;
                         display: flex;
                         flex-direction: row;
 					}
 
+                    /** Shown when collapsible is expanded */
                     .description {
                         background-color: ${ colors.white };
                         max-height: 0;
@@ -134,62 +132,83 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         transition: max-height 0.375s ${ easings.inOutQuart };
                     }
 
+                    /** Placement styling */
                     .description-content {
                         margin: 10px;
                         border-top: 1px solid ${colors.secondaryColor};
                     }
 
+                    /** Padding between the top border and the text */
                     .description-content p {
                         padding-top: 10px;
                     }
 
+                    /** Placing the thumbnail and users name */
                     .section-user {
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
-                        align-items: center;
-                        margin-right: 20px;
+
+                        /** Margin between this and the next section */
+                        margin-right: 30px;
                     }
 
-                    .section-product {
-                        font-size: 130%;
-                        padding: 5px;
+                    /** Placement of the chevron in the right-bottom corner */
+                    .section-chevron {
+                        margin: auto 15px 10px auto;
                     }
 
+                    /**  */
                     .section-donate {
+                        font-size: 130%;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
-                        margin-left: auto;
-                        padding-top: 5px;
+                        padding: 5px;
                     }
 
+                    /** 
+                    *   Consist of product title, hidden when text overflows 
+                    *   the limits set by max-width
+                    */
+                    .product {
+                        display: inline-block;
+                        width: 100%;
+                        max-width: 250px;
+                        white-space: nowrap;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis;
+                    }
+
+                    /** Thumbnail img in the .section-user */
                     .thumbnail {
-                        margin-bottom: 10px;
                         height: 60px;
                         width: 60px;
                         border-radius: 50%;
+
+                        /** Margin between this and the name element */
+                        margin-bottom: 10px;
                     }
                     
+                    /** The name placed under the thumbnail in the .section-user */
                     .name {
                         font-size: 75%;
                     }
 
+                    /** The wrapper around the chevron arrow */
                     i {
-                        width: 20px;
+                        width: 28px;
                         height: 20px;
-                        margin-left: 48%;
+
+                        /** Needs to relative, because the Chevrons position is 
+                        *   absolute
+                        */
                         position: relative;
                         cursor: pointer;
                     }
 
                     i:hover {
                         color: ${ colors.secondaryColor }
-                    }
-
-                    .price {
-                        text-align: right;
-                        font-size: 140%;
                     }
 
 				`}</style>
