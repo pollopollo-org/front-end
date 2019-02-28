@@ -128,7 +128,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         flex-direction: row;
 					}
 
-                    /** Shown when collapsible is expanded */
+                    /** Shown when the collapsible is expanded */
                     .description {
                         background-color: ${ colors.white };
                         max-height: 0;
@@ -140,11 +140,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     .description-content {
                         margin: 10px;
                         border-top: 1px solid ${colors.secondaryColor};
-                    }
-
-                    /** Padding between the top border and the text */
-                    .description-content p {
-                        padding-top: 10px;
                     }
 
                     /** Placing the thumbnail and users name */
@@ -159,7 +154,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                     /** Placement of the chevron in the right-bottom corner */
                     .section-chevron {
-                        margin: auto 15px 10px auto;
+                        margin: auto 15px 5px auto;
                     }
 
                     /**  */
@@ -201,6 +196,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                     /** The wrapper around the chevron arrow */
                     i {
+                        display: block; 
                         width: 28px;
                         height: 20px;
 
