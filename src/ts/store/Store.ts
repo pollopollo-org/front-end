@@ -1,5 +1,14 @@
 import { observable } from "mobx";
-import { DummyModel } from "../models/DummyModel";
+
+import { ApplicationModel } from "../models/ApplicationModel";
+
+/**
+ * Specifies where the created models should fetch their data from.
+ */
+export enum DataProviders {
+    DUMMY = "dummy",
+    BACKEND = "backend",
+};
 
 /**
  * Specifies the arguments required to create a store.
@@ -8,7 +17,7 @@ import { DummyModel } from "../models/DummyModel";
  */
 // tslint:disable completed-docs
 type StoreArgs = {
-    dummyModel: DummyModel;
+    application: ApplicationModel;
 }
 // tslint:enable completed-docs
 
@@ -20,9 +29,10 @@ type StoreArgs = {
 // tslint:disable completed-docs
 export class Store {
     /**
-     * Contains a reference to the DummyModel making it accessible from the RootStore
+     * Contains a reference to the ApplicationModel, which contains fetched data
+     * about an application.
      */
-    public readonly dummy: DummyModel;
+    public readonly application: ApplicationModel;
 
     /**
      * Specifies the application has managed to fully render itself yet.
@@ -33,6 +43,6 @@ export class Store {
     public didMount: boolean = false;
 
     constructor(initial: StoreArgs) {
-        this.dummy = initial.dummyModel;
+        this.application = initial.application;
     }
 }

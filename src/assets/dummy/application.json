@@ -1,9 +1,9 @@
 {
     "name": "Sif Kristensen",
     "product": "chickens with really really really really really long title",
-    "amount": "5",
-    "price": "20",
-    "description": "I want someone to write my thesis, because fuck that",
+    "amount": 5,
+    "price": 20,
+    "motivation": "I want someone to write my thesis, because fuck that",
     "country": "Norge",
     "thumbnail": "src/assets/dummy/sif.PNG"
 }

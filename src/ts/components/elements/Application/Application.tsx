@@ -1,15 +1,21 @@
 import React from "react";
 
-
 import { colors } from "src/ts/config/colors";
+import { ApplicationModel } from "src/ts/models/ApplicationModel";
 
-import dummyApplication from "src/assets/dummy/dummyApplication.json";
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "../../utils";
 
+export type ApplicationProps = {
+    /**
+     * Contains a reference to the applicaiton model that should be rendered
+     */
+    application: ApplicationModel;
+}
+
 export type ApplicationState = {
     /**
-     * A boolean that tracks whether the application is expanded, and should 
+     * A boolean that tracks whether the application is expanded, and should
      */
     expanded: boolean;
 };
@@ -18,8 +24,7 @@ export type ApplicationState = {
  * Application template to contain information about the donation
  * of a single application
  */
-export class Application extends React.PureComponent<{}, ApplicationState> {
-
+export class Application extends React.PureComponent<ApplicationProps, ApplicationState> {
     /**
      * State of the component
      */
@@ -38,47 +43,46 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
      */
     public toggleCollapsible() {
         this.setState( {expanded: !this.state.expanded} );
-        
+
         const desc = this.descriptionRef.current;
         const border = this.borderRef.current;
-        
+
         // Check if null
         if(!desc || !border ) {
             return;
-        } 
+        }
 
         if (!this.state.expanded){
             desc.style.maxHeight = null;
         } else {
             desc.style.maxHeight = desc.scrollHeight + "px";
 
-            // The border should expand with both description size and its own 
+            // The border should expand with both description size and its own
             // size
             border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
-        } 
+        }
     }
-            
-    
 
     /**
      * Main render method, used to render Application
      */
 	public render(): JSX.Element {
+        const { application } = this.props;
 
 		return (
 			<div>
-				
+
                 <div className="application-border" ref={ this.borderRef }>
                     <div className="application">
                         <div className="sections">
                             <section className="section-user">
                                 <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
-                                <div className="name">{ dummyApplication.name }</div>
+                                <div className="name">{ application.name }</div>
                             </section>
                             
                             <section className="section-donate">
-                                <div className="product" title={ dummyApplication.product }>{ dummyApplication.amount } { dummyApplication.product }</div>
-                                <Button text={ "Donate $" + dummyApplication.price }   />
+                                <div className="product" title={ application.product }>{ application.amount } { application.product }</div>
+                                <Button text={ "Donate $" + application.price }   />
                             </section>
                             <section className="section-chevron">
                                 <i onClick={ () => { this.toggleCollapsible(); } }>
@@ -92,12 +96,12 @@ export class Application extends React.PureComponent<{}, ApplicationState> {
                         <div className="description-content">
                             <h3>Motivation</h3>
                             <p>
-                                { dummyApplication.description }
+                                { application.motivation }
                             </p>
                         </div>
                     </div>
                 </div>
-                
+
 
 				<style jsx>{`
 

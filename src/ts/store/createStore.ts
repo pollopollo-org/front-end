@@ -1,13 +1,6 @@
-import { DummyModel } from "../models/DummyModel";
-import { Store } from "./Store";
+import { ApplicationModel } from "../models/ApplicationModel";
 
-/**
- * Specifies where the created models should fetch their data from.
- */
-export enum DataProviders {
-    DUMMY = "dummy",
-    BACKEND = "backend",
-};
+import { DataProviders, Store } from "./Store";
 
 /**
  * Cache used to prevent re-creating a store over and over again.
@@ -24,9 +17,9 @@ export const createStore = () => {
             try {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
-                const dummyModel = await DummyModel.CREATE(DataProviders.DUMMY);
+                const application = await ApplicationModel.CREATE(DataProviders.DUMMY);
 
-                resolve(new Store({dummyModel}));
+                resolve(new Store({application}));
             } catch (err) {
                 reject(err);
             }
