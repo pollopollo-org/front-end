@@ -1,9 +1,9 @@
 {
     "name": "Sif Kristensen",
-    "product": "chickens with really really really really really long title",
+    "product": "chickens",
     "amount": 5,
     "price": 20,
-    "motivation": "I want someone to write my thesis, because fuck that",
+    "motivation": "I want five chickens to get the amount of eggs to regularly sustain my family. I would appreciate your help.",
     "country": "Norge",
     "thumbnail": "src/assets/dummy/sif.PNG"
 }
