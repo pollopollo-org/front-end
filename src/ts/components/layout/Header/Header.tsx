@@ -15,15 +15,13 @@ export class Header extends React.PureComponent {
      */
 	public render(): JSX.Element {
 		return (
-            <div>
-                <div className="header">
-                    <i>
-                        { getSVG("logo_full") }
-                    </i>
+            <div className="header">
+                <i>
+                    { getSVG("logo_full_inverted") }
+                </i>
 
-                    <Link to={routes.root}>Root</Link>
-                    <Link to={routes.register}>Register</Link>
-                </div>
+                <Link to={routes.root}>Root</Link>
+                <Link to={routes.register}>Register</Link>
 
                 <style jsx>{`
 
@@ -35,7 +33,8 @@ export class Header extends React.PureComponent {
                         position: fixed;
                         display: flex;
                         flex-direction: row;
-                        border-bottom: 1px solid ${ colors.primaryColor }
+                        background-color: ${ colors.primary };
+                        border-bottom: 1px solid ${ colors.primary }
                     }
 
                     i {

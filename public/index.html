@@ -24,24 +24,37 @@
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
         <meta name="msapplication-TileColor" content="#443266">
         <meta name="msapplication-TileImage" content="%PUBLIC_URL%/icons/ms-icon-144x144.png">
+        <link href="https://fonts.googleapis.com/css?family=Cabin:500|Lato:300,400" rel="stylesheet">
         <title>PolloPollo</title>
         <style>
+            body {
+                background: #f7f7f7;
+            }
             .initial-throbber {
                 position: absolute;
-                left: calc(50% - 128px);
+                left: calc(50% - 128px * 4.349571858);
                 top: calc(50% - 128px);
                 display: block;
-                width: 256px;
+                width: calc(256px * 4.349571858);
                 height: 256px;
                 transform: scale(0.5);
-                transition: opacity 0.2s linear;
+                transition: opacity 0.2s linear, transform 0.28s cubic-bezier(0.77, 0, 0.175, 1);
             }
 
             .initial-throbber--exiting {
                 opacity: 0;
+                transform: scale(0.475);
             }
 
-            .initial-throbber::before {
+            .initial-throbber__throbber {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 256px;
+                height: 256px;
+            }
+
+            .initial-throbber__throbber::before {
                 content: "";
                 position: absolute;
                 top: -1px;
@@ -67,8 +80,9 @@
         </noscript>
         <div id="root"></div>
         <span class="initial-throbber">
+            <span class="initial-throbber__throbber"></span>
             <i class="initial-throbber__logo">
-                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86.42 86.42">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375.89 86.42">
                     <defs>
                         <style>
                             .cls-1 {
@@ -81,6 +95,50 @@
                         </style>
                     </defs>
                     <title>logo</title>
+                    <g id="_Group_" data-name="&lt;Group&gt;">
+                        <g id="_Group_2" data-name="&lt;Group&gt;">
+                            <path id="_Compound_Path_" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M121.08,49h-8v8.34h-5.34V29c4.45,0,8.9,0,13.36,0C134.93,29,135,49,121.08,49Zm-8-4.9h8c6.84,0,6.8-10,0-10h-8Z" />
+                            <path id="_Compound_Path_2" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M163,43.33C162.87,50.66,158.37,58,148.41,58s-14.58-7.17-14.58-14.62,4.78-14.94,14.58-14.94S163,35.92,163,43.33Zm-23.85.12c.12,4.66,2.63,9.64,9.31,9.64s9.19-5,9.27-9.68-2.59-10.12-9.27-10.12S139,38.67,139.1,43.45Z" />
+                            <path id="_Compound_Path_3" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M172.22,29V52.4H186.8v4.94H166.87V29Z" />
+                            <path id="_Compound_Path_4" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M195.91,29V52.4h14.57v4.94H190.56V29Z" />
+                            <path id="_Compound_Path_5" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M241.26,43.33C241.18,50.66,236.68,58,226.72,58s-14.58-7.17-14.58-14.62,4.78-14.94,14.58-14.94S241.34,35.92,241.26,43.33Zm-23.85.12c.12,4.66,2.63,9.64,9.31,9.64s9.19-5,9.28-9.68-2.6-10.12-9.28-10.12S217.29,38.67,217.41,43.45Z" />
+                            <g id="_Group_3" data-name="&lt;Group&gt;">
+                                <g id="_Group_4" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_6" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M248,47.54v9.8h-2.19V29h12.43c12.31,0,12.31,18.54,0,18.54ZM248,31V45.56h10.24c9.44,0,9.44-14.54,0-14.54Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_5" data-name="&lt;Group&gt;">
+                                <g id="_Group_6" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_7" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M299.65,43.21c0,7.45-4.78,14.62-14.3,14.62s-14.29-7.21-14.29-14.7,4.74-14.58,14.29-14.58S299.69,35.56,299.65,43.21Zm-26.45,0c.05,6.4,4.09,12.63,12.15,12.63s12.19-6.23,12.19-12.63c0-6.56-4.05-12.59-12.19-12.59S273.16,36.49,273.2,43.17Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_7" data-name="&lt;Group&gt;">
+                                <g id="_Group_8" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_8" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M307,29V55.28h16v2.06H304.83V29Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_9" data-name="&lt;Group&gt;">
+                                <g id="_Group_10" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_9" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M329.28,29V55.28h16v2.06H327.1V29Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_11" data-name="&lt;Group&gt;">
+                                <g id="_Group_12" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_10" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M375.89,43.21c0,7.45-4.77,14.62-14.29,14.62s-14.3-7.21-14.3-14.7S352,28.55,361.6,28.55,375.93,35.56,375.89,43.21Zm-26.44,0c0,6.4,4.09,12.63,12.15,12.63s12.19-6.23,12.19-12.63c0-6.56-4.05-12.59-12.19-12.59S349.41,36.49,349.45,43.17Z" />
+                                </g>
+                            </g>
+                        </g>
+                    </g>
                     <g id="_Group_13" data-name="&lt;Group&gt;">
                         <g id="_Group_14" data-name="&lt;Group&gt;">
                             <path id="_Path_" data-name="&lt;Path&gt;" class="cls-2"

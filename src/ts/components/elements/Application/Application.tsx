@@ -70,7 +70,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         const { application } = this.props;
 
 		return (
-			<div>
+			<React.Fragment>
 
                 <div className="application-border" ref={ this.borderRef }>
                     <div className="application" onClick={ () => { this.toggleCollapsible(); } }>
@@ -103,6 +103,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                     /** Draws a border around the application */
                     .application-border {
+                        position: relative;
 
                         /** temp margin */
                         margin-left: 100px;
@@ -111,14 +112,52 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         max-height: 100px;
                         width: 400px;
                         padding: 10px;
-                        border: 1px solid ${ colors.secondaryColor };
-                        color: ${ colors.primaryColor };
+                        border: 1px solid rgba(139,72,156, 0.15);
+                        border-radius: 2px;
+                        color: ${ colors.primary };
+                        box-sizing: border-box;
+
+                        transition: transform 0.1s linear, border-color 0.1s linear, box-shadow 0.1s linear;
+
+                        &::before {
+                            content: "";
+
+                            position: absolute;
+                            top: 0%;
+                            bottom: 0%;
+                            left: 50%;
+                            right: 50%;
+
+                            background-color: rgba(219,208,239, 0.15);
+
+                            opacity: 0;
+                            z-index: 0;
+
+                            transition: opacity 0.1s linear, left 0.1s ${ easings.inOutQuad}, right 0.1s ${easings.inOutQuad},top 0.1s ${easings.inOutQuad}, bottom 0.1s ${easings.inOutQuart };
+                        }
+
+                        &:hover {
+                            transform: scale(1.005);
+                            box-shadow: 0 0 5px rgba(139,72,156, 0.15);
+                            border-color: ${ colors.secondary };
+                        }
+
+                        &:hover::before {
+                            opacity: 1;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            top: 0;
+                        }
                     }
 
 					.application {
                         margin: 0 10px;
                         display: flex;
                         flex-direction: row;
+
+                        position: relative;
+                        z-index: 2;
 					}
 
                     .description {
@@ -130,7 +169,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                     .description-content {
                         margin: 10px;
-                        border-top: 1px solid ${colors.secondaryColor};
+                        border-top: 1px solid ${colors.secondary};
                     }
 
                     .description-content p {
@@ -174,7 +213,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     }
 
 				`}</style>
-			</div>
+			</React.Fragment>
 		);
 	}
 }

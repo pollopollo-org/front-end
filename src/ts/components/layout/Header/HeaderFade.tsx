@@ -35,8 +35,8 @@ export const HeaderFade: React.SFC<{ in?: boolean }> = (props) => {
                         opacity: 1;
                         transform: translateY(0);
                         transition:
-                            opacity ${ DURATION }ms linear,
-                            transform ${ DURATION * 0.8 }ms ${ easings.inOutQuart };
+                            opacity ${ DURATION * 0.8 }ms linear,
+                            transform ${ DURATION }ms ${ easings.outQuart };
                     }
                 `}</style>
             </>

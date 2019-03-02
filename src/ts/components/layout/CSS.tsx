@@ -17,30 +17,28 @@ export const CSS: React.SFC = () => (
 
                 /** Fill up the viewport */
                 box-sizing: border-box;
-                min-width: 100%;
-                min-height: 100%;
-
-                /** Apply default background color */
-                background-color: #fff;
+                width: 100%;
+                height: 100%;
             }
 
             body {
                 /** Set up basic font */
                 color: ${ colors.black };
-                font-family: ${ fonts.tempFont };
+                font-family: ${ fonts.text };
                 font-size: 16px;
                 line-height: 1em;
+                transition: background-color 0.2s linear;
             }
 
             h1 {
-                font-size: 30px;
-                color: ${ colors.primaryColor };
+                font-size: 2em;
             }
 
             #root {
                 /** Fill up the viewport */
                 width: 100%;
                 height: 100%;
+                min-height: 100vh;
 
                 /** Use flexbox inside on the y-axis */
                 display: flex;

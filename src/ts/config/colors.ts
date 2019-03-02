@@ -4,7 +4,11 @@
  */
 export const colors = {
     black: "#393939",
-    primaryColor: "#443266",
-    secondaryColor: "#8C489F",
+    licorice: "#0F1119",
+    pale: "#DBD0EF",
+    primary: "#453266",
+    secondary: "#8B489C",
+    tulip: "#F78E8C",
     white: "#fff",
+    whiteSmoke: "#f7f7f7",
 };

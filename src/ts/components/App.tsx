@@ -40,7 +40,7 @@ export class App extends React.PureComponent<{}, AppState> {
 		// moving on to render the actual page
 		const [store] = await Promise.all([
 			createStore(),
-			asyncTimeout(300),
+			asyncTimeout(30000),
 		]);
 
 		this.onAppReady(store);
@@ -117,12 +117,15 @@ export class App extends React.PureComponent<{}, AppState> {
 	 * to be rendered, in order to clean up pre-render UI.
 	 */
 	protected async onAppReady(store: Store): Promise<void> {
-		this.setState({store});
-
 		const initialThrobber = document.querySelector(".initial-throbber");
 
 		if (initialThrobber) {
 			initialThrobber.classList.add("initial-throbber--exiting");
+			document.body.style.background = "#fff";
+
+			await asyncTimeout(100);
+			this.setState({ store });
+
 
 			await asyncTimeout(200);
 			document.body.removeChild(initialThrobber);

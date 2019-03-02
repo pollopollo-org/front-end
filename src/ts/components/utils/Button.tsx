@@ -4,7 +4,7 @@ import { colors } from "src/ts/config/colors";
 
 type ButtonProps = {
     /**
-     * Temp Sif  
+     * Temp Sif
      */
     text: string;
 };
@@ -16,7 +16,7 @@ export const Button: React.SFC<ButtonProps> = ({ text }) => {
 
 		    <style jsx>{`
                 button {
-                    background-color: ${ colors.secondaryColor };
+                    background-color: ${ colors.secondary };
                     color: ${ colors.white };
                     border: none;
                     border-radius: 12px;
@@ -26,7 +26,7 @@ export const Button: React.SFC<ButtonProps> = ({ text }) => {
                 }
 
                 button:hover {
-                    background-color: ${ colors.primaryColor };
+                    background-color: ${ colors.primary };
                 }
 			`}</style>
 		</div>

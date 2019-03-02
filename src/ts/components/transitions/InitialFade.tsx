@@ -5,7 +5,7 @@ import { easings } from "src/ts/config/easings";
 /**
  * Specification of the transition duration in milliseconds.
  */
-const DURATION = 200;
+const DURATION = 280;
 
 let incrementedId = 0;
 
@@ -39,7 +39,7 @@ export const InitialFade: React.SFC<{ in?: boolean; withTransform?: boolean }> =
                         opacity: 1;
                         transform: ${ props.withTransform ? "translateY(0)" : null };
                         transition:
-                            opacity ${ DURATION }ms linear,
+                            opacity ${ DURATION * 0.8 }ms linear,
                             transform ${ DURATION }ms ${ easings.inOutQuart };
                     }
                 `}</style>

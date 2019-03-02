@@ -73,7 +73,7 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                          * make rotation visible
                          *
                          */
-                        border-left-color: ${colors.primaryColor};
+                        border-left-color: ${colors.primary};
 
                         /** Visually indicate that things are happening! */
                         animation: spin 0.9s linear infinite;
