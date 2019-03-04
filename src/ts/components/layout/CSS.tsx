@@ -48,11 +48,19 @@ export const CSS: React.SFC = () => (
 
             h1 {
                 font-size: 2em;
+                font-family: ${ fonts.heading };
+                font-weight: 500;
+                color: ${ colors.licorice };
             }
 
-            h4 {
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
                 font-family: ${ fonts.heading };
                 font-weight: 400;
+                color: ${ colors.licorice };
             }
 
             p {

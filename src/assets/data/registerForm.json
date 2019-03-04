@@ -1,0 +1,10 @@
+{
+    "title": "Register as new user", 
+    "name": "Name", 
+    "country": "Country", 
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "producer": "I am a producer",
+    "reciever": "I am a reciever"
+}
