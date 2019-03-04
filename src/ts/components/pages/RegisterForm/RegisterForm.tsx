@@ -67,6 +67,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     select{
+                        -webkit-appearance: none;
+                        background: transparent;
                         height: 37px;
                         width: 254px;
                         margin-right: 30px;
