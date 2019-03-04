@@ -2,7 +2,7 @@ import React from "react";
 
 import { getSVG } from "src/assets/svg";
 import { Chevron } from "src/ts/utils/Chevron";
-import { Application } from "../../elements/Application/Application";
+// import { Application } from "../../elements/Application/Application";
 
 /**
  * Frontpage
@@ -18,9 +18,9 @@ export class FrontPage extends React.PureComponent{
                 <p>Welcome to the official PolloPollo website.</p>
 
                 <h1>Recent applications</h1>
-                <div className="list-of-applications">
+                {/* <div className="list-of-applications">
                     <Application />
-                </div>
+                </div> */}
 
                 <Chevron size={20} lineWidthRatio={0.5} inversed={true} vertical={true}/>
 
