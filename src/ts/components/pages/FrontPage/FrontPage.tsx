@@ -24,10 +24,8 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
      * Main render method, used to render Frontpage
      */
     public render() : JSX.Element{
-        console.log(this.props.store.applications);
         return(
             <div>
-
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
                     { this.props.store.applications.map((application, index) => {

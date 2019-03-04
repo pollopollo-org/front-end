@@ -54,7 +54,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         </div>
 
                         <div className="button-wrapper">
-                            <Button text={"Donate $" + application.price} />
+                            <Button text={`Donate $${application.price}`} />
                         </div>
 
                         { this.renderChevron() }
@@ -129,7 +129,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             left: 0;
                             right: 0;
                         }
-
 
                         /*
                          * Apply a slightly different bg-color for even and odd
