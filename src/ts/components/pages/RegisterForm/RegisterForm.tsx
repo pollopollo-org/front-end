@@ -1,12 +1,17 @@
 import React from "react";
-import registerForm from "src/assets/data/registerForm.json"
-import { colors } from "src/ts/config/colors";
+
+type RegisterFormState = {
+    /**
+     * hvad tror du det er
+     */
+    userType: string; 
+}
 
 /**
  * A page where the user can register for the project
  */
-export class RegisterForm extends React.PureComponent{
-    constructor(props: Readonly<{}>){
+export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
+    constructor(props:any){
         super(props);
         this.state={
             userType: "",
@@ -20,27 +25,36 @@ export class RegisterForm extends React.PureComponent{
         return(
             <div className="allSection">
 
-                <h1 className="headerText">{registerForm.title}</h1>
+                <h1 className="headerText">Register as new user</h1>
                 <div>
                     <div className="section">
-                        <input className="nameInput" placeholder={registerForm.name}/>
-                        <input className="countryInput" placeholder={registerForm.country}/>
+                        <input className="firstNameInput" placeholder="First name"/>
+                        <input className="lastNameInput" placeholder="Last name"/>
                     </div>
                     <div className="section">
-                        <input className="emailInput" placeholder={registerForm.email}/>
+                        <input className="emailInput" placeholder="Email"/>
+                        <select className="countryInput">
+                            <option value="Country">Country</option>
+                        </select>
                     </div>
                     <div className="section">
-                        <input type="password" className="firstPasswordInput" placeholder={registerForm.password}/>
-                        <input type="password" className="secondPasswordInput" placeholder={registerForm.confirmPassword}/>
+                        <input type="password" className="firstPasswordInput" placeholder="Password"/>
+                        <input type="password" className="secondPasswordInput" placeholder="Confirm password"/>
                     </div>
                     <div>
                         <div className="section">
-                            <input type="radio" className="userType" name="userType" value="producer" onClick={this.setState}/><label>{registerForm.producer}</label>
-                            <input type="radio" className="userType" name="userType" value="receiver"/><label>{registerForm.reciever}</label>
+                            <input type="radio" className="userType" name="userType" value="producer" onChange={event => this.setState({userType: event.target.value,})}/><label>I am a producer</label>
+                            <input type="radio" className="userType" name="userType" value="receiver" onChange={event => this.setState({userType: event.target.value,})}/><label>I am a receiver</label>
                         </div>
                     </div>
                     <div className="conditionalSection">
-                        {}
+                        {this.state.userType==="producer" && (
+                            <input></input>
+                        )}
+                        {this.state.userType!=="" && (
+                            <button>Submit</button>
+                        )
+                        }
                     </div>
                     <div className="behindFooter"/>
                 </div>
@@ -48,8 +62,15 @@ export class RegisterForm extends React.PureComponent{
 
                 <style jsx>{`
                     .headerText{
-                        color: ${colors.secondaryColor};
+                        color: #8C489F;
                         margin: 30px auto;
+                    }
+
+                    select{
+                        height: 37px;
+                        width: 254px;
+                        margin-right: 30px;
+                        text-indent: 9px;
                     }
 
                     input{
@@ -76,7 +97,7 @@ export class RegisterForm extends React.PureComponent{
                     label{
                         font-size: 20px;
                         margin-right: 30px;
-                        color: ${colors.primaryColor};
+                        color: #443266;
                     }
 
                     .allSection{
@@ -91,4 +112,6 @@ export class RegisterForm extends React.PureComponent{
             </div>
         );
     }
+
+
 }
