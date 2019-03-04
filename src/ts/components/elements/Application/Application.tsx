@@ -267,8 +267,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private renderContentSection = () => {
         const { application } = this.props;
 
-        console.log(this.state.isSmall);
-
         return (
             <section className="section-content">
                 <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
