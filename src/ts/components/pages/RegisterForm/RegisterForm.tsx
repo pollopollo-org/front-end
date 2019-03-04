@@ -6,11 +6,8 @@ import React from "react";
 export class RegisterForm extends React.PureComponent{
     constructor(props: Readonly<{}>){
         super(props);
-        this.producerClick = this.producerClick.bind(this);
-        this.receiverClick = this.receiverClick.bind(this);
-        this.state = {
-            producer: false,
-            receiver: false,
+        this.state={
+            userType: "",
         };
     }
 
@@ -23,32 +20,27 @@ export class RegisterForm extends React.PureComponent{
 
                 <h1 className="headerText">Register as new user</h1>
                 <div>
-                    <div className="nameAndCountrySection">
-                        <input className="nameInput" placeholder="   Name"></input>
-                        <input className="countryInput" placeholder="   Country"></input>
+                    <div className="section">
+                        <input className="nameInput" placeholder="Name"/>
+                        <input className="countryInput" placeholder="Country"/>
                     </div>
-                    <div className="emailSection">
-                        <input className="emailInput" placeholder="   email"></input>
+                    <div className="section">
+                        <input className="emailInput" placeholder="Email"/>
                     </div>
-                    <div className="passwordSection">
-                        <input className="firstPasswordInput" placeholder="   Password"></input>
-                        <input className="secondPasswordInput" placeholder="   Password, again"></input>
+                    <div className="section">
+                        <input type="password" className="firstPasswordInput" placeholder="Password"/>
+                        <input type="password" className="secondPasswordInput" placeholder="Confirm password"/>
                     </div>
                     <div>
-                        <div className="userTypeSection">
-                            <label>
-                                <input type="radio" className="userType" onClick={this.producerClick}/>
-                                I am a producer
-                            </label>
-                            <label>
-                                <input type="radio" className="userType" onClick={this.receiverClick}/>
-                                I am a receiver
-                            </label>
+                        <div className="section">
+                            <input type="radio" className="userType" name="userType" value="producer" onClick={this.setState}/><label>I am a producer</label>
+                            <input type="radio" className="userType" name="userType" value="receiver"/><label>I am a receiver</label>
                         </div>
                     </div>
                     <div className="conditionalSection">
-                        <div/>
+                        {}
                     </div>
+                    <div className="behindFooter"/>
                 </div>
 
 
@@ -62,6 +54,7 @@ export class RegisterForm extends React.PureComponent{
                         height: 30px;
                         width: 250px;
                         margin-right: 30px;
+                        text-indent: 9px;
                     }
 
                     input.userType{
@@ -69,20 +62,7 @@ export class RegisterForm extends React.PureComponent{
                         width: 17px;
                         margin: 0px 10px;
                     }
-
-                    .nameAndCountrySection{
-                        margin: 20px auto;
-                    }
-
-                    .emailSection{
-                        margin: 20px auto;
-                    }
-
-                    .passwordSection{
-                        margin: 20px auto;
-                    }
-
-                    .userTypeSection{
+                    .section{
                         margin: 20px auto;
                     }
 
@@ -94,35 +74,19 @@ export class RegisterForm extends React.PureComponent{
                     label{
                         font-size: 20px;
                         margin-right: 30px;
+                        color: #443266;
                     }
 
                     .allSection{
                         margin-left: 50px;
                     }
 
+                    .behindFooter{
+                        height: 100px;
+                    }
                 `}</style>
 
             </div>
         );
-    }
-
-    /**
-     * Handles radio button click to allow for conditional rendering
-     */
-    private producerClick(){
-        this.setState({
-            producer: true,
-            receiver: false,
-        });
-    }
-
-    /**
-     * Handles radio button click to allow for conditional rendering
-     */
-    private receiverClick(){
-        this.setState({
-            producer: false,
-            receiver: true,
-        });
     }
 }
