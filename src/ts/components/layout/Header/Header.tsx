@@ -5,7 +5,6 @@ import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
 import { routes } from "src/ts/config/routes";
 
-
 /**
  * Header to be placed at the top of all pages
  */
@@ -16,19 +15,15 @@ export class Header extends React.PureComponent {
      */
 	public render(): JSX.Element {
 		return (
-			<div>
-                <div className="header">
-                    <i>
-                        { getSVG("logo_full") }
-                    </i>
+            <div className="header">
+                <i>
+                    { getSVG("logo_full_inverted") }
+                </i>
 
-                    <Link to={routes.root}>Root</Link>
-                    <Link to={routes.register}>Register</Link>
-                </div>
+                <Link to={routes.root}>Root</Link>
+                <Link to={routes.register}>Register</Link>
 
-                <div className="phantom-header" />
-
-				<style jsx>{`
+                <style jsx>{`
 
                     .header {
                         top: 0;
@@ -38,22 +33,18 @@ export class Header extends React.PureComponent {
                         position: fixed;
                         display: flex;
                         flex-direction: row;
-                        border-bottom: 1px solid ${ colors.primaryColor }
+                        background-color: ${ colors.primary };
+                        border-bottom: 1px solid ${ colors.primary };
+                        z-index: 1000;
                     }
 
-                    .phantom-header {
-                        width: 100%;
-                        height: 60px;
-                        background-color: ${ colors.white }
-                    }
-
-					i {
+                    i {
                         margin-left: 10px;
                         width: 200px;
                         height: 60px;
                     }
-				`}</style>
-			</div>
+                `}</style>
+            </div>
 		);
 	}
 }

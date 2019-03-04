@@ -1,5 +1,6 @@
-import { DummyModel } from "../models/DummyModel";
-import { Store } from "./Store";
+import { ApplicationModel } from "../models/ApplicationModel";
+
+import { DataProviders, Store } from "./Store";
 
 /**
  * Cache used to prevent re-creating a store over and over again.
@@ -16,9 +17,9 @@ export const createStore = () => {
             try {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
-                const dummyModel = await DummyModel.CREATE(false);
+                const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
 
-                resolve(new Store({dummyModel}));
+                resolve(new Store({applications}));
             } catch (err) {
                 reject(err);
             }

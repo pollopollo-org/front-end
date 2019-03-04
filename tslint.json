@@ -2,14 +2,7 @@
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "rules": {
     "interface-over-type-literal": false,
-    "completed-docs": [
-      true,
-      "classes",
-      "enums",
-      "functions",
-      "methods",
-      "namespaces"
-    ],
+    "completed-docs": true,
     "quotemark": [
       true,
       "double"
