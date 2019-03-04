@@ -43,7 +43,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
 	public render(): JSX.Element {
         const { application } = this.props;
-
+    
 		return (
 			<React.Fragment>
                 <div className="application-border" ref={ this.borderRef }>
@@ -182,7 +182,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         return (
             <section className="section-user">
                 <img className="thumbnail" src={require("src/assets/dummy/sif.PNG")} />
-                <div className="flag" title={application.country}></div>
+                <img className="flag" title={application.country} src={`${process.env.PUBLIC_URL}/flags/${application.countryCode.toLowerCase()}.svg`} />
                 <div className="name">{this.nameEstimator()}</div>
 
                 <style jsx>{`
@@ -221,8 +221,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Positioning it on the top-right of the thumbnail */
                         top: 0;
                         left: 50px;
-
-                        background-color: black;
                     }
 
                     /** The name placed under the thumbnail in the .section-user */

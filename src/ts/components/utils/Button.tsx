@@ -20,6 +20,7 @@ export const Button: React.SFC<ButtonProps> = ({ text }) => {
                     background-color: ${ colors.secondary };
                     color: ${ colors.white };
                     border: none;
+                    border-radius: 2px;
                     padding: 10px 10px;
                     transition: background-color 0.1s linear;
                     font-size: 12px;
