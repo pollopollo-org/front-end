@@ -6,6 +6,8 @@ import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "../../utils";
 
+import ApplicationLabels from "src/assets/data/application.json";
+
 export type ApplicationProps = {
     /**
      * Contains a reference to the applicaiton model that should be rendered
@@ -367,7 +369,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className="description-content">
-                    <h3>Motivation</h3>
+                    <h3>{ ApplicationLabels.motivation }</h3>
                     <p>
                         {application.motivation}
                     </p>
