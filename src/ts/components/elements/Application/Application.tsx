@@ -78,7 +78,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         <div className="sections">
                             <section className="section-user">
                                 <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
-                                <div className="flag" title={ application.country }></div>
+                                <img className="flag" src={process.env.PUBLIC_URL} />
                                 <div className="name">{ this.nameEstimator() }</div>
                             </section>
 
@@ -293,8 +293,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Positioning it on the top-right of the thumbnail */
                         top: 0;
                         left: 50px;
-
-                        background-color: black;
                     }
 
                     /** The name placed under the thumbnail in the .section-user */
