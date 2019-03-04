@@ -109,6 +109,20 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     .behindFooter{
                         height: 100px;
                     }
+
+                    @media only screen and (max-width: 666px) {
+                        .section {
+                            margin: 0;
+                        }
+
+                        input {
+                            margin: 10px 0;
+                        }
+
+                        input.userType {
+                            margin: 10px 0;
+                        }
+                    }
                 `}</style>
 
             </div>

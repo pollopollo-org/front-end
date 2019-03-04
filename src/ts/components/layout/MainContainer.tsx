@@ -49,6 +49,7 @@ class UnwrappedMainContainer extends React.Component<MainContainerProps> {
                 <style jsx>{`
                     main {
                         margin: 5%;
+                        margin: 0 auto;
                     }
                 `}</style>
             </div>
