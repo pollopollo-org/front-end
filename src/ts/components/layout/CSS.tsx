@@ -19,6 +19,9 @@ export const CSS: React.SFC = () => (
                 box-sizing: border-box;
                 width: 100%;
                 height: 100%;
+
+                /** We should aspire to never having overflow on the x-axis on the body layer  */
+                overflow-x: hidden;
             }
 
             body {

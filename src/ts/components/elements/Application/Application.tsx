@@ -20,6 +20,8 @@ export type ApplicationState = {
     expanded: boolean;
 };
 
+const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
+
 /**
  * Application template to contain information about the donation
  * of a single application
@@ -31,6 +33,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     public state: ApplicationState = {
         expanded: false,
     };
+
+    /**
+     * Specfies whether we're currently running the expand/collapse transition
+     */
+    private isTransitioning: boolean = false;
 
     /** Reference to the div tag with class name description */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
@@ -326,7 +333,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Prepare expand-collapse functionality */
                         height: 0;
                         overflow: hidden;
-                        transition: height 0.375s ${ easings.inOutQuart};
+                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION }ms ${ easings.inOutQuart};
 
                         /** Setup font */
                         font-size: 14px;
@@ -378,16 +385,20 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     }
 
     /**
-     * Toggle if element is expanded
+     * Method that'll trigger the transition to expand/collapse the description
+     * of the application
      */
     private toggleCollapsible = () => {
-        this.setState({ expanded: !this.state.expanded });
         const desc = this.descriptionRef.current;
 
-        // Check if null
-        if(!desc) {
+        // If our ref isn't available
+        if(!desc || this.isTransitioning) {
             return;
         }
+
+        // Initialize the transition!
+        this.setState({ expanded: !this.state.expanded });
+        this.isTransitioning = true;
 
         // Start by locking the height of the content wrapper to the full
         // height of the content
@@ -405,8 +416,13 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
             // ended to allow responsively adjusting to size changes
             setTimeout(() => {
                 desc.style.height = "auto";
-            }, 375);
+            }, EXPAND_COLLAPSE_TRANSITION_DURATION);
         }
+
+        // Once the transition is complety, specify that we're ready for a new transition
+        setTimeout(() => {
+            this.isTransitioning = false;
+        }, EXPAND_COLLAPSE_TRANSITION_DURATION);
     }
 
     /**
