@@ -79,8 +79,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      * Main render method, used to render Application
      */
 	public render(): JSX.Element {
-        const { application } = this.props;
-
 		return (
 			<React.Fragment>
                 <div className="application-border" ref={ this.borderRef }>
@@ -90,9 +88,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             { this.renderContentSection() }
                         </div>
 
-                        <div className="button-wrapper">
-                            <Button text={`Donate $${application.price}`} />
-                        </div>
+                        { this.renderDonateButton() }
+
+                        { this.state.isSmall && (
+                            this.renderMotivationTeaser()
+                        )}
 
                         { this.renderChevron() }
                     </div>
@@ -195,14 +195,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         position: relative;
                         z-index: 2;
 					}
-
-                    .button-wrapper {
-                        /** Position the donate button in the top right corner */
-                        position: absolute;
-                        right: 0;
-                        top: 0;
-                        z-index: 10;
-                    }
 				`}</style>
 			</React.Fragment>
 		);
@@ -275,11 +267,13 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private renderContentSection = () => {
         const { application } = this.props;
 
+        console.log(this.state.isSmall);
+
         return (
             <section className="section-content">
-                <h2 className="product" title={application.product}>{application.amount} {application.product}</h2>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
 
-                { true && (
+                { !this.state.isSmall && (
                     this.renderMotivationTeaser()
                 )}
 
@@ -311,6 +305,12 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         overflow: hidden;
                         max-width: calc(100% - 150px);
 
+                        /** When mobile size, force product text to one line */
+                        &.isSmall {
+                            -webkit-line-clamp: 1;
+                            max-width: 100%;
+                        }
+
                         /**
                          * Enforce maximum dimensions to keep the product
                          * away from other content such as buttons
@@ -324,14 +324,15 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     }
 
     /**
-     * something hhahaha
+     * Internal renderer that renders the motivation teaser section of the
+     * application
      */
     private renderMotivationTeaser = () => {
         const { application } = this.props;
 
         return (
             <span
-                className="motivation__teaser"
+                className={`motivation__teaser ${this.state.isSmall ? "isSmall" : ""}`}
                 style={{
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
@@ -358,13 +359,23 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Prepare transitions */
                         transition: opacity 0.15s linear;
+
+                        /**
+                        *   When mobile size, motivation teaser is positioned
+                        *   at the bottom
+                        */
+                        &.isSmall {
+                            position: relative;
+                            display: block;
+                            max-width: calc(100% - 60px);
+
+                            margin-top: 8px;
+                            margin-left: 12px;
+                        }
                     }
                 `}</style>
             </span>
         );
-
-
-
     }
 
     /**
@@ -429,8 +440,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
     private renderChevron = () => {
         return (
-            <i className="chevron-wrapper" onClick={this.toggleCollapsible}>
-                <Chevron size={20} lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
+            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible}>
+                <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
                     /** The wrapper around the chevron arrow */
@@ -453,12 +464,48 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Position on top of other content */
                         z-index: 10;
 
+                        /** When mobile size, make chevron smaller */
+                        &.isSmall {
+                            height: 15px;
+                            width: 21px;
+                        }
+
                         &:hover {
                             color: ${ colors.secondary };
                         }
                     }
                 `}</style>
             </i>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the donate button of the application
+     */
+    private renderDonateButton = () => {
+        const { application } = this.props;
+
+        return(
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <Button text={`Donate $${application.price}`} />
+
+                <style jsx>{`
+                    .button-wrapper {
+                        /** Position the donate button in the top right corner */
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        z-index: 10;
+
+                        /** When mobile size, position button in the middle */
+                        &.isSmall {
+                            left: 100px;
+                            top: 40px;
+                            right: unset;
+                        }
+                    }
+                `}</style>
+            </div>
         );
     }
 
