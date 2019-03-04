@@ -70,7 +70,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
 	public render(): JSX.Element {
         const { application } = this.props;
-
+    
 		return (
 			<React.Fragment>
                 <div className="application-border" ref={ this.borderRef }>
@@ -78,7 +78,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         <div className="sections">
                             <section className="section-user">
                                 <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
-                                <img className="flag" src={process.env.PUBLIC_URL} />
+                                <img className="flag" src={`${process.env.PUBLIC_URL}/flags/${application.countryCode.toLowerCase()}.svg`} />
                                 <div className="name">{ this.nameEstimator() }</div>
                             </section>
 
