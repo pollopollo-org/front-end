@@ -87,6 +87,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         { this.renderDonateButton() }
 
+                        { this.state.isSmall && (
+                            this.renderMotivationTeaser() 
+                        )}
+
                         { this.renderChevron() }
                     </div>
                     { this.renderMotivation() }
@@ -320,7 +324,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         return (
             <span
-                className="motivation__teaser"
+                className={`motivation__teaser ${this.state.isSmall ? "isSmall" : ""}`}
                 style={{
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
@@ -345,6 +349,15 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Prepare transitions */
                         transition: opacity 0.15s linear;
+
+                        &.isSmall {
+                            position: relative;
+                            display: block;
+                            max-width: calc(100% - 60px);
+                            
+                            margin-top: 8px;
+                            margin-left: 12px;
+                        }
                     }
                 `}</style>
             </span>
@@ -394,8 +407,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
     private renderChevron = () => {
         return (
-            <i className="chevron-wrapper" onClick={this.toggleCollapsible}>
-                <Chevron size={20} lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
+            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible}>
+                <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
                     /** The wrapper around the chevron arrow */
@@ -417,6 +430,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Position on top of other content */
                         z-index: 10;
+
+                        &.isSmall {
+                            height: 15px;
+                            width: 21px;
+                        }
                     }
                 `}</style>
             </i>
@@ -444,6 +462,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         &.isSmall {
                             left: 100px;
                             top: 40px;
+                            right: unset;
                         }
                     }
                 `}</style>

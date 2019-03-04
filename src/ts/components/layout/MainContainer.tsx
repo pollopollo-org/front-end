@@ -30,6 +30,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
 
                         /** Setup a max-width to avoid unnecessarily large items */
                         max-width: 1160px;
+                        width: 100%;
                         margin: 0 auto;
 
                         @media (max-width: 768px) {
