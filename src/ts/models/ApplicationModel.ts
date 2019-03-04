@@ -1,5 +1,8 @@
 import { DataProviders } from "../store/Store";
 
+import Countries from "../../assets/countries.json";
+import { CountryCodes } from "./CountryCodes";
+
 /**
  * Defines the data required to create an application model.
  *
@@ -8,7 +11,7 @@ import { DataProviders } from "../store/Store";
 // tslint:disable completed-docs
 type ApplicationModelData = {
     amount: number;
-    country: string;
+    country: CountryCodes;
     motivation: string;
     name: string;
     price: number;
@@ -26,19 +29,19 @@ export class ApplicationModel {
      */
     public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ApplicationModel[]> {
         if (dataProivder === DataProviders.BACKEND) {
-            const data = await import("../../assets/dummy/application.json");
+            const data = Array.from((await import("../../assets/dummy/application.json")).default) as ApplicationModelData[];
             const applications = [];
 
-            for (const application of Array.from(data.default)) {
+            for (const application of data) {
                 applications.push(new ApplicationModel(application));
             }
 
             return applications;
         } else {
-            const data = await import("../../assets/dummy/application.json");
+            const data = Array.from((await import("../../assets/dummy/application.json")).default) as ApplicationModelData[];
             const applications = [];
 
-            for (const application of Array.from(data.default)) {
+            for (const application of data) {
                 applications.push(new ApplicationModel(application));
             }
 
@@ -68,7 +71,12 @@ export class ApplicationModel {
     public readonly amount: number;
 
     /**
-     * Defines the country the applicant is coming from
+     * Defines the countryCode of the country that applicant is coming from
+     */
+    public readonly countryCode: CountryCodes;
+
+    /**
+     * Defines the country that the applicant is coming from.
      */
     public readonly country: string;
 
@@ -100,8 +108,18 @@ export class ApplicationModel {
     public readonly thumbnail: string;
 
     constructor(data: ApplicationModelData) {
+        // Parse the country from the supplied countryCode
+        const country = Countries.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
+
+        if (!country) {
+            console.warn("Unable to find country from countryCode!");
+            this.country = "";
+        } else {
+            this.country = country.Name;
+        }
+
         this.amount = data.amount;
-        this.country = data.country;
+        this.countryCode = data.country;
         this.motivation = data.motivation;
         this.name = data.name;
         this.price = data.price;
