@@ -1,7 +1,7 @@
 import React from "react";
 import { colors } from "src/ts/config/colors";
 
-import footer from "../../../../assets/data/footer.json";
+import footer from "src/assets/data/footer.json";
 
 /**
  * Footer to be placed at the bottom of all pages

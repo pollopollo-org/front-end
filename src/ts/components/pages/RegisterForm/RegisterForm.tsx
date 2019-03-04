@@ -1,4 +1,6 @@
 import React from "react";
+import registerForm from "src/assets/data/registerForm.json"
+import { colors } from "src/ts/config/colors";
 
 /**
  * A page where the user can register for the project
@@ -18,23 +20,23 @@ export class RegisterForm extends React.PureComponent{
         return(
             <div className="allSection">
 
-                <h1 className="headerText">Register as new user</h1>
+                <h1 className="headerText">{registerForm.title}</h1>
                 <div>
                     <div className="section">
-                        <input className="nameInput" placeholder="Name"/>
-                        <input className="countryInput" placeholder="Country"/>
+                        <input className="nameInput" placeholder={registerForm.name}/>
+                        <input className="countryInput" placeholder={registerForm.country}/>
                     </div>
                     <div className="section">
-                        <input className="emailInput" placeholder="Email"/>
+                        <input className="emailInput" placeholder={registerForm.email}/>
                     </div>
                     <div className="section">
-                        <input type="password" className="firstPasswordInput" placeholder="Password"/>
-                        <input type="password" className="secondPasswordInput" placeholder="Confirm password"/>
+                        <input type="password" className="firstPasswordInput" placeholder={registerForm.password}/>
+                        <input type="password" className="secondPasswordInput" placeholder={registerForm.confirmPassword}/>
                     </div>
                     <div>
                         <div className="section">
-                            <input type="radio" className="userType" name="userType" value="producer" onClick={this.setState}/><label>I am a producer</label>
-                            <input type="radio" className="userType" name="userType" value="receiver"/><label>I am a receiver</label>
+                            <input type="radio" className="userType" name="userType" value="producer" onClick={this.setState}/><label>{registerForm.producer}</label>
+                            <input type="radio" className="userType" name="userType" value="receiver"/><label>{registerForm.reciever}</label>
                         </div>
                     </div>
                     <div className="conditionalSection">
@@ -46,7 +48,7 @@ export class RegisterForm extends React.PureComponent{
 
                 <style jsx>{`
                     .headerText{
-                        color: #8C489F;
+                        color: ${colors.secondaryColor};
                         margin: 30px auto;
                     }
 
@@ -74,7 +76,7 @@ export class RegisterForm extends React.PureComponent{
                     label{
                         font-size: 20px;
                         margin-right: 30px;
-                        color: #443266;
+                        color: ${colors.primaryColor};
                     }
 
                     .allSection{
