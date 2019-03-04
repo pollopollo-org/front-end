@@ -29,7 +29,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      * State of the component
      */
     public state: ApplicationState = {
-        expanded: true
+        expanded: false,
     };
 
     /** Reference to the div tag with class name description */
@@ -52,7 +52,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
             return;
         }
 
-        if (!this.state.expanded){
+        if (this.state.expanded){
             desc.style.maxHeight = null;
         } else {
             desc.style.maxHeight = desc.scrollHeight + "px";
@@ -82,14 +82,26 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                                 <div className="name">{ this.nameEstimator() }</div>
                             </section>
 
-                            <section className="section-donate">
-                                <div className="product" title={ application.product }>{ application.amount } { application.product }</div>
-                                <Button text={ "Donate $" + application.price }   />
+                            <section className="section-content">
+                                <span className="product" title={application.product}>{application.amount} {application.product}</span>
+                                <span
+                                    className="motivation__teaser"
+                                    style={{
+                                        opacity: this.state.expanded ? 0 : 0.6,
+                                        userSelect: this.state.expanded ? "none" : "text",
+                                    }}
+                                >
+                                    {application.motivation}
+                                </span>
                             </section>
                         </div>
 
+                        <div className="button-wrapper">
+                            <Button text={"Donate $" + application.price} />
+                        </div>
+
                         <i className="chevron-wrapper" onClick={this.toggleCollapsible}>
-                            <Chevron size={20} lineWidthRatio={0.5} inversed={!this.state.expanded} vertical={true} />
+                            <Chevron size={20} lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
                         </i>
                     </div>
 
@@ -160,7 +172,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Setup hover styling */
                         &:hover {
-                            transform: scale(1.005);
                             box-shadow: 0 0 5px rgba(139,72,156, 0.15);
                             border-color: ${ colors.secondary };
                         }
@@ -186,35 +197,33 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         }
                     }
 
+                    /** The application itself  */
                     .application {
                         position: relative;
+                        overflow: hidden;
                     }
 
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
+                        /** Display sections alongside each other */
                         margin: 0 0 0 10px;
                         display: flex;
                         flex-direction: row;
 
+                        /** Position on top of hover pseudo element */
                         position: relative;
                         z-index: 2;
 					}
 
-                    /** Shown when the collapsible is expanded */
-                    .description {
-                        max-height: 0;
+                    .section-content {
+                        /* Allow the content section to fill as much as possible */
+                        flex-grow: 1;
                         overflow: hidden;
-                        transition: max-height 0.375s ${ easings.inOutQuart };
-                    }
-
-                    /** Placement styling */
-                    .description-content {
-                        margin: 10px;
-                        border-top: 1px solid ${colors.secondary};
                     }
 
                     /** Placing the thumbnail and users name */
                     .section-user {
+                        /** Display name and text on top of each other */
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
@@ -222,21 +231,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Fixed size to align the the elements */
                         min-width: 75px;
+                        flex-shrink: 0;
 
                         /** Margin between this and the next section */
                         margin-right: 20px;
-                    }
-
-                    /**  */
-                    .section-donate {
-                        font-size: 130%;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-
-                        overflow: hidden;
-
-                        padding: 5px;
                     }
 
                     /**
@@ -244,15 +242,36 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     *   the limits set by max-width
                     */
                     .product {
-                        display: inline-block;
-                        width: 100%;
-                        white-space: nowrap;
-
-                        overflow: hidden;
+                        /** Setup font */
+                        font-size: 18px;
                         line-height: 1.3em;
 
-                        margin-top: -0.15em;
+                        /**
+                         * Force product to be at max two lines
+                         */
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        max-width: calc(100% - 150px);
+
+                        /**
+                         * Enforce maximum dimensions to keep the product
+                         * away from other content such as buttons
+                         */
+                        overflow: hidden;
+                        max-height: calc(18px * 2 * 1.3 + 0.25em);
+                    }
+
+                    .motivation__teaser {
+                        /** Position the teaser on the bottom of the content section */
+                        position: absolute;
+                        bottom: 0;
+
                         text-overflow: ellipsis;
+                        overflow: hidden;
+                        max-width: calc(100% - 160px);
+                        font-size: 12px;
                     }
 
                     /** Thumbnail img in the .section-user */
@@ -283,20 +302,59 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         font-size: 12px;
                     }
 
+                    .button-wrapper {
+                        /** Position the donate button in the top right corner */
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        z-index: 10;
+                    }
+
+                    .motivation__teaser {
+                        /** Display the motivation teaser on one line */
+                        white-space: nowrap;
+
+                        /** Prepare transitions */
+                        transition: opacity 0.15s linear;
+                    }
+
                     /** The wrapper around the chevron arrow */
                     .chevron-wrapper {
+                        /** Position chevron properly */
                         position: absolute;
 
                         /** Placing the chevron so it lines up with the other elements */
                         bottom: 5px;
                         right: 10px;
 
+                        /** Specify dimensions of chevron within */
                         display: block;
-                        width: 28px;
+                        width: 30px;
                         height: 20px;
 
+                        /** Indicate that chevron is clickable */
                         cursor: pointer;
+
+                        /** Position on top of other content */
                         z-index: 10;
+                    }
+
+                    /** Shown when the collapsible is expanded */
+                    .description {
+                        /** Prepare expand-collapse functionality */
+                        max-height: 0;
+                        overflow: hidden;
+                        transition: max-height 0.375s ${ easings.inOutQuart };
+
+                        /** Setup font */
+                        font-size: 14px;
+                        line-height: 1.5em;
+                    }
+
+                    /** Placement styling */
+                    .description-content {
+                        margin: 10px;
+                        border-top: 1px solid ${colors.secondary};
                     }
 
                     i:hover {

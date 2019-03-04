@@ -37,10 +37,14 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
 
                 <style jsx>{`
                     h1{
+                        /** Override defaults */
+                        margin: 0;
+
+                        /** Setup font */
                         font-family: ${ fonts.heading };
                         font-weight: 500;
-                        margin: 0;
                         line-height: 1;
+                        margin-bottom: 10px;
                     }
 
                     .list-of-applications {
