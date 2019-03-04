@@ -40,7 +40,7 @@ export class App extends React.PureComponent<{}, AppState> {
 		// moving on to render the actual page
 		const [store] = await Promise.all([
 			createStore(),
-			asyncTimeout(30000),
+			asyncTimeout(300),
 		]);
 
 		this.onAppReady(store);

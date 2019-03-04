@@ -17,9 +17,9 @@ export const createStore = () => {
             try {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
-                const application = await ApplicationModel.CREATE(DataProviders.DUMMY);
+                const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
 
-                resolve(new Store({application}));
+                resolve(new Store({applications}));
             } catch (err) {
                 reject(err);
             }

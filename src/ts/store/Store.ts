@@ -17,7 +17,7 @@ export enum DataProviders {
  */
 // tslint:disable completed-docs
 type StoreArgs = {
-    application: ApplicationModel;
+    applications: ApplicationModel[];
 }
 // tslint:enable completed-docs
 
@@ -32,7 +32,7 @@ export class Store {
      * Contains a reference to the ApplicationModel, which contains fetched data
      * about an application.
      */
-    public readonly application: ApplicationModel;
+    public readonly applications: ApplicationModel[];
 
     /**
      * Specifies the application has managed to fully render itself yet.
@@ -43,6 +43,6 @@ export class Store {
     public didMount: boolean = false;
 
     constructor(initial: StoreArgs) {
-        this.application = initial.application;
+        this.applications = initial.applications;
     }
 }

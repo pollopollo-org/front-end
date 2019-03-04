@@ -19,10 +19,10 @@ export const Button: React.SFC<ButtonProps> = ({ text }) => {
                     background-color: ${ colors.secondary };
                     color: ${ colors.white };
                     border: none;
-                    border-radius: 12px;
-                    padding: 12px 15px;
+                    padding: 10px 25px;
                     transition: background-color 0.1s linear;
                     font-size: 12px;
+                    cursor: pointer;
                 }
 
                 button:hover {

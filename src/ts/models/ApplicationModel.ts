@@ -24,16 +24,41 @@ export class ApplicationModel {
     /**
      * Helper that instantiates a dummy model, populated with required data.
      */
+    public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ApplicationModel[]> {
+        if (dataProivder === DataProviders.BACKEND) {
+            const data = await import("../../assets/dummy/application.json");
+            const applications = [];
+
+            for (const application of Array.from(data.default)) {
+                applications.push(new ApplicationModel(application));
+            }
+
+            return applications;
+        } else {
+            const data = await import("../../assets/dummy/application.json");
+            const applications = [];
+
+            for (const application of Array.from(data.default)) {
+                applications.push(new ApplicationModel(application));
+            }
+
+            return applications;
+        }
+    }
+
+    /**
+     * Helper that instantiates a dummy model, populated with required data.
+     */
     public static async CREATE(dataProivder: DataProviders): Promise<ApplicationModel> {
         if (dataProivder === DataProviders.BACKEND) {
             const data = await import("../../assets/dummy/application.json");
 
             // Actually fetch data from backend.. :-)
-            return new ApplicationModel(data);
+            return new ApplicationModel(data[0]);
         } else {
             const data = await import("../../assets/dummy/application.json");
 
-            return new ApplicationModel(data);
+            return new ApplicationModel(data[0]);
         }
     }
 
