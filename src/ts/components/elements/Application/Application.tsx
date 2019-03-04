@@ -435,6 +435,9 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             height: 15px;
                             width: 21px;
                         }
+                        &:hover {
+                            color: ${ colors.secondary };
+                        }
                     }
                 `}</style>
             </i>
