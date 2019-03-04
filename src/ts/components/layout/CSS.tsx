@@ -17,30 +17,54 @@ export const CSS: React.SFC = () => (
 
                 /** Fill up the viewport */
                 box-sizing: border-box;
-                min-width: 100%;
-                min-height: 100%;
+                width: 100%;
+                height: 100%;
 
-                /** Apply default background color */
-                background-color: #fff;
+                /** We should aspire to never having overflow on the x-axis on the body layer  */
+                overflow-x: hidden;
             }
 
             body {
                 /** Set up basic font */
                 color: ${ colors.black };
-                font-family: ${ fonts.tempFont };
+                font-family: ${ fonts.text };
                 font-size: 16px;
                 line-height: 1em;
+                transition: background-color 0.2s linear;
+
+                /** Apply custom scrollbar styling */
+                & ::-webkit-scrollbar {
+                    width: 3px;
+                }
+
+                & ::-webkit-scrollbar-track {
+                    background: rgba(56, 56, 56, 0.1);
+                }
+
+                & ::-webkit-scrollbar-thumb {
+                    background: ${ colors.black };
+                }
             }
 
             h1 {
-                font-size: 30px;
-                color: ${ colors.primaryColor };
+                font-size: 2em;
+            }
+
+            h4 {
+                font-family: ${ fonts.heading };
+                font-weight: 400;
+            }
+
+            p {
+                font-family: ${ fonts.text };
+                font-weight: 300;
             }
 
             #root {
                 /** Fill up the viewport */
                 width: 100%;
                 height: 100%;
+                min-height: 100vh;
 
                 /** Use flexbox inside on the y-axis */
                 display: flex;

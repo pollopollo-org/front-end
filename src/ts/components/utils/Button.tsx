@@ -1,14 +1,18 @@
 import React from "react";
 
+import { fonts } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
 
 type ButtonProps = {
     /**
-     * Temp Sif  
+     * The text to appear on the button
      */
     text: string;
 };
 
+/**
+ * Styled button to be used instead of html button tag
+ */
 export const Button: React.SFC<ButtonProps> = ({ text }) => {
     return (
         <div>
@@ -16,17 +20,21 @@ export const Button: React.SFC<ButtonProps> = ({ text }) => {
 
 		    <style jsx>{`
                 button {
-                    background-color: ${ colors.secondaryColor };
+                    width: 110px;
+                    background-color: ${ colors.secondary };
                     color: ${ colors.white };
                     border: none;
-                    border-radius: 12px;
-                    padding: 12px 15px;
+                    border-radius: 2px;
+                    padding: 10px 5px;
                     transition: background-color 0.1s linear;
                     font-size: 12px;
+                    font-family: ${ fonts.text };
+                    font-weight: 300;
+                    cursor: pointer;
                 }
 
                 button:hover {
-                    background-color: ${ colors.primaryColor };
+                    background-color: ${ colors.primary };
                 }
 			`}</style>
 		</div>

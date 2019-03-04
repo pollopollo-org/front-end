@@ -2,7 +2,7 @@ import React from "react";
 
 import { getSVG } from "src/assets/svg";
 
-import { colors } from "../config/colors";
+import { colors } from "../../config/colors";
 
 type ThrobberProps = {
     /**
@@ -65,18 +65,15 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                         bottom: 0;
 
                         /** Render the actual circle */
-                        border: 8px solid ${ colors.white };
+                        border: 8px solid ${colors.pale};
                         border-radius: 50%;
 
                         /**
                          * Color parts of the circle in another color to
                          * make rotation visible
-                         * 
+                         *
                          */
-                        border-left-color: ${colors.primaryColor};
-                        border-top-color: #D1B7D9; 
-                        border-right-color: #D1B7D9;  
-                        border-bottom-color: #D1B7D9;
+                        border-left-color: ${colors.primary};
 
                         /** Visually indicate that things are happening! */
                         animation: spin 0.9s linear infinite;

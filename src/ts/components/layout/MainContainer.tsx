@@ -1,60 +1,48 @@
-import { observer } from "mobx-react";
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
 import { routes } from "src/ts/config/routes";
-import { injectStore } from "src/ts/store/injectStore";
-import { Store } from "src/ts/store/Store";
 
-import { Throbber } from "src/ts/utils";
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
 
-
-type MainContainerProps = {
-    /**
-     * Contains a reference to the root store.
-     */
-    store: Store;
-}
 
 /**
  * The main container is responsible for wrapper all pages within it, while also
  * taking care of routing.
  */
-@observer
-class UnwrappedMainContainer extends React.Component<MainContainerProps> {
+export class UnwrappedMainContainer extends React.PureComponent<RouteComponentProps> {
     /**
      * Main render method
      */
     public render(): JSX.Element {
-        const { dummy } = this.props.store;
-
         return (
-            <div>
-                <main>
-                    {/*
-                    <p>Title: {dummy.title}</p>
-                    <p>UserId: {dummy.userId}</p>*/}
-                    <p>Counter from store: {dummy.incrementingValue}</p>
-                    
-                    <Throbber/>
-
-                    <Switch>
-                        <Route exact path={routes.root} component={FrontPage} />
-                        <Route exact path={routes.register} component={RegisterForm} />
-                    </Switch>
-                </main>
+            <main>
+                <Switch>
+                    <Route exact path={routes.root} component={FrontPage} />
+                    <Route exact path={routes.register} component={RegisterForm} />
+                </Switch>
 
                 <style jsx>{`
                     main {
-                        margin: 5%;
+                        height: auto;
+                        min-height: calc(100% - 200px);
+                        padding: 60px 30px 0;
+
+                        /** Setup a max-width to avoid unnecessarily large items */
+                        max-width: 1160px;
+                        width: 100%;
                         margin: 0 auto;
+
+                        @media (max-width: 1100px) {
+                            padding: 60px 0 0;
+                            min-height: unset;
+                        }
                     }
                 `}</style>
-            </div>
+            </main>
         );
     }
 }
 
-export const MainContainer = injectStore((store) => ({store}), UnwrappedMainContainer);
+export const MainContainer = withRouter(UnwrappedMainContainer);

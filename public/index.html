@@ -1,35 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#443266">
-    <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-    -->
-    <link rel="apple-touch-icon" sizes="57x57" href="%PUBLIC_URL%/icons/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="%PUBLIC_URL%/icons/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="%PUBLIC_URL%/icons/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="%PUBLIC_URL%/icons/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="%PUBLIC_URL%/icons/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="%PUBLIC_URL%/icons/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="%PUBLIC_URL%/icons/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/icons/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/icons/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/icons/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="%PUBLIC_URL%/icons/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/icons/favicon-16x16.png">
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <meta name="msapplication-TileColor" content="#443266">
-    <meta name="msapplication-TileImage" content="%PUBLIC_URL%/icons/ms-icon-144x144.png">
-    <title>PolloPollo</title>
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root"></div>
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#443266">
+        <!--
+        manifest.json provides metadata used when your web app is added to the
+        homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+        -->
+        <link rel="apple-touch-icon" sizes="57x57" href="%PUBLIC_URL%/icons/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="%PUBLIC_URL%/icons/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="%PUBLIC_URL%/icons/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="%PUBLIC_URL%/icons/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="%PUBLIC_URL%/icons/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="%PUBLIC_URL%/icons/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="%PUBLIC_URL%/icons/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/icons/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/icons/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="%PUBLIC_URL%/icons/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="%PUBLIC_URL%/icons/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/icons/favicon-16x16.png">
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+        <meta name="msapplication-TileColor" content="#443266">
+        <meta name="msapplication-TileImage" content="%PUBLIC_URL%/icons/ms-icon-144x144.png">
+        <link href="https://fonts.googleapis.com/css?family=Cabin:500|Lato:300,400" rel="stylesheet">
+        <title>PolloPollo</title>
+        <style>
+            body {
+                background: #f7f7f7;
+            }
+            .initial-throbber {
+                position: absolute;
+                left: calc(50% - 128px * 4.349571858);
+                top: calc(50% - 128px);
+                display: block;
+                width: calc(256px * 4.349571858);
+                height: 256px;
+                transform: scale(0.5);
+                transition: opacity 0.2s linear, transform 0.28s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+
+            .initial-throbber--exiting {
+                opacity: 0;
+                transform: scale(0.475);
+            }
+
+            .initial-throbber__throbber {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 256px;
+                height: 256px;
+            }
+
+            .initial-throbber__throbber::before {
+                content: "";
+                position: absolute;
+                top: -1px;
+                left: -1px;
+                right: -1px;
+                bottom: -1px;
+                border: 8.5px solid #DBD0EF;
+                border-radius: 50%;
+                border-left-color: #443266;
+                animation: spin 0.9s linear infinite;
+                transform: opacity 0.2s linear;
+            }
+
+            .initial-throbber__logo--small {
+                display: none;
+            }
+
+            @media (max-width: 768px) {
+                .initial-throbber {
+                    left: calc(50% - 128px);
+                    width: 256px;
+                }
+                .initial-throbber__logo--large {
+                    display: none;
+                }
+
+                .initial-throbber__logo--small {
+                    display: block;
+                }
+            }
+
+            @keyframes spin {
+                from { transform: rotate(0); }
+                to { transform: rotate(360deg); }
+            }
+        </style>
+    </head>
+    <body>
+        <noscript>
+        You need to enable JavaScript to run this app.
+        </noscript>
+        <div id="root"></div>
+        <span class="initial-throbber">
+            <span class="initial-throbber__throbber"></span>
+            <i class="initial-throbber__logo--large">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375.89 86.42">
+                    <defs>
+                        <style>
+                            .cls-1 {
+                                fill: #443266;
+                            }
+
+                            .cls-2 {
+                                fill: #8c489f;
+                            }
+                        </style>
+                    </defs>
+                    <title>logo</title>
+                    <g id="_Group_" data-name="&lt;Group&gt;">
+                        <g id="_Group_2" data-name="&lt;Group&gt;">
+                            <path id="_Compound_Path_" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M121.08,49h-8v8.34h-5.34V29c4.45,0,8.9,0,13.36,0C134.93,29,135,49,121.08,49Zm-8-4.9h8c6.84,0,6.8-10,0-10h-8Z" />
+                            <path id="_Compound_Path_2" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M163,43.33C162.87,50.66,158.37,58,148.41,58s-14.58-7.17-14.58-14.62,4.78-14.94,14.58-14.94S163,35.92,163,43.33Zm-23.85.12c.12,4.66,2.63,9.64,9.31,9.64s9.19-5,9.27-9.68-2.59-10.12-9.27-10.12S139,38.67,139.1,43.45Z" />
+                            <path id="_Compound_Path_3" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M172.22,29V52.4H186.8v4.94H166.87V29Z" />
+                            <path id="_Compound_Path_4" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M195.91,29V52.4h14.57v4.94H190.56V29Z" />
+                            <path id="_Compound_Path_5" data-name="&lt;Compound Path&gt;" class="cls-1"
+                                d="M241.26,43.33C241.18,50.66,236.68,58,226.72,58s-14.58-7.17-14.58-14.62,4.78-14.94,14.58-14.94S241.34,35.92,241.26,43.33Zm-23.85.12c.12,4.66,2.63,9.64,9.31,9.64s9.19-5,9.28-9.68-2.6-10.12-9.28-10.12S217.29,38.67,217.41,43.45Z" />
+                            <g id="_Group_3" data-name="&lt;Group&gt;">
+                                <g id="_Group_4" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_6" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M248,47.54v9.8h-2.19V29h12.43c12.31,0,12.31,18.54,0,18.54ZM248,31V45.56h10.24c9.44,0,9.44-14.54,0-14.54Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_5" data-name="&lt;Group&gt;">
+                                <g id="_Group_6" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_7" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M299.65,43.21c0,7.45-4.78,14.62-14.3,14.62s-14.29-7.21-14.29-14.7,4.74-14.58,14.29-14.58S299.69,35.56,299.65,43.21Zm-26.45,0c.05,6.4,4.09,12.63,12.15,12.63s12.19-6.23,12.19-12.63c0-6.56-4.05-12.59-12.19-12.59S273.16,36.49,273.2,43.17Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_7" data-name="&lt;Group&gt;">
+                                <g id="_Group_8" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_8" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M307,29V55.28h16v2.06H304.83V29Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_9" data-name="&lt;Group&gt;">
+                                <g id="_Group_10" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_9" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M329.28,29V55.28h16v2.06H327.1V29Z" />
+                                </g>
+                            </g>
+                            <g id="_Group_11" data-name="&lt;Group&gt;">
+                                <g id="_Group_12" data-name="&lt;Group&gt;">
+                                    <path id="_Compound_Path_10" data-name="&lt;Compound Path&gt;" class="cls-2"
+                                        d="M375.89,43.21c0,7.45-4.77,14.62-14.29,14.62s-14.3-7.21-14.3-14.7S352,28.55,361.6,28.55,375.93,35.56,375.89,43.21Zm-26.44,0c0,6.4,4.09,12.63,12.15,12.63s12.19-6.23,12.19-12.63c0-6.56-4.05-12.59-12.19-12.59S349.41,36.49,349.45,43.17Z" />
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <g id="_Group_13" data-name="&lt;Group&gt;">
+                        <g id="_Group_14" data-name="&lt;Group&gt;">
+                            <path id="_Path_" data-name="&lt;Path&gt;" class="cls-2"
+                                d="M62.12,54.55a30,30,0,0,0,2.35-9.15C62.4,50.32,60.13,55.05,55,57.49l-.16-.14c1.15-1.15,2.34-2.26,3.44-3.45a21.59,21.59,0,0,0,5.1-8.47,9.26,9.26,0,0,0,.29-4.53c-.44,1.38-.81,2.62-1.24,3.84a23.53,23.53,0,0,1-4.27,7.77,9.32,9.32,0,0,1-4.7,3.15C58.6,51.74,61.85,46.77,62,40.1c-1.84,5.44-4,10.66-9.29,13.74,4.54-4.7,8.2-9.77,7.42-16.82-.39,6.45-3.66,11.23-8.63,15a33,33,0,0,0,5.88-8.84,13.06,13.06,0,0,0,1.17-6.58,5.9,5.9,0,0,0-1.09-2.86,3.6,3.6,0,0,0-3.92-1.4,9.26,9.26,0,0,0-3.1,1.28,4.07,4.07,0,0,1-.66.33c1.93-1.91,4-3.64,6.7-4.34a7.32,7.32,0,0,1,8.31,4,17.42,17.42,0,0,1,1.14,9.44A33.14,33.14,0,0,1,62.12,54.55Z" />
+                            <path id="_Path_2" data-name="&lt;Path&gt;" class="cls-2"
+                                d="M27.86,43.67A15.79,15.79,0,0,1,23.94,37a7.34,7.34,0,0,1,4.88-8.51,18.63,18.63,0,0,1,10.49-.09,35.8,35.8,0,0,1,9.62,4,.45.45,0,0,1,.18.22,27.49,27.49,0,0,0-8.69-2.85A35.93,35.93,0,0,1,47,33.81,12.46,12.46,0,0,1,51.48,40a49,49,0,0,0-4.1-4.42A19.48,19.48,0,0,0,39,30.41a8.46,8.46,0,0,0-3.37-.23c1.45.58,2.76,1.05,4,1.61a22.86,22.86,0,0,1,7.42,4.85,11.11,11.11,0,0,1,2.26,3.28,2.63,2.63,0,0,1,.29,1.23c-3.68-5.47-8.57-8.93-15.29-9.42A35.81,35.81,0,0,1,42,35.51a15.18,15.18,0,0,1,5.68,6.26c-1.12-1-2.07-2.15-3.19-3.14a19.44,19.44,0,0,0-10.4-5.19,12,12,0,0,0-2.24,0,.41.41,0,0,0-.44.19,17,17,0,0,1,8.37,3A22,22,0,0,1,46,43a46.32,46.32,0,0,0-4.2-3.72c-2.87-2.18-5.93-4-9.62-4.28a6.69,6.69,0,0,0-3.5.59,3.66,3.66,0,0,0-2.23,4.05A12.25,12.25,0,0,0,27.86,43.67Z" />
+                            <path id="_Path_3" data-name="&lt;Path&gt;" class="cls-2"
+                                d="M42.51,59.34c-5.23-3.66-7.59-10.22-7.68-15.44.11.38.22.75.32,1.13l.35,1.22a26.87,26.87,0,0,0,4,8.24,11.11,11.11,0,0,0,4.79,4,4.43,4.43,0,0,0,4.25-.13,4.54,4.54,0,0,0,1.8-2.77,13.07,13.07,0,0,0,.38-3.09c.95,3.4.8,7.59-1.13,9.92A7.22,7.22,0,0,1,42.34,65c-3.8-.72-6.84-2.86-9.54-5.53a35.44,35.44,0,0,1-5.49-7.17.62.62,0,0,1-.09-.34A29.47,29.47,0,0,0,33,58.22c-2.87-4.4-5.51-8.87-4.59-14.44.34,1.56.64,3.14,1.05,4.69,1.11,4.13,2.66,8,6.18,10.75a5.92,5.92,0,0,0,1.47.83c.11-.25-.1-.32-.19-.42a31.05,31.05,0,0,1-5.45-8.3,12.49,12.49,0,0,1-1.13-6.71,3.48,3.48,0,0,1,.4-1.31,21.69,21.69,0,0,0,2.19,9.14A17.12,17.12,0,0,0,39,59.3c-3.6-4.58-6.83-9.3-6.41-15.51a29.52,29.52,0,0,0,3.13,9A14.55,14.55,0,0,0,42.51,59.34Z" />
+                            <path id="_Path_4" data-name="&lt;Path&gt;" class="cls-1"
+                                d="M46.53,77.15a5.3,5.3,0,0,1-6.65-3.69,5.41,5.41,0,1,1,6.65,3.69Z" />
+                            <path id="_Path_5" data-name="&lt;Path&gt;" class="cls-1"
+                                d="M15.64,21.52a5.41,5.41,0,1,1,7.67,7.64,5.41,5.41,0,0,1-7.67-7.64Z" />
+                            <path id="_Path_6" data-name="&lt;Path&gt;" class="cls-1"
+                                d="M71.58,20.4A5.38,5.38,0,1,1,64,28a5.38,5.38,0,1,1,7.61-7.61Z" />
+                        </g>
+                        <path id="_Compound_Path_11" data-name="&lt;Compound Path&gt;" class="cls-1"
+                            d="M43.21,2.46A40.75,40.75,0,1,1,2.46,43.21,40.75,40.75,0,0,1,43.21,2.46m0-2.46A43.21,43.21,0,1,0,86.42,43.21,43.25,43.25,0,0,0,43.21,0Z" />
+                    </g>
+                </svg>
+            </i>
+            <i class="initial-throbber__logo--small">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86.42 86.42">
+                    <defs>
+                        <style>
+                            .cls-1 {
+                                fill: #443266;
+                            }
+
+                            .cls-2 {
+                                fill: #8c489f;
+                            }
+                        </style>
+                    </defs>
+                    <title>logo</title>
+                    <g id="_Group_13" data-name="&lt;Group&gt;">
+                        <g id="_Group_14" data-name="&lt;Group&gt;">
+                            <path id="_Path_" data-name="&lt;Path&gt;" class="cls-2"
+                                d="M62.12,54.55a30,30,0,0,0,2.35-9.15C62.4,50.32,60.13,55.05,55,57.49l-.16-.14c1.15-1.15,2.34-2.26,3.44-3.45a21.59,21.59,0,0,0,5.1-8.47,9.26,9.26,0,0,0,.29-4.53c-.44,1.38-.81,2.62-1.24,3.84a23.53,23.53,0,0,1-4.27,7.77,9.32,9.32,0,0,1-4.7,3.15C58.6,51.74,61.85,46.77,62,40.1c-1.84,5.44-4,10.66-9.29,13.74,4.54-4.7,8.2-9.77,7.42-16.82-.39,6.45-3.66,11.23-8.63,15a33,33,0,0,0,5.88-8.84,13.06,13.06,0,0,0,1.17-6.58,5.9,5.9,0,0,0-1.09-2.86,3.6,3.6,0,0,0-3.92-1.4,9.26,9.26,0,0,0-3.1,1.28,4.07,4.07,0,0,1-.66.33c1.93-1.91,4-3.64,6.7-4.34a7.32,7.32,0,0,1,8.31,4,17.42,17.42,0,0,1,1.14,9.44A33.14,33.14,0,0,1,62.12,54.55Z" />
+                            <path id="_Path_2" data-name="&lt;Path&gt;" class="cls-2"
+                                d="M27.86,43.67A15.79,15.79,0,0,1,23.94,37a7.34,7.34,0,0,1,4.88-8.51,18.63,18.63,0,0,1,10.49-.09,35.8,35.8,0,0,1,9.62,4,.45.45,0,0,1,.18.22,27.49,27.49,0,0,0-8.69-2.85A35.93,35.93,0,0,1,47,33.81,12.46,12.46,0,0,1,51.48,40a49,49,0,0,0-4.1-4.42A19.48,19.48,0,0,0,39,30.41a8.46,8.46,0,0,0-3.37-.23c1.45.58,2.76,1.05,4,1.61a22.86,22.86,0,0,1,7.42,4.85,11.11,11.11,0,0,1,2.26,3.28,2.63,2.63,0,0,1,.29,1.23c-3.68-5.47-8.57-8.93-15.29-9.42A35.81,35.81,0,0,1,42,35.51a15.18,15.18,0,0,1,5.68,6.26c-1.12-1-2.07-2.15-3.19-3.14a19.44,19.44,0,0,0-10.4-5.19,12,12,0,0,0-2.24,0,.41.41,0,0,0-.44.19,17,17,0,0,1,8.37,3A22,22,0,0,1,46,43a46.32,46.32,0,0,0-4.2-3.72c-2.87-2.18-5.93-4-9.62-4.28a6.69,6.69,0,0,0-3.5.59,3.66,3.66,0,0,0-2.23,4.05A12.25,12.25,0,0,0,27.86,43.67Z" />
+                            <path id="_Path_3" data-name="&lt;Path&gt;" class="cls-2"
+                                d="M42.51,59.34c-5.23-3.66-7.59-10.22-7.68-15.44.11.38.22.75.32,1.13l.35,1.22a26.87,26.87,0,0,0,4,8.24,11.11,11.11,0,0,0,4.79,4,4.43,4.43,0,0,0,4.25-.13,4.54,4.54,0,0,0,1.8-2.77,13.07,13.07,0,0,0,.38-3.09c.95,3.4.8,7.59-1.13,9.92A7.22,7.22,0,0,1,42.34,65c-3.8-.72-6.84-2.86-9.54-5.53a35.44,35.44,0,0,1-5.49-7.17.62.62,0,0,1-.09-.34A29.47,29.47,0,0,0,33,58.22c-2.87-4.4-5.51-8.87-4.59-14.44.34,1.56.64,3.14,1.05,4.69,1.11,4.13,2.66,8,6.18,10.75a5.92,5.92,0,0,0,1.47.83c.11-.25-.1-.32-.19-.42a31.05,31.05,0,0,1-5.45-8.3,12.49,12.49,0,0,1-1.13-6.71,3.48,3.48,0,0,1,.4-1.31,21.69,21.69,0,0,0,2.19,9.14A17.12,17.12,0,0,0,39,59.3c-3.6-4.58-6.83-9.3-6.41-15.51a29.52,29.52,0,0,0,3.13,9A14.55,14.55,0,0,0,42.51,59.34Z" />
+                            <path id="_Path_4" data-name="&lt;Path&gt;" class="cls-1"
+                                d="M46.53,77.15a5.3,5.3,0,0,1-6.65-3.69,5.41,5.41,0,1,1,6.65,3.69Z" />
+                            <path id="_Path_5" data-name="&lt;Path&gt;" class="cls-1"
+                                d="M15.64,21.52a5.41,5.41,0,1,1,7.67,7.64,5.41,5.41,0,0,1-7.67-7.64Z" />
+                            <path id="_Path_6" data-name="&lt;Path&gt;" class="cls-1"
+                                d="M71.58,20.4A5.38,5.38,0,1,1,64,28a5.38,5.38,0,1,1,7.61-7.61Z" />
+                        </g>
+                        <path id="_Compound_Path_11" data-name="&lt;Compound Path&gt;" class="cls-1"
+                            d="M43.21,2.46A40.75,40.75,0,1,1,2.46,43.21,40.75,40.75,0,0,1,43.21,2.46m0-2.46A43.21,43.21,0,1,0,86.42,43.21,43.25,43.25,0,0,0,43.21,0Z" />
+                    </g>
+                </svg>
+            </i>
+        </span>
+    </body>
 </html>
