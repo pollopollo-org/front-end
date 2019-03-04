@@ -1,9 +1,5 @@
 # PolloPollo FrontEnd
 
-## Introduction/Motivation
-
-to be written.
-
 ## Build project
 
 To build the PolloPollo frontend you should follow the process below.
@@ -25,9 +21,13 @@ To build the PolloPollo frontend you should follow the process below.
 
 ## Deployment of project
 
-todo..
+To deploy the project then the command `yarn run build` should be executed.
+
+Afterwards the build folder should be uploaded to the server.
 
 ## Architecture of the project
+
+The architecture of the project is described in the subsection below.
 
 ### Static content
 

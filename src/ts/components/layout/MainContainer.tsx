@@ -26,7 +26,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                 <style jsx>{`
                     main {
                         height: auto;
-                        min-height: calc(100% - 200px);
+                        min-height: calc(100% - 299px);
                         padding: 60px 30px 0;
 
                         /** Setup a max-width to avoid unnecessarily large items */
