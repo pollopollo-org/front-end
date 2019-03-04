@@ -24,10 +24,8 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
      * Main render method, used to render Frontpage
      */
     public render() : JSX.Element{
-        console.log(this.props.store.applications);
         return(
             <div>
-
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
                     { this.props.store.applications.map((application, index) => {
@@ -53,6 +51,16 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
 
                         max-height: 600px;
                         overflow-y: auto;
+
+                        /**
+                         * When the viewport gets too small, force rendering
+                         * of applications to fill 100%
+                         */
+                        @media (max-width: 1100px) {
+                            width: 100%;
+                            max-width: 650px;
+                            margin: 0 auto;
+                        }
 
                         /** Apply custom scrollbar styling */
                         & ::-webkit-scrollbar {

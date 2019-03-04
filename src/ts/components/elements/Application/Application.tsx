@@ -18,7 +18,16 @@ export type ApplicationState = {
      * A boolean that tracks whether the application is expanded, and should
      */
     expanded: boolean;
+
+    /**
+     * Specifies whether the application should be rendered to be compatible with
+     * smaller viewports
+     */
+    isSmall: boolean;
 };
+
+const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
+const MOBILE_BREAKPOINT = 440;
 
 /**
  * Application template to contain information about the donation
@@ -30,20 +39,48 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
     public state: ApplicationState = {
         expanded: false,
+        isSmall: false,
     };
+
+    /**
+     * Specfies whether we're currently running the expand/collapse transition
+     */
+    private isTransitioning: boolean = false;
 
     /** Reference to the div tag with class name description */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+    /** Reference to the div tag with class name application-border */
+    private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+    /**
+     * Determine the breakpoint we're currently in as soon as the component mounts,
+     * and prepare for
+     */
+    public componentDidMount(): void {
+        this.determineBreakpoint();
+
+        window.addEventListener("resize", this.determineBreakpoint);
+        window.addEventListener("orientationchange", this.determineBreakpoint);
+    }
+
+    /**
+     * Cleanup on unmount
+     */
+    public componentWillUnmount(): void {
+        window.removeEventListener("resize", this.determineBreakpoint);
+        window.removeEventListener("orientationchange", this.determineBreakpoint);
+    }
 
     /**
      * Main render method, used to render Application
      */
 	public render(): JSX.Element {
         const { application } = this.props;
-    
+
 		return (
 			<React.Fragment>
-                <div className="application-border" >
+                <div className="application-border" ref={ this.borderRef }>
                     <div className="application">
                         <div className="sections">
                             { this.renderUserSection() }
@@ -51,7 +88,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         </div>
 
                         <div className="button-wrapper">
-                            <Button text={"Donate $" + application.price} />
+                            <Button text={`Donate $${application.price}`} />
                         </div>
 
                         { this.renderChevron() }
@@ -125,7 +162,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             left: 0;
                             right: 0;
                         }
-
 
                         /*
                          * Apply a slightly different bg-color for even and odd
@@ -341,9 +377,9 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     /** Shown when the collapsible is expanded */
                     .description {
                         /** Prepare expand-collapse functionality */
-                        max-height: 0;
+                        height: 0;
                         overflow: hidden;
-                        transition: max-height 0.375s ${ easings.inOutQuart };
+                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION }ms ${ easings.inOutQuart};
 
                         /** Setup font */
                         font-size: 14px;
@@ -395,32 +431,45 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     }
 
     /**
-     * Toggle if element is expanded
+     * Method that'll trigger the transition to expand/collapse the description
+     * of the application
      */
     private toggleCollapsible = () => {
-        this.setState( {expanded: !this.state.expanded} );
-
         const desc = this.descriptionRef.current;
 
-        // Check if null
-        if(!desc) {
+        // If our ref isn't available or if we're currently transitioning, then
+        // bail out
+        if(!desc || this.isTransitioning) {
             return;
         }
 
+        // Initialize the transition!
+        this.setState({ expanded: !this.state.expanded });
+        this.isTransitioning = true;
+
+        // Start by locking the height of the content wrapper to the full
+        // height of the content
+        desc.style.height = `${desc.scrollHeight}px`;
+
+        // Force a reflow before we're going to manage the transition
+        desc.offsetHeight; // tslint:disable-line no-unused-expression
+
         if (this.state.expanded){
-            desc.style.maxHeight = desc.scrollHeight + "px";
-            desc.offsetWidth; // tslint:disable-line no-unused-expression
-
-            desc.style.maxHeight = "0px";
-            desc.style.maxHeight = null;
+            // If we're collapsing, then run transition after back to 0px
+            // height
+            desc.style.height = "0px";
         } else {
-            desc.style.maxHeight = desc.scrollHeight + "px";
-
+            // ... Otherwise reset height to "auto" once the transition has
+            // ended to allow responsively adjusting to size changes
             setTimeout(() => {
-                desc.style.maxHeight = "100%";
-            }, 375);
+                desc.style.height = "auto";
+            }, EXPAND_COLLAPSE_TRANSITION_DURATION);
         }
-        
+
+        // Once the transition is complety, specify that we're ready for a new transition
+        setTimeout(() => {
+            this.isTransitioning = false;
+        }, EXPAND_COLLAPSE_TRANSITION_DURATION);
     }
 
     /**
@@ -443,5 +492,19 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         }
 
         return newName;
+    }
+
+    /**
+     * Internal helper that determines whether the application should be rendered
+     * in a small breakpoint or not
+     */
+    private determineBreakpoint = () => {
+        const root = this.borderRef.current;
+
+        if (!root) {
+            return;
+        }
+
+        this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
     }
 }
