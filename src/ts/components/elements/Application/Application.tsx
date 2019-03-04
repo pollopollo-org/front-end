@@ -63,7 +63,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         }
     }
 
-    
+
 
     /**
      * Main render method, used to render Application
@@ -363,10 +363,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 			</React.Fragment>
 		);
     }
-    
+
     /**
      * To make sure that longer names fit in the fixed size of the user section,
-     * check name length and change if necissary. 
+     * check name length and change if necissary.
      */
     private nameEstimator = () => {
         const name = this.props.application.name;
