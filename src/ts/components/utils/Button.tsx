@@ -16,10 +16,11 @@ export const Button: React.SFC<ButtonProps> = ({ text }) => {
 
 		    <style jsx>{`
                 button {
+                    width: 125px;
                     background-color: ${ colors.secondary };
                     color: ${ colors.white };
                     border: none;
-                    padding: 10px 25px;
+                    padding: 10px 10px;
                     transition: background-color 0.1s linear;
                     font-size: 12px;
                     cursor: pointer;

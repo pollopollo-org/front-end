@@ -63,6 +63,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         }
     }
 
+    
+
     /**
      * Main render method, used to render Application
      */
@@ -76,7 +78,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         <div className="sections">
                             <section className="section-user">
                                 <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
-                                <div className="name">{ application.name }</div>
+                                <div className="flag" title={ application.country }></div>
+                                <div className="name">{ this.nameEstimator() }</div>
                             </section>
 
                             <section className="section-donate">
@@ -199,7 +202,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                     /** Shown when the collapsible is expanded */
                     .description {
-                        background-color: ${ colors.white };
                         max-height: 0;
                         overflow: hidden;
                         transition: max-height 0.375s ${ easings.inOutQuart };
@@ -216,9 +218,13 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
+                        align-items: center;
+
+                        /** Fixed size to align the the elements */
+                        min-width: 75px;
 
                         /** Margin between this and the next section */
-                        margin-right: 30px;
+                        margin-right: 20px;
                     }
 
                     /**  */
@@ -227,6 +233,9 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
+
+                        overflow: hidden;
+
                         padding: 5px;
                     }
 
@@ -238,7 +247,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         display: inline-block;
                         width: 100%;
                         white-space: nowrap;
-                        overflow: hidden !important;
+
+                        overflow: hidden;
+                        line-height: 1.3em;
+
+                        margin-top: -0.15em;
                         text-overflow: ellipsis;
                     }
 
@@ -252,17 +265,31 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         margin-bottom: 4px;
                     }
 
+                    /** Flag showing the users country */
+                    .flag {
+                        position: absolute;
+                        height: 20px;
+                        width: 30px;
+
+                        /** Positioning it on the top-right of the thumbnail */
+                        top: 0;
+                        left: 50px;
+
+                        background-color: black;
+                    }
+
                     /** The name placed under the thumbnail in the .section-user */
                     .name {
-                        font-size: 75%;
-                        white-space: nowrap;
+                        font-size: 12px;
                     }
 
                     /** The wrapper around the chevron arrow */
                     .chevron-wrapper {
                         position: absolute;
-                        bottom: 0;
-                        right: 0;
+
+                        /** Placing the chevron so it lines up with the other elements */
+                        bottom: 5px;
+                        right: 10px;
 
                         display: block;
                         width: 28px;
@@ -279,5 +306,27 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 				`}</style>
 			</React.Fragment>
 		);
-	}
+    }
+    
+    /**
+     * To make sure that longer names fit in the fixed size of the user section,
+     * check name length and change if necissary. 
+     */
+    private nameEstimator = () => {
+        const name = this.props.application.name;
+
+        // If name meets the length requirements, return initial name
+        let newName = name;
+
+        if(name.length > 12) {
+            newName = "";
+            const nameList = name.split(" ");
+
+            // Shorten the firstname to the first letter, and put it together
+            // with the surname
+            newName = `${nameList[0].charAt(0)}. ${nameList[nameList.length-1]}`
+        }
+
+        return newName;
+    }
 }
