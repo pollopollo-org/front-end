@@ -77,7 +77,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                             background: ${ colors.black };
                         }
                     }
-                    
+
                 `}</style>
             </div>
         );

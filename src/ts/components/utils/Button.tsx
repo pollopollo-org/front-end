@@ -5,11 +5,14 @@ import { colors } from "src/ts/config/colors";
 
 type ButtonProps = {
     /**
-     * Temp Sif
+     * The text to appear on the button
      */
     text: string;
 };
 
+/**
+ * Styled button to be used instead of html button tag
+ */
 export const Button: React.SFC<ButtonProps> = ({ text }) => {
     return (
         <div>
