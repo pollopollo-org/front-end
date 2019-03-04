@@ -43,7 +43,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
 	public render(): JSX.Element {
         const { application } = this.props;
-    
+
 		return (
 			<React.Fragment>
                 <div className="application-border" ref={ this.borderRef }>
@@ -74,7 +74,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         margin: 10px;
                         width: calc(100% - 40px); /* Might be temp */
                         height: 100%;
-                        max-height: 100px;
 
                         /** Setup internal dimensions */
                         padding: 10px;
@@ -325,9 +324,9 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     /** Shown when the collapsible is expanded */
                     .description {
                         /** Prepare expand-collapse functionality */
-                        max-height: 0;
+                        height: 0;
                         overflow: hidden;
-                        transition: max-height 0.375s ${ easings.inOutQuart};
+                        transition: height 0.375s ${ easings.inOutQuart};
 
                         /** Setup font */
                         font-size: 14px;
@@ -382,24 +381,31 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      * Toggle if element is expanded
      */
     private toggleCollapsible = () => {
-        this.setState( {expanded: !this.state.expanded} );
-
+        this.setState({ expanded: !this.state.expanded });
         const desc = this.descriptionRef.current;
-        const border = this.borderRef.current;
 
         // Check if null
-        if(!desc || !border ) {
+        if(!desc) {
             return;
         }
 
-        if (this.state.expanded){
-            desc.style.maxHeight = null;
-        } else {
-            desc.style.maxHeight = desc.scrollHeight + "px";
+        // Start by locking the height of the content wrapper to the full
+        // height of the content
+        desc.style.height = `${desc.scrollHeight}px`;
 
-            // The border should expand with both description size and its own
-            // size
-            border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
+        // Force a reflow before we're going to manage the transition
+        desc.offsetHeight; // tslint:disable-line no-unused-expression
+
+        if (this.state.expanded){
+            // If we're collapsing, then run transition after back to 0px
+            // height
+            desc.style.height = "0px";
+        } else {
+            // ... Otherwise reset height to "auto" once the transition has
+            // ended to allow responsively adjusting to size changes
+            setTimeout(() => {
+                desc.style.height = "auto";
+            }, 375);
         }
     }
 

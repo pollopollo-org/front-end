@@ -51,6 +51,10 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         max-height: 600px;
                         overflow-y: auto;
 
+                        @media (max-width: 768px) {
+                            width: 100%;
+                        }
+
                         /** Apply custom scrollbar styling */
                         & ::-webkit-scrollbar {
                             width: 3px;
