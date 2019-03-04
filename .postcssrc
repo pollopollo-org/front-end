@@ -1,0 +1,7 @@
+{
+  "plugins": {
+    "postcss-nesting": {},
+    "postcss-mobile-hover": {},
+    "postcss-css-variables": {}
+  }
+}
