@@ -76,8 +76,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      * Main render method, used to render Application
      */
 	public render(): JSX.Element {
-        const { application } = this.props;
-
 		return (
 			<React.Fragment>
                 <div className="application-border" ref={ this.borderRef }>
@@ -87,9 +85,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             { this.renderContentSection() }
                         </div>
 
-                        <div className="button-wrapper">
-                            <Button text={`Donate $${application.price}`} />
-                        </div>
+                        { this.renderDonateButton() }
 
                         { this.renderChevron() }
                     </div>
@@ -193,14 +189,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         position: relative;
                         z-index: 2;
 					}
-
-                    .button-wrapper {
-                        /** Position the donate button in the top right corner */
-                        position: absolute;
-                        right: 0;
-                        top: 0;
-                        z-index: 10;
-                    }
 				`}</style>
 			</React.Fragment>
 		);
@@ -271,11 +259,13 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private renderContentSection = () => {
         const { application } = this.props;
 
+        console.log(this.state.isSmall);
+
         return (
             <section className="section-content">
-                <span className="product" title={application.product}>{application.amount} {application.product}</span>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
                 
-                { true && (
+                { !this.state.isSmall && (
                     this.renderMotivationTeaser()
                 )}
 
@@ -304,6 +294,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         overflow: hidden;
                         max-width: calc(100% - 150px);
 
+                        &.isSmall {
+                            -webkit-line-clamp: 1;
+                            max-width: 100%;
+                        }
+
                         /**
                          * Enforce maximum dimensions to keep the product
                          * away from other content such as buttons
@@ -317,7 +312,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     }
 
     /**
-     * something hhahaha
+     * Internal renderer that renders the motivation teaser section of the 
+     * application
      */
     private renderMotivationTeaser = () => {
         const { application } = this.props;
@@ -353,9 +349,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                 `}</style>
             </span>
         );
-        
-
-        
     }
 
     /**
@@ -427,6 +420,34 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     }
                 `}</style>
             </i>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the donate button of the application
+     */
+    private renderDonateButton = () => {
+        const { application } = this.props;
+
+        return(
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <Button text={`Donate $${application.price}`} />
+
+                <style jsx>{`
+                    .button-wrapper {
+                        /** Position the donate button in the top right corner */
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        z-index: 10;
+
+                        &.isSmall {
+                            left: 100px;
+                            top: 40px;
+                        }
+                    }
+                `}</style>
+            </div>
         );
     }
 
