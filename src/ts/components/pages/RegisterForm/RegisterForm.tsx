@@ -1,4 +1,5 @@
 import React from "react";
+import { fonts } from "src/ts/config/fonts";
 
 type RegisterFormState = {
     /**
@@ -20,7 +21,7 @@ type RegisterFormState = {
     /**
      * user type, producer or receiver
      */
-    userType: string; 
+    userType: string;
     /**
      * password
      */
@@ -63,8 +64,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     </div>
                     <div className="section">
                         <input type="email" className="leftInput" placeholder="Email" required onChange={event => this.setState({password: event.target.value,})}/>
-                        <select 
-                            required 
+                        <select
+                            required
                             onChange={event => this.setState({country: event.target.value})}
                             className={`${this.state.country === "" ? "inactive" : "active"}`}
                         >
@@ -102,10 +103,9 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                 <style jsx>{`
                     h1 {
-                        color: #8C489F;
-                        margin: 30px auto;
-                        margin-bottom: 8px;
+                        margin: 0 30px 8px;
                         line-height: 30px;
+                        text-align: center;
                     }
 
                     h4 {
@@ -113,9 +113,13 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     .allSection {
-                        margin-left: 100px;
-                        margin-bottom: 100px;
                         width: 540px;
+                        min-height: calc(100vh - 299px);
+
+                        display: flex;
+                        flex-direction: column;
+                        margin: 0 auto;
+                        justify-content: center;
                     }
 
                     .section{
@@ -123,11 +127,14 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     input{
-                        height: 30px;
+                        height: 39px;
                         width: 250px;
                         text-indent: 9px;
                         border: 1px solid lightgray;
                         border-radius: 3px;
+                        font-family: ${ fonts.text };
+                        font-size: 16px;
+                        font-weight: 300;
                     }
 
                     .leftInput {
@@ -143,12 +150,14 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     select{
                         -webkit-appearance: none;
                         background: transparent;
-                        height: 35px;
+                        height: 39px;
                         width: 254px;
                         text-indent: 9px;
                         border: 1px solid lightgray;
                         border-radius: 3px;
-                        
+                        font-size: 16px;
+                        font-weight: 300;
+                        font-family: ${ fonts.text };
                     }
 
                     select.inactive {
@@ -175,41 +184,45 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     label{
                         font-size: 16px;
                         margin-right: 30px;
-                        color: #443266;
                     }
 
                     button {
                         float: right;
-                        
+
                         margin: 30px auto auto 49px;
                         background-color: #8C489F;
                         color: white;
                         border: none;
-                        border-radius: 3px;
+                        border-radius: 2px;
                         padding: 10px 104px;
                         transition: background-color 0.1s linear;
-                        font-size: 12px;
+                        font-size: 16px;
+                        font-family: ${ fonts.heading };
+                        font-weight: 300;
+                        width: 254px;
                     }
 
                     button:hover {
                         background-color: #443266;
                     }
 
-                    @media only screen and (max-width: 666px) {
+                    @media only screen and (max-width: 768px) {
                         .allSection {
                             margin: auto;
                             text-align: center;
-                            width: 254px;
+                            width: 100%;
                         }
 
                         h1 {
+                            font-size: 28px;
+                            margin-top: 20px;
                             margin-bottom: 20px;
                         }
 
                         h4 {
                             margin: 10px 0;
                         }
-                        
+
                         .section {
                             margin: 0;
                         }
@@ -232,6 +245,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                         .radioSection {
                             text-align: center;
+                            font-family: ${ fonts.text };
+                            font-weight: 300;
                         }
 
                         .userType.P {

@@ -49,7 +49,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         /** Temp dimensions of list */
                         width: 50%;
 
-                        max-height: 600px;
+                        max-height: 530px;
                         overflow-y: auto;
 
                         /**

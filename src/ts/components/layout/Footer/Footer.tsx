@@ -37,9 +37,9 @@ export class Footer extends React.PureComponent {
 							<h4 className="title">{footer.contributorstitle}</h4>
 								<ul>
 									<li>
-										<a href="https://en.itu.dk/" target="_blank">
-											<i className="itu">
-												{ getSVG("itu") }
+										<a href="https://www.scrumwise.com/" target="_blank">
+											<i className="scrumwise">
+												{getSVG("scrumwise")}
 											</i>
 										</a>
 									</li>
@@ -51,9 +51,9 @@ export class Footer extends React.PureComponent {
 										</a>
 									</li>
 									<li>
-										<a href="https://www.scrumwise.com/" target="_blank">
-											<i className="scrumwise">
-												{ getSVG("scrumwise") }
+										<a href="https://en.itu.dk/" target="_blank">
+											<i className="itu">
+												{getSVG("itu")}
 											</i>
 										</a>
 									</li>
@@ -106,7 +106,8 @@ export class Footer extends React.PureComponent {
 					}
 
 					.obyte {
-						width: 45px;
+						width: 70px;
+						height: 40px !important;
 					}
 
 					.itu {
@@ -129,7 +130,8 @@ export class Footer extends React.PureComponent {
 					}
 
 					.title {
-						font-weight: 700;
+						color: ${ colors.white };
+						font-size: 18px;
 					}
 
 					p {
