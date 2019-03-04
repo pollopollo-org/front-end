@@ -4,7 +4,27 @@ type RegisterFormState = {
     /**
      * hvad tror du det er
      */
+    firstName: string;
+    /**
+     * hvad tror du det er
+     */
+    lastName: string;
+    /**
+     * hvad tror du det er
+     */
+    email: string;
+    /**
+     * hvad tror du det er
+     */
+    country: string;
+    /**
+     * hvad tror du det er
+     */
     userType: string; 
+    /**
+     * hvad tror du det er
+     */
+    password: string;
 }
 
 /**
@@ -14,7 +34,12 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     constructor(props:any){
         super(props);
         this.state={
+            firstName: "",
+            lastName: "",
+            email: "",
+            country: "",
             userType: "",
+            password: "",
         };
     }
 
@@ -28,18 +53,18 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                 <h1 className="headerText">Register as new user</h1>
                 <div>
                     <div className="section">
-                        <input className="firstNameInput" placeholder="First name"/>
-                        <input className="lastNameInput" placeholder="Last name"/>
+                        <input className="firstNameInput" placeholder="First name" onChange={event => this.setState({firstName: event.target.value,})}/>
+                        <input className="lastNameInput" placeholder="Last name" onChange={event => this.setState({lastName: event.target.value,})}/>
                     </div>
                     <div className="section">
-                        <input className="emailInput" placeholder="Email"/>
-                        <select className="countryInput">
+                        <input className="emailInput" placeholder="Email" onChange={event => this.setState({password: event.target.value,})}/>
+                        <select className="countryInput" onChange={event => this.setState({country: event.target.value,})}>
                             <option value="Country">Country</option>
                         </select>
                     </div>
                     <div className="section">
                         <input type="password" className="firstPasswordInput" placeholder="Password"/>
-                        <input type="password" className="secondPasswordInput" placeholder="Confirm password"/>
+                        <input type="password" className="secondPasswordInput" placeholder="Confirm password" onChange={event => this.setState({password: event.target.value,})}/>
                     </div>
                     <div>
                         <div className="section">
