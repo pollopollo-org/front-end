@@ -65,7 +65,7 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                         bottom: 0;
 
                         /** Render the actual circle */
-                        border: 8px solid #D1B7D9;
+                        border: 8px solid ${colors.tertiaryColor};
                         border-radius: 50%;
 
                         /**
