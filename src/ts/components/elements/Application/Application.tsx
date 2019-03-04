@@ -274,7 +274,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         return (
             <section className="section-content">
                 <span className="product" title={application.product}>{application.amount} {application.product}</span>
-                
+
                 { true && (
                     this.renderMotivationTeaser()
                 )}
@@ -353,9 +353,9 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                 `}</style>
             </span>
         );
-        
 
-        
+
+
     }
 
     /**
@@ -424,6 +424,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Position on top of other content */
                         z-index: 10;
+
+                        &:hover {
+                            color: ${ colors.secondary };
+                        }
                     }
                 `}</style>
             </i>
