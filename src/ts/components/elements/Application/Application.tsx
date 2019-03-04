@@ -274,15 +274,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         return (
             <section className="section-content">
                 <span className="product" title={application.product}>{application.amount} {application.product}</span>
-                <span
-                    className="motivation__teaser"
-                    style={{
-                        opacity: this.state.expanded ? 0 : 0.6,
-                        userSelect: this.state.expanded ? "none" : "text",
-                    }}
-                >
-                    {application.motivation}
-                </span>
+                
+                { true && (
+                    this.renderMotivationTeaser()
+                )}
 
                 <style jsx>{`
                     .section-content {
@@ -316,7 +311,28 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         overflow: hidden;
                         max-height: calc(18px * 2 * 1.3 + 0.25em);
                     }
+                `}</style>
+            </section>
+        );
+    }
 
+    /**
+     * something hhahaha
+     */
+    private renderMotivationTeaser = () => {
+        const { application } = this.props;
+
+        return (
+            <span
+                className="motivation__teaser"
+                style={{
+                    opacity: this.state.expanded ? 0 : 0.6,
+                    userSelect: this.state.expanded ? "none" : "text",
+                }}
+            >
+                {application.motivation}
+
+                <style jsx>{`
                     .motivation__teaser {
                         /** Position the teaser on the bottom of the content section */
                         position: absolute;
@@ -335,8 +351,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         transition: opacity 0.15s linear;
                     }
                 `}</style>
-            </section>
+            </span>
         );
+        
+
+        
     }
 
     /**
@@ -418,7 +437,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private toggleCollapsible = () => {
         const desc = this.descriptionRef.current;
 
-        // If our ref isn't available
+        // If our ref isn't available or if we're currently transitioning, then
+        // bail out
         if(!desc || this.isTransitioning) {
             return;
         }
