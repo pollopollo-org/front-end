@@ -27,7 +27,11 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                     main {
                         box-sizing: border-box;
                         height: 100%;
-                        padding: 80px 30px;
+                        padding: 90px 30px;
+
+                        /** Setup a max-width to avoid unnecessarily large items */
+                        max-width: 1160px;
+                        margin: 0 auto;
                     }
                 `}</style>
             </main>
