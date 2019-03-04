@@ -50,6 +50,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                     .list-of-applications {
                         /** Temp dimensions of list */
                         width: 50%;
+
                         max-height: 600px;
                         overflow-y: auto;
 
@@ -66,6 +67,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                             background: ${ colors.black };
                         }
                     }
+                    
                 `}</style>
             </div>
         );

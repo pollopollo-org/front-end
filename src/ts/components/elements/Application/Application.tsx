@@ -35,9 +35,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     /** Reference to the div tag with class name description */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** Reference to the div tag with class name application-border */
-    private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
-
     /**
      * Main render method, used to render Application
      */
@@ -46,7 +43,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     
 		return (
 			<React.Fragment>
-                <div className="application-border" ref={ this.borderRef }>
+                <div className="application-border" >
                     <div className="application">
                         <div className="sections">
                             { this.renderUserSection() }
@@ -74,7 +71,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         margin: 10px;
                         width: calc(100% - 40px); /* Might be temp */
                         height: 100%;
-                        max-height: 100px;
 
                         /** Setup internal dimensions */
                         padding: 10px;
@@ -242,15 +238,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         return (
             <section className="section-content">
                 <span className="product" title={application.product}>{application.amount} {application.product}</span>
-                <span
-                    className="motivation__teaser"
-                    style={{
-                        opacity: this.state.expanded ? 0 : 0.6,
-                        userSelect: this.state.expanded ? "none" : "text",
-                    }}
-                >
-                    {application.motivation}
-                </span>
+                
+                { true && (
+                    this.renderMotivationTeaser()
+                )}
 
                 <style jsx>{`
                     .section-content {
@@ -284,7 +275,28 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         overflow: hidden;
                         max-height: calc(18px * 2 * 1.3 + 0.25em);
                     }
+                `}</style>
+            </section>
+        );
+    }
 
+    /**
+     * something hhahaha
+     */
+    private renderMotivationTeaser = () => {
+        const { application } = this.props;
+
+        return (
+            <span
+                className="motivation__teaser"
+                style={{
+                    opacity: this.state.expanded ? 0 : 0.6,
+                    userSelect: this.state.expanded ? "none" : "text",
+                }}
+            >
+                {application.motivation}
+
+                <style jsx>{`
                     .motivation__teaser {
                         /** Position the teaser on the bottom of the content section */
                         position: absolute;
@@ -303,8 +315,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         transition: opacity 0.15s linear;
                     }
                 `}</style>
-            </section>
+            </span>
         );
+        
+
+        
     }
 
     /**
@@ -328,7 +343,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Prepare expand-collapse functionality */
                         max-height: 0;
                         overflow: hidden;
-                        transition: max-height 0.375s ${ easings.inOutQuart};
+                        transition: max-height 0.375s ${ easings.inOutQuart };
 
                         /** Setup font */
                         font-size: 14px;
@@ -386,22 +401,26 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         this.setState( {expanded: !this.state.expanded} );
 
         const desc = this.descriptionRef.current;
-        const border = this.borderRef.current;
 
         // Check if null
-        if(!desc || !border ) {
+        if(!desc) {
             return;
         }
 
         if (this.state.expanded){
+            desc.style.maxHeight = desc.scrollHeight + "px";
+            desc.offsetWidth; // tslint:disable-line no-unused-expression
+
+            desc.style.maxHeight = "0px";
             desc.style.maxHeight = null;
         } else {
             desc.style.maxHeight = desc.scrollHeight + "px";
 
-            // The border should expand with both description size and its own
-            // size
-            border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
+            setTimeout(() => {
+                desc.style.maxHeight = "100%";
+            }, 375);
         }
+        
     }
 
     /**
