@@ -18,9 +18,16 @@ export type ApplicationState = {
      * A boolean that tracks whether the application is expanded, and should
      */
     expanded: boolean;
+
+    /**
+     * Specifies whether the application should be rendered to be compatible with
+     * smaller viewports
+     */
+    isSmall: boolean;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
+const MOBILE_BREAKPOINT = 440;
 
 /**
  * Application template to contain information about the donation
@@ -32,6 +39,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
     public state: ApplicationState = {
         expanded: false,
+        isSmall: false,
     };
 
     /**
@@ -44,6 +52,25 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
     /** Reference to the div tag with class name application-border */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+    /**
+     * Determine the breakpoint we're currently in as soon as the component mounts,
+     * and prepare for
+     */
+    public componentDidMount(): void {
+        this.determineBreakpoint();
+
+        window.addEventListener("resize", this.determineBreakpoint);
+        window.addEventListener("orientationchange", this.determineBreakpoint);
+    }
+
+    /**
+     * Cleanup on unmount
+     */
+    public componentWillUnmount(): void {
+        window.removeEventListener("resize", this.determineBreakpoint);
+        window.removeEventListener("orientationchange", this.determineBreakpoint);
+    }
 
     /**
      * Main render method, used to render Application
@@ -445,5 +472,19 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         }
 
         return newName;
+    }
+
+    /**
+     * Internal helper that determines whether the application should be rendered
+     * in a small breakpoint or not
+     */
+    private determineBreakpoint = () => {
+        const root = this.borderRef.current;
+
+        if (!root) {
+            return;
+        }
+
+        this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
     }
 }
