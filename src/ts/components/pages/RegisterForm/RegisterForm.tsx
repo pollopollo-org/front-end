@@ -25,29 +25,36 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         return(
             <div className="allSection">
 
-                <h1 className="headerText">Register as new user</h1>
+                <h1>Register as new user</h1>
                 <div>
                     <div className="section">
-                        <input className="firstNameInput" placeholder="First name"/>
-                        <input className="lastNameInput" placeholder="Last name"/>
+                        <input className="leftInput" placeholder="First name"/>
+                        <input placeholder="Last name"/>
                     </div>
                     <div className="section">
-                        <input className="emailInput" placeholder="Email"/>
-                        <select className="countryInput">
+                        <input className="leftInput" placeholder="Email"/>
+                        <select>
                             <option value="Country">Country</option>
                         </select>
                     </div>
                     <div className="section">
-                        <input type="password" className="firstPasswordInput" placeholder="Password"/>
-                        <input type="password" className="secondPasswordInput" placeholder="Confirm password"/>
+                        <input type="password" className="leftInput" placeholder="Password"/>
+                        <input type="password" placeholder="Confirm password"/>
                     </div>
-                    <div>
-                        <div className="section">
-                            <input type="radio" className="userType" name="userType" value="producer" onChange={event => this.setState({userType: event.target.value,})}/><label>I am a producer</label>
-                            <input type="radio" className="userType" name="userType" value="receiver" onChange={event => this.setState({userType: event.target.value,})}/><label>I am a receiver</label>
+                    <div className="grid">
+                        <div>
+                            <h4>What type of user are you?</h4>
+                            <div className="radioSection">
+                                <div className="uType P"><input type="radio" className="userType" name="userType" value="producer" onChange={event => this.setState({userType: event.target.value,})}/><label>Producer</label></div>
+                                <div className="uType R"><input type="radio" className="userType" name="userType" value="receiver" onChange={event => this.setState({userType: event.target.value,})}/><label>Receiver</label></div>
+                            </div>
+                        </div>
+                        <div>
+                            <button>Register</button>
                         </div>
                     </div>
-                    <div className="conditionalSection">
+                    
+                    {/* <div className="conditionalSection">
                         {this.state.userType==="producer" && (
                             <input></input>
                         )}
@@ -55,37 +62,49 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             <button>Submit</button>
                         )
                         }
-                    </div>
-                    <div className="behindFooter"/>
+                    </div> */}
                 </div>
 
 
                 <style jsx>{`
-                    .headerText{
+                    h1 {
                         color: #8C489F;
                         margin: 30px auto;
+                        margin-bottom: 8px;
+                        line-height: 30px;
                     }
 
                     select{
                         -webkit-appearance: none;
                         background: transparent;
-                        height: 37px;
+                        height: 35px;
                         width: 254px;
-                        margin-right: 30px;
                         text-indent: 9px;
+                        border: 1px solid lightgray;
+                        border-radius: 3px;
+                        
                     }
 
                     input{
                         height: 30px;
                         width: 250px;
-                        margin-right: 30px;
                         text-indent: 9px;
+                        border: 1px solid lightgray;
+                        border-radius: 3px;
                     }
+
+                    .leftInput {
+                        margin-right: 30px;
+                    }
+
+                    /*input::placeholder { 
+                        color: gray; 
+                    }*/
 
                     input.userType{
                         height: 17px;
                         width: 17px;
-                        margin: 0px 10px;
+                        margin: 0px 10 0 0px;
                     }
                     .section{
                         margin: 20px auto;
@@ -96,18 +115,46 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         width: 100px;
                     }
 
+                    .uType {
+                        display: inline-block;
+                    }
+
                     label{
-                        font-size: 20px;
+                        font-size: 16px;
                         margin-right: 30px;
                         color: #443266;
                     }
 
-                    .allSection{
-                        margin-left: 50px;
+                    .allSection {
+                        margin-left: 100px;
+                        margin-bottom: 100px;
+                        width: 540px;
                     }
 
-                    .behindFooter{
-                        height: 100px;
+                    button {
+                        float: right;
+                        
+                        margin: 30px auto auto 49px;
+                        background-color: #8C489F;
+                        color: white;
+                        border: none;
+                        border-radius: 3px;
+                        padding: 10px 104px;
+                        transition: background-color 0.1s linear;
+                        font-size: 12px;
+                    }
+
+                    button:hover {
+                        background-color: #443266;
+                    }
+
+                    .grid {
+                        display: flex;
+                        width: 100%;
+                    }
+
+                    h4 {
+                        margin-top: 5px;
                     }
 
                     @media only screen and (max-width: 666px) {
@@ -115,12 +162,54 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             margin: 0;
                         }
 
-                        input {
-                            margin: 10px 0;
+                        input, select {
+                            margin: 15px 0;
                         }
 
                         input.userType {
                             margin: 10px 0;
+                        }
+
+
+                        .allSection {
+                            margin: auto;
+                            text-align: center;
+                            width: 254px;
+                        }
+
+                        .leftInput {
+                            margin: 0;
+                        }
+
+                        h1 {
+                            margin-bottom: 20px;
+                        }
+
+                        h4 {
+                            margin: 10px 0;
+                        }
+
+                        label {
+                            margin-left: 7px;
+                            margin-right: 0;
+                        }
+
+                        .uType.P {
+                            margin-right: 15px;
+                        }
+
+                        .radioSection {
+                            text-align: center;
+                        }
+
+                        button {
+                            margin: 15px;
+                            padding: 12px 15px;
+                            float: none;
+                        }
+
+                        .grid {
+                            display: block;
                         }
                     }
                 `}</style>
