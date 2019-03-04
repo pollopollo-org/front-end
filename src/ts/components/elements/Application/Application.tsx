@@ -39,33 +39,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
-     * Toggle if element is expanded
-     */
-    public toggleCollapsible = () => {
-        this.setState( {expanded: !this.state.expanded} );
-
-        const desc = this.descriptionRef.current;
-        const border = this.borderRef.current;
-
-        // Check if null
-        if(!desc || !border ) {
-            return;
-        }
-
-        if (this.state.expanded){
-            desc.style.maxHeight = null;
-        } else {
-            desc.style.maxHeight = desc.scrollHeight + "px";
-
-            // The border should expand with both description size and its own
-            // size
-            border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
-        }
-    }
-
-
-
-    /**
      * Main render method, used to render Application
      */
 	public render(): JSX.Element {
@@ -76,43 +49,17 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                 <div className="application-border" ref={ this.borderRef }>
                     <div className="application">
                         <div className="sections">
-                            <section className="section-user">
-                                <img className="thumbnail" src={ require("src/assets/dummy/sif.PNG") } />
-                                <div className="flag" title={ application.country }></div>
-                                <div className="name">{ this.nameEstimator() }</div>
-                            </section>
-
-                            <section className="section-content">
-                                <span className="product" title={application.product}>{application.amount} {application.product}</span>
-                                <span
-                                    className="motivation__teaser"
-                                    style={{
-                                        opacity: this.state.expanded ? 0 : 0.6,
-                                        userSelect: this.state.expanded ? "none" : "text",
-                                    }}
-                                >
-                                    {application.motivation}
-                                </span>
-                            </section>
+                            { this.renderUserSection() }
+                            { this.renderContentSection() }
                         </div>
 
                         <div className="button-wrapper">
                             <Button text={"Donate $" + application.price} />
                         </div>
 
-                        <i className="chevron-wrapper" onClick={this.toggleCollapsible}>
-                            <Chevron size={20} lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
-                        </i>
+                        { this.renderChevron() }
                     </div>
-
-                    <div className="description" ref={ this.descriptionRef }>
-                        <div className="description-content">
-                            <h3>Motivation</h3>
-                            <p>
-                                { application.motivation }
-                            </p>
-                        </div>
-                    </div>
+                    { this.renderMotivation() }
                 </div>
 
 				<style jsx>{`
@@ -215,12 +162,31 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         z-index: 2;
 					}
 
-                    .section-content {
-                        /* Allow the content section to fill as much as possible */
-                        flex-grow: 1;
-                        overflow: hidden;
+                    .button-wrapper {
+                        /** Position the donate button in the top right corner */
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        z-index: 10;
                     }
+				`}</style>
+			</React.Fragment>
+		);
+    }
 
+    /**
+     * Internal renderer that renders the user section of the application template
+     */
+    private renderUserSection = () => {
+        const { application } = this.props;
+
+        return (
+            <section className="section-user">
+                <img className="thumbnail" src={require("src/assets/dummy/sif.PNG")} />
+                <div className="flag" title={application.country}></div>
+                <div className="name">{this.nameEstimator()}</div>
+
+                <style jsx>{`
                     /** Placing the thumbnail and users name */
                     .section-user {
                         /** Display name and text on top of each other */
@@ -235,6 +201,64 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Margin between this and the next section */
                         margin-right: 20px;
+                    }
+
+                    /** Thumbnail img in the .section-user */
+                    .thumbnail {
+                        height: 60px;
+                        width: 60px;
+                        border-radius: 50%;
+
+                        /** Margin between this and the name element */
+                        margin-bottom: 4px;
+                    }
+
+                    /** Flag showing the users country */
+                    .flag {
+                        position: absolute;
+                        height: 20px;
+                        width: 30px;
+
+                        /** Positioning it on the top-right of the thumbnail */
+                        top: 0;
+                        left: 50px;
+
+                        background-color: black;
+                    }
+
+                    /** The name placed under the thumbnail in the .section-user */
+                    .name {
+                        font-size: 12px;
+                    }
+                `}</style>
+            </section>
+        );
+    }
+
+    /**
+     * Internal renderer that'll render the content section of the application
+     */
+    private renderContentSection = () => {
+        const { application } = this.props;
+
+        return (
+            <section className="section-content">
+                <span className="product" title={application.product}>{application.amount} {application.product}</span>
+                <span
+                    className="motivation__teaser"
+                    style={{
+                        opacity: this.state.expanded ? 0 : 0.6,
+                        userSelect: this.state.expanded ? "none" : "text",
+                    }}
+                >
+                    {application.motivation}
+                </span>
+
+                <style jsx>{`
+                    .section-content {
+                        /* Allow the content section to fill as much as possible */
+                        flex-grow: 1;
+                        overflow: hidden;
                     }
 
                     /**
@@ -268,56 +292,70 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         position: absolute;
                         bottom: 0;
 
+                        /** Force motivation to remain on one line and crop on overflow */
+                        white-space: nowrap;
                         text-overflow: ellipsis;
                         overflow: hidden;
                         max-width: calc(100% - 160px);
+
+                        /** Setup font */
                         font-size: 12px;
-                    }
-
-                    /** Thumbnail img in the .section-user */
-                    .thumbnail {
-                        height: 60px;
-                        width: 60px;
-                        border-radius: 50%;
-
-                        /** Margin between this and the name element */
-                        margin-bottom: 4px;
-                    }
-
-                    /** Flag showing the users country */
-                    .flag {
-                        position: absolute;
-                        height: 20px;
-                        width: 30px;
-
-                        /** Positioning it on the top-right of the thumbnail */
-                        top: 0;
-                        left: 50px;
-
-                        background-color: black;
-                    }
-
-                    /** The name placed under the thumbnail in the .section-user */
-                    .name {
-                        font-size: 12px;
-                    }
-
-                    .button-wrapper {
-                        /** Position the donate button in the top right corner */
-                        position: absolute;
-                        right: 0;
-                        top: 0;
-                        z-index: 10;
-                    }
-
-                    .motivation__teaser {
-                        /** Display the motivation teaser on one line */
-                        white-space: nowrap;
 
                         /** Prepare transitions */
                         transition: opacity 0.15s linear;
                     }
+                `}</style>
+            </section>
+        );
+    }
 
+    /**
+     * Internal renderer that renders the motivation section of the application
+     */
+    private renderMotivation = () => {
+        const { application } = this.props;
+
+        return (
+            <div className="description" ref={this.descriptionRef}>
+                <div className="description-content">
+                    <h3>Motivation</h3>
+                    <p>
+                        {application.motivation}
+                    </p>
+                </div>
+
+                <style jsx>{`
+                    /** Shown when the collapsible is expanded */
+                    .description {
+                        /** Prepare expand-collapse functionality */
+                        max-height: 0;
+                        overflow: hidden;
+                        transition: max-height 0.375s ${ easings.inOutQuart};
+
+                        /** Setup font */
+                        font-size: 14px;
+                        line-height: 1.5em;
+                    }
+
+                    /** Placement styling */
+                    .description-content {
+                        margin: 10px;
+                        border-top: 1px solid ${colors.secondary};
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the chevron of the application
+     */
+    private renderChevron = () => {
+        return (
+            <i className="chevron-wrapper" onClick={this.toggleCollapsible}>
+                <Chevron size={20} lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
+
+                <style jsx>{`
                     /** The wrapper around the chevron arrow */
                     .chevron-wrapper {
                         /** Position chevron properly */
@@ -338,32 +376,34 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Position on top of other content */
                         z-index: 10;
                     }
+                `}</style>
+            </i>
+        );
+    }
 
-                    /** Shown when the collapsible is expanded */
-                    .description {
-                        /** Prepare expand-collapse functionality */
-                        max-height: 0;
-                        overflow: hidden;
-                        transition: max-height 0.375s ${ easings.inOutQuart };
+    /**
+     * Toggle if element is expanded
+     */
+    private toggleCollapsible = () => {
+        this.setState( {expanded: !this.state.expanded} );
 
-                        /** Setup font */
-                        font-size: 14px;
-                        line-height: 1.5em;
-                    }
+        const desc = this.descriptionRef.current;
+        const border = this.borderRef.current;
 
-                    /** Placement styling */
-                    .description-content {
-                        margin: 10px;
-                        border-top: 1px solid ${colors.secondary};
-                    }
+        // Check if null
+        if(!desc || !border ) {
+            return;
+        }
 
-                    i:hover {
-                        color: ${ colors.secondary }
-                    }
+        if (this.state.expanded){
+            desc.style.maxHeight = null;
+        } else {
+            desc.style.maxHeight = desc.scrollHeight + "px";
 
-				`}</style>
-			</React.Fragment>
-		);
+            // The border should expand with both description size and its own
+            // size
+            border.style.maxHeight = desc.scrollHeight + border.offsetHeight + "px";
+        }
     }
 
     /**
