@@ -298,6 +298,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         overflow: hidden;
                         max-width: calc(100% - 150px);
 
+                        /** When mobile size, force product text to one line */
                         &.isSmall {
                             -webkit-line-clamp: 1;
                             max-width: 100%;
@@ -350,6 +351,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Prepare transitions */
                         transition: opacity 0.15s linear;
 
+                        /**
+                        *   When mobile size, motivation teaser is positioned
+                        *   at the bottom
+                        */
                         &.isSmall {
                             position: relative;
                             display: block;
@@ -431,10 +436,12 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Position on top of other content */
                         z-index: 10;
 
+                        /** When mobile size, make chevron smaller */
                         &.isSmall {
                             height: 15px;
                             width: 21px;
                         }
+
                         &:hover {
                             color: ${ colors.secondary };
                         }
@@ -462,6 +469,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         top: 0;
                         z-index: 10;
 
+                        /** When mobile size, position button in the middle */
                         &.isSmall {
                             left: 100px;
                             top: 40px;
