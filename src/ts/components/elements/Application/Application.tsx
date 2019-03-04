@@ -100,10 +100,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         position: relative;
 
                         /** Setup dimensions of application */
-                        margin-left: 20px;
                         margin: 10px;
-                        width: calc(100% - 40px); /* Might be temp */
-                        height: 100%;
+                        width: calc(100% - 20px); /* Might be temp */
 
                         /** Setup internal dimensions */
                         padding: 10px;
@@ -131,6 +129,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             position: absolute;
                             left: 50%;
                             right: 50%;
+                            bottom: 0;
+                            top: 0;
 
                             /** Render desired hover bg color */
                             background-color: rgba(219,208,239, 0.15);

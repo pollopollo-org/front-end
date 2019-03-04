@@ -31,6 +31,19 @@ export const CSS: React.SFC = () => (
                 font-size: 16px;
                 line-height: 1em;
                 transition: background-color 0.2s linear;
+
+                /** Apply custom scrollbar styling */
+                & ::-webkit-scrollbar {
+                    width: 3px;
+                }
+
+                & ::-webkit-scrollbar-track {
+                    background: rgba(56, 56, 56, 0.1);
+                }
+
+                & ::-webkit-scrollbar-thumb {
+                    background: ${ colors.black };
+                }
             }
 
             h1 {

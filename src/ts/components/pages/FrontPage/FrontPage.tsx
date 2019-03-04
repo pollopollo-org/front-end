@@ -36,7 +36,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                 <style jsx>{`
                     h1{
                         /** Override defaults */
-                        margin: 0;
+                        margin: 15px 15px 0;
 
                         /** Setup font */
                         font-family: ${ fonts.heading };
@@ -59,7 +59,9 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         @media (max-width: 1100px) {
                             width: 100%;
                             max-width: 650px;
-                            margin: 0 auto;
+                            max-height: 100%;
+                            height: 100%;
+                            margin: 0 auto 30px;
                         }
 
                         /** Apply custom scrollbar styling */

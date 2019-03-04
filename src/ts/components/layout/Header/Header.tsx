@@ -34,7 +34,8 @@ export class Header extends React.PureComponent {
                         display: flex;
                         flex-direction: row;
                         background-color: ${ colors.primary };
-                        border-bottom: 1px solid ${ colors.primary }
+                        border-bottom: 1px solid ${ colors.primary };
+                        z-index: 1000;
                     }
 
                     i {
