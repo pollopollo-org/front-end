@@ -19,7 +19,7 @@ export class Footer extends React.PureComponent {
 					<div className="grid">
 						<div className="col">
 							<div className="contactInfo">
-								<p className="title">{footer.contacttitle}</p>
+								<h4 className="title">{footer.contacttitle}</h4>
 								<p>{footer.url}</p>
 								<p>{footer.street}</p>
 								<p>{footer.zipcode}, {footer.city}</p>
@@ -34,7 +34,7 @@ export class Footer extends React.PureComponent {
 						</div>
 						<div className="col">
 							<div className="contributorsInfo">
-							<p className="title">{footer.contributorstitle}</p>
+							<h4 className="title">{footer.contributorstitle}</h4>
 								<ul>
 									<li>
 										<a href="https://en.itu.dk/" target="_blank">

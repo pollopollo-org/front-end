@@ -50,6 +50,16 @@ export const CSS: React.SFC = () => (
                 font-size: 2em;
             }
 
+            h4 {
+                font-family: ${ fonts.heading };
+                font-weight: 400;
+            }
+
+            p {
+                font-family: ${ fonts.text };
+                font-weight: 300;
+            }
+
             #root {
                 /** Fill up the viewport */
                 width: 100%;
