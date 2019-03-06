@@ -123,7 +123,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                 <style jsx>{`
                     h1 {
-                        margin: 0 30px 8px;
+                        margin: 0 0 8px;
                         line-height: 30px;
                         text-align: center;
                     }
@@ -134,10 +134,10 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                     .allSection {
                         width: 540px;
-                        height: 100%;
+                        height: calc(100% - 60px);
                         display: flex;
                         flex-direction: column;
-                        margin: 0 auto;
+                        margin: 30px auto;
                         justify-content: center;
                     }
 
