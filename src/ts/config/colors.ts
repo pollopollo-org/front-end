@@ -11,4 +11,5 @@ export const colors = {
     tulip: "#F78E8C",
     white: "#fff",
     whiteSmoke: "#f7f7f7",
+    gray: "#a7a7a7",
 };

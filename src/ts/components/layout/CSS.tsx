@@ -22,6 +22,8 @@ export const CSS: React.SFC = () => (
 
                 /** We should aspire to never having overflow on the x-axis on the body layer  */
                 overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             body {

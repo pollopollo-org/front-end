@@ -48,9 +48,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                     .list-of-applications {
                         /** Temp dimensions of list */
                         width: 50%;
-
-                        max-height: 530px;
-                        overflow-y: auto;
+                        margin-bottom: 10px;
 
                         /**
                          * When the viewport gets too small, force rendering
@@ -59,7 +57,6 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         @media (max-width: 1100px) {
                             width: 100%;
                             max-width: 650px;
-                            max-height: 100%;
                             height: 100%;
                             margin: 0 auto 30px;
                         }
