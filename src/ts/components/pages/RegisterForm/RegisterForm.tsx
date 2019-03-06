@@ -200,7 +200,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         float: right;
 
                         margin: 30px auto auto 49px;
-                        background-color: #8C489F;
+                        background-color: ${ colors.secondary };
                         color: white;
                         border: none;
                         border-radius: 2px;
@@ -213,7 +213,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     button:hover {
-                        background-color: #443266;
+                        background-color: ${ colors.primary };
                     }
 
                     @media only screen and (max-width: 768px) {
