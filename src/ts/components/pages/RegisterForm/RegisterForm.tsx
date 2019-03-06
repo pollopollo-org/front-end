@@ -210,6 +210,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         font-family: ${ fonts.heading };
                         font-weight: 300;
                         width: 254px;
+                        cursor: pointer;
                     }
 
                     button:hover {
