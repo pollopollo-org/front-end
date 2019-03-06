@@ -49,6 +49,9 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         /** Temp dimensions of list */
                         width: 50%;
                         margin-bottom: 10px;
+                        max-height: 550px;
+                        overflow-y: auto;
+                        -webkit-overflow-scrolling: touch;
 
                         /**
                          * When the viewport gets too small, force rendering
