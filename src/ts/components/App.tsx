@@ -92,7 +92,7 @@ export class App extends React.PureComponent<{}, AppState> {
 	 */
 	protected renderMainContainer(): React.ReactNode {
 		return (
-			<InitialFade key="mainContainer" withTransform={true}>
+			<InitialFade key="mainContainer">
 				<MainContainer />
 			</InitialFade>
 		);

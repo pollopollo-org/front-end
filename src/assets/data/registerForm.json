@@ -1,10 +1,13 @@
 {
-    "title": "Register as new user", 
-    "name": "Name", 
-    "country": "Country", 
+    "title": "Register as new user",
+    "firstName": "First name",
+    "lastName": "Surname",
+    "country": "Country",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
-    "producer": "I am a producer",
-    "reciever": "I am a reciever"
+    "userType__producer": "I am a producer",
+    "userType__reciever": "I am a reciever",
+    "userType__title": "What kind of user are you?",
+    "submit": "Submit"
 }
