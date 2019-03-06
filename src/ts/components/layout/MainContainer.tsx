@@ -5,7 +5,7 @@ import { routes } from "src/ts/config/routes";
 
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
-
+import { Footer } from "./Footer/Footer";
 
 /**
  * The main container is responsible for wrapper all pages within it, while also
@@ -17,30 +17,43 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
      */
     public render(): JSX.Element {
         return (
-            <main>
-                <Switch>
-                    <Route exact path={routes.root} component={FrontPage} />
-                    <Route exact path={routes.register} component={RegisterForm} />
-                </Switch>
+
+            <div className="main-container">
+                <main>
+                    <Switch>
+                        <Route exact path={routes.root} component={FrontPage} />
+                        <Route exact path={routes.register} component={RegisterForm} />
+                    </Switch>
+
+                </main>
+
+                <Footer />
 
                 <style jsx>{`
                     main {
-                        height: auto;
-                        min-height: calc(100% - 299px);
-                        padding: 60px 30px 0;
+                        padding: 60px 0 0;
+                        flex-grow: 1;
 
                         /** Setup a max-width to avoid unnecessarily large items */
                         max-width: 1160px;
                         width: 100%;
                         margin: 0 auto;
+                    }
 
-                        @media (max-width: 1100px) {
-                            padding: 60px 0 0;
-                            min-height: unset;
-                        }
+                    /** Containing the main page and the footer */
+                    .main-container {
+                        display: flex;
+                        flex-direction: column;
+
+                        /** 
+                        *  To make sure that footer is always at the bottom, make
+                        *  that the height is at minimun full screen
+                        */
+                        min-height: 100vh;
                     }
                 `}</style>
-            </main>
+            </div>
+
         );
     }
 }

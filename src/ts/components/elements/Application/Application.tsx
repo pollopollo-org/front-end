@@ -6,9 +6,6 @@ import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "../../utils";
 
-import ApplicationLabels from "src/assets/data/application.json";
-import { fonts } from "src/ts/config";
-
 export type ApplicationProps = {
     /**
      * Contains a reference to the applicaiton model that should be rendered
@@ -18,7 +15,7 @@ export type ApplicationProps = {
 
 export type ApplicationState = {
     /**
-     * A boolean that tracks whether the application is expanded, and should
+     * A boolean that tracks whether the application is expanded, and should 
      */
     expanded: boolean;
 
@@ -91,7 +88,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         { this.renderDonateButton() }
 
                         { this.state.isSmall && (
-                            this.renderMotivationTeaser()
+                            this.renderMotivationTeaser() 
                         )}
 
                         { this.renderChevron() }
@@ -100,6 +97,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                 </div>
 
 				<style jsx>{`
+
                     /** Draws a border around the application */
                     .application-border {
                         /** Allow usage of position: absolute within */
@@ -253,8 +251,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     /** The name placed under the thumbnail in the .section-user */
                     .name {
                         font-size: 12px;
-                        font-family: ${ fonts.text };
-                        font-weight: 300;
                     }
                 `}</style>
             </section>
@@ -267,10 +263,12 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private renderContentSection = () => {
         const { application } = this.props;
 
+        console.log(this.state.isSmall);
+
         return (
             <section className="section-content">
                 <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
-
+                
                 { !this.state.isSmall && (
                     this.renderMotivationTeaser()
                 )}
@@ -288,9 +286,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     */
                     .product {
                         /** Setup font */
-                        margin: 0;
-                        font-family: ${ fonts.heading };
-                        font-weight: 400;
                         font-size: 18px;
                         line-height: 1.3em;
 
@@ -322,7 +317,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     }
 
     /**
-     * Internal renderer that renders the motivation teaser section of the
+     * Internal renderer that renders the motivation teaser section of the 
      * application
      */
     private renderMotivationTeaser = () => {
@@ -352,8 +347,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
                         /** Setup font */
                         font-size: 12px;
-                        font-family: ${ fonts.text };
-                        font-weight: 300;
 
                         /** Prepare transitions */
                         transition: opacity 0.15s linear;
@@ -366,7 +359,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             position: relative;
                             display: block;
                             max-width: calc(100% - 60px);
-
+                            
                             margin-top: 8px;
                             margin-left: 12px;
                         }
@@ -385,9 +378,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className="description-content">
-                    <h3>Requested product</h3>
-                    <p className="product">{application.amount} {application.product}</p>
-                    <h3>{ ApplicationLabels.motivation }</h3>
+                    <h3>Motivation</h3>
                     <p>
                         {application.motivation}
                     </p>
@@ -404,23 +395,6 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         /** Setup font */
                         font-size: 14px;
                         line-height: 1.5em;
-
-                        /** Position on top of hover */
-                        position: relative;
-                        z-index: 3;
-                    }
-
-                    h3 {
-                        font-family: ${ fonts.heading };
-                        font-weight: 400;
-                        margin: 10px 0 5px;
-                    }
-
-                    p {
-                        /** Override defaults */
-                        margin: 0;
-                        font-family: ${ fonts.text };
-                        font-weight: 300;
                     }
 
                     /** Placement styling */
