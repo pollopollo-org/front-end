@@ -1,5 +1,10 @@
 import React from "react";
+import { colors } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
+
+import Countries from "src/assets/countries.json";
+import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
+import RegisterFormLabels from "src/assets/data/registerForm.json";
 
 type RegisterFormState = {
     /**
@@ -43,7 +48,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
             lastName: "",
             email: "",
             country: "",
-            userType: "",
+            userType: "producer",
             password: "",
             repeatedPassword: "",
         };
@@ -56,37 +61,52 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         return(
             <div className="allSection">
 
-                <h1>Register as new user</h1>
+                <h1>{ RegisterFormLabels.title }</h1>
                 <form onSubmit={this.validate}>
                     <div className="section">
-                        <input className="leftInput" placeholder="First name" required onChange={event => this.setState({firstName: event.target.value,})}/>
-                        <input placeholder="Last name" required onChange={event => this.setState({lastName: event.target.value,})}/>
+                        <input className="leftInput" placeholder={ RegisterFormLabels.firstName } required onChange={event => this.setState({firstName: event.target.value })}/>
+                        <input placeholder={ RegisterFormLabels.lastName } required onChange={event => this.setState({lastName: event.target.value })}/>
                     </div>
                     <div className="section">
-                        <input type="email" className="leftInput" placeholder="Email" required onChange={event => this.setState({password: event.target.value,})}/>
-                        <select
-                            required
-                            onChange={event => this.setState({country: event.target.value})}
-                            className={`${this.state.country === "" ? "inactive" : "active"}`}
-                        >
-                            <option disabled selected value="">Select country</option>
-                            <option value="DA">dk</option>
-                        </select>
+                        <input type="email" className="leftInput" placeholder={ RegisterFormLabels.email } required onChange={event => this.setState({password: event.target.value,})}/>
+                        { this.renderSelect() }
                     </div>
                     <div className="section">
-                        <input type="password" className="leftInput" placeholder="Password" required onChange={event => this.setState({password: event.target.value,})}/>
-                        <input type="password" placeholder="Confirm password" required onChange={event => this.setState({repeatedPassword: event.target.value,})}/>
+                        <input type="password" className="leftInput" placeholder={RegisterFormLabels.password } required onChange={event => this.setState({password: event.target.value,})}/>
+                        <input type="password" placeholder={ RegisterFormLabels.confirmPassword } required onChange={event => this.setState({repeatedPassword: event.target.value,})}/>
                     </div>
                     <div className="grid">
                         <div>
-                            <h4>What type of user are you?</h4>
+                            <h4>{ RegisterFormLabels.userType__title }</h4>
                             <div className="radioSection">
-                                <div className="userType P"><input type="radio" className="userTypeButton" name="userType" value="producer" checked onChange={event => this.setState({userType: event.target.value,})}/><label>Producer</label></div>
-                                <div className="userType R"><input type="radio" className="userTypeButton" name="userType" value="receiver" onChange={event => this.setState({userType: event.target.value,})}/><label>Receiver</label></div>
+                                <div className="userType P">
+                                    <input
+                                        type="radio"
+                                        className="userTypeButton"
+                                        name="userType"
+                                        id="producer"
+                                        value="producer"
+                                        checked={this.state.userType === "producer"}
+                                        onChange={this.onUserTypeClick}
+                                    />
+                                        <label htmlFor="producer">{ RegisterFormLabels.userType__producer }</label>
+                                    </div>
+                                <div className="userType R">
+                                    <input
+                                        type="radio"
+                                        className="userTypeButton"
+                                        name="userType"
+                                        id="receiver"
+                                        value="receiver"
+                                        checked={this.state.userType === "receiver"}
+                                        onChange={this.onUserTypeClick}
+                                    />
+                                    <label htmlFor="receiver">{ RegisterFormLabels.userType__reciever }</label>
+                                </div>
                             </div>
                         </div>
                         <div>
-                            <button type="submit">Register</button>
+                            <button type="submit">{ RegisterFormLabels.submit }</button>
                         </div>
                     </div>
                     {/* <div className="conditionalSection">
@@ -103,7 +123,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                 <style jsx>{`
                     h1 {
-                        margin: 0 30px 8px;
+                        margin: 0 0 8px;
                         line-height: 30px;
                         text-align: center;
                     }
@@ -114,11 +134,10 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                     .allSection {
                         width: 540px;
-                        min-height: calc(100vh - 299px);
-
+                        height: calc(100% - 60px);
                         display: flex;
                         flex-direction: column;
-                        margin: 0 auto;
+                        margin: 30px auto;
                         justify-content: center;
                     }
 
@@ -127,14 +146,24 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     input{
+                        box-shadow: none;
                         height: 39px;
                         width: 250px;
                         text-indent: 9px;
-                        border: 1px solid lightgray;
+                        border: 1px solid ${ colors.gray };
+                        color: ${ colors.black };
                         border-radius: 3px;
                         font-family: ${ fonts.text };
                         font-size: 16px;
                         font-weight: 300;
+
+                        /** Remove box-shadow on iOS */
+                        background-clip: padding-box;
+
+                        &::placeholder {
+                            color: ${ colors.gray };
+                            opacity: 1;
+                        }
                     }
 
                     .leftInput {
@@ -147,27 +176,6 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         margin: 0px 10 0 0px;
                     }
 
-                    select{
-                        -webkit-appearance: none;
-                        background: transparent;
-                        height: 39px;
-                        width: 254px;
-                        text-indent: 9px;
-                        border: 1px solid lightgray;
-                        border-radius: 3px;
-                        font-size: 16px;
-                        font-weight: 300;
-                        font-family: ${ fonts.text };
-                    }
-
-                    select.inactive {
-                        color: gray;
-                    }
-
-                    select.active {
-                        color: black;
-                    }
-
                     option[value = ""][disabled] {
                         display: none;
                     }
@@ -178,7 +186,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     .userType {
-                        display: inline-block;
+                        display: inline-flex;
+                        align-items: center;
                     }
 
                     label{
@@ -190,7 +199,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         float: right;
 
                         margin: 30px auto auto 49px;
-                        background-color: #8C489F;
+                        background-color: ${ colors.secondary };
                         color: white;
                         border: none;
                         border-radius: 2px;
@@ -200,10 +209,11 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         font-family: ${ fonts.heading };
                         font-weight: 300;
                         width: 254px;
+                        cursor: pointer;
                     }
 
                     button:hover {
-                        background-color: #443266;
+                        background-color: ${ colors.primary };
                     }
 
                     @media only screen and (max-width: 768px) {
@@ -211,6 +221,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             margin: auto;
                             text-align: center;
                             width: 100%;
+                            box-sizing: border-box;
+                            padding: 0 15px;
                         }
 
                         h1 {
@@ -227,8 +239,11 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             margin: 0;
                         }
 
-                        input, select {
+                        input {
                             margin: 15px 0;
+                            width: 100%;
+                            box-sizing: border-box;
+                            max-width: 400px;
                         }
 
                         input.userTypeButton {
@@ -269,6 +284,81 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
             </div>
         );
+    }
+
+    /**
+     * Internal renderer that renders the select of the application
+     */
+    private renderSelect(): JSX.Element {
+        return (
+            <select
+                required
+                onChange={event => this.setState({ country: event.target.value })}
+                className={`${this.state.country === "" ? "inactive" : "active"}`}
+            >
+                <option disabled selected value="">Select country</option>
+                <optgroup>
+                    { PrioritisedCountries.map((country) => {
+                        return (
+                            <option value={country.Code}>{country.Name}</option>
+                        );
+                    }) }
+                </optgroup>
+                <optgroup>
+                    { Countries.map((country) => {
+                        // Only render non-prioritised countries in this list
+                        // (important countries has already been rendered)
+                        if (PrioritisedCountries.findIndex((priority) => priority.Code !== country.Code)) {
+                            return null;
+                        }
+
+                        return (
+                            <option value={country.Code}>{country.Name}</option>
+                        );
+                    }) }
+                </optgroup>
+
+                <style jsx>{`
+                    select{
+                        -webkit-appearance: none;
+                        background: transparent;
+                        height: 43px;
+                        width: 254px;
+                        text-indent: 9px;
+                        border: 1px solid ${ colors.gray };
+                        border-radius: 3px;
+                        font-size: 16px;
+                        font-weight: 300;
+                        font-family: ${ fonts.text };
+                    }
+
+                    select.inactive {
+                        color: ${ colors.gray };
+                    }
+
+                    select.active {
+                        color: ${ colors.black };
+                    }
+
+                    @media only screen and (max-width: 768px) {
+                        select {
+                            margin: 15px 0;
+                            width: 100%;
+                            box-sizing: border-box;
+                            max-width: 400px;
+                        }
+                    }
+                `}</style>
+            </select>
+        );
+    }
+
+    /**
+     * Internal helper that should be triggered once a userType radio button
+     * should be clicked
+     */
+    private onUserTypeClick = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ userType: evt.currentTarget.value });
     }
 
     /**

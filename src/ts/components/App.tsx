@@ -8,7 +8,6 @@ import { Store } from "../store/Store";
 
 import { asyncTimeout } from "../utils";
 import { CSS } from "./layout/CSS";
-import { Footer } from "./layout/Footer/Footer";
 import { Header } from "./layout/Header/Header";
 import { HeaderFade } from "./layout/Header/HeaderFade";
 import { MainContainer } from "./layout/MainContainer";
@@ -70,7 +69,6 @@ export class App extends React.PureComponent<{}, AppState> {
 				<TransitionGroup component={null} appear={true}>
 					{ this.renderHeader() }
 					{ this.renderMainContainer() }
-					{ this.renderFooter() }
 				</TransitionGroup>
 			</StoreProvider>
 		);
@@ -94,22 +92,10 @@ export class App extends React.PureComponent<{}, AppState> {
 	 */
 	protected renderMainContainer(): React.ReactNode {
 		return (
-			<InitialFade key="mainContainer" withTransform={true}>
+			<InitialFade key="mainContainer">
 				<MainContainer />
 			</InitialFade>
 		);
-	}
-
-	/**
-	 * Renderer that'll render the footer of the application once content is
-	 * ready.
-	 */
-	protected renderFooter(): React.ReactNode {
-		return (
-			<InitialFade key="footer">
-				<Footer />
-			</InitialFade>
-		)
 	}
 
 	/**
