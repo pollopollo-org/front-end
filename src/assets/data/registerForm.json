@@ -6,8 +6,8 @@
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
-    "userType__producer": "I am a producer",
-    "userType__reciever": "I am a reciever",
+    "userType__producer": "Producer",
+    "userType__reciever": "Reciever",
     "userType__title": "What kind of user are you?",
     "submit": "Submit"
 }

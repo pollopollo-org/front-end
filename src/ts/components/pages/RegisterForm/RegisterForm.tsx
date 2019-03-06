@@ -134,8 +134,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                     .allSection {
                         width: 540px;
-                        min-height: calc(100vh - 299px);
-
+                        height: 100%;
                         display: flex;
                         flex-direction: column;
                         margin: 0 auto;
