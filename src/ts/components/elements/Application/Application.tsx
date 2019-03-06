@@ -15,7 +15,7 @@ export type ApplicationProps = {
 
 export type ApplicationState = {
     /**
-     * A boolean that tracks whether the application is expanded, and should 
+     * A boolean that tracks whether the application is expanded, and should
      */
     expanded: boolean;
 
@@ -88,7 +88,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         { this.renderDonateButton() }
 
                         { this.state.isSmall && (
-                            this.renderMotivationTeaser() 
+                            this.renderMotivationTeaser()
                         )}
 
                         { this.renderChevron() }
@@ -263,12 +263,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private renderContentSection = () => {
         const { application } = this.props;
 
-        console.log(this.state.isSmall);
-
         return (
             <section className="section-content">
                 <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
-                
+
                 { !this.state.isSmall && (
                     this.renderMotivationTeaser()
                 )}
@@ -317,7 +315,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     }
 
     /**
-     * Internal renderer that renders the motivation teaser section of the 
+     * Internal renderer that renders the motivation teaser section of the
      * application
      */
     private renderMotivationTeaser = () => {
@@ -359,7 +357,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             position: relative;
                             display: block;
                             max-width: calc(100% - 60px);
-                            
+
                             margin-top: 8px;
                             margin-left: 12px;
                         }
