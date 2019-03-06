@@ -5,6 +5,8 @@ import { routes } from "src/ts/config/routes";
 
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
+import { InitialFade } from "../transitions/InitialFade";
+import { Footer } from "./Footer/Footer";
 
 
 /**
@@ -17,11 +19,17 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
      */
     public render(): JSX.Element {
         return (
-            <main>
-                <Switch>
-                    <Route exact path={routes.root} component={FrontPage} />
-                    <Route exact path={routes.register} component={RegisterForm} />
-                </Switch>
+
+            <div className="main-container">
+                <main>
+                    <Switch>
+                        <Route exact path={routes.root} component={FrontPage} />
+                        <Route exact path={routes.register} component={RegisterForm} />
+                    </Switch>
+
+                </main>
+
+                { this.renderFooter() }
 
                 <style jsx>{`
                     main {
@@ -39,10 +47,34 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                             min-height: unset;
                         }
                     }
+
+                    /** Containing the main page and the footer */
+                    .main-container {
+
+                        /** 
+                        *  To make sure that footer is always at the bottom, make
+                        *  that the height is at minimun full screen
+                        */
+                        min-height: 100vh;
+                    }
                 `}</style>
-            </main>
+            </div>
+
         );
     }
+
+
+    /**
+     * Renderer that'll render the footer of the application once content is
+     * ready.
+     */
+	protected renderFooter(): React.ReactNode {
+		return (
+			<InitialFade key="footer">
+				<Footer />
+			</InitialFade>
+		)
+	}
 }
 
 export const MainContainer = withRouter(UnwrappedMainContainer);
