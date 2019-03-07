@@ -15,7 +15,7 @@ export type ApplicationProps = {
 
 export type ApplicationState = {
     /**
-     * A boolean that tracks whether the application is expanded, and should 
+     * A boolean that tracks whether the application is expanded, and should
      */
     expanded: boolean;
 
@@ -88,7 +88,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         { this.renderDonateButton() }
 
                         { this.state.isSmall && (
-                            this.renderMotivationTeaser() 
+                            this.renderMotivationTeaser()
                         )}
 
                         { this.renderChevron() }
@@ -263,12 +263,10 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     private renderContentSection = () => {
         const { application } = this.props;
 
-        console.log(this.state.isSmall);
-
         return (
             <section className="section-content">
                 <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
-                
+
                 { !this.state.isSmall && (
                     this.renderMotivationTeaser()
                 )}
@@ -317,7 +315,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
     }
 
     /**
-     * Internal renderer that renders the motivation teaser section of the 
+     * Internal renderer that renders the motivation teaser section of the
      * application
      */
     private renderMotivationTeaser = () => {
@@ -359,7 +357,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                             position: relative;
                             display: block;
                             max-width: calc(100% - 60px);
-                            
+
                             margin-top: 8px;
                             margin-left: 12px;
                         }
@@ -378,6 +376,8 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className="description-content">
+                    <h3>Requested product</h3>
+                    <p>{application.amount} {application.product}</p>
                     <h3>Motivation</h3>
                     <p>
                         {application.motivation}
@@ -392,9 +392,25 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         overflow: hidden;
                         transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION }ms ${ easings.inOutQuart};
 
+                        /** Position on top of before element */
+                        position: relative;
+                        z-index: 10;
+
                         /** Setup font */
                         font-size: 14px;
                         line-height: 1.5em;
+                    }
+
+                    h3 {
+                        margin: 0;
+
+                        &:first-of-type {
+                            margin-top: 10px;
+                        }
+                    }
+
+                    p {
+                        margin: 4px 0 14px;
                     }
 
                     /** Placement styling */
