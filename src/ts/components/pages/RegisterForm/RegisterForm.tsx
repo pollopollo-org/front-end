@@ -221,6 +221,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             margin: auto;
                             text-align: center;
                             width: 100%;
+                            height: 100%;
                             box-sizing: border-box;
                             padding: 0 15px;
                         }
