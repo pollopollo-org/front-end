@@ -20,9 +20,14 @@ export class Footer extends React.PureComponent {
 						<div className="col">
 							<div className="contactInfo">
 								<h4 className="title">{footer.contacttitle}</h4>
-								<p>{footer.url}</p>
-								<p>{footer.street}</p>
-								<p>{footer.zipcode}, {footer.city}</p>
+								<h5>{footer.pressTitle}</h5>
+								<p>
+									<a href={`mailto:${footer.email}`}>{footer.email}</a>
+								</p>
+								<h5>{footer.community}</h5>
+								<p>
+									<a href={footer.discordURL} target="_blank">{footer.discord}</a>
+								</p>
 							</div>
 						</div>
 						<div className="col">
@@ -37,19 +42,20 @@ export class Footer extends React.PureComponent {
 							<h4 className="title">{footer.contributorstitle}</h4>
 								<ul>
 									<li>
-										<a href="https://www.scrumwise.com/" target="_blank">
-											<i className="scrumwise">
-												{getSVG("scrumwise")}
-											</i>
-										</a>
-									</li>
-									<li>
 										<a href="https://obyte.org/" target="_blank">
 											<i className="obyte">
 												{ getSVG("obyte", {fillColor: "white"}) }
 											</i>
 										</a>
 									</li>
+									<li>
+										<a href="https://www.scrumwise.com/" target="_blank">
+											<i className="scrumwise">
+												{getSVG("scrumwise")}
+											</i>
+										</a>
+									</li>
+									
 									<li>
 										<a href="https://en.itu.dk/" target="_blank">
 											<i className="itu">
@@ -71,6 +77,13 @@ export class Footer extends React.PureComponent {
 						left: 0;
 						bottom: 0;
 						width: 100%;
+					}
+
+					h5 {
+						font-size: 14px;
+						color: ${ colors.white };
+						margin: 0;
+						
 					}
 
 					ul {
@@ -129,13 +142,23 @@ export class Footer extends React.PureComponent {
 						height: 100px;
 					}
 
-					.title {
+					h4 {
 						color: ${ colors.white };
 						font-size: 18px;
+						margin-bottom: 15px;
 					}
 
 					p {
-						margin: 15px 0;
+						margin: 7px 0 20px 0;
+					}
+
+					a {
+						color: ${ colors.white };
+						text-decoration: none;
+					}
+
+					a:hover {
+						text-decoration: underline;
 					}
 
 					@media only screen and (max-width: 666px) {
