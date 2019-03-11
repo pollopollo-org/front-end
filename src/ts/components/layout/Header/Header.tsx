@@ -13,15 +13,16 @@ export class Header extends React.PureComponent {
     /**
      * Main render method, used to render Header
      */
-	public render(): JSX.Element {
-		return (
+    public render(): JSX.Element {
+        return (
             <div className="header">
                 <i>
-                    { getSVG("logo_full_inverted") }
+                    {getSVG("logo_full_inverted")}
                 </i>
 
                 <Link to={routes.root}>Root</Link>
                 <Link to={routes.register}>Register</Link>
+                <Link to={routes.login}>Login</Link>
 
                 <style jsx>{`
 
@@ -33,8 +34,8 @@ export class Header extends React.PureComponent {
                         position: fixed;
                         display: flex;
                         flex-direction: row;
-                        background-color: ${ colors.primary };
-                        border-bottom: 1px solid ${ colors.primary };
+                        background-color: ${ colors.primary};
+                        border-bottom: 1px solid ${ colors.primary};
                         z-index: 1000;
                     }
 
@@ -45,6 +46,6 @@ export class Header extends React.PureComponent {
                     }
                 `}</style>
             </div>
-		);
-	}
+        );
+    }
 }
