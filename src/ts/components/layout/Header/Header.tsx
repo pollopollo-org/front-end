@@ -22,6 +22,7 @@ export class Header extends React.PureComponent {
 
                 <Link to={routes.root}>Root</Link>
                 <Link to={routes.register}>Register</Link>
+                <Link to={routes.editProducerProfile}>editProducerProfile</Link>
 
                 <style jsx>{`
 

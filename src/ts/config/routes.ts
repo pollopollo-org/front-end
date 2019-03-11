@@ -4,4 +4,5 @@
 export const routes = {
     root: "/",
     register: "/register.html",
+    editProducerProfile: "/editProducerProfile.html",
 }

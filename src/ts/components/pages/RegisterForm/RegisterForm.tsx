@@ -2,9 +2,8 @@ import React from "react";
 import { colors } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
-import Countries from "src/assets/countries.json";
-import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
 import RegisterFormLabels from "src/assets/data/registerForm.json";
+import { SelectCountry } from "../../utils/SelectCountry";
 
 type RegisterFormState = {
     /**
@@ -64,16 +63,37 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                 <h1>{ RegisterFormLabels.title }</h1>
                 <form onSubmit={this.validate}>
                     <div className="section">
-                        <input className="leftInput" placeholder={ RegisterFormLabels.firstName } required onChange={event => this.setState({firstName: event.target.value })}/>
-                        <input placeholder={ RegisterFormLabels.lastName } required onChange={event => this.setState({lastName: event.target.value })}/>
+                        <input 
+                            className="leftInput" 
+                            placeholder={ RegisterFormLabels.firstName } 
+                            required 
+                            onChange={event => this.setState({firstName: event.target.value })}/>
+                        <input 
+                            placeholder={ RegisterFormLabels.lastName } 
+                            required 
+                            onChange={event => this.setState({lastName: event.target.value })}/>
                     </div>
                     <div className="section">
-                        <input type="email" className="leftInput" placeholder={ RegisterFormLabels.email } required onChange={event => this.setState({password: event.target.value,})}/>
-                        { this.renderSelect() }
+                        <input 
+                            type="email" 
+                            className="leftInput" 
+                            placeholder={ RegisterFormLabels.email } 
+                            required 
+                            onChange={event => this.setState({password: event.target.value,})}/>
+                        <SelectCountry onChange={this.newCountrySelected}/>
                     </div>
                     <div className="section">
-                        <input type="password" className="leftInput" placeholder={RegisterFormLabels.password } required onChange={event => this.setState({password: event.target.value,})}/>
-                        <input type="password" placeholder={ RegisterFormLabels.confirmPassword } required onChange={event => this.setState({repeatedPassword: event.target.value,})}/>
+                        <input 
+                            type="password" 
+                            className="leftInput" 
+                            placeholder={RegisterFormLabels.password } 
+                            required 
+                            onChange={event => this.setState({password: event.target.value,})}/>
+                        <input 
+                            type="password" 
+                            placeholder={ RegisterFormLabels.confirmPassword } 
+                            required 
+                            onChange={event => this.setState({repeatedPassword: event.target.value,})}/>
                     </div>
                     <div className="grid">
                         <div>
@@ -288,73 +308,6 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     }
 
     /**
-     * Internal renderer that renders the select of the application
-     */
-    private renderSelect(): JSX.Element {
-        return (
-            <select
-                required
-                onChange={event => this.setState({ country: event.target.value })}
-                className={`${this.state.country === "" ? "inactive" : "active"}`}
-            >
-                <option disabled selected value="">Select country</option>
-                <optgroup>
-                    { PrioritisedCountries.map((country) => {
-                        return (
-                            <option value={country.Code}>{country.Name}</option>
-                        );
-                    }) }
-                </optgroup>
-                <optgroup>
-                    { Countries.map((country) => {
-                        // Only render non-prioritised countries in this list
-                        // (important countries has already been rendered)
-                        if (PrioritisedCountries.findIndex((priority) => priority.Code !== country.Code)) {
-                            return null;
-                        }
-
-                        return (
-                            <option value={country.Code}>{country.Name}</option>
-                        );
-                    }) }
-                </optgroup>
-
-                <style jsx>{`
-                    select{
-                        -webkit-appearance: none;
-                        background: transparent;
-                        height: 43px;
-                        width: 254px;
-                        text-indent: 9px;
-                        border: 1px solid ${ colors.gray };
-                        border-radius: 3px;
-                        font-size: 16px;
-                        font-weight: 300;
-                        font-family: ${ fonts.text };
-                    }
-
-                    select.inactive {
-                        color: ${ colors.gray };
-                    }
-
-                    select.active {
-                        color: ${ colors.black };
-                    }
-
-                    @media only screen and (max-width: 768px) {
-                        select {
-                            margin: 15px 0;
-                            width: 100%;
-                            box-sizing: border-box;
-                            max-width: 400px;
-                        }
-                    }
-                `}</style>
-            </select>
-        );
-    }
-
-    /**
      * Internal helper that should be triggered once a userType radio button
      * should be clicked
      */
@@ -377,5 +330,12 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         } else {
             return true;
         }
+    }
+
+    /**
+     * Is passed down to SelectCountry and allows us to extract its value
+     */
+    private newCountrySelected = (newCountry:string) => {
+        this.setState({country: newCountry,});
     }
 }
