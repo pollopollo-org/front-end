@@ -1,0 +1,8 @@
+{
+    "title": "Log in to PolloPollo",
+    "EmailInputLabel": "Email",
+    "PasswordInputLabel": "Password",
+    "buttonText": "Log in",
+    "linkQuestion": "Not registered yet?",
+    "linkSignUpText": "Sign up here"
+}
