@@ -1,8 +1,9 @@
 {
-    "contacttitle": "Contact information",
-    "url": "PolloPollo.org",
-    "street": "Stumpedal 3, 1.th",
-    "zipcode": "2730",
-    "city": "Herlev",
+    "contacttitle": "Contact",
+    "pressTitle": "Press inquiries:",
+    "email": "casper@obyte.org",
+    "community": "Community and help desk:",
+    "discord": "Discord",
+    "discordURL": "https://discord.gg/kQzuR4c",
     "contributorstitle": "Contributors"
 }
