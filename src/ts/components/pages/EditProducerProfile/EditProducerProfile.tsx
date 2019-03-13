@@ -1,4 +1,5 @@
 import React from "react";
+import EditProducerProfileLabels from "src/assets/data/editProducerProfile.json";
 import { colors, fonts } from "src/ts/config";
 import { SelectCountry } from "../../utils/SelectCountry";
 
@@ -72,25 +73,25 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
     public render(): JSX.Element{
         return(
             <div className="allSection">
-            <h1>Edit profile</h1>
+            <h1>{ EditProducerProfileLabels.title }</h1>
             <form>
                 <div className="inputPicDescSection">
                     <div className="inputFieldsSection">
                         <input 
                             className="input name first" 
                             required 
-                            placeholder="First name" 
+                            placeholder={ false || EditProducerProfileLabels.firstName } 
                             onChange={event => this.setState({firstName: event.target.value })}/>
                         <input 
                             className="input name last" 
                             required 
-                            placeholder="Surname" 
+                            placeholder={false || EditProducerProfileLabels.lastName } 
                             onChange={event => this.setState({lastName: event.target.value })}/>
                         <input 
                             type="email" 
                             className="input email" 
                             required 
-                            placeholder="Email" 
+                            placeholder={ false || EditProducerProfileLabels.email } 
                             onChange={event => this.setState({email: event.target.value })}/>
                         
                         <div className="SelectCountryDiv">
@@ -101,27 +102,27 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                             type="password" 
                             className="input password first" 
                             required 
-                            placeholder="Password" 
+                            placeholder={ false || EditProducerProfileLabels.password }
                             onChange={event => this.setState({password: event.target.value })}/>
                         <input 
                             type="password" 
                             className="input password second" 
                             required 
-                            placeholder="Confirm password" 
+                            placeholder={ false || EditProducerProfileLabels.confirmPassword }
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
                     </div>
                     <div className="pictureDescSection">
                         <input 
                             type="file"
                             className="upload"
-                            placeholder="Upload a picture"
+                            placeholder={ false || EditProducerProfileLabels.uploadPicture }
                             onChange={event => this.setState({profilePicture: event.target.value })}/>
                         <div className="currentPictureDiv">
                             {}
                         </div>
                         <textarea 
                             className="description" 
-                            placeholder="Describe yourself" 
+                            placeholder={ false || EditProducerProfileLabels.decription }
                             onChange={event => this.setState({description: event.target.value })}/>
                     </div>
                 </div>
@@ -133,11 +134,11 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                             type="password" 
                             className="input password old" 
                             required 
-                            placeholder="Enter your old password to proceed" 
+                            placeholder={ false || EditProducerProfileLabels.oldPassword } 
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
                     <div className="submitDiv">
-                        <button type="submit">Save</button>
+                        <button type="submit">{ EditProducerProfileLabels.saveButton}</button>
                     </div>
                 </div>
             </form>
