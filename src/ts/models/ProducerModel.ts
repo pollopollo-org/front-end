@@ -1,3 +1,4 @@
+import { DataProviders } from "../store/Store";
 import { UserModel, UserModelData } from "./UserModel";
 
 /**
@@ -15,6 +16,21 @@ export type ProducerModelData = {
  * User model for a producer
  */
 export class ProducerModel extends UserModel {
+    /**
+     * Helper that instantiates a user model, populated with required data.
+     */
+    public static async CREATE(dataProivder: DataProviders): Promise<ProducerModel> {
+        if (dataProivder === DataProviders.BACKEND) {
+            // Fetch data from backend
+            const data = await import("../../assets/dummy/user.json");
+            return new ProducerModel(data as ProducerModelData);
+        } else {
+            // Use dummydata
+            const data = await import("../../assets/dummy/user.json");
+            return new ProducerModel(data as ProducerModelData);
+        }
+    }
+
     /**
      * The Obyte wallet of the user
      */

@@ -8,6 +8,7 @@ import { routes } from "src/ts/config/routes";
 
 import profile from "src/assets/data/profile.json";
 
+import { ProducerModel } from "src/ts/models/ProducerModel";
 import { UserModel } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 
@@ -22,7 +23,7 @@ type UserProfileState = {
     /**
      * user type, producer or receiver
      */
-    userType: string;
+    userType?: string;
 }
 
 /**
@@ -30,11 +31,25 @@ type UserProfileState = {
  */
 @observer
 export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserProfileState>{
-    constructor(props:any){
-        super(props);
-        this.state={
-            userType: "receiver",
-        };
+
+    /**
+     * The state of the component
+     */
+    public readonly state: UserProfileState = {};
+
+    /**
+     * Determine user type
+     */
+    public componentDidMount(): void {
+        if(this.props.user instanceof ProducerModel) {
+            this.setState({
+                userType: "producer",
+            });
+        } else {
+            this.setState({
+                userType: "receiver",
+            });
+        }
     }
 
     /**
