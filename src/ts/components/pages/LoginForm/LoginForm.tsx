@@ -36,33 +36,42 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
      */
     public render(): JSX.Element {
         return (
-            <div className="loginSpacer">
-                <h1>{LoginFormLabels.title}</h1>
-                <div className="loginFormContainer">
-                    <div className="container">
-                        <form>
-                            <div className="loginForm Email">
-                                <label htmlFor="user_name" className="loginLabel Email">
-                                    {LoginFormLabels.EmailInputLabel}
-                                </label>
-                                <input type="email" className="loginInput Email" id="user_name" required onChange={event => this.setState({ email: event.target.value, })} />
-                            </div>
-                            <div className="loginForm Password">
-                                <label htmlFor="user_password" className="loginLabel Password">
-                                    {LoginFormLabels.PasswordInputLabel}
-                                </label>
-                                <input type="password" className="loginInput Password" id="user_password" required onChange={event => this.setState({ password: event.target.value, })} />
-                            </div>
-                            <button type="submit">{LoginFormLabels.buttonText}</button>
-                        </form>
-                        <Link className="registerLink" to={routes.register}>{LoginFormLabels.linkQuestion} <b>{LoginFormLabels.linkSignUpText}</b></Link>
+            <div className="loginCenterWrapper">
+                <div className="loginSpacer">
+                    <h1>{LoginFormLabels.title}</h1>
+                    <div className="loginFormContainer">
+                        <div className="container">
+                            <form>
+                                <div className="loginForm Email">
+                                    <label htmlFor="user_name" className="loginLabel Email">
+                                        {LoginFormLabels.EmailInputLabel}
+                                    </label>
+                                    <input type="email" className="loginInput Email" id="user_name" required onChange={event => this.setState({ email: event.target.value, })} />
+                                </div>
+                                <div className="loginForm Password">
+                                    <label htmlFor="user_password" className="loginLabel Password">
+                                        {LoginFormLabels.PasswordInputLabel}
+                                    </label>
+                                    <input type="password" className="loginInput Password" id="user_password" required onChange={event => this.setState({ password: event.target.value, })} />
+                                </div>
+                                <button type="submit">{LoginFormLabels.buttonText}</button>
+                            </form>
+                            <Link className="link registerLink" to={routes.register}>{LoginFormLabels.linkQuestion} <b>{LoginFormLabels.linkSignUpText}</b></Link>
+                        </div>
                     </div>
                 </div>
                 <style jsx>{`
+
+                    .loginCenterWrapper {
+                        flex-grow: 1;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
                     .loginSpacer {
                         margin-top: 2rem;
                         margin-bottom: 2rem;
-                        float: center;
                     }
 
                     .loginFormContainer {
@@ -134,13 +143,13 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                         background-color: ${ colors.primary};
                     }
 
-                    :global(.registerLink) {
+                    :global(.link) {
                         margin-top: 10px;
 						color: ${ colors.secondary};
                         text-decoration: none;
                     }
 
-                    :global(.registerLink:hover) {
+                    :global(.link:hover) {
 						color: ${ colors.primary};
                         text-decoration:none; 
                         cursor:pointer;  
