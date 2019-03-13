@@ -19,6 +19,9 @@ export const routes = {
     },
     register: {
         path: "/register.html",
-        name: "Sign up",
     },
+    profile: {
+        path: "/profile.html",
+        name: "Profile"
+    }
 }

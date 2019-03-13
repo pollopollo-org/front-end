@@ -5,6 +5,7 @@ import { routes } from "src/ts/config/routes";
 
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
+import { UserProfile } from "../pages/UserProfile/UserProfile";
 import { Footer } from "./Footer/Footer";
 
 /**
@@ -23,6 +24,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                     <Switch>
                         <Route exact path={routes.root.path} component={FrontPage} />
                         <Route exact path={routes.register.path} component={RegisterForm} />
+                        <Route exact path={routes.profile.path} component={UserProfile} />
                     </Switch>
                 </main>
 

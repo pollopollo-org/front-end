@@ -1,5 +1,6 @@
 import { ApplicationModel } from "../models/ApplicationModel";
 
+import { UserModel } from "../models/UserModel";
 import { DataProviders, Store } from "./Store";
 
 /**
@@ -18,8 +19,9 @@ export const createStore = () => {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
+                const user = await UserModel.CREATE(DataProviders.DUMMY);
 
-                resolve(new Store({applications}));
+                resolve(new Store({applications, user}));
             } catch (err) {
                 reject(err);
             }
