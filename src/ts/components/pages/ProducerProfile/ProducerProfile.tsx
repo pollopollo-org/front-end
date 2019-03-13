@@ -16,9 +16,8 @@ export class ProducerProfile extends React.PureComponent<{}>{
     public render() : JSX.Element{
         return (
             <div className="page">
-                
                 <div className="wrapper">
-                        <div className="left">
+                    <div className="left">
                         <h1>Profile</h1>
                         <div className="information">
                             <div className="content">
@@ -56,19 +55,22 @@ export class ProducerProfile extends React.PureComponent<{}>{
                         margin-top: 25px;
                     }
 
+                    /* Box for user information */
                     .information {
                         padding: 10px 0;
                         max-width: 325px;
                         border-radius: 3px;
                         background-color: ${colors.pale};
                         color: ${colors.licorice};
-                        text-align: justify;
+                        
                     }
 
+                    /* The content of the information box */
                     .content {
                         margin: 30px 50px;
                     }
 
+                    /* Link to edit profile page */
                     :global(.editProfile) {
                         text-align: center;
                         margin-top: 10px;
@@ -85,11 +87,13 @@ export class ProducerProfile extends React.PureComponent<{}>{
                         margin: 15px 0;
                     }
 
+                    /* Description part of information */
                     .desc {
                         margin-top: 25px;
                     }
 
                     .desc p {
+                        text-align: justify;
                         margin: 5px 0 0 0;
                         -webkit-hyphens: auto;
                         -moz-hyphens: auto;
@@ -102,6 +106,7 @@ export class ProducerProfile extends React.PureComponent<{}>{
                         margin: 0;
                     }
 
+                    /* Profile picture */
                     .image {
                         display: block;
                         height: 160px;
@@ -111,11 +116,13 @@ export class ProducerProfile extends React.PureComponent<{}>{
                         margin: 0 auto;
                     }
 
+                    /* List of user's products */
                     .products {
                         margin-top: 63px;
                         width: 50%;
                     }
 
+                    /* Dummy products for list of products */
                     .item {
                         height: 90px;
                         border: 1px solid rgba(139,72,156, 0.15);
