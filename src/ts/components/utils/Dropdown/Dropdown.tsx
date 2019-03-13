@@ -401,6 +401,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
  * Helper that'll calculate the position of the given node, relativiely to the
  * viewport.
  */
+// tslint:disable-next-line completed-docs
 function getAbsolutePosition(node: HTMLElement): { top: number; left: number } {
     // Prepare position
     const position = {

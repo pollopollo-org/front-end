@@ -1,10 +1,13 @@
 import React from "react";
-import { TransitionGroup } from "react-transition-group";
-import { getSVG } from 'src/assets/svg';
-import { colors } from 'src/ts/config';
-import { injectStore } from 'src/ts/store/injectStore';
-import { Chevron } from '../../utils';
-import { Dropdown } from '../../utils/Dropdown/Dropdown';
+import { Link } from "react-router-dom";
+
+import { getSVG } from "src/assets/svg";
+import { colors, routes } from "src/ts/config";
+import { ProducerModel } from "src/ts/models/ProducerModel";
+import { UserModel } from "src/ts/models/UserModel";
+import { injectStore } from "src/ts/store/injectStore";
+import { Chevron } from "../../utils";
+import { Dropdown } from "../../utils/Dropdown/Dropdown";
 
 
 /**
@@ -47,11 +50,6 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
      * Primary render method.
      */
     public render(): JSX.Element | undefined {
-        // Bail out if no user was available
-        if (!this.props.user) {
-            return undefined;
-        }
-
         return (
             <div
                 className={`${ this.state.showDropdown ? "active" : "" }`}
@@ -60,16 +58,25 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
                 role="button"
             >
                 <i className="icon">{ getSVG("user") }</i>
-                <span className="chevron">
-                    <Chevron
-                        vertical
-                        size={ 10 }
-                        inverseDuration={ 200 }
-                        inversed={ this.state.showDropdown }
-                    />
-                </span>
+                { !this.props.user && (
+                    <Link to={routes.register.path}>
+                        Log in
+                    </Link>
+                )}
+                { this.props.user && (
+                    <>
+                        <span className="chevron">
+                            <Chevron
+                                vertical
+                                size={10}
+                                inverseDuration={200}
+                                inversed={this.state.showDropdown}
+                            />
+                        </span>
 
-                { this.renderDropdown() }
+                        { this.renderDropdown() }
+                    </>
+                )}
 
                 <style jsx>{`
                     div {
@@ -223,8 +230,7 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
 
         return (
             <div className="user">
-                <b>{ user.name }</b><br />
-
+                <b>{ user.firstName } { user.surName }</b><br />
                 { this.renderUserType() }
 
                 <style jsx>{`
@@ -251,15 +257,21 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
      * Renderer that'll inject the user's type into the DOM (this is used, if we
      * were unable to identify the user's institution assoication).
      */
-    protected renderUserType(): JSX.Element {
+    protected renderUserType(): React.ReactNode {
         // ... Otherwise return label based on user type
-        switch (this.props.user.userType) {
-            case PRODUCER:
-                return "Producer";
-
-            default:
-                return "Reciever";
+        if (this.props.user instanceof ProducerModel) {
+            return "Producer";
+        } else {
+            return "Reciever";
         }
+    }
+
+    /**
+     * Method that'll be executed once the user wishes to log out in order to
+     * process the functionality required to achieve this.
+     */
+    protected signOut = () => {
+        alert("You cannot logout :-))))))");
     }
 
     /**

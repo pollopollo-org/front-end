@@ -50,7 +50,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         <div className="information">
                             <div className="content">
                                 <img className="image" src={require("src/assets/dummy/sif.PNG")} />
-                                <Link className="editProfile" to={routes.register}>{profile.edit}</Link>
+                                <Link className="editProfile" to={routes.register.path}>{profile.edit}</Link>
                                 <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
                                 <p><span className="bold">{profile.country}</span> {user.country}</p>
                                 <p><span className="bold">{profile.email}</span> {user.email}</p>
@@ -96,7 +96,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         border-radius: 3px;
                         background-color: ${colors.pale};
                         color: ${colors.licorice};
-                        
+
                     }
 
                     /* The content of the information box */
@@ -182,7 +182,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             width: 100%;
     						flex-direction: column;
                             justify-content: center;
-                            
+
 						}
 
                         .information {

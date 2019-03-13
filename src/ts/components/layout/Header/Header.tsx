@@ -5,6 +5,7 @@ import { getSVG } from "src/assets/svg";
 import { routes } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
 import { Menu } from "./Menu";
+import { UserInfo } from "./UserInfo";
 
 /**
  * Header to be placed at the top of all pages
@@ -24,6 +25,8 @@ export class Header extends React.PureComponent {
                 </Link>
 
                 <Menu />
+
+                <UserInfo />
 
                 <style jsx>{`
 
