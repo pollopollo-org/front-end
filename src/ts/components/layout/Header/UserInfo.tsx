@@ -57,14 +57,17 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
                 onClick={ this.onUsernameClick }
                 role="button"
             >
-                <i className="icon">{ getSVG("user") }</i>
+                <i className="icon">{ getSVG("user", { strokeColor: colors.whiteSmoke }) }</i>
                 { !this.props.user && (
-                    <Link to={routes.register.path}>
-                        Log in
-                    </Link>
+                    <span className="loginButton">
+                        <Link to={routes.register.path}>
+                            Log in
+                        </Link>
+                    </span>
                 )}
                 { this.props.user && (
                     <>
+                        <span className="name">{ this.props.user.firstName } { this.props.user.surName }</span>
                         <span className="chevron">
                             <Chevron
                                 vertical
@@ -80,27 +83,49 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
 
                 <style jsx>{`
                     div {
+                        /** Position unserinfo to the right */
+                        position: absolute;
+                        right: 10px;
+                        top: 0;
+
+                        /** Position children properly */
+                        height: 60px;
+                        display: flex;
+                        align-items: center;
+
                         /** Indicate that the element is clickable */
                         cursor: pointer;
 
-                        /** Apply default color */
-                        & .icon > :global(.svgIcon) > :global(svg) > :global(path) {
-                            fill: blue;
+                        & .loginButton :global(> a),
+                        & .name {
+                            /** Override defaults for link */
+                            color: ${ colors.whiteSmoke };
+                            text-decoration: none;
+
+                            /** Prepare transitions */
+                            transition: color 0.1s linear;
                         }
 
                         & .chevron {
-                            border-color: blue;
+                            border-color: ${ colors.whiteSmoke };
                         }
 
                         /** Apply hover colors */
-                        &:hover .icon > :global(.svgIcon) > :global(svg) > :global(path),
-                        &.active .icon > :global(.svgIcon > svg > path) {
-                            fill: ${ colors.primary };
+                        &:hover .icon > :global(.svgIcon) > :global(svg) > :global(*),
+                        &.active .icon > :global(.svgIcon > svg > *) {
+                            stroke: ${ colors.tulip };
+                        }
+
+                        &:hover .loginButton :global(> a),
+                        &.active .loginButton :global(> a),
+                        &:hover .name,
+                        &.active .name {
+                            color: ${ colors.tulip };
                         }
 
                         &:hover .chevron,
                         &.active .chevron {
-                            border-color: ${ colors.primary };
+                            border-color: ${ colors.tulip };
                         }
                     }
 
@@ -148,7 +173,7 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
                     { this.renderUserData() }
 
                     <button onClick={ this.signOut } role="button">
-                        <i>{ getSVG("signIn") }</i>
+                        <i>{ getSVG("log_out") }</i>
 
                         Log out
                     </button>
@@ -279,7 +304,9 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
      * and prompts opening of the dropdown.
      */
     protected onUsernameClick = () => {
-        this.setState({ showDropdown: true });
+        if (this.props.user) {
+            this.setState({ showDropdown: true });
+        }
     }
 
     /**

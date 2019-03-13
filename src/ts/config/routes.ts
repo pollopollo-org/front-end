@@ -16,6 +16,7 @@ export type Route = {
 export const routes = {
     root: {
         path: "/",
+        name: "Home",
     },
     register: {
         path: "/register.html",
