@@ -154,6 +154,12 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                         text-decoration:none; 
                         cursor:pointer;  
                     }
+
+                    @media only screen and (max-width: 768px) {
+                        .loginFormContainer {
+                            width: 100%;
+                        }
+                    }
                 `}</style>
             </div>
         );
