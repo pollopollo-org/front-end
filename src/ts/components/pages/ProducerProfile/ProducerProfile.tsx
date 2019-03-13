@@ -16,22 +16,24 @@ export class ProducerProfile extends React.PureComponent<{}>{
     public render() : JSX.Element{
         return (
             <div className="page">
-                <h1>Profile</h1>
+                
                 <div className="wrapper">
-                    <div className="information">
-                        <div className="content">
-                            <img className="image" src={require("src/assets/dummy/sif.PNG")} />
-                            <Link className="editProfile" to={routes.register}>{profile.edit}</Link>
-                            <p><span className="bold">{profile.name}</span> Sif Kristensen</p>
-                            <p><span className="bold">{profile.country}</span> Denmark</p>
-                            <p><span className="bold">{profile.email}</span> sikr@itu.dk</p>
-                            <div className="desc">
-                                <p><span className="bold">{profile.desc}</span> </p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ligula urna, condimentum quis tempus ut, pharetra eu eros. Nulla sed turpis nisi. Vivamus viverra finibus nisl, ut varius dolor lobortis id. Curabitur ullamcorper libero id justo interdum eleifend. Suspendisse aliquet sem id nisi iaculis vehicula. Ut ut porttitor elit. Aenean maximus elit id consequat sagittis. Etiam et augue dui.</p>
+                        <div className="left">
+                        <h1>Profile</h1>
+                        <div className="information">
+                            <div className="content">
+                                <img className="image" src={require("src/assets/dummy/sif.PNG")} />
+                                <Link className="editProfile" to={routes.register}>{profile.edit}</Link>
+                                <p><span className="bold">{profile.name}</span> Sif Kristensen</p>
+                                <p><span className="bold">{profile.country}</span> Denmark</p>
+                                <p><span className="bold">{profile.email}</span> sikr@itu.dk</p>
+                                <div className="desc">
+                                    <p><span className="bold">{profile.desc}</span> </p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ligula urna, condimentum quis tempus ut, pharetra eu eros. Nulla sed turpis nisi. Vivamus viverra finibus nisl, ut varius dolor lobortis id. Curabitur ullamcorper libero id justo interdum eleifend. Suspendisse aliquet sem id nisi iaculis vehicula. Ut ut porttitor elit. Aenean maximus elit id consequat sagittis. Etiam et augue dui.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                     <div className="products">
                         <h2>Your products</h2>
                         <div className="item"></div>
@@ -41,22 +43,22 @@ export class ProducerProfile extends React.PureComponent<{}>{
 
                 <style jsx>{`
                     .page {
-                        margin: auto;
                         margin-bottom: 15px;
-                        width: 900px;
-                        justify-content: center;
-                        height: 100%;
-                        box-sizing: border-box;
+                        padding: 0 10px;
                     }
 
                     .wrapper {
                         display: flex;
-                        justify-content: space-between;
+                        justify-content: space-evenly;
+                    }
+
+                    h1 {
+                        margin-top: 25px;
                     }
 
                     .information {
-                        max-width: 300px;
-                        width: 300px;
+                        padding: 10px 0;
+                        max-width: 325px;
                         border-radius: 3px;
                         background-color: ${colors.pale};
                         color: ${colors.licorice};
@@ -110,8 +112,8 @@ export class ProducerProfile extends React.PureComponent<{}>{
                     }
 
                     .products {
-                        width: 500px;
-                        padding-right: 10px;
+                        margin-top: 63px;
+                        width: 50%;
                     }
 
                     .item {
@@ -132,19 +134,20 @@ export class ProducerProfile extends React.PureComponent<{}>{
                         .page {
                             width: 100%;
                             margin: auto;
-                            
+                            padding: 0;
                         }
 
 						.wrapper {
                             width: 100%;
     						flex-direction: column;
                             justify-content: center;
-                            margin: 10px;
+                            
 						}
 
                         .information {
-                            width: 100%;
-                            padding: 0;
+                            width: calc(100% - 20px);
+                            max-width: 100%;
+                            margin: 0 10px;
                             text-align: center;
                         }
 
@@ -161,7 +164,9 @@ export class ProducerProfile extends React.PureComponent<{}>{
                         }
 
                         .products {
-                            width: 100%;
+                            width: calc(100% - 20px);
+                            padding: 10px;
+                            margin: 0;
                         }
 
 					}
