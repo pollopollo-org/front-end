@@ -1,10 +1,22 @@
+import { observer } from "mobx-react";
 import React from "react";
+
 import { colors } from "src/ts/config/colors";
 
 import { Link } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
 import profile from "src/assets/data/profile.json";
+
+import { UserModel } from "src/ts/models/UserModel";
+import { injectStore } from "src/ts/store/injectStore";
+
+export type UserProps = {
+    /**
+     * Contains a reference to the user model that should be rendered
+     */
+    user: UserModel;
+}
 
 type UserProfileState = {
     /**
@@ -16,7 +28,8 @@ type UserProfileState = {
 /**
  * A page where the user can see their profile
  */
-export class UserProfile extends React.PureComponent<{}, UserProfileState>{
+@observer
+export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserProfileState>{
     constructor(props:any){
         super(props);
         this.state={
@@ -28,6 +41,7 @@ export class UserProfile extends React.PureComponent<{}, UserProfileState>{
      * Main render method, used to render ProfilePage
      */
     public render() : JSX.Element{
+        const { user } = this.props;
         return (
             <div className="page">
                 <div className="wrapper">
@@ -37,12 +51,12 @@ export class UserProfile extends React.PureComponent<{}, UserProfileState>{
                             <div className="content">
                                 <img className="image" src={require("src/assets/dummy/sif.PNG")} />
                                 <Link className="editProfile" to={routes.register}>{profile.edit}</Link>
-                                <p><span className="bold">{profile.name}</span> Sif Kristensen</p>
-                                <p><span className="bold">{profile.country}</span> Denmark</p>
-                                <p><span className="bold">{profile.email}</span> sikr@itu.dk</p>
+                                <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
+                                <p><span className="bold">{profile.country}</span> {user.country}</p>
+                                <p><span className="bold">{profile.email}</span> {user.email}</p>
                                 <div className="desc">
                                     <p><span className="bold">{profile.desc}</span> </p>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ligula urna, condimentum quis tempus ut, pharetra eu eros. Nulla sed turpis nisi. Vivamus viverra finibus nisl, ut varius dolor lobortis id. Curabitur ullamcorper libero id justo interdum eleifend. Suspendisse aliquet sem id nisi iaculis vehicula. Ut ut porttitor elit. Aenean maximus elit id consequat sagittis. Etiam et augue dui.</p>
+                                    <p>{user.description}</p>
                                 </div>
                             </div>
                         </div>
@@ -203,3 +217,5 @@ export class UserProfile extends React.PureComponent<{}, UserProfileState>{
         )
     }
 }
+
+export const UserProfile = injectStore((store) => ({user: store.user}), UnwrappedUserProfile);
