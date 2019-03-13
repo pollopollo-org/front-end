@@ -6,10 +6,24 @@ import { routes } from "src/ts/config/routes";
 
 import profile from "src/assets/data/profile.json";
 
+type UserProfileState = {
+    /**
+     * user type, producer or receiver
+     */
+    userType: string;
+}
+
 /**
  * A page where the user can see their profile
  */
-export class UserProfile extends React.PureComponent<{}>{
+export class UserProfile extends React.PureComponent<{}, UserProfileState>{
+    constructor(props:any){
+        super(props);
+        this.state={
+            userType: "receiver",
+        };
+    }
+
     /**
      * Main render method, used to render ProfilePage
      */
@@ -34,7 +48,13 @@ export class UserProfile extends React.PureComponent<{}>{
                         </div>
                     </div>
                     <div className="products">
-                        <h2>Your products</h2>
+                        {this.state.userType==="producer" && (
+                            <h2>Your products</h2>
+                        )}
+                        {this.state.userType==="receiver" && (
+                            <h2>Your applications</h2>
+                        )
+                        }
                         <div className="item"></div>
                         <div className="item"></div>
                     </div>
@@ -183,5 +203,3 @@ export class UserProfile extends React.PureComponent<{}>{
         )
     }
 }
-
-
