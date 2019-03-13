@@ -124,15 +124,6 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             <button type="submit">{RegisterFormLabels.submit}</button>
                         </div>
                     </div>
-                    {/* <div className="conditionalSection">
-                        {this.state.userType==="producer" && (
-                            <input></input>
-                        )}
-                        {this.state.userType!=="" && (
-                            <button>Submit</button>
-                        )
-                        }
-                    </div> */}
                 </form>
 
 
