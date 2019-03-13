@@ -60,8 +60,9 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
         return (
             <div className="page">
                 <div className="wrapper">
-                    <div className="left">
+                    <div>
                         <h1>Profile</h1>
+                        {/* Information box */}
                         <div className="information">
                             <div className="content">
                                 <img className="image" src={require("src/assets/dummy/sif.PNG")} />
@@ -76,7 +77,8 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             </div>
                         </div>
                     </div>
-                    <div className="products">
+                    {/* List of the user's products/applications */}
+                    <div className="list">
                         {this.state.userType==="producer" && (
                             <h2>Your products</h2>
                         )}
@@ -84,6 +86,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             <h2>Your applications</h2>
                         )
                         }
+                        {/* Dummy items for the list */}
                         <div className="item"></div>
                         <div className="item"></div>
                     </div>
@@ -119,7 +122,17 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         margin: 30px 50px;
                     }
 
-                    /* Link to edit profile page */
+                    /* Profile picture, centered within information box */
+                    .image {
+                        display: block;
+                        height: 160px;
+                        width: 160px;
+                        border-radius: 50%;
+                        border: 2px solid ${colors.primary};
+                        margin: 0 auto;
+                    }
+
+                    /* Link to edit profile page, centered under image */
                     :global(.editProfile) {
                         text-align: center;
                         margin-top: 10px;
@@ -141,6 +154,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         margin-top: 25px;
                     }
 
+                    /* Justify text and split words */
                     .desc p {
                         text-align: justify;
                         margin: 5px 0 0 0;
@@ -155,23 +169,21 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         margin: 0;
                     }
 
-                    /* Profile picture */
-                    .image {
-                        display: block;
-                        height: 160px;
-                        width: 160px;
-                        border-radius: 50%;
-                        border: 2px solid ${colors.primary};
-                        margin: 0 auto;
+                    h2 {
+                        margin: 0;
+                        margin-bottom: 15px;
                     }
 
-                    /* List of user's products */
-                    .products {
+                    /** 
+                     * List of user's products/applications, 
+                     * move down to align with information box 
+                     */
+                    .list {
                         margin-top: 63px;
                         width: 50%;
                     }
 
-                    /* Dummy products for list of products */
+                    /* Dummy products for list of products, replace later */
                     .item {
                         height: 90px;
                         border: 1px solid rgba(139,72,156, 0.15);
@@ -180,12 +192,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         margin-top: 15px;
                     }
 
-                    h2 {
-                        margin: 0;
-                        margin-bottom: 15px;
-                    }
-
-                    @media only screen and (max-width: 666px) {
+                    @media only screen and (max-width: 690px) {
 					/* For mobile phones: */
                         .page {
                             width: 100%;
@@ -193,6 +200,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             padding: 0;
                         }
 
+                        /* Make products/applications appear beneath information */
 						.wrapper {
                             width: 100%;
     						flex-direction: column;
@@ -200,6 +208,10 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             
 						}
 
+                        /** 
+                         * Make the information box wide enough to fill the 
+                         * screen and center it.
+                         */
                         .information {
                             width: calc(100% - 20px);
                             max-width: 100%;
@@ -219,14 +231,13 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             margin-top: 20px;
                         }
 
-                        .products {
+                        /* Make the list wide enough to fill the  screen. */
+                        .list {
                             width: calc(100% - 20px);
                             padding: 10px;
                             margin: 0;
                         }
-
 					}
-
                 `}</style>
             </div>
         )
