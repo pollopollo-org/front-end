@@ -9,7 +9,7 @@ import profile from "src/assets/data/profile.json";
 /**
  * A page where the user can see their profile
  */
-export class ProducerProfile extends React.PureComponent<{}>{
+export class UserProfile extends React.PureComponent<{}>{
     /**
      * Main render method, used to render ProfilePage
      */
