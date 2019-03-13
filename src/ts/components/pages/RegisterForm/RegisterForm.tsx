@@ -41,9 +41,9 @@ type RegisterFormState = {
  * A page where the user can register for the project
  */
 export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
-    constructor(props:any){
+    constructor(props: any) {
         super(props);
-        this.state={
+        this.state = {
             firstName: "",
             lastName: "",
             email: "",
@@ -58,26 +58,41 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
      * Render the component
      */
     public render(): JSX.Element {
-        return(
+        return (
             <div className="allSection">
 
-                <h1>{ RegisterFormLabels.title }</h1>
+                <h1>{RegisterFormLabels.title}</h1>
                 <form onSubmit={this.validate}>
                     <div className="section">
-                        <input className="leftInput" placeholder={ RegisterFormLabels.firstName } required onChange={event => this.setState({firstName: event.target.value })}/>
-                        <input placeholder={ RegisterFormLabels.lastName } required onChange={event => this.setState({lastName: event.target.value })}/>
+                        <input
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.firstName}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ firstName: event.target.value })} />
+                        <input
+                            placeholder={RegisterFormLabels.lastName}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ lastName: event.target.value })} />
                     </div>
                     <div className="section">
-                        <input type="email" className="leftInput" placeholder={ RegisterFormLabels.email } required onChange={event => this.setState({password: event.target.value,})}/>
-                        { this.renderSelect() }
+                        <input
+                            type="email"
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.email}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ password: event.target.value, })} />
+                        {this.renderSelect()}
                     </div>
                     <div className="section">
-                        <input type="password" className="leftInput" placeholder={RegisterFormLabels.password } required onChange={event => this.setState({password: event.target.value,})}/>
-                        <input type="password" placeholder={ RegisterFormLabels.confirmPassword } required onChange={event => this.setState({repeatedPassword: event.target.value,})}/>
+                        <input type="password" className="leftInput" placeholder={RegisterFormLabels.password} required onChange={event => this.setState({ password: event.target.value, })} />
+                        <input type="password" placeholder={RegisterFormLabels.confirmPassword} required onChange={event => this.setState({ repeatedPassword: event.target.value, })} />
                     </div>
                     <div className="grid">
                         <div>
-                            <h4>{ RegisterFormLabels.userType__title }</h4>
+                            <h4>{RegisterFormLabels.userType__title}</h4>
                             <div className="radioSection">
                                 <div className="userType P">
                                     <input
@@ -89,8 +104,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                                         checked={this.state.userType === "producer"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                        <label htmlFor="producer">{ RegisterFormLabels.userType__producer }</label>
-                                    </div>
+                                    <label htmlFor="producer">{RegisterFormLabels.userType__producer}</label>
+                                </div>
                                 <div className="userType R">
                                     <input
                                         type="radio"
@@ -101,12 +116,12 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                                         checked={this.state.userType === "receiver"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                    <label htmlFor="receiver">{ RegisterFormLabels.userType__reciever }</label>
+                                    <label htmlFor="receiver">{RegisterFormLabels.userType__reciever}</label>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <button type="submit">{ RegisterFormLabels.submit }</button>
+                            <button type="submit">{RegisterFormLabels.submit}</button>
                         </div>
                     </div>
                     {/* <div className="conditionalSection">
@@ -150,10 +165,10 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         height: 39px;
                         width: 250px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray };
-                        color: ${ colors.black };
+                        border: 1px solid ${ colors.gray};
+                        color: ${ colors.black};
                         border-radius: 3px;
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                         font-size: 16px;
                         font-weight: 300;
 
@@ -161,7 +176,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         background-clip: padding-box;
 
                         &::placeholder {
-                            color: ${ colors.gray };
+                            color: ${ colors.gray};
                             opacity: 1;
                         }
                     }
@@ -199,21 +214,21 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         float: right;
 
                         margin: 30px auto auto 49px;
-                        background-color: ${ colors.secondary };
+                        background-color: ${ colors.secondary};
                         color: white;
                         border: none;
                         border-radius: 2px;
                         padding: 10px 104px;
                         transition: background-color 0.1s linear;
                         font-size: 16px;
-                        font-family: ${ fonts.heading };
+                        font-family: ${ fonts.heading};
                         font-weight: 300;
                         width: 254px;
                         cursor: pointer;
                     }
 
                     button:hover {
-                        background-color: ${ colors.primary };
+                        background-color: ${ colors.primary};
                     }
 
                     @media only screen and (max-width: 768px) {
@@ -261,7 +276,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                         .radioSection {
                             text-align: center;
-                            font-family: ${ fonts.text };
+                            font-family: ${ fonts.text};
                             font-weight: 300;
                         }
 
@@ -299,14 +314,14 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
             >
                 <option disabled selected value="">Select country</option>
                 <optgroup>
-                    { PrioritisedCountries.map((country) => {
+                    {PrioritisedCountries.map((country) => {
                         return (
                             <option value={country.Code}>{country.Name}</option>
                         );
-                    }) }
+                    })}
                 </optgroup>
                 <optgroup>
-                    { Countries.map((country) => {
+                    {Countries.map((country) => {
                         // Only render non-prioritised countries in this list
                         // (important countries has already been rendered)
                         if (PrioritisedCountries.findIndex((priority) => priority.Code !== country.Code)) {
@@ -316,7 +331,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         return (
                             <option value={country.Code}>{country.Name}</option>
                         );
-                    }) }
+                    })}
                 </optgroup>
 
                 <style jsx>{`
@@ -326,19 +341,19 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray };
+                        border: 1px solid ${ colors.gray};
                         border-radius: 3px;
                         font-size: 16px;
                         font-weight: 300;
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                     }
 
                     select.inactive {
-                        color: ${ colors.gray };
+                        color: ${ colors.gray};
                     }
 
                     select.active {
-                        color: ${ colors.black };
+                        color: ${ colors.black};
                     }
 
                     @media only screen and (max-width: 768px) {
@@ -371,11 +386,15 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
             alert("Please choose a country.");
             return false;
         }
+        else if (this.state.country.match(/[^0-9]+/)) {
+            alert("There was an error with the selected country.")
+            return false;
+        }
         else if (this.state.password !== this.state.repeatedPassword) {
             alert("Passwords must match.");
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 }
