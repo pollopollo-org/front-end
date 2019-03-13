@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { getSVG } from "src/assets/svg";
+import { routes } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
-import { routes } from "src/ts/config/routes";
+import { Menu } from "./Menu";
 
 /**
  * Header to be placed at the top of all pages
@@ -16,32 +17,48 @@ export class Header extends React.PureComponent {
 	public render(): JSX.Element {
 		return (
             <div className="header">
-                <i>
-                    { getSVG("logo_full_inverted") }
-                </i>
+                <Link to={routes.root.path}>
+                    <i>
+                        {getSVG("logo_full_inverted")}
+                    </i>
+                </Link>
 
-                <Link to={routes.root}>Root</Link>
-                <Link to={routes.register}>Register</Link>
+                <Menu />
 
                 <style jsx>{`
 
                     .header {
+                        /** Fixate header on top of the viewport */
+                        position: fixed;
                         top: 0;
                         left: 0;
+                        z-index: 1000;
+
+                        /** Setup dimensions of header */
                         width: 100%;
                         height: 60px;
-                        position: fixed;
+
+                        /**
+                         * Ensure content within is positioned properly in relation
+                         * to each other
+                         */
                         display: flex;
                         flex-direction: row;
+
+                        /** Render header */
                         background-color: ${ colors.primary };
-                        border-bottom: 1px solid ${ colors.primary };
-                        z-index: 1000;
                     }
 
                     i {
+                        /** Render PolloPollo logo in desired dimensions */
+                        display: block;
                         margin-left: 10px;
                         width: 200px;
                         height: 60px;
+
+                        /** Position on top of menu */
+                        position: relative;
+                        z-index: 2;
                     }
                 `}</style>
             </div>
