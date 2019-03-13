@@ -1,5 +1,7 @@
 import { ApplicationModel } from "../models/ApplicationModel";
 
+import { ProducerModel } from "../models/ProducerModel";
+import { ReceiverModel } from "../models/ReceiverModel";
 import { UserModel } from "../models/UserModel";
 import { DataProviders, Store } from "./Store";
 
@@ -19,7 +21,16 @@ export const createStore = () => {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
-                const user = await UserModel.CREATE(DataProviders.DUMMY);
+
+                // used for test of user models
+                const producer = false;
+                let user: UserModel;
+                if (producer) {
+                    user = await ProducerModel.CREATE(DataProviders.DUMMY);
+                } else {
+                    user = await ReceiverModel.CREATE(DataProviders.DUMMY);
+                }
+                
 
                 resolve(new Store({applications, user}));
             } catch (err) {

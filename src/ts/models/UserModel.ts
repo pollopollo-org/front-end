@@ -1,6 +1,3 @@
-import { DataProviders } from "../store/Store";
-import { ProducerModel, ProducerModelData } from "./ProducerModel";
-import { ReceiverModel, ReceiverModelData } from "./ReceiverModel";
 
 enum UserTypes {
     PRODUCER = "producer",
@@ -30,29 +27,6 @@ export type UserModelData = {
  * User model
  */
 export class UserModel {
-    /**
-     * Helper that instantiates a user model, populated with required data.
-     */
-    public static async CREATE(dataProivder: DataProviders): Promise<UserModel> {
-        if (dataProivder === DataProviders.BACKEND) {
-            // Fetch data from backend
-            const data = await import("../../assets/dummy/user.json");
-            if (data.userType === UserTypes.PRODUCER) {
-                return new ProducerModel(data as ProducerModelData);
-            } else {
-                return new ReceiverModel(data as ReceiverModelData);
-            }
-        } else {
-            // Use dummydata
-            const data = await import("../../assets/dummy/user.json");
-            if (data.userType === UserTypes.PRODUCER) {
-                return new ProducerModel(data as ProducerModelData);
-            } else {
-                return new ReceiverModel(data as ReceiverModelData);
-            }
-        }
-    }
-
     /**
      * The id of the user
      */
