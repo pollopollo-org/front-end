@@ -64,16 +64,45 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                 <h1>{RegisterFormLabels.title}</h1>
                 <form onSubmit={this.validate}>
                     <div className="section">
-                        <input className="leftInput" placeholder={RegisterFormLabels.firstName} required onChange={event => this.setState({ firstName: event.target.value })} />
-                        <input placeholder={RegisterFormLabels.lastName} required onChange={event => this.setState({ lastName: event.target.value })} />
+                        <input
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.firstName}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ firstName: event.target.value })}
+                        />
+                        <input
+                            placeholder={RegisterFormLabels.lastName}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ lastName: event.target.value })}
+                        />
                     </div>
                     <div className="section">
-                        <input type="email" className="leftInput" placeholder={RegisterFormLabels.email} required onChange={event => this.setState({ password: event.target.value, })} />
+                        <input
+                            type="email"
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.email}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ password: event.target.value, })}
+                        />
                         {this.renderSelect()}
                     </div>
                     <div className="section">
-                        <input type="password" className="leftInput" placeholder={RegisterFormLabels.password} required onChange={event => this.setState({ password: event.target.value, })} />
-                        <input type="password" placeholder={RegisterFormLabels.confirmPassword} required onChange={event => this.setState({ repeatedPassword: event.target.value, })} />
+                        <input
+                            type="password"
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.password}
+                            required
+                            onChange={event => this.setState({ password: event.target.value, })}
+                        />
+                        <input
+                            type="password"
+                            placeholder={RegisterFormLabels.confirmPassword}
+                            required
+                            onChange={event => this.setState({ repeatedPassword: event.target.value, })}
+                        />
                     </div>
                     <div className="grid">
                         <div>
@@ -109,15 +138,6 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             <button type="submit">{RegisterFormLabels.submit}</button>
                         </div>
                     </div>
-                    {/* <div className="conditionalSection">
-                        {this.state.userType==="producer" && (
-                            <input></input>
-                        )}
-                        {this.state.userType!=="" && (
-                            <button>Submit</button>
-                        )
-                        }
-                    </div> */}
                 </form>
 
 
@@ -133,6 +153,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         margin-top: 5px;
                     }
 
+                    /* center in the middle */
                     .allSection {
                         width: 540px;
                         height: calc(100% - 60px);
@@ -151,7 +172,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         height: 39px;
                         width: 250px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray};
+                        border: 1px solid ${ colors.pale}; 
+                        border-transition: border-color 0.15s linear;
                         color: ${ colors.black};
                         border-radius: 3px;
                         font-family: ${ fonts.text};
@@ -166,6 +188,11 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             opacity: 1;
                         }
                     }
+
+                    /* Set border styling when clicked on */
+                    input:focus {
+                        border: 1px solid ${ colors.secondary};
+                    }   
 
                     .leftInput {
                         margin-right: 30px;
@@ -218,6 +245,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     @media only screen and (max-width: 768px) {
+                        /* Center in the middle */
                         .allSection {
                             margin: auto;
                             text-align: center;
@@ -327,7 +355,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray};
+                        border: 1px solid ${ colors.pale}; 
+                        border-transition: border-color 0.15s linear;
                         border-radius: 3px;
                         font-size: 16px;
                         font-weight: 300;
@@ -340,6 +369,10 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                     select.active {
                         color: ${ colors.black};
+                    }
+
+                    select:focus {
+                        border: 1px solid ${ colors.secondary};
                     }
 
                     @media only screen and (max-width: 768px) {
@@ -372,11 +405,15 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
             alert("Please choose a country.");
             return false;
         }
+        else if (this.state.country.match(/[^0-9]+/)) {
+            alert("There was an error with the selected country.")
+            return false;
+        }
         else if (this.state.password !== this.state.repeatedPassword) {
             alert("Passwords must match.");
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 }

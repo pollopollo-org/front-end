@@ -62,6 +62,7 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                 </div>
                 <style jsx>{`
 
+                    /* Center form on middle of page */
                     .loginCenterWrapper {
                         flex-grow: 1;
                         height: 100%;
@@ -69,32 +70,42 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                         justify-content: center;
                         align-items: center;
                     }
+
+                    /* Top and bottom margin for login form*/
                     .loginSpacer {
                         margin-top: 2rem;
                         margin-bottom: 2rem;
                     }
 
+                    /* Wrapper to set width of form */
                     .loginFormContainer {
                         width: 22rem;
                     }
 
+                    /* Wrapper to flex the form with columns */
                     .container {
                         display: flex;
                         flex-direction: column;
                         max-width: 22rem;
                     }
 
+                    /* Start align items in form */
                     form {
                         display: flex;
                         flex-direction: column;
                         align-items: flex-start;
                     }
 
+                    /*  Wrapper for input fields
+                        filling fields in container
+                        with bottom margin under input fields
+                     */
                     .loginForm {
                         margin-bottom: 10px;
                         width: 100%;
                     }
 
+                    /* Set font, size and margin for input labels  */
                     .loginLabel {
                         display: block;
                         margin: 10px auto;
@@ -102,20 +113,32 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                         font-family: ${ fonts.text};
                     }
 
+                    /* Set styling for input fields */
                     .loginInput {
-                        box-shadow: none;
                         padding: 0.8rem 0;
-
                         text-indent: 9px;
-                        border: 1px solid ${ colors.pale};
+                        width: 100%;
+
+                        /* Set border styling */
+                        border: 1px solid ${ colors.pale}; 
                         border-transition: border-color 0.15s linear;
                         border-radius: 3px;
+                        box-shadow: none;
+                        box-sizing: border-box;
+
+                        /* Remove box-shadow on iOS */
+                        background-clip: padding-box;
+
+                        /* Set font styling */
                         font-weight: normal;
                         font-size: 1rem;
                         font-family: ${ fonts.text};
-                        box-sizing: border-box;
-                        width: 100%;
+                        color: ${ colors.black};
+
+                       ;
                     }
+
+                    /* Set border styling when clicked on */
                     .loginInput:focus {
                         border: 1px solid ${ colors.secondary};
                     }   
@@ -127,22 +150,29 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
 
                     button {
                         margin-top: 25px;
-                        background-color: ${ colors.secondary};
-                        color: white;
-                        border: none;
-                        border-radius: 3px;
                         padding: 0.75rem 1.25rem;
-                        transition: background-color 0.1s linear;
-                        font-size: 1.25rem;
-                        font-family: ${ fonts.heading};
                         width: 100%;
                         cursor: pointer;
+
+                        /* Set color styling */
+                        background-color: ${ colors.secondary};
+                        color: white;
+
+                        /* Set border styling */
+                        border: none;
+                        border-radius: 3px;
+                        transition: background-color 0.1s linear;
+
+                        /* Set font styling */
+                        font-size: 1.25rem;
+                        font-family: ${ fonts.heading};
                     }
 
                     button:hover {
                         background-color: ${ colors.primary};
                     }
 
+                    /* Set link styling */
                     :global(.link) {
                         margin-top: 10px;
 						color: ${ colors.secondary};
