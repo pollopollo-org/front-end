@@ -46,17 +46,31 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                                     <label htmlFor="user_name" className="loginLabel Email">
                                         {LoginFormLabels.EmailInputLabel}
                                     </label>
-                                    <input type="email" className="loginInput Email" id="user_name" required onChange={event => this.setState({ email: event.target.value, })} />
+                                    <input
+                                        type="email"
+                                        className="loginInput Email"
+                                        id="user_name"
+                                        required
+                                        onChange={event => this.setState({ email: event.target.value, })}
+                                    />
                                 </div>
                                 <div className="loginForm Password">
                                     <label htmlFor="user_password" className="loginLabel Password">
                                         {LoginFormLabels.PasswordInputLabel}
                                     </label>
-                                    <input type="password" className="loginInput Password" id="user_password" required onChange={event => this.setState({ password: event.target.value, })} />
+                                    <input
+                                        type="password"
+                                        className="loginInput Password"
+                                        id="user_password"
+                                        required
+                                        onChange={event => this.setState({ password: event.target.value, })}
+                                    />
                                 </div>
                                 <button type="submit">{LoginFormLabels.buttonText}</button>
                             </form>
-                            <Link className="link registerLink" to={routes.register}>{LoginFormLabels.linkQuestion} <b>{LoginFormLabels.linkSignUpText}</b></Link>
+                            <Link className="link registerLink" to={routes.register}>
+                                {LoginFormLabels.linkQuestion} <b>{LoginFormLabels.linkSignUpText}</b>
+                            </Link>
                         </div>
                     </div>
                 </div>
