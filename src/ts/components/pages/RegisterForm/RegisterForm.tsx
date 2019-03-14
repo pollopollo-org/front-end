@@ -85,8 +85,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             placeholder={RegisterFormLabels.email}
                             maxLength={255}
                             required
-                            onChange={event => this.setState({ password: event.target.value, })}
-                        />
+                            onChange={event => this.setState({ password: event.target.value, })} />
                         {this.renderSelect()}
                     </div>
                     <div className="section">
@@ -352,12 +351,15 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     select{
                         -webkit-appearance: none;
                         background: transparent;
+                        
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
+
                         border: 1px solid ${ colors.pale}; 
                         border-transition: border-color 0.15s linear;
                         border-radius: 3px;
+
                         font-size: 16px;
                         font-weight: 300;
                         font-family: ${ fonts.text};
