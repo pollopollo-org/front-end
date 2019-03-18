@@ -6,6 +6,7 @@ import { routes } from "src/ts/config/routes";
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { LoginForm } from "../pages/LoginForm/LoginForm";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
+import { UserProfile } from "../pages/UserProfile/UserProfile";
 import { Footer } from "./Footer/Footer";
 
 /**
@@ -24,6 +25,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                     <Switch>
                         <Route exact path={routes.root} component={FrontPage} />
                         <Route exact path={routes.register} component={RegisterForm} />
+                        <Route exact path={routes.profile} component={UserProfile} />
                         <Route exact path={routes.login} component={LoginForm} />
                     </Switch>
 
@@ -47,7 +49,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                         display: flex;
                         flex-direction: column;
 
-                        /** 
+                        /**
                         *  To make sure that footer is always at the bottom, make
                         *  that the height is at minimun full screen
                         */
