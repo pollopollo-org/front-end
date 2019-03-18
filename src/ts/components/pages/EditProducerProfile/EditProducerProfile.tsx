@@ -1,5 +1,6 @@
 import React from "react";
 import EditProfileLabels from "src/assets/data/editProfile.json";
+import { getSVG } from "src/assets/svg";
 import { colors, fonts } from "src/ts/config";
 import { isNullOrUndefined } from "util";
 import { SelectCountry } from "../../utils/SelectCountry";
@@ -126,7 +127,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                            { isNullOrUndefined(this.state.profilePicture) || <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
+                            { (isNullOrUndefined(this.state.profilePicture) && <i className="user">{ getSVG("user", {fillColor: "white"}) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
                         </div>
                         <input 
                             type="file"
@@ -191,7 +192,6 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                 }
 
                 img {
-                    /**Format the shibe*/
                     height: 258px;
                     width: 258px;
                     object-fit: cover;
@@ -268,10 +268,17 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     background-color: ${colors.pale};
                 }
 
+                i {
+                    margin: auto;
+                    display: block;
+                    height: 100px;
+                    width: 100px;
+                }
+
                 .description{
                     box-shadow: none;
                     width: 252px;
-                    height: 150px;
+                    height: 137px;
                     text-indent: 9px;
                     border: 1px solid ${ colors.gray };
                     color: ${ colors.black };
