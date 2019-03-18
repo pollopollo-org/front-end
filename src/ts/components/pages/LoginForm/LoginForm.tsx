@@ -32,7 +32,6 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
      * Render the component
      */
     public render(): JSX.Element {
-        console.log(this.state);
         return (
             <div className="loginCenterWrapper">
                 <div className="loginSpacer">

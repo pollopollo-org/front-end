@@ -8,51 +8,43 @@ import RegisterFormLabels from "src/assets/data/registerForm.json";
 
 type RegisterFormState = {
     /**
-     * first name
+     * The first name of the user who wants to register
      */
-    firstName: string;
+    firstName?: string;
     /**
-     * last name
+     * The last name of the user who wants to register
      */
-    lastName: string;
+    lastName?: string;
     /**
-     * email
+     * The email adress of the user who wants to register
      */
-    email: string;
+    email?: string;
     /**
-     * country
+     * The country the user is living in
      */
-    country: string;
+    country?: string;
     /**
-     * user type, producer or receiver
+     * The type of profile the user wants to create, either producer or receiver
      */
-    userType: string;
+    userType?: string;
     /**
-     * password
+     * The password the user wants to use for their profile
      */
-    password: string;
+    password?: string;
     /**
-     * repeated password
+     * The password again for validation reasons
      */
-    repeatedPassword: string;
+    repeatedPassword?: string;
 }
 
 /**
  * A page where the user can register for the project
  */
 export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            country: "",
-            userType: "producer",
-            password: "",
-            repeatedPassword: "",
-        };
-    }
+    /**
+     * State of the register form, all fields initially set to null
+     */
+    public readonly state: RegisterFormState = {};
 
     /**
      * Render the component
@@ -60,9 +52,9 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     public render(): JSX.Element {
         return (
             <div className="allSection">
-
-                <h1>{RegisterFormLabels.title}</h1>
+                <h1>{ RegisterFormLabels.title }</h1>
                 <form onSubmit={this.validate}>
+                    {/* First and last name */}
                     <div className="section">
                         <input
                             className="leftInput"
@@ -78,6 +70,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             onChange={event => this.setState({ lastName: event.target.value })}
                         />
                     </div>
+                    {/* Email and country */}
                     <div className="section">
                         <input
                             type="email"
@@ -88,21 +81,23 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             onChange={event => this.setState({ password: event.target.value, })} />
                         {this.renderSelect()}
                     </div>
+                    {/* Password */}
                     <div className="section">
-                        <input
-                            type="password"
-                            className="leftInput"
-                            placeholder={RegisterFormLabels.password}
-                            required
-                            onChange={event => this.setState({ password: event.target.value, })}
+                        <input 
+                            type="password" 
+                            className="leftInput" 
+                            placeholder={RegisterFormLabels.password} 
+                            required 
+                            onChange={event => this.setState({ password: event.target.value, })} 
                         />
-                        <input
-                            type="password"
-                            placeholder={RegisterFormLabels.confirmPassword}
-                            required
-                            onChange={event => this.setState({ repeatedPassword: event.target.value, })}
+                        <input 
+                            type="password" 
+                            placeholder={RegisterFormLabels.confirmPassword} 
+                            required 
+                            onChange={event => this.setState({ repeatedPassword: event.target.value, })} 
                         />
                     </div>
+                    {/* Usertype */}
                     <div className="grid">
                         <div>
                             <h4>{RegisterFormLabels.userType__title}</h4>
@@ -133,6 +128,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                                 </div>
                             </div>
                         </div>
+                        {/* Submit button */}
                         <div>
                             <button type="submit">{RegisterFormLabels.submit}</button>
                         </div>
@@ -162,11 +158,11 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         justify-content: center;
                     }
 
-                    .section{
+                    .section {
                         margin: 20px auto;
                     }
 
-                    input{
+                    input {
                         box-shadow: none;
                         height: 39px;
                         width: 250px;
@@ -179,7 +175,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         font-size: 16px;
                         font-weight: 300;
 
-                        /** Remove box-shadow on iOS */
+                        /* Remove box-shadow on iOS */
                         background-clip: padding-box;
 
                         &::placeholder {
@@ -224,7 +220,6 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                     button {
                         float: right;
-
                         margin: 30px auto auto 49px;
                         background-color: ${ colors.secondary};
                         color: white;
@@ -403,11 +398,11 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
      */
     private validate = (evt: React.FormEvent) => {
         evt.preventDefault();
-        if (this.state.country === "") {
+        if (this.state.country === null) {
             alert("Please choose a country.");
             return false;
         }
-        else if (this.state.country.match(/[^0-9]+/)) {
+        else if (this.state.country && this.state.country.match(/[^0-9]+/)) {
             alert("There was an error with the selected country.")
             return false;
         }
