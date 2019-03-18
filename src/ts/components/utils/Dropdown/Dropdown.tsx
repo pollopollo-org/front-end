@@ -174,7 +174,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                             * edge of the dropdown.
                             */
                             height: 3px;
-                            background: ${ colors.black };
+                            background: ${ colors.primary };
 
                             & .arrow {
                                 /**
@@ -209,7 +209,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                             /** Render the arrow pointing up */
                             & .arrow {
                                 top: -8px;
-                                border-bottom: 8px solid ${ colors.black };
+                                border-bottom: 8px solid ${ colors.primary };
                             }
                         }
 
@@ -224,7 +224,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                             /** Render the arrow pointing down */
                             & .arrow {
                                 bottom: -8px;
-                                border-top: 8px solid ${ colors.black };
+                                border-top: 8px solid ${ colors.primary };
                             }
                         }
                     }
@@ -302,7 +302,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
 
         // Bail out if the node isn't currently mounted
         if (!this.containerRef.current) {
-            throw new Error("<Dropdown />.calculatePosition(): Unable to calculate position for inactive dropdown!");
+            return;
         }
 
         // And then calculate the position of the reference node and the parent
