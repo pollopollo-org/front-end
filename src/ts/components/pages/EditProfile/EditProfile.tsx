@@ -5,7 +5,7 @@ import { colors, fonts } from "src/ts/config";
 import { isNullOrUndefined } from "util";
 import { SelectCountry } from "../../utils/SelectCountry";
 
-type EditProducerProfileState = {
+type EditProfileState = {
     /**
      * first name
      */
@@ -55,13 +55,13 @@ type EditProducerProfileState = {
 /**
  *  Page where a logged in producer can edit their profile
  */
-export class EditProducerProfile extends React.PureComponent<{},EditProducerProfileState>{
+export class EditProfile extends React.PureComponent<{},EditProfileState>{
 
     /**
      * State of the component
      * // TODO here we wanna get the actual user information tho
      */
-    public state: EditProducerProfileState = {
+    public state: EditProfileState = {
         firstName: "",
         lastName: "",
         email: "",
