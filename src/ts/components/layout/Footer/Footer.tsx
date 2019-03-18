@@ -17,6 +17,7 @@ export class Footer extends React.PureComponent {
 			<div>
 				<footer>
 					<div className="grid">
+						{/* Contact information */}
 						<div className="col">
 							<div className="contactInfo">
 								<h4 className="title">{footer.contacttitle}</h4>
@@ -30,6 +31,7 @@ export class Footer extends React.PureComponent {
 								</p>
 							</div>
 						</div>
+						{/* PolloPollo logo */}
 						<div className="col">
 							<div className="logo">
 								<i>
@@ -37,6 +39,7 @@ export class Footer extends React.PureComponent {
 								</i>
 							</div>
 						</div>
+						{/* Contributors */}
 						<div className="col">
 							<div className="contributorsInfo">
 							<h4 className="title">{footer.contributorstitle}</h4>
@@ -55,7 +58,6 @@ export class Footer extends React.PureComponent {
 											</i>
 										</a>
 									</li>
-									
 									<li>
 										<a href="https://en.itu.dk/" target="_blank">
 											<i className="itu">
