@@ -4,5 +4,6 @@
 export const routes = {
     root: "/",
     register: "/register.html",
-    producerProfile: "/producerprofile.html",
+    profile: "/profile.html",
+    login: "/login",
 }
