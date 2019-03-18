@@ -42,7 +42,7 @@ type RegisterFormState = {
  */
 export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     /**
-     * State of the register form, all fierlds initially set to null
+     * State of the register form, all fields initially set to null
      */
     public readonly state: RegisterFormState = {};
 
@@ -81,8 +81,19 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     </div>
                     {/* Password */}
                     <div className="section">
-                        <input type="password" className="leftInput" placeholder={RegisterFormLabels.password} required onChange={event => this.setState({ password: event.target.value, })} />
-                        <input type="password" placeholder={RegisterFormLabels.confirmPassword} required onChange={event => this.setState({ repeatedPassword: event.target.value, })} />
+                        <input 
+                            type="password" 
+                            className="leftInput" 
+                            placeholder={RegisterFormLabels.password} 
+                            required 
+                            onChange={event => this.setState({ password: event.target.value, })} 
+                        />
+                        <input 
+                            type="password" 
+                            placeholder={RegisterFormLabels.confirmPassword} 
+                            required 
+                            onChange={event => this.setState({ repeatedPassword: event.target.value, })} 
+                        />
                     </div>
                     {/* Usertype */}
                     <div className="grid">
@@ -372,7 +383,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
             alert("Please choose a country.");
             return false;
         }
-        else if (this.state.country.match(/[^0-9]+/)) {
+        else if (this.state.country && this.state.country.match(/[^0-9]+/)) {
             alert("There was an error with the selected country.")
             return false;
         }
