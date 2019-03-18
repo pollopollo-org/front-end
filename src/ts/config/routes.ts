@@ -25,6 +25,9 @@ export const routes = {
         path: "/profile.html",
     },
     login: {
-        path: "/login",
+        path: "/login.html",
+    },
+    editProfile: {
+        path: "/profile/edit.html",
     }
 }

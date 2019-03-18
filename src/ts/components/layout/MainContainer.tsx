@@ -3,6 +3,7 @@ import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom
 
 import { routes } from "src/ts/config/routes";
 
+import { EditProfile } from "../pages/EditProfile/EditProfile";
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { LoginForm } from "../pages/LoginForm/LoginForm";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
@@ -27,6 +28,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                         <Route exact path={routes.register.path} component={RegisterForm} />
                         <Route exact path={routes.profile.path} component={UserProfile} />
                         <Route exact path={routes.login.path} component={LoginForm} />
+                        <Route exact path={routes.editProfile.path} component={EditProfile} />
                     </Switch>
                 </main>
 
