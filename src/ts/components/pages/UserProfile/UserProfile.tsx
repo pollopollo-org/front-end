@@ -9,10 +9,9 @@ import { routes } from "src/ts/config/routes";
 import profile from "src/assets/data/profile.json";
 
 import { getSVG } from "src/assets/svg";
-import { ProducerModel } from "src/ts/models/ProducerModel";
-import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { UserModel } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
+import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 export type UserProps = {
     /**
@@ -26,16 +25,11 @@ export type UserProps = {
  */
 @observer
 export class UnwrappedUserProfile extends React.Component<UserProps>{
-
     /**
      * Main render method, used to render ProfilePage
      */
     public render() : JSX.Element{
         const { user } = this.props;
-
-        if (!user) {
-            return <h1>No user is currently logged in</h1>;
-        }
 
         return (
             <div className="page">
@@ -249,20 +243,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
             </div>
         )
     }
-}
-
-/**
- * Check if the user is a producer
- */
-function isProducerUser(model: UserModel): model is ProducerModel {
-    return model instanceof ProducerModel;
-}
-
-/**
- * Check if the user is a receiver
- */
-function isReceiverUser(model: UserModel): model is ReceiverModel {
-    return model instanceof ReceiverModel;
 }
 
 export const UserProfile = injectStore((store) => ({user: store.user}), UnwrappedUserProfile);
