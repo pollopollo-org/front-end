@@ -1,5 +1,5 @@
 import React from "react";
-import EditProducerProfileLabels from "src/assets/data/editProducerProfile.json";
+import EditProfileLabels from "src/assets/data/editProfile.json";
 import { colors, fonts } from "src/ts/config";
 import { isNullOrUndefined } from "util";
 import { SelectCountry } from "../../utils/SelectCountry";
@@ -45,6 +45,10 @@ type EditProducerProfileState = {
      * profile image
      */
     profilePicture?:File;
+    /**
+     * wallet address
+     */
+    wallet:string;
 }
 
 /**
@@ -65,6 +69,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
             oldPassword: "",
             description: "",
             profilePicture: undefined,
+            wallet: "",
         };
     }
 
@@ -74,47 +79,55 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
     public render(): JSX.Element{
         return(
             <div className="allSection">
-            <h1>{ EditProducerProfileLabels.title }</h1>
+            <h1>{ EditProfileLabels.title }</h1>
             <form>
                 <div className="inputPicDescSection">
                     <div className="inputFieldsSection">
                         <input 
                             className="input name first" 
                             required 
-                            placeholder={ false || EditProducerProfileLabels.firstName } 
-                            onChange={event => this.setState({firstName: event.target.value })}/>
+                            placeholder={ false || EditProfileLabels.firstName } 
+                            onChange={event => this.setState({firstName: event.target.value })}
+                        />
                         <input 
                             className="input name last" 
                             required 
-                            placeholder={false || EditProducerProfileLabels.lastName } 
-                            onChange={event => this.setState({lastName: event.target.value })}/>
+                            placeholder={false || EditProfileLabels.lastName } 
+                            onChange={event => this.setState({lastName: event.target.value })}
+                        />
+                        <div className="SelectCountryDiv">
+                            <SelectCountry onChange={this.newCountrySelected}/>
+                        </div>
                         <input 
                             type="email" 
                             className="input email" 
                             required 
-                            placeholder={ false || EditProducerProfileLabels.email } 
-                            onChange={event => this.setState({email: event.target.value })}/>
-                        
-                        <div className="SelectCountryDiv">
-                            <SelectCountry onChange={this.newCountrySelected}/>
-                        </div>
-
+                            placeholder={ false || EditProfileLabels.email } 
+                            onChange={event => this.setState({email: event.target.value })}
+                        />
+                        {this.state.userType === "producer" && 
+                            <input
+                            className="input wallet"
+                            placeholder={false || EditProfileLabels.wallet}
+                            onChange={event => this.setState({wallet: event.target.value})}
+                            />
+                        }
                         <input 
                             type="password" 
                             className="input password first" 
                             required 
-                            placeholder={ false || EditProducerProfileLabels.password }
+                            placeholder={ false || EditProfileLabels.password }
                             onChange={event => this.setState({password: event.target.value })}/>
                         <input 
                             type="password" 
                             className="input password second" 
                             required 
-                            placeholder={ false || EditProducerProfileLabels.confirmPassword }
+                            placeholder={ false || EditProfileLabels.confirmPassword }
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                            { (isNullOrUndefined(this.state.profilePicture) && <p>{EditProducerProfileLabels.uploadPicture}</p> ) || <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
+                            { isNullOrUndefined(this.state.profilePicture) || <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
                         </div>
                         <input 
                             type="file"
@@ -123,7 +136,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                             onChange={event => this.chooseImage(event)}/>
                         <textarea 
                             className="description" 
-                            placeholder={ false || EditProducerProfileLabels.decription }
+                            placeholder={ false || EditProfileLabels.decription }
                             onChange={event => this.setState({description: event.target.value })}/>
                     </div>
                 </div>
@@ -135,11 +148,11 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                             type="password" 
                             className="input password old" 
                             required 
-                            placeholder={ false || EditProducerProfileLabels.oldPassword } 
+                            placeholder={ false || EditProfileLabels.oldPassword } 
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
                     <div className="submitDiv">
-                        <button type="submit">{ EditProducerProfileLabels.saveButton }</button>
+                        <button type="submit" onClick={this.sendToBackEnd}>{ EditProfileLabels.saveButton }</button>
                     </div>
                 </div>
             </form>
@@ -166,7 +179,9 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     font-family: ${ fonts.text };
                     font-size: 16px;
                     font-weight: 300;
-                    margin: 10px 0px;
+
+                    /**Note that this is overwritten later for wallet and email */
+                    margin: 14px auto;
 
                     /** Remove box-shadow on iOS */
                     background-clip: padding-box;
@@ -205,6 +220,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     background-color: ${ colors.primary };
                 }
 
+
                 .allSection{
                     width: 545px;
                     height: calc(100% - 60px);
@@ -220,11 +236,13 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
 
                 .inputFieldsSection{
                     max-width: 255px;
+                    height: calc(100% - 115px);
                     float: left;
                 }
 
                 .pictureDescSection{
                     max-width: 255px;
+                    height: calc(100% - 115px);
                     float: left;
                     margin-left: 30px;
                 }
@@ -235,7 +253,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                 
                 .SelectCountryDiv{
                     max-width: 255px;
-                    margin: 10px 0;
+                    margin: 0;
                 }
 
                 .upload{
@@ -247,8 +265,9 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                 .currentPictureDiv{
                     height: 258px;
                     width: 258px;
-                    border-radius: 3px; 
+                    border-radius: 50%; 
                     margin: 10px 0;
+                    background-color: ${colors.pale};
                 }
 
                 .description{
@@ -280,6 +299,16 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     width: 545px;
                     background-color: ${colors.primary};
                     margin-bottom: 10px;
+                }
+
+                @media only screen and (min-width: 960px) {
+                    .SelectCountryDiv{
+                        margin: 17px 0;
+                    }
+
+                    .description{
+                        height: 141px;
+                    }
                 }
 
             `}</style>
@@ -324,5 +353,12 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
         } else{
             return window.URL.createObjectURL(this.state.profilePicture);
         }
+    }
+
+    /**
+     * Send the information to the backend
+     */
+    private sendToBackEnd = () => {
+        return;
     }
 }

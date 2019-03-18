@@ -87,10 +87,10 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps, Selec
 
                     @media only screen and (max-width: 768px) {
                         select {
-                            margin: 15px 0;
                             width: 100%;
                             box-sizing: border-box;
                             max-width: 400px;
+                            margin: 15px 0;
                         }
                     }
                 `}</style>
