@@ -1,11 +1,13 @@
 import React from "react";
+import { RouterProps, withRouter } from "react-router";
 import EditProfileLabels from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
-import { colors, fonts } from "src/ts/config";
+import { colors, fonts, routes } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
+import { Throbber } from "../../utils";
 import { SelectCountry } from "../../utils/SelectCountry";
 
 type EditProfileProps = {
@@ -13,7 +15,7 @@ type EditProfileProps = {
      * Contains a reference to the root store
      */
     store: Store;
-}
+} & RouterProps;
 
 type EditProfileState = {
     /**
@@ -60,6 +62,11 @@ type EditProfileState = {
      * wallet address
      */
     wallet:string;
+
+    /**
+     * Specifies whether or not we're currently attempting to create a user
+     */
+    isPending?: boolean;
 }
 
 /**
@@ -90,7 +97,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         const { store } = this.props;
 
         if (store.user) {
-            console.log(store.user);
             this.setState({
                 firstName: store.user.firstName,
                 lastName: store.user.surName,
@@ -118,7 +124,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         return(
             <div className="allSection">
             <h1>{ EditProfileLabels.title }</h1>
-            <form>
+            <form onSubmit={this.sendToBackEnd}>
                 <div className="inputPicDescSection">
                     <div className="inputFieldsSection">
                         <input
@@ -157,14 +163,12 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         <input
                             type="password"
                             className="input password first"
-                            required
                             value={this.state.password}
                             placeholder={ false || EditProfileLabels.password }
                             onChange={event => this.setState({password: event.target.value })}/>
                         <input
                             type="password"
                             className="input password second"
-                            required
                             value={this.state.repeatedPassword}
                             placeholder={ false || EditProfileLabels.confirmPassword }
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
@@ -197,7 +201,12 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
                     <div className="submitDiv">
-                        <button type="submit" onClick={this.sendToBackEnd}>{ EditProfileLabels.saveButton }</button>
+                        <button type="submit" className={this.state.isPending ? "isPending" : ""}>
+                            <span className="text">{EditProfileLabels.saveButton}</span>
+                            <span className="throbber">
+                                <Throbber size={30} relative={true} inverted={true} />
+                            </span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -254,6 +263,44 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     width: 260px;
                     cursor: pointer;
                     height: 43px;
+                    position: relative;
+
+                    & .throbber {
+                        /**
+                            * Position a throbber in the middle to be displayed
+                            * while requests are ongoing
+                            */
+                        position: absolute;
+                        left: calc(50% - 15px);
+                        top: calc(50% - 15px);
+                        opacity: 0;
+                        overflow: hidden;
+
+                        /**
+                            * prepare transitions
+                            */
+                        transition: opacity 0.2s linear;
+                    }
+
+                    & .text {
+                        opacity: 1;
+                        transform: scale(1);
+
+                        /**
+                            * prepare transitions
+                            */
+                        transition: opacity 0.2s linear;
+                    }
+
+                    &.isPending .throbber {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+
+                    &.isPending .text {
+                        opacity: 0;
+                        transform: scale(0.5);
+                    }
                 }
 
                 button:hover {
@@ -491,14 +538,52 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Send the information to the backend
      */
-    private sendToBackEnd = () => {
-        if(this.state.password !== this.state.repeatedPassword){
+    private sendToBackEnd = (evt: React.FormEvent) => {
+        evt.preventDefault();
+
+        if (this.state.isPending) {
+            return;
+        }
+
+        if(this.state.password && this.state.password !== this.state.repeatedPassword){
             alert("Your passwords must match");
             return;
         }
+
+        // const endPoint = apis.user.create;
+
+        // try {
+        //     this.setState({ isPending: true });
+        //     const startedAt = performance.now();
+
+        //     await fetch(endPoint, {
+        //         method: "POST",
+        //         body: JSON.stringify({
+        //             password: this.state.password,
+        //             email: this.state.email,
+        //         })
+        //     });
+
+        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+        // } catch (err) {
+        //     alert("Either your password or email doesn't match, please try again.");
+        // } finally {
+        //     this.setState({ isPending: false });
+        // }
+
+        // Dummy
+        this.setState({ isPending: true });
+        setTimeout(
+            () => {
+                this.setState({ isPending: false });
+
+                this.props.history.push(routes.profile.path);
+            },
+            2000,
+        );
+
         /** TODO Send data to backend */
-        return;
     }
 }
 
-export const EditProfile = injectStore((store) => ({ store }), UnwrappedEditProfile);
+export const EditProfile = withRouter(injectStore((store) => ({ store }), UnwrappedEditProfile));
