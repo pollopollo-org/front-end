@@ -12,29 +12,27 @@ type LoginFormState = {
     /**
      * Inputted email
      */
-    email: string;
+    email?: string;
     /**
      * Inputted password
      */
-    password: string;
+    password?: string;
 }
 
 /**
  * A page where the user can login to the platform
  */
 export class LoginForm extends React.PureComponent<{}, LoginFormState>{
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            email: "",
-            password: "",
-        };
-    }
+    /**
+     * State of the login form, all fields initially set to null
+     */
+    public readonly state: LoginFormState = {};
 
     /**
      * Render the component
      */
     public render(): JSX.Element {
+        console.log(this.state);
         return (
             <div className="loginCenterWrapper">
                 <div className="loginSpacer">
