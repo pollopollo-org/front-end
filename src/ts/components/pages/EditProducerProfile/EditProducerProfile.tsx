@@ -264,6 +264,8 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     font-weight: 300;
                     margin: 10px 0px;
 
+                    resize: none;
+
                     /** Remove box-shadow on iOS */
                     background-clip: padding-box;
 
