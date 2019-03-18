@@ -1,7 +1,8 @@
 import React from "react";
-import { colors } from "src/ts/config";
+import { colors, routes } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
+import { RouterProps, withRouter } from "react-router";
 import Countries from "src/assets/countries.json";
 import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
 import RegisterFormLabels from "src/assets/data/registerForm.json";
@@ -46,7 +47,7 @@ type RegisterFormState = {
 /**
  * A page where the user can register for the project
  */
-export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
+class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFormState>{
     /**
      * State of the register form, all fields initially set to null
      */
@@ -457,6 +458,9 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         else if (this.state.password !== this.state.repeatedPassword) {
             alert("Passwords must match.");
             return false;
+        } else if (!this.state.password || this.state.password.length < 8) {
+            alert("Passwords must contain more than or 8 characters.");
+            return false;
         }
 
         return true;
@@ -498,8 +502,13 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         setTimeout(
             () => {
                 this.setState({ isPending: false });
+
+                alert("Your user has been created and you have now been logged in!");
+                this.props.history.push(routes.root.path);
             },
             2000,
         );
     }
 }
+
+export const RegisterForm = withRouter(props => <UnwrappedRegisterForm {...props} />);
