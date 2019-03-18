@@ -129,7 +129,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                            { (isNullOrUndefined(this.state.profilePicture) && <i className="user">{ getSVG("user", {fillColor: "white"}) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
+                            { (isNullOrUndefined(this.state.profilePicture) && <i className="user">{ getSVG("user2", {strokeColor: colors.primary}) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
                         </div>
                         <input
                             type="file"
@@ -170,7 +170,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     height: 39px;
                     width: 252px;
                     text-indent: 9px;
-                    border: 1px solid ${ colors.gray };
+                    border: 1px solid ${ colors.pale };
                     color: ${ colors.black };
                     border-radius: 3px;
                     font-family: ${ fonts.text };
@@ -187,6 +187,11 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                         color: ${ colors.gray };
                         opacity: 1;
                     }
+                }
+
+                /* Set border styling when clicked on */
+                input:focus {
+                    border: 1px solid ${ colors.secondary};
                 }
 
                 img {
@@ -254,6 +259,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     border-radius: 50%;
                     margin: 10px 0;
                     background-color: ${colors.pale};
+                    border: 2px solid ${colors.pale};
                 }
 
                 i {
@@ -261,6 +267,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     display: block;
                     height: 100px;
                     width: 100px;
+                    padding-top: 79px;
                 }
 
                 [type="file"] {
@@ -297,7 +304,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     width: 252px;
                     height: 139px;
                     text-indent: 9px;
-                    border: 1px solid ${ colors.gray };
+                    border: 1px solid ${ colors.pale };
                     color: ${ colors.black };
                     border-radius: 3px;
                     font-family: ${ fonts.text };
@@ -314,6 +321,11 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                         color: ${ colors.gray };
                         opacity: 1;
                     }
+                }
+
+                /* Set border styling when clicked on */
+                .description:focus {
+                    border: 1px solid ${ colors.secondary};
                 }
 
                 .borderLine{
@@ -419,9 +431,10 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
     private chooseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files !== null){
             if(
-                !( e.target.value.endsWith(".PNG")
-                || e.target.value.endsWith(".jpeg")
-                || e.target.value.endsWith(".jpg"))
+                !( e.target.value.toLowerCase().endsWith(".png")
+                || e.target.value.toLowerCase().endsWith(".jpeg")
+                || e.target.value.toLowerCase().endsWith(".jpg")
+                )
                 )
                 {
                     alert("We support only .PNG, .jpg and .jpeg files!");

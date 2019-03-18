@@ -31,9 +31,9 @@ export type UserModelData = {
     firstName: string;
     surName: string;
     country: string;
-    city: string;
-    description: string;
-    thumbnail: string;
+    city: string | null;
+    description: string | null;
+    thumbnail: string | null;
     userType: UserTypes;
 };
 // tslint:enable completed-docs
@@ -70,17 +70,17 @@ export class UserModel {
     /**
      * The city the user lives in
      */
-    public readonly city: string;
+    public readonly city: string | null;
 
     /**
      * The description of the user
      */
-    public readonly description: string;
+    public readonly description: string | null;
 
     /**
      * The path to the user's profile picture
      */
-    public readonly thumbnail: string;
+    public readonly thumbnail: string | null;
 
     constructor(data: UserModelData) {
         this.id = data.id;
