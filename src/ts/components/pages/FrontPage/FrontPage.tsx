@@ -23,14 +23,14 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
     /**
      * Main render method, used to render Frontpage
      */
-    public render() : JSX.Element{
-        return(
+    public render(): JSX.Element {
+        return (
             <div>
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
-                    { this.props.store.applications.map((application, index) => {
-                        return <Application key={index} application={application}/>;
-                    }) }
+                    {this.props.store.applications.map((application, index) => {
+                        return <Application key={index} application={application} />;
+                    })}
                 </div>
 
                 <style jsx>{`
@@ -39,7 +39,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         margin: 15px 15px 0;
 
                         /** Setup font */
-                        font-family: ${ fonts.heading };
+                        font-family: ${ fonts.heading};
                         font-weight: 500;
                         line-height: 1;
                         margin-bottom: 10px;
@@ -74,7 +74,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         }
 
                         & ::-webkit-scrollbar-thumb {
-                            background: ${ colors.black };
+                            background: ${ colors.black};
                         }
                     }
 
@@ -84,4 +84,4 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
     }
 }
 
-export const FrontPage = injectStore((store) => ({store}), UnwrappedFrontPage);
+export const FrontPage = injectStore((store) => ({ store }), UnwrappedFrontPage);

@@ -61,12 +61,14 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             placeholder={RegisterFormLabels.firstName}
                             maxLength={255}
                             required
-                            onChange={event => this.setState({ firstName: event.target.value })} />
+                            onChange={event => this.setState({ firstName: event.target.value })}
+                        />
                         <input
                             placeholder={RegisterFormLabels.lastName}
                             maxLength={255}
                             required
-                            onChange={event => this.setState({ lastName: event.target.value })} />
+                            onChange={event => this.setState({ lastName: event.target.value })}
+                        />
                     </div>
                     {/* Email and country */}
                     <div className="section">
@@ -139,12 +141,14 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         margin: 0 0 8px;
                         line-height: 30px;
                         text-align: center;
+
                     }
 
                     h4 {
                         margin-top: 5px;
                     }
 
+                    /* center in the middle */
                     .allSection {
                         width: 540px;
                         height: calc(100% - 60px);
@@ -163,7 +167,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         height: 39px;
                         width: 250px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray};
+                        border: 1px solid ${ colors.pale}; 
+                        border-transition: border-color 0.15s linear;
                         color: ${ colors.black};
                         border-radius: 3px;
                         font-family: ${ fonts.text};
@@ -178,6 +183,11 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             opacity: 1;
                         }
                     }
+
+                    /* Set border styling when clicked on */
+                    input:focus {
+                        border: 1px solid ${ colors.secondary};
+                    }   
 
                     .leftInput {
                         margin-right: 30px;
@@ -229,6 +239,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     }
 
                     @media only screen and (max-width: 768px) {
+                        /* Center in the middle */
                         .allSection {
                             margin: auto;
                             text-align: center;
@@ -335,11 +346,15 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     select{
                         -webkit-appearance: none;
                         background: transparent;
+                        
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray};
+
+                        border: 1px solid ${ colors.pale}; 
+                        border-transition: border-color 0.15s linear;
                         border-radius: 3px;
+
                         font-size: 16px;
                         font-weight: 300;
                         font-family: ${ fonts.text};
@@ -351,6 +366,10 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
 
                     select.active {
                         color: ${ colors.black};
+                    }
+
+                    select:focus {
+                        border: 1px solid ${ colors.secondary};
                     }
 
                     @media only screen and (max-width: 768px) {
