@@ -23,7 +23,7 @@ export const createStore = () => {
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
 
                 // used for test of user models
-                const producer = false;
+                const producer = true;
                 let user: UserModel;
                 if (producer) {
                     user = await ProducerModel.CREATE(DataProviders.DUMMY);
