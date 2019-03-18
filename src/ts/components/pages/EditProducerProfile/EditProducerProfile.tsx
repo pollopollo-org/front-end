@@ -114,13 +114,12 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                            <img className="currentPicture" src={ this.getProfilePictureURL() }/>
+                            { (isNullOrUndefined(this.state.profilePicture) && <p>{EditProducerProfileLabels.uploadPicture}</p> ) || <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
                         </div>
                         <input 
                             type="file"
                             id="fileInput"
                             className="upload"
-                            placeholder={ false || EditProducerProfileLabels.uploadPicture }
                             onChange={event => this.chooseImage(event)}/>
                         <textarea 
                             className="description" 
@@ -179,7 +178,11 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                 }
 
                 img {
-                    /**Formatthe shibe */
+                    /**Format the shibe*/
+                    height: 258px;
+                    width: 258px;
+                    object-fit: cover;
+                    border-radius: 50%;
                 }
 
                 button {
@@ -239,13 +242,11 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     width: 101.38px;
                     height: 24.4px;
                     text-indent: 0;
-                    
                 }
 
                 .currentPictureDiv{
-                    height: 120px;
+                    height: 258px;
                     width: 258px;
-                    background-color: ${colors.secondary};
                     border-radius: 3px; 
                     margin: 10px 0;
                 }
