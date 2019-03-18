@@ -301,9 +301,9 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     margin-bottom: 10px;
                 }
 
-                @media only screen and (min-width: 960px) {
+                @media only screen and (min-width: 50%) {
                     .SelectCountryDiv{
-                        margin: 17px 0;
+                        margin: 30px 0;
                     }
 
                     .description{

@@ -75,6 +75,7 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps, Selec
                         font-size: 16px;
                         font-weight: 300;
                         font-family: ${ fonts.text };
+                        margin: 15px 0;
                     }
 
                     select.inactive {
@@ -90,7 +91,6 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps, Selec
                             width: 100%;
                             box-sizing: border-box;
                             max-width: 400px;
-                            margin: 15px 0;
                         }
                     }
                 `}</style>
