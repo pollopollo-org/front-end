@@ -83,18 +83,18 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     </div>
                     {/* Password */}
                     <div className="section">
-                        <input 
-                            type="password" 
-                            className="leftInput" 
-                            placeholder={RegisterFormLabels.password} 
-                            required 
-                            onChange={event => this.setState({ password: event.target.value, })} 
+                        <input
+                            type="password"
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.password}
+                            required
+                            onChange={event => this.setState({ password: event.target.value, })}
                         />
-                        <input 
-                            type="password" 
-                            placeholder={RegisterFormLabels.confirmPassword} 
-                            required 
-                            onChange={event => this.setState({ repeatedPassword: event.target.value, })} 
+                        <input
+                            type="password"
+                            placeholder={RegisterFormLabels.confirmPassword}
+                            required
+                            onChange={event => this.setState({ repeatedPassword: event.target.value, })}
                         />
                     </div>
                     {/* Usertype */}
@@ -167,7 +167,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         height: 39px;
                         width: 250px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.pale}; 
+                        border: 1px solid ${ colors.pale};
                         border-transition: border-color 0.15s linear;
                         color: ${ colors.black};
                         border-radius: 3px;
@@ -187,7 +187,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     /* Set border styling when clicked on */
                     input:focus {
                         border: 1px solid ${ colors.secondary};
-                    }   
+                    }
 
                     .leftInput {
                         margin-right: 30px;
@@ -318,7 +318,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
             <select
                 required
                 onChange={event => this.setState({ country: event.target.value })}
-                className={`${this.state.country === "" ? "inactive" : "active"}`}
+                className={`${!this.state.country ? "inactive" : "active"}`}
             >
                 <option disabled selected value="">Select country</option>
                 <optgroup>
@@ -346,12 +346,12 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     select{
                         -webkit-appearance: none;
                         background: transparent;
-                        
+
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
 
-                        border: 1px solid ${ colors.pale}; 
+                        border: 1px solid ${ colors.pale};
                         border-transition: border-color 0.15s linear;
                         border-radius: 3px;
 

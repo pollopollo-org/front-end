@@ -39,7 +39,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                     <div>
                         <div className="header">
                             <h1>Profile</h1>
-                            <Link className="editProfile" to={routes.register}>
+                            <Link className="editProfile" to={routes.register.path}>
                                 <i>
 									{ getSVG("edit") }
 								</i>
@@ -56,7 +56,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                                     <p><span className="bold">{profile.desc}</span> </p>
                                     <p>{user.description}</p>
                                 </div>
-                                
+
                                     {isProducerUser(user) && (
                                         <div className="twoliner">
                                             <p><span className="bold">{profile.wallet}</span> </p>
@@ -104,7 +104,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                         border-radius: 3px;
                         background-color: ${colors.pale};
                         color: ${colors.licorice};
-                        
+
                     }
 
                     /* The content of the information box */
@@ -174,9 +174,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                         margin-bottom: 15px;
                     }
 
-                    /** 
-                     * List of user's products/applications, 
-                     * move down to align with information box 
+                    /**
+                     * List of user's products/applications,
+                     * move down to align with information box
                      */
                     .list {
                         margin-top: 63px;
@@ -212,11 +212,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                             width: 100%;
     						flex-direction: column;
                             justify-content: center;
-                            
+
 						}
 
                         /*
-                         * Make the information box wide enough to fill the 
+                         * Make the information box wide enough to fill the
                          * screen and center it.
                          */
                         .information {

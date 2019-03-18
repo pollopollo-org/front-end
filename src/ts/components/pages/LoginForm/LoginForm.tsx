@@ -65,7 +65,7 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                                 </div>
                                 <button type="submit">{LoginFormLabels.buttonText}</button>
                             </form>
-                            <Link className="link registerLink" to={routes.register}>
+                            <Link className="link registerLink" to={routes.register.path}>
                                 {LoginFormLabels.linkQuestion} <b>{LoginFormLabels.linkSignUpText}</b>
                             </Link>
                         </div>
@@ -131,7 +131,7 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                         width: 100%;
 
                         /* Set border styling */
-                        border: 1px solid ${ colors.pale}; 
+                        border: 1px solid ${ colors.pale};
                         border-transition: border-color 0.15s linear;
                         border-radius: 3px;
                         box-shadow: none;
@@ -152,7 +152,7 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                     /* Set border styling when clicked on */
                     .loginInput:focus {
                         border: 1px solid ${ colors.secondary};
-                    }   
+                    }
 
                     h1 {
                         display: block;
@@ -192,8 +192,8 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
 
                     :global(.link:hover) {
 						color: ${ colors.primary};
-                        text-decoration:none; 
-                        cursor:pointer;  
+                        text-decoration:none;
+                        cursor:pointer;
                     }
 
                     @media only screen and (max-width: 768px) {
