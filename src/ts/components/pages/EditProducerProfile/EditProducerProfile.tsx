@@ -58,7 +58,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
     constructor(props:any){
         super(props);
         this.state={ 
-            // here we wanna get the actual user information tho
+            // TODO here we wanna get the actual user information tho
             firstName: "",
             lastName: "",
             email: "",
@@ -359,6 +359,11 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
      * Send the information to the backend
      */
     private sendToBackEnd = () => {
+        if(this.state.password !== this.state.repeatedPassword){
+            alert("Your passwords must match");
+            return;
+        }
+        /** TODO Send data to backend */
         return;
     }
 }
