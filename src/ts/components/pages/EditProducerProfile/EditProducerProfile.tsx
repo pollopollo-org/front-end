@@ -1,6 +1,7 @@
 import React from "react";
 import EditProducerProfileLabels from "src/assets/data/editProducerProfile.json";
 import { colors, fonts } from "src/ts/config";
+import { isNullOrUndefined } from "util";
 import { SelectCountry } from "../../utils/SelectCountry";
 
 type EditProducerProfileState = {
@@ -43,7 +44,7 @@ type EditProducerProfileState = {
     /**
      * profile image
      */
-    profilePicture:string;
+    profilePicture?:File;
 }
 
 /**
@@ -63,7 +64,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
             repeatedPassword: "",
             oldPassword: "",
             description: "",
-            profilePicture: "",
+            profilePicture: undefined,
         };
     }
 
@@ -112,14 +113,15 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
                     </div>
                     <div className="pictureDescSection">
+                        <div className="currentPictureDiv">
+                            <img className="currentPicture" src={ this.getProfilePictureURL() }/>
+                        </div>
                         <input 
                             type="file"
+                            id="fileInput"
                             className="upload"
                             placeholder={ false || EditProducerProfileLabels.uploadPicture }
-                            onChange={event => this.setState({profilePicture: event.target.value })}/>
-                        <div className="currentPictureDiv">
-                            {}
-                        </div>
+                            onChange={event => this.chooseImage(event)}/>
                         <textarea 
                             className="description" 
                             placeholder={ false || EditProducerProfileLabels.decription }
@@ -138,7 +140,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
                     <div className="submitDiv">
-                        <button type="submit">{ EditProducerProfileLabels.saveButton}</button>
+                        <button type="submit">{ EditProducerProfileLabels.saveButton }</button>
                     </div>
                 </div>
             </form>
@@ -174,6 +176,10 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                         color: ${ colors.gray };
                         opacity: 1;
                     }
+                }
+
+                img {
+                    /**Formatthe shibe */
                 }
 
                 button {
@@ -229,8 +235,11 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     margin: 10px 0;
                 }
 
-                .uploadButton{
-                    width: 258px;
+                .upload{
+                    width: 101.38px;
+                    height: 24.4px;
+                    text-indent: 0;
+                    
                 }
 
                 .currentPictureDiv{
@@ -280,5 +289,37 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
      */
     private newCountrySelected = (newCountry:string) => {
         this.setState({country: newCountry,});
+    }
+
+    /**
+     * Checks if the value is null and then if it is a picture, 
+     * and updates the state accordingly
+     */
+    private chooseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files !== null){
+            if( 
+                !( e.target.value.endsWith(".PNG") 
+                || e.target.value.endsWith(".jpeg") 
+                || e.target.value.endsWith(".jpg")) 
+                ) 
+                { 
+                    alert("We support only .PNG, .jpg and .jpeg files!");
+                    return; 
+                }
+
+            this.setState({ profilePicture: e.target.files[0]}); 
+        }
+    }
+
+    /**
+     * Checks if a picture is currently selected, if yes it is shown
+     * otherwise not
+     */
+    private getProfilePictureURL = () => {
+        if(isNullOrUndefined(this.state.profilePicture)){
+            return "";
+        } else{
+            return window.URL.createObjectURL(this.state.profilePicture);
+        }
     }
 }
