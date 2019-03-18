@@ -24,11 +24,11 @@ type SelectCountryState = {
  * A select field for selecting country of location
  */
 export class SelectCountry extends React.PureComponent<SelectCountryProps, SelectCountryState>{
-    constructor(props:any){
-        super(props);
-        this.state={
-            country:"",
-        };
+    /**
+     * State of the component
+     */
+    public state: SelectCountryState = {
+        country: "",
     }
 
     /**
@@ -86,6 +86,16 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps, Selec
                         color: ${ colors.black };
                     }
 
+                    /**
+                     * Removes the "Select country" option from dropdown
+                     */
+                    option[value = ""][disabled] {
+                        display: none;
+                    }
+
+                    /**
+                     * Restyling to fit smaller screens and mobile
+                     */
                     @media only screen and (max-width: 768px) {
                         select {
                             width: 100%;

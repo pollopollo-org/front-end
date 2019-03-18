@@ -3,7 +3,7 @@ import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom
 
 import { routes } from "src/ts/config/routes";
 
-import { EditProducerProfile } from "../pages/EditProducerProfile/EditProducerProfile";
+import { EditProducerProfile } from "../pages/EditProfile/EditProfile";
 import { FrontPage } from "../pages/FrontPage/FrontPage";
 import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
 import { Footer } from "./Footer/Footer";
