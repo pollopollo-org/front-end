@@ -1,8 +1,8 @@
 import React from "react";
-
-import { colors } from "src/ts/config";
+import { colors, routes } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
+import { RouterProps, withRouter } from "react-router";
 import RegisterFormLabels from "src/assets/data/registerForm.json";
 
 import { SelectCountry } from "../../utils/SelectCountry";
@@ -49,7 +49,7 @@ type RegisterFormState = {
 /**
  * A page where the user can register for the project
  */
-export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
+class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFormState>{
     /**
      * State of the register form, all fields initially set to null
      */
@@ -81,15 +81,15 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                     </div>
                     {/* Email and country */}
                     <div className="section">
-                        <input 
-                            type="email" 
-                            className="leftInput" 
-                            placeholder={ RegisterFormLabels.email } 
+                        <input
+                            type="email"
+                            className="leftInput"
+                            placeholder={ RegisterFormLabels.email }
                             maxLength={255}
-                            required 
+                            required
                             onChange={event => this.setState({password: event.target.value,})}
                         />
-                        <SelectCountry onChange={this.newCountrySelected}/>
+                        <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
                     </div>
                     {/* Password */}
                     <div className="section">
@@ -173,7 +173,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         justify-content: center;
                     }
 
-                    /** 
+                    /**
                      * Sections surrounding the input fields
                      */
                     .section{
@@ -210,9 +210,9 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         border: 1px solid ${ colors.secondary};
                     }
 
-                    /** 
-                    * Three of the input fields have this classname, 
-                    * it allows us to keep a bit of distance between the inputs 
+                    /**
+                    * Three of the input fields have this classname,
+                    * it allows us to keep a bit of distance between the inputs
                     *to the left and those to the right
                     */
                     .leftInput {
@@ -389,7 +389,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     }
 
     /**
-     * Internal helper that should be triggered once a userType 
+     * Internal helper that should be triggered once a userType
      * radio button is clicked
      */
     private onUserTypeClick = (evt: React.FormEvent<HTMLInputElement>) => {
@@ -410,6 +410,9 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         }
         else if (this.state.password !== this.state.repeatedPassword) {
             alert("Passwords must match.");
+            return false;
+        } else if (!this.state.password || this.state.password.length < 8) {
+            alert("Passwords must contain more than or 8 characters.");
             return false;
         }
 
@@ -452,6 +455,9 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         setTimeout(
             () => {
                 this.setState({ isPending: false });
+
+                alert("Your user has been created and you have now been logged in!");
+                this.props.history.push(routes.root.path);
             },
             2000,
         );
@@ -464,3 +470,5 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         this.setState({country: newCountry,});
     }
 }
+
+export const RegisterForm = withRouter(props => <UnwrappedRegisterForm {...props} />);

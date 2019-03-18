@@ -1,5 +1,6 @@
 import React from "react";
 
+import { RouterProps, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { colors } from "src/ts/config/colors";
 import { fonts } from "src/ts/config/fonts";
@@ -29,7 +30,7 @@ type LoginFormState = {
 /**
  * A page where the user can login to the platform
  */
-export class LoginForm extends React.PureComponent<{}, LoginFormState>{
+export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFormState>{
     /**
      * State of the login form, all fields initially set to null
      */
@@ -292,8 +293,11 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
         setTimeout(
             () => {
                 this.setState({ isPending: false });
+                this.props.history.push(routes.root.path);
             },
             2000,
         );
     }
 }
+
+export const LoginForm = withRouter(props => <UnwrappedLoginForm {...props} />);

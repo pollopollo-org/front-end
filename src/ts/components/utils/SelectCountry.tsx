@@ -7,39 +7,30 @@ import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
 
 type SelectCountryProps = {
     /**
+     * Specifies the currently selected country
+     */
+    currentCountry?: string;
+
+    /**
      * Allows us to extract the value out to the parent components
-     * @param country 
+     * @param country
      */
     onChange (country:string): void;
-}
-
-type SelectCountryState = {
-    /**
-     * the currrently selected country
-     */
-    country: string;
 }
 
 /**
  * A select field for selecting country of location
  */
-export class SelectCountry extends React.PureComponent<SelectCountryProps, SelectCountryState>{
-    /**
-     * State of the component
-     */
-    public state: SelectCountryState = {
-        country: "",
-    }
-
+export class SelectCountry extends React.PureComponent<SelectCountryProps>{
     /**
      * Main rendering method used for rendering the component
      */
-    public render(): JSX.Element{
+    public render(): JSX.Element {
         return (
             <select
                 required
                 onChange={event => this.props.onChange(event.target.value)}
-                className={`${this.state.country === "" ? "inactive" : "active"}`}
+                className={`${!this.props.currentCountry ? "inactive" : "active"}`}
             >
                 <option disabled selected value="">Select country</option>
                 <optgroup>
@@ -70,7 +61,7 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps, Selec
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray };
+                        border: 1px solid ${ colors.pale };
                         border-radius: 3px;
                         font-size: 16px;
                         font-weight: 300;
@@ -79,7 +70,7 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps, Selec
                     }
 
                     select.inactive {
-                        color: ${ colors.gray };
+                        color: #a7a7a7;
                     }
 
                     select.active {

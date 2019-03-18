@@ -85,45 +85,45 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
             <form>
                 <div className="inputPicDescSection">
                     <div className="inputFieldsSection">
-                        <input 
-                            className="input name first" 
-                            required 
-                            placeholder={ false || EditProfileLabels.firstName } 
+                        <input
+                            className="input name first"
+                            required
+                            placeholder={ false || EditProfileLabels.firstName }
                             onChange={event => this.setState({firstName: event.target.value })}
                         />
-                        <input 
-                            className="input name last" 
-                            required 
-                            placeholder={false || EditProfileLabels.lastName } 
+                        <input
+                            className="input name last"
+                            required
+                            placeholder={false || EditProfileLabels.lastName }
                             onChange={event => this.setState({lastName: event.target.value })}
                         />
                         <div className="SelectCountryDiv">
-                            <SelectCountry onChange={this.newCountrySelected}/>
+                            <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
                         </div>
-                        <input 
-                            type="email" 
-                            className="input email" 
-                            required 
-                            placeholder={ false || EditProfileLabels.email } 
+                        <input
+                            type="email"
+                            className="input email"
+                            required
+                            placeholder={ false || EditProfileLabels.email }
                             onChange={event => this.setState({email: event.target.value })}
                         />
-                        {this.state.userType === "producer" && 
+                        {this.state.userType === "producer" &&
                             <input
                             className="input wallet"
                             placeholder={false || EditProfileLabels.wallet}
                             onChange={event => this.setState({wallet: event.target.value})}
                             />
                         }
-                        <input 
-                            type="password" 
-                            className="input password first" 
-                            required 
+                        <input
+                            type="password"
+                            className="input password first"
+                            required
                             placeholder={ false || EditProfileLabels.password }
                             onChange={event => this.setState({password: event.target.value })}/>
-                        <input 
-                            type="password" 
-                            className="input password second" 
-                            required 
+                        <input
+                            type="password"
+                            className="input password second"
+                            required
                             placeholder={ false || EditProfileLabels.confirmPassword }
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
                     </div>
@@ -131,13 +131,13 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                         <div className="currentPictureDiv">
                             { (isNullOrUndefined(this.state.profilePicture) && <i className="user">{ getSVG("user", {fillColor: "white"}) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
                         </div>
-                        <input 
+                        <input
                             type="file"
                             id="fileInput"
                             onChange={event => this.chooseImage(event)}/>
                         <label htmlFor="fileInput">Choose a file</label>
-                        <textarea 
-                            className="description" 
+                        <textarea
+                            className="description"
                             placeholder={ false || EditProfileLabels.decription }
                             onChange={event => this.setState({description: event.target.value })}/>
                     </div>
@@ -145,11 +145,11 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                 <div className="borderLine"/>
                 <div className="oldPassSubmitSection">
                     <div className="oldPasswordSection">
-                        <input 
-                            type="password" 
-                            className="input password old" 
-                            required 
-                            placeholder={ false || EditProfileLabels.oldPassword } 
+                        <input
+                            type="password"
+                            className="input password old"
+                            required
+                            placeholder={ false || EditProfileLabels.oldPassword }
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
                     <div className="submitDiv">
@@ -157,7 +157,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     </div>
                 </div>
             </form>
-            
+
             <style jsx>{`
                 h1{
                     margin: 0 0 8px;
@@ -220,7 +220,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                 .allSection{
                     width: 545px;
                     height: calc(100% - 60px);
-                    
+
                     margin: 30px auto;
                     justify-content: center;
                 }
@@ -242,7 +242,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     float: left;
                     margin-left: 30px;
                 }
-                
+
                 .SelectCountryDiv{
                     max-width: 255px;
                     margin: 0;
@@ -251,7 +251,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                 .currentPictureDiv{
                     height: 258px;
                     width: 258px;
-                    border-radius: 50%; 
+                    border-radius: 50%;
                     margin: 10px 0;
                     background-color: ${colors.pale};
                 }
@@ -285,7 +285,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     width: 90px;
                     display: block;
                     margin: 10px auto 20px auto;
-                    
+
                 }
 
                 [type="file"] + label:hover {
@@ -347,7 +347,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                         text-align: center;
                         width: 100%;
                     }
-                    
+
                     h1 {
                         margin-bottom: 15px;
                     }
@@ -357,7 +357,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                         margin: 0 auto;
                         padding: 0 15px;
                     }
-                    
+
                     /* Make columns appear beneath eachother */
                         .inputPicDescSection {
                             flex-direction: column;
@@ -413,22 +413,22 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
     }
 
     /**
-     * Checks if the value is null and then if it is a picture, 
+     * Checks if the value is null and then if it is a picture,
      * and updates the state accordingly
      */
     private chooseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(e.target.files !== null){
-            if( 
-                !( e.target.value.endsWith(".PNG") 
-                || e.target.value.endsWith(".jpeg") 
-                || e.target.value.endsWith(".jpg")) 
-                ) 
-                { 
+            if(
+                !( e.target.value.endsWith(".PNG")
+                || e.target.value.endsWith(".jpeg")
+                || e.target.value.endsWith(".jpg"))
+                )
+                {
                     alert("We support only .PNG, .jpg and .jpeg files!");
-                    return; 
+                    return;
                 }
 
-            this.setState({ profilePicture: e.target.files[0]}); 
+            this.setState({ profilePicture: e.target.files[0]});
         }
     }
 
