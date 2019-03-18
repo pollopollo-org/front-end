@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 import { getSVG } from "src/assets/svg";
 import { colors, easings, routes } from "src/ts/config";
 import { ProducerModel } from "src/ts/models/ProducerModel";
-import { UserModel } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { Chevron } from "../../utils";
 import { Dropdown } from "../../utils/Dropdown/Dropdown";
 
+import { observer } from "mobx-react";
 import userInfoLabels from "src/assets/data/userInfo.json";
+import { Store } from "src/ts/store/Store";
 
 
 /**
@@ -17,9 +18,9 @@ import userInfoLabels from "src/assets/data/userInfo.json";
  */
 type UserInfoProps = {
     /**
-     * A reference to the user model describing the currently signed in user.
+     * Contains a reference to the root store
      */
-    user: UserModel;
+    store: Store;
 };
 
 /**
@@ -42,7 +43,8 @@ type UserInfoState = {
  * Component responsible for rendering information related to information about
  * the user
  */
-export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserInfoState> {
+@observer
+export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoState> {
     /**
      * Set up initial state, so this.state can be safely accessed.
      */
@@ -79,13 +81,13 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
     public render(): JSX.Element | undefined {
         return (
             <div
-                className={`${ this.state.showDropdown ? "active" : "" } ${ this.props.user ? "hasUser" : "noUser"}`}
+                className={`${ this.state.showDropdown ? "active" : "" } ${ this.props.store.user ? "hasUser" : "noUser"}`}
                 ref={ this.wrapperRef }
                 onClick={ this.onUsernameClick }
                 role="button"
             >
                 <i className="icon">{ getSVG("user", { strokeColor: colors.whiteSmoke }) }</i>
-                { !this.props.user && (
+                { !this.props.store.user && (
                     <>
                         <span className="loginButton">
                             <Link to={routes.login.path}>
@@ -101,9 +103,9 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
                         </span>
                     </>
                 )}
-                { this.props.user && (
+                { this.props.store.user && (
                     <>
-                        <span className="name">{ this.props.user.firstName } { this.props.user.surName }</span>
+                        <span className="name">{ this.props.store.user.firstName } { this.props.store.user.surName }</span>
                         <span className="chevron">
                             <Chevron
                                 vertical
@@ -490,12 +492,14 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
      * Renderer that'll inject data about the currently signed in user, so that
      * it's available in the dropdown.
      */
-    protected renderUserData(): JSX.Element {
-        const { user } = this.props;
+    protected renderUserData(): React.ReactNode {
+        if (!this.props.store.user) {
+            return;
+        }
 
         return (
             <div className="user">
-                <b>{ user.firstName } { user.surName }</b><br />
+                <b>{ this.props.store.user.firstName } { this.props.store.user.surName }</b><br />
                 { this.renderUserType() }
 
                 <style jsx>{`
@@ -537,7 +541,7 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
      */
     protected renderUserType(): React.ReactNode {
         // ... Otherwise return label based on user type
-        if (this.props.user instanceof ProducerModel) {
+        if (this.props.store.user instanceof ProducerModel) {
             return "Producer";
         } else {
             return "Reciever";
@@ -549,7 +553,8 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
      * process the functionality required to achieve this.
      */
     protected signOut = () => {
-        alert("You cannot logout :-))))))");
+        this.props.store.user = undefined;
+        window.localStorage.setItem("userJWT", "");
     }
 
     /**
@@ -557,7 +562,7 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
      * and prompts opening of the dropdown.
      */
     protected onUsernameClick = () => {
-        if (this.props.user) {
+        if (this.props.store.user) {
             this.setState({ showDropdown: true });
         }
     }
@@ -590,4 +595,4 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
 }
 
 // tslint:disable-next-line variable-name
-export const UserInfo = injectStore((store) => ({ user: store.user }), UserInfoUnwrapped);
+export const UserInfo = injectStore((store) => ({ store, user: store.user }), UserInfoUnwrapped);
