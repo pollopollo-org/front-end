@@ -8,5 +8,6 @@
     "uploadPicture": "Upload a picture",
     "decription": "Describe yourself",
     "oldPassword": "Confirm with old password",
-    "saveButton": "Save"
+    "saveButton": "Save",
+    "wallet":"Wallet address"
 }
