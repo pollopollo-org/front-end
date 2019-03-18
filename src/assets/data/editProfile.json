@@ -1,0 +1,13 @@
+{
+    "title": "Edit profile",
+    "firstName": "First name",
+    "lastName": "Surname",
+    "email": "Email",
+    "password": "New password",
+    "confirmPassword": "Confirm password",
+    "uploadPicture": "Upload a picture",
+    "decription": "Describe yourself",
+    "oldPassword": "Confirm with old password",
+    "saveButton": "Save",
+    "wallet":"Wallet address"
+}

@@ -39,7 +39,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                     <div>
                         <div className="header">
                             <h1>Profile</h1>
-                            <Link className="editProfile" to={routes.register.path}>
+                            <Link className="editProfile" to={routes.editProfile.path}>
                                 <i>
 									{ getSVG("edit") }
 								</i>
