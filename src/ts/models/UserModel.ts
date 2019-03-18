@@ -5,6 +5,21 @@ enum UserTypes {
 }
 
 /**
+ * Specifies what's available in a stored JWT token
+ */
+export type UserToken = {
+    /**
+     * Specifies the userId that the token is related to
+     */
+    userId: string;
+
+    /**
+     * Specifies the email of the user the token is related to.
+     */
+    email: string;
+}
+
+/**
  * Defines the data required to create a user model.
  *
  * The fields have been commented in length within the actual class

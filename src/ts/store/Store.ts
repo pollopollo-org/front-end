@@ -20,7 +20,7 @@ export enum DataProviders {
 // tslint:disable completed-docs
 type StoreArgs = {
     applications: ApplicationModel[];
-    user: UserModel;
+    user?: UserModel;
 }
 // tslint:enable completed-docs
 
@@ -35,12 +35,15 @@ export class Store {
      * Contains a reference to the ApplicationModel, which contains fetched data
      * about an application.
      */
+    @observable
     public readonly applications: ApplicationModel[];
+
     /**
      * Contains a reference to the UserModel, which contains fetched data
      * about a user - either a producer or a receiver.
      */
-    public readonly user: UserModel;
+    @observable
+    public user?: UserModel;
 
     /**
      * Specifies the application has managed to fully render itself yet.
