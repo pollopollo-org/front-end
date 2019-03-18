@@ -2,12 +2,10 @@ import React from "react";
 import EditProfileLabels from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
 import { colors, fonts } from "src/ts/config";
+import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { asyncTimeout } from "src/ts/utils";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
-import { Throbber } from "../../utils";
-import { Fade } from "../../utils/Dropdown/Fade";
 import { SelectCountry } from "../../utils/SelectCountry";
 
 type EditProfileProps = {
@@ -67,7 +65,7 @@ type EditProfileState = {
 /**
  *  Page where a logged in producer can edit their profile
  */
-export class EditProfile extends React.PureComponent<EditProfileProps,EditProfileState>{
+class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProfileState>{
     /**
      * State of the component
      */
@@ -92,6 +90,7 @@ export class EditProfile extends React.PureComponent<EditProfileProps,EditProfil
         const { store } = this.props;
 
         if (store.user) {
+            console.log(store.user);
             this.setState({
                 firstName: store.user.firstName,
                 lastName: store.user.surName,
@@ -125,12 +124,14 @@ export class EditProfile extends React.PureComponent<EditProfileProps,EditProfil
                         <input
                             className="input name first"
                             required
+                            value={this.state.firstName}
                             placeholder={ false || EditProfileLabels.firstName }
                             onChange={event => this.setState({firstName: event.target.value })}
                         />
                         <input
                             className="input name last"
                             required
+                            value={this.state.lastName}
                             placeholder={false || EditProfileLabels.lastName }
                             onChange={event => this.setState({lastName: event.target.value })}
                         />
@@ -141,12 +142,14 @@ export class EditProfile extends React.PureComponent<EditProfileProps,EditProfil
                             type="email"
                             className="input email"
                             required
+                            value={this.state.email}
                             placeholder={ false || EditProfileLabels.email }
                             onChange={event => this.setState({email: event.target.value })}
                         />
                         {this.state.userType === "producer" &&
                             <input
                             className="input wallet"
+                            value={this.state.wallet}
                             placeholder={false || EditProfileLabels.wallet}
                             onChange={event => this.setState({wallet: event.target.value})}
                             />
@@ -155,12 +158,14 @@ export class EditProfile extends React.PureComponent<EditProfileProps,EditProfil
                             type="password"
                             className="input password first"
                             required
+                            value={this.state.password}
                             placeholder={ false || EditProfileLabels.password }
                             onChange={event => this.setState({password: event.target.value })}/>
                         <input
                             type="password"
                             className="input password second"
                             required
+                            value={this.state.repeatedPassword}
                             placeholder={ false || EditProfileLabels.confirmPassword }
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
                     </div>
@@ -175,6 +180,7 @@ export class EditProfile extends React.PureComponent<EditProfileProps,EditProfil
                         <label htmlFor="fileInput">Choose a file</label>
                         <textarea
                             className="description"
+                            value={this.state.description}
                             placeholder={ false || EditProfileLabels.decription }
                             onChange={event => this.setState({description: event.target.value })}/>
                     </div>
@@ -186,6 +192,7 @@ export class EditProfile extends React.PureComponent<EditProfileProps,EditProfil
                             type="password"
                             className="input password old"
                             required
+                            value={this.state.oldPassword}
                             placeholder={ false || EditProfileLabels.oldPassword }
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
@@ -493,3 +500,5 @@ export class EditProfile extends React.PureComponent<EditProfileProps,EditProfil
         return;
     }
 }
+
+export const EditProfile = injectStore((store) => ({ store }), UnwrappedEditProfile);
