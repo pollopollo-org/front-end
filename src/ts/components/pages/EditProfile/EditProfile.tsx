@@ -2,7 +2,10 @@ import React from "react";
 import EditProfileLabels from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
 import { colors, fonts } from "src/ts/config";
+import { asyncTimeout } from "src/ts/utils";
 import { isNullOrUndefined } from "util";
+import { Throbber } from "../../utils";
+import { Fade } from "../../utils/Dropdown/Fade";
 import { SelectCountry } from "../../utils/SelectCountry";
 
 type EditProfileState = {
@@ -50,6 +53,11 @@ type EditProfileState = {
      * wallet address
      */
     wallet:string;
+
+    /**
+     * Specifies whether or not we're currently pending data for the page
+     */
+    isPending?: boolean;
 }
 
 /**
@@ -73,7 +81,15 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
         description: "",
         profilePicture: undefined,
         wallet: "",
+        isPending: true,
     };
+
+    /**
+     * On mount fetch data to use on the edit profile page immediately!
+     */
+    public componentDidMount(): void {
+        this.fetchData();
+    }
 
     /**
      * Main render method for the entire component
@@ -157,6 +173,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                     </div>
                 </div>
             </form>
+            { this.renderThrobberOverlay() }
 
             <style jsx>{`
                 h1{
@@ -406,6 +423,44 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
     }
 
     /**
+     * Renderer that renders a throbber overlay that'll be displayed while data
+     * is loading
+     */
+    private renderThrobberOverlay(): React.ReactNode {
+        return (
+            <Fade key="throbber" in={this.state.isPending} unmountOnExit>
+                <div>
+                    <span className="throbber">
+                        <Throbber size={100} inverted={true} />
+                    </span>
+
+                    <style jsx>{`
+                    div {
+                        /** Force overlay to fill screen */
+                        position: fixed;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+
+                        /** Render the backdrop */
+                        background-color: rgba(0, 0, 0, 0.85);
+                    }
+
+                    .throbber {
+                        /** Position throbber in middle */
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                `}</style>
+                </div>
+            </Fade>
+        );
+    }
+
+    /**
      * Is passed down to SelectCountry and allows us to extract its value
      */
     private newCountrySelected = (newCountry:string) => {
@@ -453,6 +508,18 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
             return;
         }
         /** TODO Send data to backend */
+        return;
+    }
+
+    /**
+     * temp
+     */
+    private fetchData = async() => {
+        // Fetch data from backend
+
+        await asyncTimeout(650);
+        this.setState({ isPending: false });
+
         return;
     }
 }

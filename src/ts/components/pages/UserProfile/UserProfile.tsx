@@ -33,6 +33,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
     public render() : JSX.Element{
         const { user } = this.props;
 
+        if (!user) {
+            return <h1>No user is currently logged in</h1>;
+        }
+
         return (
             <div className="page">
                 <div className="wrapper">
