@@ -88,13 +88,13 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
                 { !this.props.user && (
                     <>
                         <span className="loginButton">
-                            <Link to={routes.register.path}>
+                            <Link to={routes.login.path}>
                                 { userInfoLabels.logIn }
                             </Link>
                             <span className="underline" />
                         </span>
                         <span className="loginButton">
-                            <Link to={"/temp"}>
+                            <Link to={routes.register.path}>
                                 { userInfoLabels.register }
                             </Link>
                             <span className="underline" />
@@ -356,13 +356,13 @@ export class UserInfoUnwrapped extends React.PureComponent<UserInfoProps, UserIn
                 { this.renderUserData() }
 
                 <span className="link">
-                    <Link to="/temp2">
+                    <Link to={routes.login.path}>
                         <i className="logIn">{ getSVG("log_in")}</i>
                         { userInfoLabels.profile }
                     </Link>
                 </span>
                 <span className="link">
-                    <Link to="/temp">
+                    <Link to={routes.login.path}>
                         <i className="edit">{ getSVG("edit") }</i>
                         { userInfoLabels.edit }
                     </Link>

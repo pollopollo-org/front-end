@@ -8,7 +8,9 @@ import { routes } from "src/ts/config/routes";
 
 import profile from "src/assets/data/profile.json";
 
+import { getSVG } from "src/assets/svg";
 import { ProducerModel } from "src/ts/models/ProducerModel";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { UserModel } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 
@@ -19,71 +21,61 @@ export type UserProps = {
     user: UserModel;
 }
 
-type UserProfileState = {
-    /**
-     * user type, producer or receiver
-     */
-    userType?: string;
-}
-
 /**
  * A page where the user can see their profile
  */
 @observer
-export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserProfileState>{
-
-    /**
-     * The state of the component
-     */
-    public readonly state: UserProfileState = {};
-
-    /**
-     * Determine user type
-     */
-    public componentDidMount(): void {
-        if(this.props.user instanceof ProducerModel) {
-            this.setState({
-                userType: "producer",
-            });
-        } else {
-            this.setState({
-                userType: "receiver",
-            });
-        }
-    }
+export class UnwrappedUserProfile extends React.Component<UserProps>{
 
     /**
      * Main render method, used to render ProfilePage
      */
     public render() : JSX.Element{
         const { user } = this.props;
+
         return (
             <div className="page">
                 <div className="wrapper">
-                    <div className="left">
-                        <h1>Profile</h1>
+                    <div>
+                        <div className="header">
+                            <h1>Profile</h1>
+                            <Link className="editProfile" to={routes.register.path}>
+                                <i>
+									{ getSVG("edit") }
+								</i>
+                            </Link>
+                        </div>
+                        {/* Information box */}
                         <div className="information">
                             <div className="content">
                                 <img className="image" src={require("src/assets/dummy/sif.PNG")} />
-                                <Link className="editProfile" to={routes.register.path}>{profile.edit}</Link>
                                 <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
                                 <p><span className="bold">{profile.country}</span> {user.country}</p>
                                 <p><span className="bold">{profile.email}</span> {user.email}</p>
-                                <div className="desc">
+                                <div className="twoliner">
                                     <p><span className="bold">{profile.desc}</span> </p>
                                     <p>{user.description}</p>
                                 </div>
+
+                                    {isProducerUser(user) && (
+                                        <div className="twoliner">
+                                            <p><span className="bold">{profile.wallet}</span> </p>
+                                            <p>{user.wallet}</p>
+                                        </div>
+                                    )}
                             </div>
                         </div>
                     </div>
-                    <div className="products">
-                        {this.state.userType==="producer" && (
+                    {/* List of the user's products/applications */}
+                    <div className="list">
+                        {isProducerUser(user) && (
                             <h2>Your products</h2>
                         )}
-                        {this.state.userType==="receiver" && (
+                        {isReceiverUser(user) && (
                             <h2>Your applications</h2>
                         )
                         }
+                        {/* Dummy items for the list */}
                         <div className="item"></div>
                         <div className="item"></div>
                     </div>
@@ -102,12 +94,13 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
 
                     h1 {
                         margin-top: 25px;
+                        display: inline-block;
                     }
 
                     /* Box for user information */
                     .information {
                         padding: 10px 0;
-                        max-width: 325px;
+                        max-width: 350px;
                         border-radius: 3px;
                         background-color: ${colors.pale};
                         color: ${colors.licorice};
@@ -116,33 +109,54 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
 
                     /* The content of the information box */
                     .content {
-                        margin: 30px 50px;
+                        margin: 20px 50px;
                     }
 
-                    /* Link to edit profile page */
-                    :global(.editProfile) {
-                        text-align: center;
-                        margin-top: 10px;
-                        color: ${colors.primary};
+                    /* Profile picture, centered within information box */
+                    .image {
                         display: block;
+                        height: 160px;
+                        width: 160px;
+                        border-radius: 50%;
+                        border: 2px solid ${colors.primary};
+                        margin: 0 auto;
+                        margin-bottom: 25px;
+                    }
+
+                    /* Link to edit profile page, centered under image */
+                    :global(.editProfile) {
+                        margin-top: 30px;
+                        color: ${colors.primary};
                         text-decoration: none;
+                        display: inline-block;
                     }
 
                     :global(.editProfile):hover {
-                        text-decoration: underline;
+                        color: ${colors.secondary};
+                    }
+
+                    i {
+                        & :global(> span > svg) {
+                            width: 24px;
+                            margin-left: 5px;
+                            /* Allign with h1 */
+                            margin-bottom: -2px;
+                        }
                     }
 
                     p {
                         margin: 15px 0;
                     }
 
-                    /* Description part of information */
-                    .desc {
+                    /* A section of the information box where header and content are on diferent lines */
+                    .twoliner {
                         margin-top: 25px;
                     }
 
-                    .desc p {
-                        text-align: justify;
+                    /* Justify text and split words */
+                    .twoliner p {
+                        text-align: left;
+                        line-height: 1.3;
                         margin: 5px 0 0 0;
                         -webkit-hyphens: auto;
                         -moz-hyphens: auto;
@@ -155,23 +169,21 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         margin: 0;
                     }
 
-                    /* Profile picture */
-                    .image {
-                        display: block;
-                        height: 160px;
-                        width: 160px;
-                        border-radius: 50%;
-                        border: 2px solid ${colors.primary};
-                        margin: 0 auto;
+                    h2 {
+                        margin: 0;
+                        margin-bottom: 15px;
                     }
 
-                    /* List of user's products */
-                    .products {
+                    /**
+                     * List of user's products/applications,
+                     * move down to align with information box
+                     */
+                    .list {
                         margin-top: 63px;
                         width: 50%;
                     }
 
-                    /* Dummy products for list of products */
+                    /* Dummy products/applications for list, replace later */
                     .item {
                         height: 90px;
                         border: 1px solid rgba(139,72,156, 0.15);
@@ -180,19 +192,22 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                         margin-top: 15px;
                     }
 
-                    h2 {
-                        margin: 0;
-                        margin-bottom: 15px;
+                    /* Make more room for applications/products when the width is less than 820px */
+                    @media only screen and (max-width: 820px) {
+                        .information {
+                            max-width: 300px;
+                        }
                     }
 
-                    @media only screen and (max-width: 666px) {
-					/* For mobile phones: */
+                    /* For mobile phones */
+                    @media only screen and (max-width: 690px) {
                         .page {
                             width: 100%;
                             margin: auto;
                             padding: 0;
                         }
 
+                        /* Make products/applications appear beneath information */
 						.wrapper {
                             width: 100%;
     						flex-direction: column;
@@ -200,6 +215,10 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
 
 						}
 
+                        /*
+                         * Make the information box wide enough to fill the
+                         * screen and center it.
+                         */
                         .information {
                             width: calc(100% - 20px);
                             max-width: 100%;
@@ -207,11 +226,7 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             text-align: center;
                         }
 
-                        .desc {
-                            text-align: left;
-                        }
-
-                        h1 {
+                        .header {
                             text-align: center;
                         }
 
@@ -219,18 +234,31 @@ export class UnwrappedUserProfile extends React.PureComponent<UserProps, UserPro
                             margin-top: 20px;
                         }
 
-                        .products {
+                        /* Make the list wide enough to fill the  screen. */
+                        .list {
                             width: calc(100% - 20px);
                             padding: 10px;
                             margin: 0;
                         }
-
 					}
-
                 `}</style>
             </div>
         )
     }
+}
+
+/**
+ * Check if the user is a producer
+ */
+function isProducerUser(model: UserModel): model is ProducerModel {
+    return model instanceof ProducerModel;
+}
+
+/**
+ * Check if the user is a receiver
+ */
+function isReceiverUser(model: UserModel): model is ReceiverModel {
+    return model instanceof ReceiverModel;
 }
 
 export const UserProfile = injectStore((store) => ({user: store.user}), UnwrappedUserProfile);

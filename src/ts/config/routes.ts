@@ -23,6 +23,8 @@ export const routes = {
     },
     profile: {
         path: "/profile.html",
-        name: "Profile"
+    },
+    login: {
+        path: "/login",
     }
 }

@@ -65,8 +65,8 @@ export class Header extends React.PureComponent<{}, HeaderState> {
     /**
      * Main render method, used to render Header
      */
-	public render(): JSX.Element {
-		return (
+    public render(): JSX.Element {
+        return (
             <div className="header">
                 <Link to={routes.root.path}>
                     <i>
