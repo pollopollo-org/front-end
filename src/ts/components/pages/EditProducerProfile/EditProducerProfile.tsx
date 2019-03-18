@@ -51,22 +51,21 @@ type EditProducerProfileState = {
  *  Page where a logged in producer can edit their profile
  */
 export class EditProducerProfile extends React.PureComponent<{},EditProducerProfileState>{
-    constructor(props:any){
-        super(props);
-        this.state={ 
-            // here we wanna get the actual user information tho
-            firstName: "",
-            lastName: "",
-            email: "",
-            country: "",
-            userType: "producer",
-            password: "",
-            repeatedPassword: "",
-            oldPassword: "",
-            description: "",
-            profilePicture: undefined,
-        };
-    }
+    /**
+     * State of the component
+     */
+    public state: EditProducerProfileState = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        country: "",
+        userType: "producer",
+        password: "",
+        repeatedPassword: "",
+        oldPassword: "",
+        description: "",
+        profilePicture: undefined,
+    };
 
     /**
      * Main render method for the entire component
@@ -205,13 +204,13 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                 .allSection{
                     width: 545px;
                     height: calc(100% - 60px);
-                    display: flex;
-                    flex-direction: column;
+                    
                     margin: 30px auto;
                     justify-content: center;
                 }
 
                 .inputPicDescSection{
+                    display: flex;
                     height: calc(100% - 115px);
                 }
 
@@ -279,6 +278,61 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     width: 545px;
                     background-color: ${colors.primary};
                     margin-bottom: 10px;
+                }
+
+                /* For mobile phones */
+                @media (max-width: 666px) {
+
+                    .allSection {
+                        text-align: center;
+                        width: 100%;
+                    }
+                    
+                    h1 {
+                        margin-bottom: 15px;
+                    }
+
+                    form {
+                        max-width: 400px;
+                        margin: 0 auto;
+                        padding: 0 15px;
+                    }
+                    
+                    /* Make columns appear beneath eachother */
+                        .inputPicDescSection {
+                            flex-direction: column;
+                        }
+
+                    /* Set all content to centered with a width of 100% */
+                        .inputFieldsSection,
+                        .pictureDescSection,
+                        .oldPassSubmitSection,
+                        .SelectCountryDiv,
+                        .currentPictureDiv,
+                        .borderLine  {
+                            margin: 0 auto;
+                            max-width: 100%;
+                        }
+
+                        .inputPicDescSection,
+                        .pictureDescSection,
+                        .description,
+                        .input {
+                            width: 100%;
+                        }
+
+                    /* Change order of columns */
+                        .pictureDescSection {
+                            order: 1;
+                        }
+
+                        .inputFieldsSection {
+                            order: 2;
+                        }
+
+                    .description {
+                        padding: 0;
+                    }
                 }
 
             `}</style>
