@@ -56,8 +56,10 @@ type EditProducerProfileState = {
  *  Page where a logged in producer can edit their profile
  */
 export class EditProducerProfile extends React.PureComponent<{},EditProducerProfileState>{
+
     /**
      * State of the component
+     * // TODO here we wanna get the actual user information tho
      */
     public state: EditProducerProfileState = {
         firstName: "",
@@ -132,8 +134,8 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                         <input 
                             type="file"
                             id="fileInput"
-                            className="upload"
                             onChange={event => this.chooseImage(event)}/>
+                        <label htmlFor="fileInput">Choose a file</label>
                         <textarea 
                             className="description" 
                             placeholder={ false || EditProfileLabels.decription }
@@ -161,10 +163,6 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     margin: 0 0 8px;
                     line-height: 30px;
                     text-align: center;
-                }
-
-                h3{
-                    
                 }
 
                 input{
@@ -209,7 +207,7 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     font-size: 16px;
                     font-family: ${ fonts.heading };
                     font-weight: 300;
-                    width: 254px;
+                    width: 260px;
                     cursor: pointer;
                     height: 43px;
                 }
@@ -244,20 +242,10 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     float: left;
                     margin-left: 30px;
                 }
-
-                .oldPassSubmitSection{
-                    
-                }
                 
                 .SelectCountryDiv{
                     max-width: 255px;
                     margin: 0;
-                }
-
-                .upload{
-                    width: 101.38px;
-                    height: 24.4px;
-                    text-indent: 0;
                 }
 
                 .currentPictureDiv{
@@ -275,10 +263,39 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     width: 100px;
                 }
 
+                [type="file"] {
+                    height: 0;
+                    overflow: hidden;
+                    width: 0;
+                    border: none;
+                    display: none;
+                }
+
+                [type="file"] + label {
+                    background: ${colors.secondary};
+                    border: none;
+                    border-radius: 2px;
+                    color: ${colors.white};
+                    cursor: pointer;
+                    transition: background-color 0.1s linear;
+                    font-size: 16px;
+                    font-family: ${ fonts.heading };
+                    font-weight: 300;
+                    padding: 0.5rem 20px;
+                    width: 90px;
+                    display: block;
+                    margin: 10px auto 20px auto;
+                    
+                }
+
+                [type="file"] + label:hover {
+                    background: ${colors.primary};
+                }
+
                 .description{
                     box-shadow: none;
                     width: 252px;
-                    height: 137px;
+                    height: 139px;
                     text-indent: 9px;
                     border: 1px solid ${ colors.gray };
                     color: ${ colors.black };
@@ -305,6 +322,12 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
                     background-color: ${colors.primary};
                     margin-top: 10px;
                     margin-bottom: 10px;
+                }
+
+                .oldPassSubmitSection {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
                 }
 
                 @media only screen and (min-width: 50%) {
@@ -425,6 +448,11 @@ export class EditProducerProfile extends React.PureComponent<{},EditProducerProf
      * Send the information to the backend
      */
     private sendToBackEnd = () => {
+        if(this.state.password !== this.state.repeatedPassword){
+            alert("Your passwords must match");
+            return;
+        }
+        /** TODO Send data to backend */
         return;
     }
 }
