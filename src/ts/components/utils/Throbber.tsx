@@ -11,6 +11,16 @@ type ThrobberProps = {
      * Will fallback to 64px.
      */
     size?: number;
+
+    /**
+     * Specifies if the throbber should position itself where you'd expect it to be
+     */
+    relative?: boolean;
+
+    /**
+     * Specifies if colors should be inverted
+     */
+    inverted?: boolean;
 };
 
 /**
@@ -24,7 +34,7 @@ const BASE_SIZE = 256;
 /**
  * Component that'll render a simple throbber that can be used throughout the page
  */
-export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
+export const Throbber: React.SFC<ThrobberProps> = ({ size = 64, relative = false, inverted = false }) => {
     // The scale is used to properly dimension the throbber at the desired size.
     // This is required since we use fixed px-values that result in perfect rendering
     // given the BASE_SIZE.
@@ -33,7 +43,7 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
     return (
         <span className="throbber">
             <i className="throbber__logo">
-                { getSVG("logo") }
+                { getSVG(inverted ? "logo_inverted" : "logo") }
             </i>
 
             <style jsx>{`
@@ -46,6 +56,8 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                     display: block;
                     width: ${ BASE_SIZE }px;
                     height: ${ BASE_SIZE }px;
+                    left: -${ relative ? (BASE_SIZE / 2) - (size / 2) : null }px;
+                    top: -${ relative ? (BASE_SIZE / 2) - (size / 2) : null }px;
 
                     /** Translate to desired dimensions */
                     transform: scale(${scale});
@@ -65,7 +77,7 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                         bottom: 0;
 
                         /** Render the actual circle */
-                        border: 8px solid ${colors.pale};
+                        border: 8px solid ${inverted ? colors.white : colors.pale};
                         border-radius: 50%;
 
                         /**
@@ -73,7 +85,7 @@ export const Throbber: React.SFC<ThrobberProps> = ({ size = 64 }) => {
                          * make rotation visible
                          *
                          */
-                        border-left-color: ${colors.primary};
+                        border-left-color: ${inverted ? colors.secondary : colors.primary};
 
                         /** Visually indicate that things are happening! */
                         animation: spin 0.9s linear infinite;

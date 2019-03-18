@@ -6,6 +6,8 @@ import { fonts } from "src/ts/config/fonts";
 import { routes } from "src/ts/config/routes";
 
 import LoginFormLabels from "src/assets/data/loginForm.json";
+// import { asyncTimeout } from "src/ts/utils";
+import { Throbber } from "../../utils";
 
 
 type LoginFormState = {
@@ -17,6 +19,11 @@ type LoginFormState = {
      * Inputted password
      */
     password?: string;
+
+    /**
+     * Specifies whether or not we're currently attempting to create a user
+     */
+    isPending?: boolean;
 }
 
 /**
@@ -38,7 +45,7 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                     <h1>{LoginFormLabels.title}</h1>
                     <div className="loginFormContainer">
                         <div className="container">
-                            <form>
+                            <form onSubmit={this.onSubmit}>
                                 <div className="loginForm Email">
                                     <label htmlFor="user_name" className="loginLabel Email">
                                         {LoginFormLabels.EmailInputLabel}
@@ -63,7 +70,12 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                                         onChange={event => this.setState({ password: event.target.value, })}
                                     />
                                 </div>
-                                <button type="submit">{LoginFormLabels.buttonText}</button>
+                                <button type="submit" className={this.state.isPending ? "isPending" : ""}>
+                                    <span className="text">{LoginFormLabels.buttonText}</span>
+                                    <span className="throbber">
+                                        <Throbber size={30} relative={true} inverted={true} />
+                                    </span>
+                                </button>
                             </form>
                             <Link className="link registerLink" to={routes.register.path}>
                                 {LoginFormLabels.linkQuestion} <b>{LoginFormLabels.linkSignUpText}</b>
@@ -160,6 +172,7 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                     }
 
                     button {
+                        position: relative;
                         margin-top: 25px;
                         padding: 0.75rem 1.25rem;
                         width: 100%;
@@ -177,6 +190,43 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                         /* Set font styling */
                         font-size: 1.25rem;
                         font-family: ${ fonts.heading};
+
+                        & .throbber {
+                            /**
+                             * Position a throbber in the middle to be displayed
+                             * while requests are ongoing
+                             */
+                            position: absolute;
+                            left: calc(50% - 15px);
+                            top: calc(50% - 15px);
+                            opacity: 0;
+                            overflow: hidden;
+
+                            /**
+                             * prepare transitions
+                             */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        & .text {
+                            opacity: 1;
+                            transform: scale(1);
+
+                            /**
+                             * prepare transitions
+                             */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        &.isPending .throbber {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+
+                        &.isPending .text {
+                            opacity: 0;
+                            transform: scale(0.5);
+                        }
                     }
 
                     button:hover {
@@ -203,6 +253,47 @@ export class LoginForm extends React.PureComponent<{}, LoginFormState>{
                     }
                 `}</style>
             </div>
+        );
+    }
+
+    /**
+     * Internal handler that should be triggered once the form is ready to submit
+     */
+    protected onSubmit = async (evt: React.FormEvent) => {
+        evt.preventDefault();
+
+        if (!this.state.password || !this.state.email) {
+            return;
+        }
+
+        // const endPoint = apis.user.create;
+
+        // try {
+        //     this.setState({ isPending: true });
+        //     const startedAt = performance.now();
+
+        //     await fetch(endPoint, {
+        //         method: "POST",
+        //         body: JSON.stringify({
+        //             password: this.state.password,
+        //             email: this.state.email,
+        //         })
+        //     });
+
+        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+        // } catch (err) {
+        //     alert("Either your password or email doesn't match, please try again.");
+        // } finally {
+        //     this.setState({ isPending: false });
+        // }
+
+        // Dummy
+        this.setState({ isPending: true });
+        setTimeout(
+            () => {
+                this.setState({ isPending: false });
+            },
+            2000,
         );
     }
 }

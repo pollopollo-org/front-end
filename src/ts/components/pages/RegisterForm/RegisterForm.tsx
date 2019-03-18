@@ -5,6 +5,7 @@ import { fonts } from "src/ts/config/fonts";
 import Countries from "src/assets/countries.json";
 import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
 import RegisterFormLabels from "src/assets/data/registerForm.json";
+import { Throbber } from "../../utils";
 
 type RegisterFormState = {
     /**
@@ -35,6 +36,11 @@ type RegisterFormState = {
      * The password again for validation reasons
      */
     repeatedPassword?: string;
+
+    /**
+     * Specifies whether or not we're currently attempting to create a user
+     */
+    isPending?: boolean;
 }
 
 /**
@@ -53,7 +59,7 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         return (
             <div className="allSection">
                 <h1>{ RegisterFormLabels.title }</h1>
-                <form onSubmit={this.validate}>
+                <form onSubmit={this.onSubmit}>
                     {/* First and last name */}
                     <div className="section">
                         <input
@@ -130,7 +136,12 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         </div>
                         {/* Submit button */}
                         <div>
-                            <button type="submit">{RegisterFormLabels.submit}</button>
+                            <button type="submit" className={this.state.isPending ? "isPending" : ""}>
+                                <span className="text">{RegisterFormLabels.submit}</span>
+                                <span className="throbber">
+                                    <Throbber size={24} relative={true} inverted={true} />
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -232,6 +243,44 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         font-weight: 300;
                         width: 254px;
                         cursor: pointer;
+                        position: relative;
+
+                        & .throbber {
+                            /**
+                             * Position a throbber in the middle to be displayed
+                             * while requests are ongoing
+                             */
+                            position: absolute;
+                            left: calc(50% - 12px);
+                            top: calc(50% - 12px);
+                            opacity: 0;
+                            overflow: hidden;
+
+                            /**
+                             * prepare transitions
+                             */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        & .text {
+                            opacity: 1;
+                            transform: scale(1);
+
+                            /**
+                             * prepare transitions
+                             */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        &.isPending .throbber {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+
+                        &.isPending .text {
+                            opacity: 0;
+                            transform: scale(0.5);
+                        }
                     }
 
                     button:hover {
@@ -396,13 +445,12 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     /**
      * Function for validating country and password
      */
-    private validate = (evt: React.FormEvent) => {
-        evt.preventDefault();
+    private validate = () => {
         if (this.state.country === null) {
             alert("Please choose a country.");
             return false;
         }
-        else if (this.state.country && this.state.country.match(/[^0-9]+/)) {
+        else if (!this.state.country || !this.state.country.match(/[^0-9]+/)) {
             alert("There was an error with the selected country.")
             return false;
         }
@@ -412,5 +460,46 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
         }
 
         return true;
+    }
+
+    /**
+     * Internal handler that should be triggered once the form is ready to submit
+     */
+    private onSubmit = async (evt: React.FormEvent) => {
+        evt.preventDefault();
+
+        if (!this.validate()) {
+            return;
+        }
+
+        // const endPoint = apis.user.create;
+
+        // try {
+        //     this.setState({ isPending: true });
+        //     const startedAt = performance.now();
+
+        //     await fetch(endPoint, {
+        //         method: "POST",
+        //         body: JSON.stringify({
+        //             password: this.state.password,
+        //             email: this.state.email,
+        //         })
+        //     });
+
+        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+        // } catch (err) {
+        //     alert("Either your password or email doesn't match, please try again.");
+        // } finally {
+        //     this.setState({ isPending: false });
+        // }
+
+        // Dummy
+        this.setState({ isPending: true });
+        setTimeout(
+            () => {
+                this.setState({ isPending: false });
+            },
+            2000,
+        );
     }
 }
