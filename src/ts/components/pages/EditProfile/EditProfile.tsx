@@ -4,7 +4,7 @@ import { colors, fonts } from "src/ts/config";
 import { isNullOrUndefined } from "util";
 import { SelectCountry } from "../../utils/SelectCountry";
 
-type EditProducerProfileState = {
+type EditProfileState = {
     /**
      * first name
      */
@@ -54,7 +54,7 @@ type EditProducerProfileState = {
 /**
  *  Page where a logged in producer can edit their profile
  */
-export class EditProducerProfile extends React.PureComponent<{},EditProducerProfileState>{
+export class EditProfile extends React.PureComponent<{},EditProfileState>{
     constructor(props:any){
         super(props);
         this.state={ 
