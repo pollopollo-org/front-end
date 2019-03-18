@@ -1,12 +1,18 @@
 import React from "react";
+
 import { colors, routes } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
 import { RouterProps, withRouter } from "react-router";
+
 import Countries from "src/assets/countries.json";
 import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
 import RegisterFormLabels from "src/assets/data/registerForm.json";
+
+import { SelectCountry } from "../../utils/SelectCountry";
+
 import { Throbber } from "../../utils";
+
 
 type RegisterFormState = {
     /**
@@ -79,14 +85,15 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                     </div>
                     {/* Email and country */}
                     <div className="section">
-                        <input
-                            type="email"
-                            className="leftInput"
-                            placeholder={RegisterFormLabels.email}
+                        <input 
+                            type="email" 
+                            className="leftInput" 
+                            placeholder={ RegisterFormLabels.email } 
                             maxLength={255}
-                            required
-                            onChange={event => this.setState({ password: event.target.value, })} />
-                        {this.renderSelect()}
+                            required 
+                            onChange={event => this.setState({password: event.target.value,})}
+                        />
+                        <SelectCountry onChange={this.newCountrySelected}/>
                     </div>
                     {/* Password */}
                     <div className="section">
@@ -170,11 +177,17 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                         justify-content: center;
                     }
 
-                    .section {
+                    /** 
+                     * Sections surrounding the input fields
+                     */
+                    .section{
                         margin: 20px auto;
                     }
 
-                    input {
+                    /**
+                     * Text fields' standard styling for the project
+                     */
+                    input{
                         box-shadow: none;
                         height: 39px;
                         width: 250px;
@@ -201,25 +214,35 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                         border: 1px solid ${ colors.secondary};
                     }
 
+                    /** 
+                    * Three of the input fields have this classname, 
+                    * it allows us to keep a bit of distance between the inputs 
+                    *to the left and those to the right
+                    */
                     .leftInput {
                         margin-right: 30px;
                     }
 
+                    /**
+                     * Radio buttons for usertype
+                     */
                     input.userTypeButton {
                         height: 17px;
                         width: 17px;
                         margin: 0px 10 0 0px;
                     }
 
-                    option[value = ""][disabled] {
-                        display: none;
-                    }
-
+                    /**
+                     * Layout for radio buttons
+                     */
                     .grid {
                         display: flex;
                         width: 100%;
                     }
 
+                    /**
+                     * Radio buttons
+                     */
                     .userType {
                         display: inline-flex;
                         align-items: center;
@@ -230,6 +253,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                         margin-right: 30px;
                     }
 
+                    /**
+                     * Submit button
+                     */
                     button {
                         float: right;
                         margin: 30px auto auto 49px;
@@ -288,6 +314,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                         background-color: ${ colors.primary};
                     }
 
+                    /**
+                     * Restyling to fit smaller screens and mobile
+                     */
                     @media only screen and (max-width: 768px) {
                         /* Center in the middle */
                         .allSection {
@@ -324,6 +353,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                             margin: 10px 0;
                         }
 
+                        /**
+                         * All input fields are now made to be in a single column rather than two
+                         */
                         .leftInput {
                             margin: 0;
                         }
@@ -361,83 +393,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
     }
 
     /**
-     * Internal renderer that renders the select of the application
-     */
-    private renderSelect(): JSX.Element {
-        return (
-            <select
-                required
-                onChange={event => this.setState({ country: event.target.value })}
-                className={`${!this.state.country ? "inactive" : "active"}`}
-            >
-                <option disabled selected value="">Select country</option>
-                <optgroup>
-                    {PrioritisedCountries.map((country) => {
-                        return (
-                            <option value={country.Code}>{country.Name}</option>
-                        );
-                    })}
-                </optgroup>
-                <optgroup>
-                    {Countries.map((country) => {
-                        // Only render non-prioritised countries in this list
-                        // (important countries has already been rendered)
-                        if (PrioritisedCountries.findIndex((priority) => priority.Code !== country.Code)) {
-                            return null;
-                        }
-
-                        return (
-                            <option value={country.Code}>{country.Name}</option>
-                        );
-                    })}
-                </optgroup>
-
-                <style jsx>{`
-                    select{
-                        -webkit-appearance: none;
-                        background: transparent;
-
-                        height: 43px;
-                        width: 254px;
-                        text-indent: 9px;
-
-                        border: 1px solid ${ colors.pale};
-                        border-transition: border-color 0.15s linear;
-                        border-radius: 3px;
-
-                        font-size: 16px;
-                        font-weight: 300;
-                        font-family: ${ fonts.text};
-                    }
-
-                    select.inactive {
-                        color: ${ colors.gray};
-                    }
-
-                    select.active {
-                        color: ${ colors.black};
-                    }
-
-                    select:focus {
-                        border: 1px solid ${ colors.secondary};
-                    }
-
-                    @media only screen and (max-width: 768px) {
-                        select {
-                            margin: 15px 0;
-                            width: 100%;
-                            box-sizing: border-box;
-                            max-width: 400px;
-                        }
-                    }
-                `}</style>
-            </select>
-        );
-    }
-
-    /**
-     * Internal helper that should be triggered once a userType radio button
-     * should be clicked
+     * Internal helper that should be triggered once a userType 
+     * radio button is clicked
      */
     private onUserTypeClick = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ userType: evt.currentTarget.value });
@@ -508,6 +465,13 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
             },
             2000,
         );
+    }
+
+    /**
+     * Is passed down to SelectCountry and allows us to extract its value
+     */
+    private newCountrySelected = (newCountry:string) => {
+        this.setState({country: newCountry,});
     }
 }
 
