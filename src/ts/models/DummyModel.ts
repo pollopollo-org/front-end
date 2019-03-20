@@ -22,7 +22,7 @@ export class DummyModel {
      * Helper that instantiates a dummy model, populated with required data.
      */
     public static async CREATE(dataProivder: DataProviders): Promise<DummyModel> {
-        if (dataProivder === DataProviders.BACKEND) {
+        if (dataProivder === DataProviders.LOCALBACKEND) {
             // Actually fetch data from backend.. :-)
             return new DummyModel({ title: "invalid", userId: "invalid" });
         } else {

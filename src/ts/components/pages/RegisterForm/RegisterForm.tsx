@@ -1,123 +1,165 @@
 import React from "react";
-import { colors } from "src/ts/config";
+import { colors, routes } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
-import Countries from "src/assets/countries.json";
-import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
+import { RouterProps, withRouter } from "react-router";
 import RegisterFormLabels from "src/assets/data/registerForm.json";
+
+import { SelectCountry } from "../../utils/SelectCountry";
+
+import { apis } from "src/ts/config/apis";
+import { ProducerModel, ProducerModelData } from "src/ts/models/ProducerModel";
+import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
+import { asyncTimeout } from "src/ts/utils";
+import { Throbber } from "../../utils";
+
+type RegisterFormProps = {
+    /**
+     * Contains a reference to the main store of the application
+     */
+    store: Store;
+} & RouterProps;
 
 type RegisterFormState = {
     /**
-     * first name
+     * The first name of the user who wants to register
      */
-    firstName: string;
+    firstName?: string;
     /**
-     * last name
+     * The last name of the user who wants to register
      */
-    lastName: string;
+    lastName?: string;
     /**
-     * email
+     * The email adress of the user who wants to register
      */
-    email: string;
+    email?: string;
     /**
-     * country
+     * The country the user is living in
      */
-    country: string;
+    country?: string;
     /**
-     * user type, producer or receiver
+     * The type of profile the user wants to create, either producer or receiver
      */
-    userType: string;
+    userType?: string;
     /**
-     * password
+     * The password the user wants to use for their profile
      */
-    password: string;
+    password?: string;
     /**
-     * repeated password
+     * The password again for validation reasons
      */
-    repeatedPassword: string;
+    repeatedPassword?: string;
+
+    /**
+     * Specifies whether or not we're currently attempting to create a user
+     */
+    isPending?: boolean;
 }
 
 /**
  * A page where the user can register for the project
  */
-export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
-    constructor(props:any){
-        super(props);
-        this.state={
-            firstName: "",
-            lastName: "",
-            email: "",
-            country: "",
-            userType: "producer",
-            password: "",
-            repeatedPassword: "",
-        };
-    }
+class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, RegisterFormState>{
+    /**
+     * State of the register form, all fields initially set to null
+     */
+    public readonly state: RegisterFormState = {};
 
     /**
      * Render the component
      */
     public render(): JSX.Element {
-        return(
+        return (
             <div className="allSection">
-
                 <h1>{ RegisterFormLabels.title }</h1>
-                <form onSubmit={this.validate}>
+                <form onSubmit={this.onSubmit}>
+                    {/* First and last name */}
                     <div className="section">
-                        <input className="leftInput" placeholder={ RegisterFormLabels.firstName } required onChange={event => this.setState({firstName: event.target.value })}/>
-                        <input placeholder={ RegisterFormLabels.lastName } required onChange={event => this.setState({lastName: event.target.value })}/>
+                        <input
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.firstName}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ firstName: event.target.value })}
+                        />
+                        <input
+                            placeholder={RegisterFormLabels.lastName}
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({ lastName: event.target.value })}
+                        />
                     </div>
+                    {/* Email and country */}
                     <div className="section">
-                        <input type="email" className="leftInput" placeholder={ RegisterFormLabels.email } required onChange={event => this.setState({password: event.target.value,})}/>
-                        { this.renderSelect() }
+                        <input
+                            type="email"
+                            className="leftInput"
+                            placeholder={ RegisterFormLabels.email }
+                            maxLength={255}
+                            required
+                            onChange={event => this.setState({email: event.target.value,})}
+                        />
+                        <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
                     </div>
+                    {/* Password */}
                     <div className="section">
-                        <input type="password" className="leftInput" placeholder={RegisterFormLabels.password } required onChange={event => this.setState({password: event.target.value,})}/>
-                        <input type="password" placeholder={ RegisterFormLabels.confirmPassword } required onChange={event => this.setState({repeatedPassword: event.target.value,})}/>
+                        <input
+                            type="password"
+                            className="leftInput"
+                            placeholder={RegisterFormLabels.password}
+                            required
+                            onChange={event => this.setState({ password: event.target.value, })}
+                        />
+                        <input
+                            type="password"
+                            placeholder={RegisterFormLabels.confirmPassword}
+                            required
+                            onChange={event => this.setState({ repeatedPassword: event.target.value, })}
+                        />
                     </div>
+                    {/* Usertype */}
                     <div className="grid">
                         <div>
-                            <h4>{ RegisterFormLabels.userType__title }</h4>
+                            <h4>{RegisterFormLabels.userType__title}</h4>
                             <div className="radioSection">
                                 <div className="userType P">
                                     <input
                                         type="radio"
                                         className="userTypeButton"
                                         name="userType"
-                                        id="producer"
-                                        value="producer"
-                                        checked={this.state.userType === "producer"}
+                                        id="Producer"
+                                        value="Producer"
+                                        checked={this.state.userType === "Producer"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                        <label htmlFor="producer">{ RegisterFormLabels.userType__producer }</label>
-                                    </div>
+                                    <label htmlFor="Producer">{RegisterFormLabels.userType__producer}</label>
+                                </div>
                                 <div className="userType R">
                                     <input
                                         type="radio"
                                         className="userTypeButton"
                                         name="userType"
-                                        id="receiver"
-                                        value="receiver"
-                                        checked={this.state.userType === "receiver"}
+                                        id="Receiver"
+                                        value="Receiver"
+                                        checked={this.state.userType === "Receiver"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                    <label htmlFor="receiver">{ RegisterFormLabels.userType__reciever }</label>
+                                    <label htmlFor="Receiver">{RegisterFormLabels.userType__reciever}</label>
                                 </div>
                             </div>
                         </div>
+                        {/* Submit button */}
                         <div>
-                            <button type="submit">{ RegisterFormLabels.submit }</button>
+                            <button type="submit" className={this.state.isPending ? "isPending" : ""}>
+                                <span className="text">{RegisterFormLabels.submit}</span>
+                                <span className="throbber">
+                                    <Throbber size={24} relative={true} inverted={true} />
+                                </span>
+                            </button>
                         </div>
                     </div>
-                    {/* <div className="conditionalSection">
-                        {this.state.userType==="producer" && (
-                            <input></input>
-                        )}
-                        {this.state.userType!=="" && (
-                            <button>Submit</button>
-                        )
-                        }
-                    </div> */}
                 </form>
 
 
@@ -126,12 +168,14 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         margin: 0 0 8px;
                         line-height: 30px;
                         text-align: center;
+
                     }
 
                     h4 {
                         margin-top: 5px;
                     }
 
+                    /* center in the middle */
                     .allSection {
                         width: 540px;
                         height: calc(100% - 60px);
@@ -141,23 +185,30 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         justify-content: center;
                     }
 
+                    /**
+                     * Sections surrounding the input fields
+                     */
                     .section{
                         margin: 20px auto;
                     }
 
+                    /**
+                     * Text fields' standard styling for the project
+                     */
                     input{
                         box-shadow: none;
                         height: 39px;
                         width: 250px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.gray };
-                        color: ${ colors.black };
+                        border: 1px solid ${ colors.pale };
+                        border-transition: border-color 0.15s linear;
+                        color: ${ colors.black};
                         border-radius: 3px;
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                         font-size: 16px;
                         font-weight: 300;
 
-                        /** Remove box-shadow on iOS */
+                        /* Remove box-shadow on iOS */
                         background-clip: padding-box;
 
                         &::placeholder {
@@ -166,25 +217,40 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         }
                     }
 
+                    /* Set border styling when clicked on */
+                    input:focus {
+                        border: 1px solid ${ colors.secondary };
+                    }
+
+                    /**
+                    * Three of the input fields have this classname,
+                    * it allows us to keep a bit of distance between the inputs
+                    *to the left and those to the right
+                    */
                     .leftInput {
                         margin-right: 30px;
                     }
 
+                    /**
+                     * Radio buttons for usertype
+                     */
                     input.userTypeButton {
                         height: 17px;
                         width: 17px;
                         margin: 0px 10 0 0px;
                     }
 
-                    option[value = ""][disabled] {
-                        display: none;
-                    }
-
+                    /**
+                     * Layout for radio buttons
+                     */
                     .grid {
                         display: flex;
                         width: 100%;
                     }
 
+                    /**
+                     * Radio buttons
+                     */
                     .userType {
                         display: inline-flex;
                         align-items: center;
@@ -195,12 +261,14 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         margin-right: 30px;
                     }
 
+                    /**
+                     * Submit button
+                     */
                     button {
                         float: right;
-
                         margin: 30px auto auto 49px;
                         background-color: ${ colors.secondary };
-                        color: white;
+                        color: ${colors.white};
                         border: none;
                         border-radius: 2px;
                         padding: 10px 104px;
@@ -210,13 +278,55 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                         font-weight: 300;
                         width: 254px;
                         cursor: pointer;
+                        position: relative;
+
+                        & .throbber {
+                            /**
+                             * Position a throbber in the middle to be displayed
+                             * while requests are ongoing
+                             */
+                            position: absolute;
+                            left: calc(50% - 12px);
+                            top: calc(50% - 12px);
+                            opacity: 0;
+                            overflow: hidden;
+
+                            /**
+                             * prepare transitions
+                             */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        & .text {
+                            opacity: 1;
+                            transform: scale(1);
+
+                            /**
+                             * prepare transitions
+                             */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        &.isPending .throbber {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+
+                        &.isPending .text {
+                            opacity: 0;
+                            transform: scale(0.5);
+                        }
                     }
 
                     button:hover {
                         background-color: ${ colors.primary };
                     }
 
+                    /**
+                     * Restyling to fit smaller screens and mobile
+                     */
                     @media only screen and (max-width: 768px) {
+                        /* Center in the middle */
                         .allSection {
                             margin: auto;
                             text-align: center;
@@ -251,6 +361,9 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
                             margin: 10px 0;
                         }
 
+                        /**
+                         * All input fields are now made to be in a single column rather than two
+                         */
                         .leftInput {
                             margin: 0;
                         }
@@ -288,75 +401,8 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     }
 
     /**
-     * Internal renderer that renders the select of the application
-     */
-    private renderSelect(): JSX.Element {
-        return (
-            <select
-                required
-                onChange={event => this.setState({ country: event.target.value })}
-                className={`${this.state.country === "" ? "inactive" : "active"}`}
-            >
-                <option disabled selected value="">Select country</option>
-                <optgroup>
-                    { PrioritisedCountries.map((country) => {
-                        return (
-                            <option value={country.Code}>{country.Name}</option>
-                        );
-                    }) }
-                </optgroup>
-                <optgroup>
-                    { Countries.map((country) => {
-                        // Only render non-prioritised countries in this list
-                        // (important countries has already been rendered)
-                        if (PrioritisedCountries.findIndex((priority) => priority.Code !== country.Code)) {
-                            return null;
-                        }
-
-                        return (
-                            <option value={country.Code}>{country.Name}</option>
-                        );
-                    }) }
-                </optgroup>
-
-                <style jsx>{`
-                    select{
-                        -webkit-appearance: none;
-                        background: transparent;
-                        height: 43px;
-                        width: 254px;
-                        text-indent: 9px;
-                        border: 1px solid ${ colors.gray };
-                        border-radius: 3px;
-                        font-size: 16px;
-                        font-weight: 300;
-                        font-family: ${ fonts.text };
-                    }
-
-                    select.inactive {
-                        color: ${ colors.gray };
-                    }
-
-                    select.active {
-                        color: ${ colors.black };
-                    }
-
-                    @media only screen and (max-width: 768px) {
-                        select {
-                            margin: 15px 0;
-                            width: 100%;
-                            box-sizing: border-box;
-                            max-width: 400px;
-                        }
-                    }
-                `}</style>
-            </select>
-        );
-    }
-
-    /**
-     * Internal helper that should be triggered once a userType radio button
-     * should be clicked
+     * Internal helper that should be triggered once a userType
+     * radio button is clicked
      */
     private onUserTypeClick = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ userType: evt.currentTarget.value });
@@ -365,17 +411,88 @@ export class RegisterForm extends React.PureComponent<{}, RegisterFormState>{
     /**
      * Function for validating country and password
      */
-    private validate = (evt: React.FormEvent) => {
-        evt.preventDefault();
-        if (this.state.country === "") {
+    private validate = () => {
+        if (this.state.country === null) {
             alert("Please choose a country.");
+            return false;
+        }
+        else if (!this.state.country || !this.state.country.match(/[^0-9]+/)) {
+            alert("There was an error with the selected country.")
             return false;
         }
         else if (this.state.password !== this.state.repeatedPassword) {
             alert("Passwords must match.");
             return false;
-        } else {
-            return true;
+        } else if (!this.state.password || this.state.password.length < 8) {
+            alert("Passwords must contain more than or 8 characters.");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Internal handler that should be triggered once the form is ready to submit
+     */
+    private onSubmit = async (evt: React.FormEvent) => {
+        evt.preventDefault();
+
+        if (!this.validate() || this.state.isPending) {
+            return;
+        }
+
+        const endPoint = apis.user.create;
+
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
+
+            const body = JSON.stringify({
+                firstName: this.state.firstName,
+                surname: this.state.lastName,
+                password: this.state.password,
+                email: this.state.email,
+                role: this.state.userType,
+                country: this.state.country
+            });
+
+            const response = await fetch(endPoint, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("userJWT", data.token);
+
+                if (this.state.userType === "Receiver") {
+                    this.props.store.user = new ReceiverModel(data.userDTO as ReceiverModelData);
+                } else {
+                    this.props.store.user = new ProducerModel(data.userDTO as ProducerModelData);
+                }
+
+                await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+                this.props.history.push(routes.root.path);
+            } else {
+                throw new Error(
+                    response.status === 409
+                        ? "The passed email is already present in our system, please log in instead." 
+                        : "Something went wrong when attempting to create your profile., please try again."
+                );
+            }
+        } catch (err) {
+            alert((err as Error).message);
+            this.setState({ isPending: false });
         }
     }
+
+    /**
+     * Is passed down to SelectCountry and allows us to extract its value
+     */
+    private newCountrySelected = (newCountry:string) => {
+        this.setState({country: newCountry,});
+    }
 }
+
+export const RegisterForm = withRouter(injectStore((store) => ({ store }), UnwrappedRegisterForm));

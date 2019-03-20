@@ -1,0 +1,338 @@
+import { observer } from "mobx-react";
+import React from "react";
+
+import { colors } from "src/ts/config/colors";
+
+import { Link, RouteComponentProps } from "react-router-dom";
+import { routes } from "src/ts/config/routes";
+
+import profile from "src/assets/data/profile.json";
+
+import { getSVG } from "src/assets/svg";
+import { UserModel } from "src/ts/models/UserModel";
+import { injectStore } from "src/ts/store/injectStore";
+import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
+import { isNullOrUndefined } from "util";
+
+import Countries from "src/assets/countries.json";
+import { fetchUser } from "src/ts/store/createStore";
+
+export type UserProps = {
+    /**
+     * Contains a reference to the user model that should be rendered
+     */
+    user: UserModel;
+} & RouteComponentProps;
+
+export type UserState = {
+    /**
+     * Specifies the user to be rendered
+     */
+    renderedUser?: UserModel;
+
+    /**
+     * Specifies whehter the rendered user is the user him/herself, which means
+     * we should render edit functionality etc.
+     */
+    isSelf: boolean;
+}
+
+/**
+ * A page where the user can see their profile
+ */
+@observer
+export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
+    /**
+     * Setup initial state
+     */
+    public state: UserState = {
+        isSelf: false,
+        renderedUser: this.props.user,
+    }
+
+    /**
+     * Determine if we should render a different user than self
+     */
+    public async componentDidMount(): Promise<void> {
+        // If we have a match on the route, that means we should attempt to 
+        // render the given user in readonly mode
+        if (this.props.match.params) {
+            // tslint:disable-next-line completed-docs
+            const userId = (this.props.match.params as { userId: string }).userId;
+            const user = await fetchUser(userId);
+
+            this.setState({
+                isSelf: false,
+                renderedUser: user,
+            });
+        } else {
+            // ... however, if we doesn't match, then we should render our own
+            // user
+            this.setState({ isSelf: true });
+        }
+    }
+
+    /**
+     * Main render method, used to render ProfilePage
+     */
+    public render() : JSX.Element{
+        const { renderedUser: user } = this.state;
+
+        if (!user) {
+            return <h1>wut</h1>;
+        }
+
+        return (
+            <div className="page">
+                <div className="wrapper">
+                    <div>
+                        <div className="header">
+                            <h1>Profile</h1>
+                            {this.state.isSelf && (
+                                <Link className="editProfile" to={routes.editProfile.path}>
+                                    <i>
+                                        {getSVG("edit")}
+                                    </i>
+                                </Link>
+                            )}
+                        </div>
+                        {/* Information box */}
+                        <div className="information">
+                            <div className="content">
+                                <div className="image">
+                                    { (isNullOrUndefined(user.thumbnail)
+                                        ? <i className="user">{ getSVG("user2", {strokeColor: colors.primary}) }</i>
+                                        : <img src={require("src/assets/dummy/sif.PNG")} />)
+                                    }
+                                </div>
+                                <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
+                                <p><span className="bold">{profile.country}</span> {this.extractCountry()}</p>
+                                <p><span className="bold">{profile.email}</span> {user.email}</p>
+                                <div className="twoliner">
+                                    <p><span className="bold">{profile.desc}</span> </p>
+                                    {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
+                                </div>
+
+                                {isProducerUser(user) && (
+                                    <div className="twoliner">
+                                        <p><span className="bold">{profile.wallet}</span> </p>
+                                        {isNullOrUndefined(user.wallet) ? <p><i>There is no wallet string to show.</i></p> : <p>{user.wallet}</p>}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    {/* List of the user's products/applications */}
+                    <div className="list">
+                        {isProducerUser(user) && (
+                            <h2>Your products</h2>
+                        )}
+                        {isReceiverUser(user) && (
+                            <h2>Your applications</h2>
+                        )
+                        }
+                        {/* Dummy items for the list */}
+                        <div className="item"></div>
+                        <div className="item"></div>
+                    </div>
+                </div>
+
+                <style jsx>{`
+                    .page {
+                        margin-bottom: 15px;
+                        padding: 0 10px;
+                    }
+
+                    .wrapper {
+                        display: flex;
+                        justify-content: space-evenly;
+                    }
+
+                    h1 {
+                        margin-top: 25px;
+                        display: inline-block;
+                    }
+
+                    /* Box for user information */
+                    .information {
+                        padding: 10px 0;
+                        max-width: 350px;
+                        border-radius: 3px;
+                        background-color: ${colors.pale};
+                        color: ${colors.licorice};
+
+                    }
+
+                    /* The content of the information box */
+                    .content {
+                        margin: 20px 50px;
+                    }
+
+                    /* Profile picture, centered within information box */
+                    .image {
+                        display: block;
+                        height: 160px;
+                        width: 160px;
+                        border-radius: 50%;
+                        border: 2px solid ${colors.primary};
+                        margin: 0 auto;
+                        margin-bottom: 25px;
+                        overflow: hidden;
+
+                        & img {
+                            height: 100%;
+                            width: 100%;
+                            object-fit: cover;
+                        }
+                    }
+
+                    .image i {
+                        margin: auto;
+                        display: block;
+                        height: 70px;
+                        width: 70px;
+                        padding-top: 45px;
+                    }
+
+                    /* Link to edit profile page, centered under image */
+                    :global(.editProfile) {
+                        margin-top: 30px;
+                        margin-left: 10px;
+                        color: ${colors.primary};
+                        text-decoration: none;
+                        display: inline-block;
+                    }
+
+                    :global(.editProfile):hover {
+                        color: ${colors.secondary};
+                    }
+
+                    .editProfile i {
+                        & :global(> span > svg) {
+                            width: 24px;
+                            margin-left: 5px;
+                            /* Allign with h1 */
+                            margin-bottom: -2px;
+                        }
+                    }
+
+                    p {
+                        margin: 15px 0;
+                    }
+
+                    /* A section of the information box where header and content are on different lines */
+                    .twoliner {
+                        margin-top: 25px;
+                    }
+
+                    /* Justify text and split words */
+                    .twoliner p {
+                        text-align: left;
+                        line-height: 1.3;
+                        margin: 5px 0 0 0;
+                        -webkit-hyphens: auto;
+                        -moz-hyphens: auto;
+                        -ms-hyphens: auto;
+                        hyphens: auto;
+                    }
+
+                    .bold {
+                        font-weight: bold;
+                        margin: 0;
+                    }
+
+                    h2 {
+                        margin: 0;
+                        margin-bottom: 15px;
+                    }
+
+                    /**
+                     * List of user's products/applications,
+                     * move down to align with information box
+                     */
+                    .list {
+                        margin-top: 63px;
+                        width: 50%;
+                    }
+
+                    /* Dummy products/applications for list, replace later */
+                    .item {
+                        height: 90px;
+                        border: 1px solid rgba(139,72,156, 0.15);
+                        border-radius: 2px;
+                        background-color: rgba(219,208,239, 0.15);
+                        margin-top: 15px;
+                    }
+
+                    /* Make more room for applications/products when the width is less than 820px */
+                    @media only screen and (max-width: 820px) {
+                        .information {
+                            max-width: 300px;
+                        }
+                    }
+
+                    /* For mobile phones */
+                    @media only screen and (max-width: 690px) {
+                        .page {
+                            width: 100%;
+                            margin: auto;
+                            padding: 0;
+                        }
+
+                        /* Make products/applications appear beneath information */
+						.wrapper {
+                            width: 100%;
+    						flex-direction: column;
+                            justify-content: center;
+
+						}
+
+                        /*
+                         * Make the information box wide enough to fill the
+                         * screen and center it.
+                         */
+                        .information {
+                            width: calc(100% - 20px);
+                            max-width: 100%;
+                            margin: 0 10px;
+                            text-align: center;
+                        }
+
+                        .header {
+                            text-align: center;
+                        }
+
+                        h2 {
+                            margin-top: 20px;
+                        }
+
+                        /* Make the list wide enough to fill the  screen. */
+                        .list {
+                            width: calc(100% - 20px);
+                            padding: 10px;
+                            margin: 0;
+                        }
+					}
+                `}</style>
+            </div>
+        )
+    }
+
+    /**
+     * Internal helper that extracts the country of the user based on the users
+     * country code
+     */
+    private extractCountry = () => {
+        const user = this.state.renderedUser;
+
+        if (!user) {
+            return "Unknown";
+        }
+
+        const countryData = Countries.find((country) => country.Code === user.country);
+
+        return countryData ? countryData.Name : "Unknown";
+    }
+}
+
+export const UserProfile = injectStore((store) => ({user: store.user}), UnwrappedUserProfile);
