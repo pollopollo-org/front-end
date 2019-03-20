@@ -3,8 +3,10 @@ import { RouterProps, withRouter } from "react-router";
 import EditProfileLabels from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
 import { colors, fonts, routes } from "src/ts/config";
+import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
+import { asyncTimeout } from "src/ts/utils";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Throbber } from "../../utils";
@@ -57,7 +59,7 @@ type EditProfileState = {
     /**
      * profile image
      */
-    profilePicture?:File;
+    profilePicture?:Blob;
     /**
      * wallet address
      */
@@ -538,7 +540,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Send the information to the backend
      */
-    private sendToBackEnd = (evt: React.FormEvent) => {
+    private sendToBackEnd = async (evt: React.FormEvent) => {
         evt.preventDefault();
 
         if (this.state.isPending) {
@@ -550,26 +552,26 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             return;
         }
 
-        // const endPoint = apis.user.create;
+        const endPoint = apis.user.create;
 
-        // try {
-        //     this.setState({ isPending: true });
-        //     const startedAt = performance.now();
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
 
-        //     await fetch(endPoint, {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             password: this.state.password,
-        //             email: this.state.email,
-        //         })
-        //     });
+            await fetch(endPoint, {
+                method: "POST",
+                body: JSON.stringify({
+                    email: this.state.email,
+                    password: this.state.oldPassword,
+                })
+            });
 
-        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-        // } catch (err) {
-        //     alert("Either your password or email doesn't match, please try again.");
-        // } finally {
-        //     this.setState({ isPending: false });
-        // }
+            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+        } catch (err) {
+            alert("Either your password or email doesn't match, please try again.");
+        } finally {
+            this.setState({ isPending: false });
+        }
 
         // Dummy
         this.setState({ isPending: true });
@@ -583,6 +585,32 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         );
 
         /** TODO Send data to backend */
+        try {
+
+            await fetch(endPoint,{
+                method: "PUT",
+                body: JSON.stringify({
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    country: this.state.country,
+                    role: this.state.userType,
+                    newPassword: this.state.repeatedPassword,
+                    oldPassword: this.state.oldPassword,
+                    profilePicture: this.validateImage,
+                })
+            });
+        } catch (err) {
+            alert("Something went wrong, please try again");
+        }
+    }
+
+    /**
+     * Validates the image by checking for malformed/corrupted data
+     */
+    private validateImage = () => {
+        const formData = new FormData();
+        return formData.append("file",this.state.profilePicture||"");
     }
 }
 
