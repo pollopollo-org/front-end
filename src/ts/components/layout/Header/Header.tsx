@@ -169,11 +169,11 @@ export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderStat
                         /** Positoin toggle in the top-right of the header */
                         position: absolute;
                         right: 20px;
-                        top: 20px;
+                        top: 18px;
 
                         /** Force proper dimensions of toggle */
                         width: 30px;
-                        height: 20px;
+                        height: 24px;
 
                         /** Indicate that toggle is clickable */
                         cursor: pointer;
@@ -388,7 +388,7 @@ export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderStat
     /** Internal helper that toggles the navigation */
     protected toggleContent = () => {
         // Bail out if a transition is already running
-        if (this.state.isTransitioning) {
+        if (this.state.isTransitioning || window.innerWidth > 768) {
             return;
         }
 

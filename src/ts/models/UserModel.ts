@@ -19,7 +19,7 @@ export type UserToken = {
     email: string;
 
     /**
-     * TODO
+     * Specifies the unqiue name of the user currently logged in
      */
     unique_name: string;
 }
