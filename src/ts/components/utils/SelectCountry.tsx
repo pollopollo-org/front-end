@@ -31,7 +31,7 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps>{
                 required
                 onChange={event => this.props.onChange(event.target.value)}
                 className={`${!this.props.currentCountry ? "inactive" : "active"}`}
-                defaultValue=""
+                value={this.props.currentCountry || ""}
             >
                 <option disabled value="">Select country</option>
                 <optgroup>
