@@ -501,6 +501,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     .borderLine {
                         margin: 10px 0;
                     }
+
+                    .oldPassSubmitSection {
+                        display: block;
+                    }
                 }
 
             `}</style>
