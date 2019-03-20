@@ -184,7 +184,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                            { (isNullOrUndefined(this.state.profilePicture) && <i className="user">{ getSVG("user", {fillColor: "white"}) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
+                                {(isNullOrUndefined(this.state.profilePicture) && <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
                         </div>
                         <input
                             type="file"
@@ -232,7 +232,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     height: 39px;
                     width: 252px;
                     text-indent: 9px;
-                    border: 1px solid ${ colors.gray };
+                    border: 1px solid ${ colors.pale };
                     color: ${ colors.black };
                     border-radius: 3px;
                     font-family: ${ fonts.text };
@@ -246,9 +246,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     background-clip: padding-box;
 
                     &::placeholder {
-                        color: ${ colors.gray };
+                        color: ${ colors.pale };
                         opacity: 1;
                     }
+                }
+
+                /* Set border styling when clicked on */
+                input:focus {
+                    border: 1px solid ${ colors.secondary};
                 }
 
                 img {
@@ -354,6 +359,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     border-radius: 50%;
                     margin: 10px 0;
                     background-color: ${colors.pale};
+                    border: 2px solid ${colors.pale};
                 }
 
                 i {
@@ -361,6 +367,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     display: block;
                     height: 100px;
                     width: 100px;
+                    padding-top: 79px;
                 }
 
                 [type="file"] {
@@ -397,7 +404,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     width: 252px;
                     height: 139px;
                     text-indent: 9px;
-                    border: 1px solid ${ colors.gray };
+                    border: 1px solid ${ colors.pale };
                     color: ${ colors.black };
                     border-radius: 3px;
                     font-family: ${ fonts.text };
@@ -414,6 +421,11 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         color: ${ colors.gray };
                         opacity: 1;
                     }
+                }
+
+                /* Set border styling when clicked on */
+                .description:focus {
+                    border: 1px solid ${ colors.secondary};
                 }
 
                 .borderLine{
