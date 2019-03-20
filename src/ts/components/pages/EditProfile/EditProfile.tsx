@@ -3,8 +3,10 @@ import { RouterProps, withRouter } from "react-router";
 import EditProfileLabels from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
 import { colors, fonts, routes } from "src/ts/config";
+import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
+import { asyncTimeout } from "src/ts/utils";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Throbber } from "../../utils";
@@ -57,7 +59,7 @@ type EditProfileState = {
     /**
      * profile image
      */
-    profilePicture?:File;
+    profilePicture?:Blob;
     /**
      * wallet address
      */
@@ -131,14 +133,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input name first"
                             required
                             value={this.state.firstName}
-                            placeholder={ false || EditProfileLabels.firstName }
+                            placeholder={ EditProfileLabels.firstName }
                             onChange={event => this.setState({firstName: event.target.value })}
                         />
                         <input
                             className="input name last"
                             required
                             value={this.state.lastName}
-                            placeholder={false || EditProfileLabels.lastName }
+                            placeholder={ EditProfileLabels.lastName }
                             onChange={event => this.setState({lastName: event.target.value })}
                         />
                         <div className="SelectCountryDiv">
@@ -149,14 +151,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input email"
                             required
                             value={this.state.email}
-                            placeholder={ false || EditProfileLabels.email }
+                            placeholder={ EditProfileLabels.email }
                             onChange={event => this.setState({email: event.target.value })}
                         />
                         {this.state.userType === "producer" &&
                             <input
                             className="input wallet"
                             value={this.state.wallet}
-                            placeholder={false || EditProfileLabels.wallet}
+                            placeholder={ EditProfileLabels.wallet}
                             onChange={event => this.setState({wallet: event.target.value})}
                             />
                         }
@@ -164,13 +166,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             type="password"
                             className="input password first"
                             value={this.state.password}
-                            placeholder={ false || EditProfileLabels.password }
+                            placeholder={ EditProfileLabels.password }
                             onChange={event => this.setState({password: event.target.value })}/>
                         <input
                             type="password"
                             className="input password second"
                             value={this.state.repeatedPassword}
-                            placeholder={ false || EditProfileLabels.confirmPassword }
+                            placeholder={ EditProfileLabels.confirmPassword }
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
                     </div>
                     <div className="pictureDescSection">
@@ -185,7 +187,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         <textarea
                             className="description"
                             value={this.state.description}
-                            placeholder={ false || EditProfileLabels.decription }
+                            placeholder={ EditProfileLabels.decription }
                             onChange={event => this.setState({description: event.target.value })}/>
                     </div>
                 </div>
@@ -197,7 +199,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input password old"
                             required
                             value={this.state.oldPassword}
-                            placeholder={ false || EditProfileLabels.oldPassword }
+                            placeholder={ EditProfileLabels.oldPassword }
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
                     <div className="submitDiv">
@@ -551,7 +553,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Send the information to the backend
      */
-    private sendToBackEnd = (evt: React.FormEvent) => {
+    private sendToBackEnd = async (evt: React.FormEvent) => {
         evt.preventDefault();
 
         if (this.state.isPending) {
@@ -563,26 +565,26 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             return;
         }
 
-        // const endPoint = apis.user.create;
+        const endPoint = apis.user.create;
 
-        // try {
-        //     this.setState({ isPending: true });
-        //     const startedAt = performance.now();
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
 
-        //     await fetch(endPoint, {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             password: this.state.password,
-        //             email: this.state.email,
-        //         })
-        //     });
+            await fetch(endPoint, {
+                method: "POST",
+                body: JSON.stringify({
+                    email: this.state.email,
+                    password: this.state.oldPassword,
+                })
+            });
 
-        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-        // } catch (err) {
-        //     alert("Either your password or email doesn't match, please try again.");
-        // } finally {
-        //     this.setState({ isPending: false });
-        // }
+            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+        } catch (err) {
+            alert("Either your password or email doesn't match, please try again.");
+        } finally {
+            this.setState({ isPending: false });
+        }
 
         // Dummy
         this.setState({ isPending: true });
@@ -595,7 +597,33 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             2000,
         );
 
-        /** TODO Send data to backend */
+        /** Send data to backend */
+        try {
+
+            await fetch(endPoint,{
+                method: "PUT",
+                body: JSON.stringify({
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    country: this.state.country,
+                    role: this.state.userType,
+                    newPassword: this.state.repeatedPassword,
+                    oldPassword: this.state.oldPassword,
+                    profilePicture: this.imageToData(),
+                })
+            });
+        } catch (err) {
+            alert("Something went wrong, please try again");
+        }
+    }
+
+    /**
+     * Validates the image by checking for malformed/corrupted data
+     */
+    private imageToData = () => {
+        const formData = new FormData();
+        return formData.append("file",this.state.profilePicture||"");
     }
 }
 
