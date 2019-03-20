@@ -425,7 +425,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
     private onSubmit = async (evt: React.FormEvent) => {
         evt.preventDefault();
 
-        if (!this.validate()) {
+        if (!this.validate() || this.state.isPending) {
             return;
         }
 

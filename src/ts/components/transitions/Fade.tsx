@@ -1,6 +1,5 @@
 import React from "react";
 import { CSSTransition } from "react-transition-group";
-import { easings } from "src/ts/config";
 
 /**
  * Specification of the fade duration given in milliseconds.
@@ -11,25 +10,25 @@ const DURATION = 175;
  * Simple css fade transition that'll fade the dropdown in / out when it's being
  * shown / hidden.
  */
-// tslint:disable-next-line variable-name completed-docs
-export const Fade: React.SFC<{in?: boolean; unmountOnExit?: boolean; mountOnEnter?: boolean}> = (props) => {
+// tslint:disable-next-line variable-name
+export const Fade: React.SFC = (props) => {
     return (
         <CSSTransition
             { ...props }
             timeout={ DURATION }
-            classNames="utils__dropdown__fade"
+            classNames="utils__fade"
         >
             <>
                 { props.children }
 
                 <style jsx global>{`
-                    .utils__dropdown__fade-enter,
-                    .utils__dropdown__fade-appear {
+                    .utils__fade-enter,
+                    .utils__fade-appear {
                         opacity: 0.001;
                     }
 
-                    .utils__dropdown__fade-enter-active,
-                    .utils__dropdown__fade-appear-active {
+                    .utils__fade-enter-active,
+                    .utils__fade-appear-active {
                         animation: fadeIn ${ DURATION }ms linear forwards;
                     }
 
@@ -43,20 +42,18 @@ export const Fade: React.SFC<{in?: boolean; unmountOnExit?: boolean; mountOnEnte
                         }
                     }
 
-                    .utils__dropdown__fade-exit {
+                    .utils__fade-exit {
                         opacity: 1;
                     }
 
-                    .utils__dropdown__fade-exit-active {
+                    .utils__fade-exit-active {
                         opacity: 0.001;
 
                         /** Apply transition */
-                        transition:
-                            opacity ${ DURATION }ms linear,
-                            transform ${ DURATION }ms ${ easings.inOutQuad };
+                        transition: opacity ${ DURATION }ms linear;
                     }
 
-                    .utils__dropdown__fade-exit-done {
+                    .utils__fade-exit-done {
                         opacity: 0;
                     }
                 `}</style>

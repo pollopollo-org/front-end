@@ -263,7 +263,7 @@ export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFo
     protected onSubmit = async (evt: React.FormEvent) => {
         evt.preventDefault();
 
-        if (!this.state.password || !this.state.email) {
+        if (!this.state.password || !this.state.email || this.state.isPending) {
             return;
         }
 
