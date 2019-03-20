@@ -131,14 +131,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input name first"
                             required
                             value={this.state.firstName}
-                            placeholder={ false || EditProfileLabels.firstName }
+                            placeholder={ EditProfileLabels.firstName }
                             onChange={event => this.setState({firstName: event.target.value })}
                         />
                         <input
                             className="input name last"
                             required
                             value={this.state.lastName}
-                            placeholder={false || EditProfileLabels.lastName }
+                            placeholder={ EditProfileLabels.lastName }
                             onChange={event => this.setState({lastName: event.target.value })}
                         />
                         <div className="SelectCountryDiv">
@@ -149,14 +149,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input email"
                             required
                             value={this.state.email}
-                            placeholder={ false || EditProfileLabels.email }
+                            placeholder={ EditProfileLabels.email }
                             onChange={event => this.setState({email: event.target.value })}
                         />
                         {this.state.userType === "producer" &&
                             <input
                             className="input wallet"
                             value={this.state.wallet}
-                            placeholder={false || EditProfileLabels.wallet}
+                            placeholder={ EditProfileLabels.wallet}
                             onChange={event => this.setState({wallet: event.target.value})}
                             />
                         }
@@ -164,13 +164,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             type="password"
                             className="input password first"
                             value={this.state.password}
-                            placeholder={ false || EditProfileLabels.password }
+                            placeholder={ EditProfileLabels.password }
                             onChange={event => this.setState({password: event.target.value })}/>
                         <input
                             type="password"
                             className="input password second"
                             value={this.state.repeatedPassword}
-                            placeholder={ false || EditProfileLabels.confirmPassword }
+                            placeholder={ EditProfileLabels.confirmPassword }
                             onChange={event => this.setState({repeatedPassword: event.target.value })}/>
                     </div>
                     <div className="pictureDescSection">
@@ -185,7 +185,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         <textarea
                             className="description"
                             value={this.state.description}
-                            placeholder={ false || EditProfileLabels.decription }
+                            placeholder={ EditProfileLabels.decription }
                             onChange={event => this.setState({description: event.target.value })}/>
                     </div>
                 </div>
@@ -197,7 +197,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input password old"
                             required
                             value={this.state.oldPassword}
-                            placeholder={ false || EditProfileLabels.oldPassword }
+                            placeholder={ EditProfileLabels.oldPassword }
                             onChange={event => this.setState({oldPassword: event.target.value })}/>
                     </div>
                     <div className="submitDiv">
