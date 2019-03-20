@@ -246,7 +246,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     background-clip: padding-box;
 
                     &::placeholder {
-                        color: ${ colors.pale };
+                        color: ${ colors.gray };
                         opacity: 1;
                     }
                 }
