@@ -31,12 +31,13 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps>{
                 required
                 onChange={event => this.props.onChange(event.target.value)}
                 className={`${!this.props.currentCountry ? "inactive" : "active"}`}
+                defaultValue=""
             >
-                <option disabled selected value="">Select country</option>
+                <option disabled value="">Select country</option>
                 <optgroup>
                     { PrioritisedCountries.map((country) => {
                         return (
-                            <option value={country.Code}>{country.Name}</option>
+                            <option key={country.Code} value={country.Code}>{country.Name}</option>
                         );
                     }) }
                 </optgroup>
@@ -49,7 +50,7 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps>{
                         }
 
                         return (
-                            <option value={country.Code}>{country.Name}</option>
+                            <option key={country.Code} value={country.Code}>{country.Name}</option>
                         );
                     }) }
                 </optgroup>

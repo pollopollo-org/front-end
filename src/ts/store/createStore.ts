@@ -20,8 +20,6 @@ export const createStore = () => {
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
                 const user = await ProducerModel.CREATE(DataProviders.DUMMY);
 
-                localStorage.setItem("userJWT", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
-
                 resolve(new Store({applications, user}));
             } catch (err) {
                 reject(err);
