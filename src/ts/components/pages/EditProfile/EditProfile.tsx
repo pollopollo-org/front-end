@@ -110,7 +110,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 oldPassword: "",
                 description: store.user.description,
                 profilePicture: undefined,
-                wallet: isProducerUser(store.user) ? store.user.wallet : ""
+                wallet: isProducerUser(store.user) ? store.user.wallet : "",
             });
         }
     }
@@ -177,7 +177,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                            { (isNullOrUndefined(this.state.profilePicture) && <i className="user">{ getSVG("user2", {strokeColor: colors.primary}) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
+                            { (isNullOrUndefined(this.state.profilePicture) && <i className="user">{ getSVG("user", {fillColor: "white"}) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
                         </div>
                         <input
                             type="file"
@@ -225,7 +225,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     height: 39px;
                     width: 252px;
                     text-indent: 9px;
-                    border: 1px solid ${ colors.pale };
+                    border: 1px solid ${ colors.gray };
                     color: ${ colors.black };
                     border-radius: 3px;
                     font-family: ${ fonts.text };
@@ -242,11 +242,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         color: ${ colors.gray };
                         opacity: 1;
                     }
-                }
-
-                /* Set border styling when clicked on */
-                input:focus {
-                    border: 1px solid ${ colors.secondary};
                 }
 
                 img {
@@ -352,7 +347,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     border-radius: 50%;
                     margin: 10px 0;
                     background-color: ${colors.pale};
-                    border: 2px solid ${colors.pale};
                 }
 
                 i {
@@ -360,7 +354,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     display: block;
                     height: 100px;
                     width: 100px;
-                    padding-top: 79px;
                 }
 
                 [type="file"] {
@@ -397,7 +390,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     width: 252px;
                     height: 139px;
                     text-indent: 9px;
-                    border: 1px solid ${ colors.pale };
+                    border: 1px solid ${ colors.gray };
                     color: ${ colors.black };
                     border-radius: 3px;
                     font-family: ${ fonts.text };
@@ -414,11 +407,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         color: ${ colors.gray };
                         opacity: 1;
                     }
-                }
-
-                /* Set border styling when clicked on */
-                .description:focus {
-                    border: 1px solid ${ colors.secondary};
                 }
 
                 .borderLine{
@@ -561,7 +549,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         }
 
         if(this.state.password && this.state.password !== this.state.repeatedPassword){
-            alert(EditProfileLabels.passwordAlert);
+            alert("Your passwords must match");
             return;
         }
 
@@ -611,6 +599,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     newPassword: this.state.repeatedPassword,
                     oldPassword: this.state.oldPassword,
                     profilePicture: this.imageToData(),
+                    wallet: this.state.wallet,
                 })
             });
         } catch (err) {
