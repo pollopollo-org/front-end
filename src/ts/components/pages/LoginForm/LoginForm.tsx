@@ -58,24 +58,20 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                         <div className="container">
                             <form onSubmit={this.onSubmit}>
                                 <div className="loginForm Email">
-                                    <label htmlFor="user_name" className="loginLabel Email">
-                                        {LoginFormLabels.EmailInputLabel}
-                                    </label>
                                     <input
                                         type="email"
                                         className="loginInput Email"
+                                        placeholder={ LoginFormLabels.EmailInputLabel }
                                         id="user_name"
                                         required
                                         onChange={event => this.setState({ email: event.target.value, })}
                                     />
                                 </div>
                                 <div className="loginForm Password">
-                                    <label htmlFor="user_password" className="loginLabel Password">
-                                        {LoginFormLabels.PasswordInputLabel}
-                                    </label>
                                     <input
                                         type="password"
                                         className="loginInput Password"
+                                        placeholder={ LoginFormLabels.PasswordInputLabel }
                                         id="user_password"
                                         required
                                         onChange={event => this.setState({ password: event.target.value, })}
@@ -135,16 +131,8 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                         with bottom margin under input fields
                      */
                     .loginForm {
-                        margin-bottom: 10px;
+                        margin-bottom: 25px;
                         width: 100%;
-                    }
-
-                    /* Set font, size and margin for input labels  */
-                    .loginLabel {
-                        display: block;
-                        margin: 10px auto;
-                        font-size: 1.2rem;
-                        font-family: ${ fonts.text};
                     }
 
                     /* Set styling for input fields */
@@ -164,34 +152,32 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                         background-clip: padding-box;
 
                         /* Set font styling */
-                        font-weight: normal;
-                        font-size: 1rem;
                         font-family: ${ fonts.text};
-                        color: ${ colors.black};
-
-                       ;
+                        font-size: 16px;
+                        font-weight: 300;
                     }
 
                     /* Set border styling when clicked on */
                     .loginInput:focus {
-                        border: 1px solid ${ colors.secondary};
+                        border: 1px solid ${ colors.secondary };
                     }
 
                     h1 {
                         display: block;
                         font-size: 2rem;
+                        text-align: center;
+                        margin-bottom: 30px;
                     }
 
                     button {
                         position: relative;
-                        margin-top: 25px;
                         padding: 0.75rem 1.25rem;
                         width: 100%;
                         cursor: pointer;
 
                         /* Set color styling */
                         background-color: ${ colors.secondary};
-                        color: white;
+                        color: ${colors.white};
 
                         /* Set border styling */
                         border: none;
@@ -212,6 +198,10 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                             top: calc(50% - 15px);
                             opacity: 0;
                             overflow: hidden;
+
+                            /* Make sure throbber does not overlap the register link */
+                            height: 40px;
+                            width: 190px;
 
                             /**
                              * prepare transitions
@@ -246,14 +236,14 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
 
                     /* Set link styling */
                     :global(.link) {
-                        margin-top: 10px;
+                        margin-top: 15px;
 						color: ${ colors.secondary};
                         text-decoration: none;
+                        text-align: center;
                     }
 
                     :global(.link:hover) {
-						color: ${ colors.primary};
-                        text-decoration:none;
+                        text-decoration:underline;
                         cursor:pointer;
                     }
 

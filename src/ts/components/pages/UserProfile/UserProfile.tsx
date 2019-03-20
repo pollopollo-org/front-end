@@ -110,15 +110,15 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <p><span className="bold">{profile.email}</span> {user.email}</p>
                                 <div className="twoliner">
                                     <p><span className="bold">{profile.desc}</span> </p>
-                                    {!isNullOrUndefined(user.description) && <p>{user.description}</p>}
+                                    {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
                                 </div>
 
-                                    {isProducerUser(user) && (
-                                        <div className="twoliner">
-                                            <p><span className="bold">{profile.wallet}</span> </p>
-                                            <p>{user.wallet}</p>
-                                        </div>
-                                    )}
+                                {isProducerUser(user) && (
+                                    <div className="twoliner">
+                                        <p><span className="bold">{profile.wallet}</span> </p>
+                                        {isNullOrUndefined(user.wallet) ? <p><i>There is no wallet string to show.</i></p> : <p>{user.wallet}</p>}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
