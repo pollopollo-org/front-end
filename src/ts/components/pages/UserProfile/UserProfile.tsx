@@ -14,6 +14,8 @@ import { injectStore } from "src/ts/store/injectStore";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 
+import Countries from "src/assets/countries.json";
+
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
@@ -54,7 +56,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                                     }
                                 </div>
                                 <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
-                                <p><span className="bold">{profile.country}</span> {user.country}</p>
+                                <p><span className="bold">{profile.country}</span> {this.extractCountry()}</p>
                                 <p><span className="bold">{profile.email}</span> {user.email}</p>
                                 <div className="twoliner">
                                     <p><span className="bold">{profile.desc}</span> </p>
@@ -263,6 +265,16 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                 `}</style>
             </div>
         )
+    }
+
+    /**
+     * Internal helper that extracts the country of the user based on the users
+     * country code
+     */
+    private extractCountry = () => {
+        const countryData = Countries.find((country) => country.Code === this.props.user.country);
+
+        return countryData ? countryData.Name : "Unknown";
     }
 }
 

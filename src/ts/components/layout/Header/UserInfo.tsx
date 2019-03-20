@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import { getSVG } from "src/assets/svg";
 import { colors, easings, routes } from "src/ts/config";
@@ -9,6 +9,7 @@ import { Chevron } from "../../utils";
 import { Dropdown } from "../../utils/Dropdown/Dropdown";
 
 import { observer } from "mobx-react";
+import { RouterProps } from "react-router";
 import userInfoLabels from "src/assets/data/userInfo.json";
 import { Store } from "src/ts/store/Store";
 
@@ -21,7 +22,7 @@ type UserInfoProps = {
      * Contains a reference to the root store
      */
     store: Store;
-};
+} & RouterProps;
 
 /**
  * Specification of lifecycle state of <UserInfo />.
@@ -189,6 +190,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         display: inline-block;
                         height: 22px;
                         width: 24px;
+                        margin-right: 5px;
                     }
 
                     .chevron {
@@ -554,7 +556,8 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      */
     protected signOut = () => {
         this.props.store.user = undefined;
-        window.localStorage.setItem("userJWT", "");
+        localStorage.setItem("userJWT", "");
+        this.props.history.push(routes.root.path);
     }
 
     /**
@@ -595,4 +598,4 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 }
 
 // tslint:disable-next-line variable-name
-export const UserInfo = injectStore((store) => ({ store, user: store.user }), UserInfoUnwrapped);
+export const UserInfo = withRouter(injectStore((store) => ({ store, user: store.user }), UserInfoUnwrapped));

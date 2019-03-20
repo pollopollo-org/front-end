@@ -286,17 +286,20 @@ export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFo
                 body
             });
 
-            const token = await response.text();
+            if (response.ok) {
+                const token = await response.text();
+                localStorage.setItem("userJWT", token);
 
-            window.localStorage.setItem("userJWT", token);
+                await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+                this.props.history.push(routes.root.path);
+            } else {
+                alert("Either your password or email is not correct, please try again.");
+            }
 
-            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-            this.props.history.push(routes.root.path);
 
         } catch (err) {
-            alert("Either your password or email is not correct, please try again.");
-        } finally {
             this.setState({ isPending: false });
+            alert("Either your password or email is not correct, please try again.");
         }
     }
 }

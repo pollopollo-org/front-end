@@ -11,12 +11,17 @@ export type UserToken = {
     /**
      * Specifies the userId that the token is related to
      */
-    userId: string;
+    nameid: string;
 
     /**
      * Specifies the email of the user the token is related to.
      */
     email: string;
+
+    /**
+     * TODO
+     */
+    unique_name: string;
 }
 
 /**
@@ -29,7 +34,7 @@ export type UserModelData = {
     id: number;
     email: string;
     firstName: string;
-    surName: string;
+    surname: string;
     country: string;
     city?: string;
     description?: string;
@@ -83,10 +88,11 @@ export class UserModel {
     public readonly thumbnail?: string;
 
     constructor(data: UserModelData) {
+        console.log(data);
         this.id = data.id;
         this.email = data.email;
         this.firstName = data.firstName;
-        this.surName = data.surName;
+        this.surName = data.surname;
         this.country = data.country;
         this.city = data.city;
         this.description = data.description;
