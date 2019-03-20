@@ -89,7 +89,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         lastName: "",
         email: "",
         country: "",
-        userType: "producer",
+        userType: "Producer",
         password: "",
         repeatedPassword: "",
         oldPassword: "",
@@ -111,7 +111,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 lastName: store.user.surName,
                 email: store.user.email,
                 country: store.user.country,
-                userType: isProducerUser(store.user) ? "producer" : "receiver",
+                userType: isProducerUser(store.user) ? "Producer" : "Receiver",
                 password: "",
                 repeatedPassword: "",
                 oldPassword: "",
@@ -161,7 +161,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             placeholder={ EditProfileLabels.email }
                             onChange={event => this.setState({email: event.target.value })}
                         />
-                        {this.state.userType === "producer" &&
+                        {this.state.userType === "Producer" &&
                             <input
                             className="input wallet"
                             value={this.state.wallet}
@@ -569,29 +569,38 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         try {
             this.setState({ isPending: true });
             const startedAt = performance.now();
+            const token = localStorage.getItem("userJWT");
 
-            await fetch(endPoint,{
+            const result = await fetch(endPoint, {
                 method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     id: this.state.userId,
                     firstName: this.state.firstName,
-                    lastName: this.state.lastName,
+                    surname: this.state.lastName,
                     email: this.state.email,
                     country: this.state.country,
-                    role: this.state.userType,
+                    userRole: this.state.userType,
                     newPassword: this.state.repeatedPassword,
-                    oldPassword: this.state.oldPassword,
-                    profilePicture: this.imageToData(),
-                    wallet: this.state.wallet,
+                    password: this.state.oldPassword,
+                    thumbnail: this.imageToData(),
+                    wallet: this.state.wallet
                 })
             });
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-            this.props.history.push(routes.profile.path);
+
+            if (result.ok) {
+                this.props.history.push(routes.profile.path);
+            } else {
+                throw new Error("Something went wrong, please try again.");
+            }
         } catch (err) {
-            alert("Either your password or email doesn't match, please try again.");
-        } finally {
             this.setState({ isPending: false });
+            alert((err as Error).message);
         }
     }
 
