@@ -53,7 +53,7 @@ type EditProfileState = {
     /**
      * a brief description of the user
      */
-    description:string;
+    description?:string;
     /**
      * profile image
      */
@@ -61,7 +61,7 @@ type EditProfileState = {
     /**
      * wallet address
      */
-    wallet:string;
+    wallet?:string;
 
     /**
      * Specifies whether or not we're currently attempting to create a user
@@ -108,7 +108,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 oldPassword: "",
                 description: store.user.description,
                 profilePicture: undefined,
-                wallet: isProducerUser(store.user) ? store.user.wallet : "",
+                wallet: isProducerUser(store.user) ? store.user.wallet : ""
             });
         }
     }
