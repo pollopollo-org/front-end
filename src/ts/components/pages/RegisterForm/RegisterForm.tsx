@@ -188,7 +188,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                         height: 39px;
                         width: 250px;
                         text-indent: 9px;
-                        border: 1px solid ${ colors.pale};
+                        border: 1px solid ${ colors.pale };
                         border-transition: border-color 0.15s linear;
                         color: ${ colors.black};
                         border-radius: 3px;
@@ -200,14 +200,14 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                         background-clip: padding-box;
 
                         &::placeholder {
-                            color: ${ colors.gray};
+                            color: ${ colors.gray };
                             opacity: 1;
                         }
                     }
 
                     /* Set border styling when clicked on */
                     input:focus {
-                        border: 1px solid ${ colors.secondary};
+                        border: 1px solid ${ colors.secondary };
                     }
 
                     /**
@@ -255,14 +255,14 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                     button {
                         float: right;
                         margin: 30px auto auto 49px;
-                        background-color: ${ colors.secondary};
-                        color: white;
+                        background-color: ${ colors.secondary };
+                        color: ${colors.white};
                         border: none;
                         border-radius: 2px;
                         padding: 10px 104px;
                         transition: background-color 0.1s linear;
                         font-size: 16px;
-                        font-family: ${ fonts.heading};
+                        font-family: ${ fonts.heading };
                         font-weight: 300;
                         width: 254px;
                         cursor: pointer;
@@ -307,7 +307,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                     }
 
                     button:hover {
-                        background-color: ${ colors.primary};
+                        background-color: ${ colors.primary };
                     }
 
                     /**
@@ -362,7 +362,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
 
                         .radioSection {
                             text-align: center;
-                            font-family: ${ fonts.text};
+                            font-family: ${ fonts.text };
                             font-weight: 300;
                         }
 
