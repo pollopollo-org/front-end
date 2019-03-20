@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { getSVG } from "src/assets/svg";
 import { colors, easings, routes } from "src/ts/config";
@@ -22,6 +22,11 @@ type UserInfoProps = {
      * Contains a reference to the root store
      */
     store: Store;
+
+    /**
+     * Callback that when called will close the header
+     */
+    closeHeader(): void;
 } & RouterProps;
 
 /**
@@ -90,13 +95,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 <i className="icon">{ getSVG("user", { strokeColor: colors.whiteSmoke }) }</i>
                 { !this.props.store.user && (
                     <>
-                        <span className="loginButton">
+                        <span className="loginButton" onClick={this.props.closeHeader}>
                             <Link to={routes.login.path}>
                                 { userInfoLabels.logIn }
                             </Link>
                             <span className="underline" />
                         </span>
-                        <span className="loginButton">
+                        <span className="loginButton" onClick={this.props.closeHeader}>
                             <Link to={routes.register.path}>
                                 { userInfoLabels.register }
                             </Link>
@@ -359,13 +364,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
             <React.Fragment>
                 { this.renderUserData() }
 
-                <span className="link">
+                <span className="link" onClick={this.props.closeHeader}>
                     <Link to={routes.profile.path}>
                         <i className="logIn">{ getSVG("log_in")}</i>
                         { userInfoLabels.profile }
                     </Link>
                 </span>
-                <span className="link">
+                <span className="link" onClick={this.props.closeHeader}>
                     <Link to={routes.editProfile.path}>
                         <i className="edit">{ getSVG("edit") }</i>
                         { userInfoLabels.edit }
@@ -555,6 +560,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      * process the functionality required to achieve this.
      */
     protected signOut = () => {
+        this.props.closeHeader();
         this.props.store.user = undefined;
         localStorage.setItem("userJWT", "");
         this.setState({ showDropdown: false });
@@ -599,4 +605,4 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 }
 
 // tslint:disable-next-line variable-name
-export const UserInfo = withRouter(injectStore((store) => ({ store }), UserInfoUnwrapped));
+export const UserInfo = injectStore((store) => ({ store }), UserInfoUnwrapped);

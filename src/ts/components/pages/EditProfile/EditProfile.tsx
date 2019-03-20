@@ -184,7 +184,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         <label htmlFor="fileInput">Choose a file</label>
                         <textarea
                             className="description"
-                            value={this.state.description}
+                            value={this.state.description || ""}
                             placeholder={ false || EditProfileLabels.decription }
                             onChange={event => this.setState({description: event.target.value })}/>
                     </div>
