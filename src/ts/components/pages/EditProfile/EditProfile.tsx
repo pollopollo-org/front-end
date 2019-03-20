@@ -584,7 +584,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             2000,
         );
 
-        /** TODO Send data to backend */
+        /** Send data to backend */
         try {
 
             await fetch(endPoint,{
@@ -597,7 +597,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     role: this.state.userType,
                     newPassword: this.state.repeatedPassword,
                     oldPassword: this.state.oldPassword,
-                    profilePicture: this.validateImage,
+                    profilePicture: this.imageToData(),
                 })
             });
         } catch (err) {
@@ -608,7 +608,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Validates the image by checking for malformed/corrupted data
      */
-    private validateImage = () => {
+    private imageToData = () => {
         const formData = new FormData();
         return formData.append("file",this.state.profilePicture||"");
     }
