@@ -147,6 +147,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                     /* Link to edit profile page, centered under image */
                     :global(.editProfile) {
                         margin-top: 30px;
+                        margin-left: 10px;
                         color: ${colors.primary};
                         text-decoration: none;
                         display: inline-block;

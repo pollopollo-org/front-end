@@ -598,4 +598,4 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 }
 
 // tslint:disable-next-line variable-name
-export const UserInfo = withRouter(injectStore((store) => ({ store, user: store.user }), UserInfoUnwrapped));
+export const UserInfo = withRouter(injectStore((store) => ({ store }), UserInfoUnwrapped));

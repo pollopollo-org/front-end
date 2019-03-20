@@ -8,10 +8,18 @@ import { routes } from "src/ts/config/routes";
 
 import LoginFormLabels from "src/assets/data/loginForm.json";
 import { apis } from "src/ts/config/apis";
+import { fetchUser } from "src/ts/store/createStore";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
-// import { asyncTimeout } from "src/ts/utils";
 import { Throbber } from "../../utils";
 
+type LoginFormProps = {
+    /**
+     * Contains a reference to the root store
+     */
+    store: Store;
+} & RouterProps;
 
 type LoginFormState = {
     /**
@@ -32,7 +40,7 @@ type LoginFormState = {
 /**
  * A page where the user can login to the platform
  */
-export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFormState>{
+export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, LoginFormState>{
     /**
      * State of the login form, all fields initially set to null
      */
@@ -290,10 +298,12 @@ export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFo
                 const token = await response.text();
                 localStorage.setItem("userJWT", token);
 
+                this.props.store.user = await fetchUser();
+
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
             } else {
-                alert("Either your password or email is not correct, please try again.");
+                throw new Error("Either your password or email is not correct, please try again.")
             }
 
 
@@ -304,4 +314,4 @@ export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFo
     }
 }
 
-export const LoginForm = withRouter(props => <UnwrappedLoginForm {...props} />);
+export const LoginForm = withRouter(injectStore((store) => ({ store }), UnwrappedLoginForm));

@@ -88,7 +88,6 @@ export class UserModel {
     public readonly thumbnail?: string;
 
     constructor(data: UserModelData) {
-        console.log(data);
         this.id = data.id;
         this.email = data.email;
         this.firstName = data.firstName;

@@ -456,8 +456,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 country: this.state.country
             });
 
-            console.log(body);
-
             const response = await fetch(endPoint, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -477,11 +475,14 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
             } else {
-                console.log(await response.text());
-                throw new Error("Something went wrong");
+                throw new Error(
+                    response.status === 409
+                        ? "The passed email is already present in our system, please log in instead." 
+                        : "Something went wrong when attempting to create your profile., please try again."
+                );
             }
         } catch (err) {
-            alert("Something went wrong when attempting to create your profile., please try again.");
+            alert((err as Error).message);
             this.setState({ isPending: false });
         }
     }

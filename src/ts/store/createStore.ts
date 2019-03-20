@@ -24,7 +24,7 @@ export const createStore = () => {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
-                const user = await fetchUserData();
+                const user = await fetchUser();
 
                 resolve(new Store({applications, user}));
             } catch (err) {
@@ -41,7 +41,7 @@ export const createStore = () => {
  * This will only be possible if the user has already logged in previously,
  * since it relies on a token being stored in the localStorage.
  */
-async function fetchUserData() {
+export async function fetchUser() {
     const token = localStorage.getItem("userJWT");
 
     if (!token) {
