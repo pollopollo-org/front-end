@@ -11,6 +11,7 @@ import profile from "src/assets/data/profile.json";
 import { getSVG } from "src/assets/svg";
 import { UserModel } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
+import { isNullOrUndefined } from "util";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 export type UserProps = {
@@ -46,13 +47,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                         {/* Information box */}
                         <div className="information">
                             <div className="content">
-                                <img className="image" src={require("src/assets/dummy/sif.PNG")} />
+                                <div className="image">
+                                    { (isNullOrUndefined(user.thumbnail)
+                                        ? <i className="user">{ getSVG("user2", {strokeColor: colors.primary}) }</i>
+                                        : <img src={require("src/assets/dummy/sif.PNG")} />)
+                                    }
+                                </div>
                                 <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
                                 <p><span className="bold">{profile.country}</span> {user.country}</p>
                                 <p><span className="bold">{profile.email}</span> {user.email}</p>
                                 <div className="twoliner">
                                     <p><span className="bold">{profile.desc}</span> </p>
-                                    <p>{user.description}</p>
+                                    {!isNullOrUndefined(user.description) && <p>{user.description}</p>}
                                 </div>
 
                                     {isProducerUser(user) && (
@@ -119,6 +125,21 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                         border: 2px solid ${colors.primary};
                         margin: 0 auto;
                         margin-bottom: 25px;
+                        overflow: hidden;
+
+                        & img {
+                            height: 100%;
+                            width: 100%;
+                            object-fit: cover;
+                        }
+                    }
+
+                    .image i {
+                        margin: auto;
+                        display: block;
+                        height: 70px;
+                        width: 70px;
+                        padding-top: 45px;
                     }
 
                     /* Link to edit profile page, centered under image */
@@ -133,7 +154,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                         color: ${colors.secondary};
                     }
 
-                    i {
+                    .editProfile i {
                         & :global(> span > svg) {
                             width: 24px;
                             margin-left: 5px;
@@ -146,7 +167,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                         margin: 15px 0;
                     }
 
-                    /* A section of the information box where header and content are on diferent lines */
+                    /* A section of the information box where header and content are on different lines */
                     .twoliner {
                         margin-top: 25px;
                     }
