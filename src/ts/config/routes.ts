@@ -24,6 +24,9 @@ export const routes = {
     profile: {
         path: "/profile.html",
     },
+    viewProfile: {
+        path: "/profile/:userId",
+    },
     login: {
         path: "/login.html",
     },

@@ -557,6 +557,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     protected signOut = () => {
         this.props.store.user = undefined;
         localStorage.setItem("userJWT", "");
+        this.setState({ showDropdown: false });
         this.props.history.push(routes.root.path);
     }
 

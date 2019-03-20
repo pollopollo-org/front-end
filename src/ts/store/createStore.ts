@@ -41,7 +41,7 @@ export const createStore = () => {
  * This will only be possible if the user has already logged in previously,
  * since it relies on a token being stored in the localStorage.
  */
-export async function fetchUser() {
+export async function fetchUser(userId?: string) {
     const token = localStorage.getItem("userJWT");
 
     if (!token) {
@@ -50,7 +50,7 @@ export async function fetchUser() {
 
     const parsedToken = jwt_decode(token) as UserToken;
 
-    const endPoint = apis.user.get.replace("{userId}", parsedToken.nameid);
+    const endPoint = apis.user.get.replace("{userId}", userId || parsedToken.nameid);
 
     try {
         const response = await fetch(endPoint, {
@@ -63,12 +63,17 @@ export async function fetchUser() {
 
         const userData = await response.json();
 
-        // Determine whether we're dealing with a producer or a receiver
-        if (true) {
-            return new ReceiverModel(userData as ReceiverModelData);
+        if (response.ok) {
+            // Determine whether we're dealing with a producer or a receiver
+            if (true) {
+                return new ReceiverModel(userData as ReceiverModelData);
+            } else {
+                return new ProducerModel(userData as ProducerModelData);
+            }
         } else {
-            return new ProducerModel(userData as ProducerModelData);
+            return;
         }
+
     } catch (err) {
         return;
     }

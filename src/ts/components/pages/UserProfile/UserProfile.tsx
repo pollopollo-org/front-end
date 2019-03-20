@@ -3,7 +3,7 @@ import React from "react";
 
 import { colors } from "src/ts/config/colors";
 
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
 import profile from "src/assets/data/profile.json";
@@ -15,24 +15,72 @@ import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 
 import Countries from "src/assets/countries.json";
+import { fetchUser } from "src/ts/store/createStore";
 
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
      */
     user: UserModel;
+} & RouteComponentProps;
+
+export type UserState = {
+    /**
+     * Specifies the user to be rendered
+     */
+    renderedUser?: UserModel;
+
+    /**
+     * Specifies whehter the rendered user is the user him/herself, which means
+     * we should render edit functionality etc.
+     */
+    isSelf: boolean;
 }
 
 /**
  * A page where the user can see their profile
  */
 @observer
-export class UnwrappedUserProfile extends React.Component<UserProps>{
+export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
+    /**
+     * Setup initial state
+     */
+    public state: UserState = {
+        isSelf: false,
+        renderedUser: this.props.user,
+    }
+
+    /**
+     * Determine if we should render a different user than self
+     */
+    public async componentDidMount(): Promise<void> {
+        // If we have a match on the route, that means we should attempt to 
+        // render the given user in readonly mode
+        if (this.props.match.params) {
+            // tslint:disable-next-line completed-docs
+            const userId = (this.props.match.params as { userId: string }).userId;
+            const user = await fetchUser(userId);
+
+            this.setState({
+                isSelf: false,
+                renderedUser: user,
+            });
+        } else {
+            // ... however, if we doesn't match, then we should render our own
+            // user
+            this.setState({ isSelf: true });
+        }
+    }
+
     /**
      * Main render method, used to render ProfilePage
      */
     public render() : JSX.Element{
-        const { user } = this.props;
+        const { renderedUser: user } = this.state;
+
+        if (!user) {
+            return <h1>wut</h1>;
+        }
 
         return (
             <div className="page">
@@ -40,11 +88,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                     <div>
                         <div className="header">
                             <h1>Profile</h1>
-                            <Link className="editProfile" to={routes.editProfile.path}>
-                                <i>
-									{ getSVG("edit") }
-								</i>
-                            </Link>
+                            {this.state.isSelf && (
+                                <Link className="editProfile" to={routes.editProfile.path}>
+                                    <i>
+                                        {getSVG("edit")}
+                                    </i>
+                                </Link>
+                            )}
                         </div>
                         {/* Information box */}
                         <div className="information">
