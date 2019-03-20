@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
+import { RouterProps } from "react-router";
 import { getSVG } from "src/assets/svg";
 import { easings, routes } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
@@ -31,7 +32,7 @@ type HeaderState = {
 /**
  * Header to be placed at the top of all pages
  */
-export class Header extends React.PureComponent<{}, HeaderState> {
+export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderState> {
     /** Setup initial state */
     public state: HeaderState = {
         hasUserToggled: false,
@@ -76,8 +77,8 @@ export class Header extends React.PureComponent<{}, HeaderState> {
 
                 <div className="content" ref={this.contentRef}>
                     <div className="content__children">
-                        <Menu />
-                        <UserInfo />
+                        <Menu history={this.props.history} closeHeader={this.toggleContent} />
+                        <UserInfo history={this.props.history} closeHeader={this.toggleContent} />
                     </div>
                 </div>
 
@@ -168,11 +169,11 @@ export class Header extends React.PureComponent<{}, HeaderState> {
                         /** Positoin toggle in the top-right of the header */
                         position: absolute;
                         right: 20px;
-                        top: 20px;
+                        top: 18px;
 
                         /** Force proper dimensions of toggle */
                         width: 30px;
-                        height: 20px;
+                        height: 24px;
 
                         /** Indicate that toggle is clickable */
                         cursor: pointer;
@@ -387,7 +388,7 @@ export class Header extends React.PureComponent<{}, HeaderState> {
     /** Internal helper that toggles the navigation */
     protected toggleContent = () => {
         // Bail out if a transition is already running
-        if (this.state.isTransitioning) {
+        if (this.state.isTransitioning || window.innerWidth > 768) {
             return;
         }
 
@@ -485,3 +486,5 @@ export class Header extends React.PureComponent<{}, HeaderState> {
         }
     }
 }
+
+export const Header = withRouter((props) => <UnwrappedHeader {...props} />);

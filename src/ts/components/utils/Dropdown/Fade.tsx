@@ -26,6 +26,7 @@ export const Fade: React.SFC<{in?: boolean; unmountOnExit?: boolean; mountOnEnte
                     .utils__dropdown__fade-enter,
                     .utils__dropdown__fade-appear {
                         opacity: 0.001;
+                        transform: translateY(-5px);
                     }
 
                     .utils__dropdown__fade-enter-active,
@@ -36,19 +37,23 @@ export const Fade: React.SFC<{in?: boolean; unmountOnExit?: boolean; mountOnEnte
                     @keyframes fadeIn {
                         from {
                             opacity: 0.001;
+                            transform: translateY(-5px);
                         }
 
                         to {
                             opacity: 1;
+                            transform: translateY(0);
                         }
                     }
 
                     .utils__dropdown__fade-exit {
                         opacity: 1;
+                        transform: translateY(0);
                     }
 
                     .utils__dropdown__fade-exit-active {
                         opacity: 0.001;
+                        transform: translateY(5px);
 
                         /** Apply transition */
                         transition:

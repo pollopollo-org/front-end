@@ -7,8 +7,20 @@ import RegisterFormLabels from "src/assets/data/registerForm.json";
 
 import { SelectCountry } from "../../utils/SelectCountry";
 
+import { apis } from "src/ts/config/apis";
+import { ProducerModel, ProducerModelData } from "src/ts/models/ProducerModel";
+import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
+import { asyncTimeout } from "src/ts/utils";
 import { Throbber } from "../../utils";
 
+type RegisterFormProps = {
+    /**
+     * Contains a reference to the main store of the application
+     */
+    store: Store;
+} & RouterProps;
 
 type RegisterFormState = {
     /**
@@ -49,7 +61,7 @@ type RegisterFormState = {
 /**
  * A page where the user can register for the project
  */
-class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFormState>{
+class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, RegisterFormState>{
     /**
      * State of the register form, all fields initially set to null
      */
@@ -87,7 +99,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                             placeholder={ RegisterFormLabels.email }
                             maxLength={255}
                             required
-                            onChange={event => this.setState({password: event.target.value,})}
+                            onChange={event => this.setState({email: event.target.value,})}
                         />
                         <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
                     </div>
@@ -117,24 +129,24 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
                                         type="radio"
                                         className="userTypeButton"
                                         name="userType"
-                                        id="producer"
-                                        value="producer"
-                                        checked={this.state.userType === "producer"}
+                                        id="Producer"
+                                        value="Producer"
+                                        checked={this.state.userType === "Producer"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                    <label htmlFor="producer">{RegisterFormLabels.userType__producer}</label>
+                                    <label htmlFor="Producer">{RegisterFormLabels.userType__producer}</label>
                                 </div>
                                 <div className="userType R">
                                     <input
                                         type="radio"
                                         className="userTypeButton"
                                         name="userType"
-                                        id="receiver"
-                                        value="receiver"
-                                        checked={this.state.userType === "receiver"}
+                                        id="Receiver"
+                                        value="Receiver"
+                                        checked={this.state.userType === "Receiver"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                    <label htmlFor="receiver">{RegisterFormLabels.userType__reciever}</label>
+                                    <label htmlFor="Receiver">{RegisterFormLabels.userType__reciever}</label>
                                 </div>
                             </div>
                         </div>
@@ -429,38 +441,50 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
             return;
         }
 
-        // const endPoint = apis.user.create;
+        const endPoint = apis.user.create;
 
-        // try {
-        //     this.setState({ isPending: true });
-        //     const startedAt = performance.now();
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
 
-        //     await fetch(endPoint, {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             password: this.state.password,
-        //             email: this.state.email,
-        //         })
-        //     });
+            const body = JSON.stringify({
+                firstName: this.state.firstName,
+                surname: this.state.lastName,
+                password: this.state.password,
+                email: this.state.email,
+                role: this.state.userType,
+                country: this.state.country
+            });
 
-        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-        // } catch (err) {
-        //     alert("Either your password or email doesn't match, please try again.");
-        // } finally {
-        //     this.setState({ isPending: false });
-        // }
+            const response = await fetch(endPoint, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body
+            });
 
-        // Dummy
-        this.setState({ isPending: true });
-        setTimeout(
-            () => {
-                this.setState({ isPending: false });
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("userJWT", data.token);
 
-                alert("Your user has been created and you have now been logged in!");
+                if (this.state.userType === "Receiver") {
+                    this.props.store.user = new ReceiverModel(data.userDTO as ReceiverModelData);
+                } else {
+                    this.props.store.user = new ProducerModel(data.userDTO as ProducerModelData);
+                }
+
+                await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
-            },
-            2000,
-        );
+            } else {
+                throw new Error(
+                    response.status === 409
+                        ? "The passed email is already present in our system, please log in instead." 
+                        : "Something went wrong when attempting to create your profile., please try again."
+                );
+            }
+        } catch (err) {
+            alert((err as Error).message);
+            this.setState({ isPending: false });
+        }
     }
 
     /**
@@ -471,4 +495,4 @@ class UnwrappedRegisterForm extends React.PureComponent<RouterProps, RegisterFor
     }
 }
 
-export const RegisterForm = withRouter(props => <UnwrappedRegisterForm {...props} />);
+export const RegisterForm = withRouter(injectStore((store) => ({ store }), UnwrappedRegisterForm));

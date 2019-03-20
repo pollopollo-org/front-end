@@ -3,7 +3,7 @@ import React from "react";
 
 import { colors } from "src/ts/config/colors";
 
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
 import profile from "src/assets/data/profile.json";
@@ -14,23 +14,73 @@ import { injectStore } from "src/ts/store/injectStore";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 
+import Countries from "src/assets/countries.json";
+import { fetchUser } from "src/ts/store/createStore";
+
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
      */
     user: UserModel;
+} & RouteComponentProps;
+
+export type UserState = {
+    /**
+     * Specifies the user to be rendered
+     */
+    renderedUser?: UserModel;
+
+    /**
+     * Specifies whehter the rendered user is the user him/herself, which means
+     * we should render edit functionality etc.
+     */
+    isSelf: boolean;
 }
 
 /**
  * A page where the user can see their profile
  */
 @observer
-export class UnwrappedUserProfile extends React.Component<UserProps>{
+export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
+    /**
+     * Setup initial state
+     */
+    public state: UserState = {
+        isSelf: false,
+        renderedUser: this.props.user,
+    }
+
+    /**
+     * Determine if we should render a different user than self
+     */
+    public async componentDidMount(): Promise<void> {
+        // If we have a match on the route, that means we should attempt to 
+        // render the given user in readonly mode
+        if (this.props.match.params) {
+            // tslint:disable-next-line completed-docs
+            const userId = (this.props.match.params as { userId: string }).userId;
+            const user = await fetchUser(userId);
+
+            this.setState({
+                isSelf: false,
+                renderedUser: user,
+            });
+        } else {
+            // ... however, if we doesn't match, then we should render our own
+            // user
+            this.setState({ isSelf: true });
+        }
+    }
+
     /**
      * Main render method, used to render ProfilePage
      */
     public render() : JSX.Element{
-        const { user } = this.props;
+        const { renderedUser: user } = this.state;
+
+        if (!user) {
+            return <h1>wut</h1>;
+        }
 
         return (
             <div className="page">
@@ -38,11 +88,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                     <div>
                         <div className="header">
                             <h1>Profile</h1>
-                            <Link className="editProfile" to={routes.editProfile.path}>
-                                <i>
-									{ getSVG("edit") }
-								</i>
-                            </Link>
+                            {this.state.isSelf && (
+                                <Link className="editProfile" to={routes.editProfile.path}>
+                                    <i>
+                                        {getSVG("edit")}
+                                    </i>
+                                </Link>
+                            )}
                         </div>
                         {/* Information box */}
                         <div className="information">
@@ -54,19 +106,19 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                                     }
                                 </div>
                                 <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
-                                <p><span className="bold">{profile.country}</span> {user.country}</p>
+                                <p><span className="bold">{profile.country}</span> {this.extractCountry()}</p>
                                 <p><span className="bold">{profile.email}</span> {user.email}</p>
                                 <div className="twoliner">
                                     <p><span className="bold">{profile.desc}</span> </p>
-                                    {!isNullOrUndefined(user.description) && <p>{user.description}</p>}
+                                    {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
                                 </div>
 
-                                    {isProducerUser(user) && (
-                                        <div className="twoliner">
-                                            <p><span className="bold">{profile.wallet}</span> </p>
-                                            <p>{user.wallet}</p>
-                                        </div>
-                                    )}
+                                {isProducerUser(user) && (
+                                    <div className="twoliner">
+                                        <p><span className="bold">{profile.wallet}</span> </p>
+                                        {isNullOrUndefined(user.wallet) ? <p><i>There is no wallet string to show.</i></p> : <p>{user.wallet}</p>}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -145,6 +197,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                     /* Link to edit profile page, centered under image */
                     :global(.editProfile) {
                         margin-top: 30px;
+                        margin-left: 10px;
                         color: ${colors.primary};
                         text-decoration: none;
                         display: inline-block;
@@ -263,6 +316,22 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                 `}</style>
             </div>
         )
+    }
+
+    /**
+     * Internal helper that extracts the country of the user based on the users
+     * country code
+     */
+    private extractCountry = () => {
+        const user = this.state.renderedUser;
+
+        if (!user) {
+            return "Unknown";
+        }
+
+        const countryData = Countries.find((country) => country.Code === user.country);
+
+        return countryData ? countryData.Name : "Unknown";
     }
 }
 
