@@ -323,7 +323,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * country code
      */
     private extractCountry = () => {
-        const countryData = Countries.find((country) => country.Code === this.props.user.country);
+        const user = this.state.renderedUser;
+
+        if (!user) {
+            return "Unknown";
+        }
+
+        const countryData = Countries.find((country) => country.Code === user.country);
 
         return countryData ? countryData.Name : "Unknown";
     }
