@@ -9,5 +9,7 @@
     "decription": "Describe yourself",
     "oldPassword": "Confirm with old password",
     "saveButton": "Save",
-    "wallet":"Wallet address"
+    "wallet":"Wallet address",
+    "imageTypeAlert": "The file type of the uploaded image is not supprted. Please upload another image. The supported file types are: .png, .jpg, .jpeg.",
+    "passwordAlert": "Your passwords must match."
 }

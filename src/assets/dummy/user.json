@@ -6,7 +6,6 @@
     "country": "Denmark",
     "city": "København",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ligula urna, condimentum quis tempus ut, pharetra eu eros. Nulla sed turpis nisi. Vivamus viverra finibus nisl, ut varius dolor lobortis id. Curabitur ullamcorper libero id justo interdum eleifend. Suspendisse aliquet sem id nisi iaculis vehicula. Ut ut porttitor elit. Aenean maximus elit id consequat sagittis. Etiam et augue dui.",
-    "thumbnail": null,
     "userType": "producer",
     "wallet": "[This should be a wallet string]"
 }

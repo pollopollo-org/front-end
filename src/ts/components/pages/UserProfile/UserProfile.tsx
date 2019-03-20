@@ -169,7 +169,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps>{
                         margin: 15px 0;
                     }
 
-                    /* A section of the information box where header and content are on diferent lines */
+                    /* A section of the information box where header and content are on different lines */
                     .twoliner {
                         margin-top: 25px;
                     }

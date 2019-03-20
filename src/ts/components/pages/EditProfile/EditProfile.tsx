@@ -437,7 +437,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
                 )
                 )
                 {
-                    alert("We support only .PNG, .jpg and .jpeg files!");
+                    alert(EditProfileLabels.imageTypeAlert);
                     return;
                 }
 
@@ -462,7 +462,7 @@ export class EditProfile extends React.PureComponent<{},EditProfileState>{
      */
     private sendToBackEnd = () => {
         if(this.state.password !== this.state.repeatedPassword){
-            alert("Your passwords must match");
+            alert(EditProfileLabels.passwordAlert);
             return;
         }
         /** TODO Send data to backend */
