@@ -24,6 +24,9 @@ export const routes = {
     profile: {
         path: "/profile.html",
     },
+    viewProfile: {
+        path: "/profile/readonly/:userId",
+    },
     login: {
         path: "/login.html",
     },

@@ -9,6 +9,7 @@ import { Chevron } from "../../utils";
 import { Dropdown } from "../../utils/Dropdown/Dropdown";
 
 import { observer } from "mobx-react";
+import { RouterProps } from "react-router";
 import userInfoLabels from "src/assets/data/userInfo.json";
 import { Store } from "src/ts/store/Store";
 
@@ -21,7 +22,12 @@ type UserInfoProps = {
      * Contains a reference to the root store
      */
     store: Store;
-};
+
+    /**
+     * Callback that when called will close the header
+     */
+    closeHeader(): void;
+} & RouterProps;
 
 /**
  * Specification of lifecycle state of <UserInfo />.
@@ -89,13 +95,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 <i className="icon">{ getSVG("user", { strokeColor: colors.whiteSmoke }) }</i>
                 { !this.props.store.user && (
                     <>
-                        <span className="loginButton">
+                        <span className="loginButton" onClick={this.props.closeHeader}>
                             <Link to={routes.login.path}>
                                 { userInfoLabels.logIn }
                             </Link>
                             <span className="underline" />
                         </span>
-                        <span className="loginButton">
+                        <span className="loginButton" onClick={this.props.closeHeader}>
                             <Link to={routes.register.path}>
                                 { userInfoLabels.register }
                             </Link>
@@ -189,6 +195,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         display: inline-block;
                         height: 22px;
                         width: 24px;
+                        margin-right: 5px;
                     }
 
                     .chevron {
@@ -357,14 +364,14 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
             <React.Fragment>
                 { this.renderUserData() }
 
-                <span className="link">
-                    <Link to={routes.login.path}>
+                <span className="link" onClick={this.props.closeHeader}>
+                    <Link to={routes.profile.path}>
                         <i className="logIn">{ getSVG("log_in")}</i>
                         { userInfoLabels.profile }
                     </Link>
                 </span>
-                <span className="link">
-                    <Link to={routes.login.path}>
+                <span className="link" onClick={this.props.closeHeader}>
+                    <Link to={routes.editProfile.path}>
                         <i className="edit">{ getSVG("edit") }</i>
                         { userInfoLabels.edit }
                     </Link>
@@ -553,8 +560,11 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      * process the functionality required to achieve this.
      */
     protected signOut = () => {
+        this.props.closeHeader();
         this.props.store.user = undefined;
-        window.localStorage.setItem("userJWT", "");
+        localStorage.setItem("userJWT", "");
+        this.setState({ showDropdown: false });
+        this.props.history.push(routes.root.path);
     }
 
     /**
@@ -595,4 +605,4 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 }
 
 // tslint:disable-next-line variable-name
-export const UserInfo = injectStore((store) => ({ store, user: store.user }), UserInfoUnwrapped);
+export const UserInfo = injectStore((store) => ({ store }), UserInfoUnwrapped);

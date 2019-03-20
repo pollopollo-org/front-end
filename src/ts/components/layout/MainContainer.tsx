@@ -27,6 +27,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                         <Route exact path={routes.root.path} component={FrontPage} />
                         <Route exact path={routes.register.path} component={RegisterForm} />
                         <Route exact path={routes.profile.path} component={UserProfile} />
+                        <Route exact path={routes.viewProfile.path} component={UserProfile} />
                         <Route exact path={routes.login.path} component={LoginForm} />
                         <Route exact path={routes.editProfile.path} component={EditProfile} />
                     </Switch>

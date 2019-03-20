@@ -1,13 +1,26 @@
+import { History } from "history";
 import React from "react";
 import { RouterProps } from "react-router";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { colors, easings, Route, routes } from "src/ts/config";
+
+export type MenuProps = {
+    /**
+     * Contains a reference to the history object
+     */
+    history: History<any>;
+
+    /**
+     * Callback that when executed will close the header
+     */
+    closeHeader(): void;
+} & RouterProps;
 
 /**
  * Component responsible for rendering a menu that contains all available
  * navigation for the application
  */
-class UnwrappedMenu extends React.Component<RouterProps> {
+export class Menu extends React.Component<MenuProps> {
     /**
      * Ensure this component gets updated every time our history changes to ensure
      * that the active link is always related to the active one
@@ -118,7 +131,7 @@ class UnwrappedMenu extends React.Component<RouterProps> {
             const isActive = this.props.history.location.pathname === link.path;
 
             return (
-                <li key={link.name} className={isActive ? "active" : ""}>
+                <li key={link.name} className={isActive ? "active" : ""} onClick={this.props.closeHeader}>
                     <Link to={link.path}>{link.name}</Link>
                     <span className="underline" />
 
@@ -201,5 +214,3 @@ class UnwrappedMenu extends React.Component<RouterProps> {
         });
     }
 }
-
-export const Menu = withRouter(props => <UnwrappedMenu {...props}/>);

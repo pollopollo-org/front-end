@@ -7,9 +7,19 @@ import { fonts } from "src/ts/config/fonts";
 import { routes } from "src/ts/config/routes";
 
 import LoginFormLabels from "src/assets/data/loginForm.json";
-// import { asyncTimeout } from "src/ts/utils";
-import { Throbber } from "src/ts/components/utils";
+import { apis } from "src/ts/config/apis";
+import { fetchUser } from "src/ts/store/createStore";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
+import { asyncTimeout } from "src/ts/utils";
+import { Throbber } from "../../utils";
 
+type LoginFormProps = {
+    /**
+     * Contains a reference to the root store
+     */
+    store: Store;
+} & RouterProps;
 
 type LoginFormState = {
     /**
@@ -30,7 +40,7 @@ type LoginFormState = {
 /**
  * A page where the user can login to the platform
  */
-export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFormState>{
+export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, LoginFormState>{
     /**
      * State of the login form, all fields initially set to null
      */
@@ -257,37 +267,41 @@ export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFo
             return;
         }
 
-        // const endPoint = apis.user.create;
+        const endPoint = apis.user.authenticate;
 
-        // try {
-        //     this.setState({ isPending: true });
-        //     const startedAt = performance.now();
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
 
-        //     await fetch(endPoint, {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             password: this.state.password,
-        //             email: this.state.email,
-        //         })
-        //     });
+            const body = JSON.stringify({
+                password: this.state.password,
+                email: this.state.email
+            });
 
-        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-        // } catch (err) {
-        //     alert("Either your password or email doesn't match, please try again.");
-        // } finally {
-        //     this.setState({ isPending: false });
-        // }
+            const response = await fetch(endPoint, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body
+            });
 
-        // Dummy
-        this.setState({ isPending: true });
-        setTimeout(
-            () => {
-                this.setState({ isPending: false });
+            if (response.ok) {
+                const token = await response.text();
+                localStorage.setItem("userJWT", token);
+
+                this.props.store.user = await fetchUser();
+
+                await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
-            },
-            2000,
-        );
+            } else {
+                throw new Error("Either your password or email is not correct, please try again.")
+            }
+
+
+        } catch (err) {
+            this.setState({ isPending: false });
+            alert("Either your password or email is not correct, please try again.");
+        }
     }
 }
 
-export const LoginForm = withRouter(props => <UnwrappedLoginForm {...props} />);
+export const LoginForm = withRouter(injectStore((store) => ({ store }), UnwrappedLoginForm));
