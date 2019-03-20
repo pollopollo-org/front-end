@@ -358,13 +358,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 { this.renderUserData() }
 
                 <span className="link">
-                    <Link to={routes.login.path}>
+                    <Link to={routes.profile.path}>
                         <i className="logIn">{ getSVG("log_in")}</i>
                         { userInfoLabels.profile }
                     </Link>
                 </span>
                 <span className="link">
-                    <Link to={routes.login.path}>
+                    <Link to={routes.editProfile.path}>
                         <i className="edit">{ getSVG("edit") }</i>
                         { userInfoLabels.edit }
                     </Link>

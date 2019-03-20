@@ -7,6 +7,8 @@ import { fonts } from "src/ts/config/fonts";
 import { routes } from "src/ts/config/routes";
 
 import LoginFormLabels from "src/assets/data/loginForm.json";
+import { apis } from "src/ts/config/apis";
+import { asyncTimeout } from "src/ts/utils";
 // import { asyncTimeout } from "src/ts/utils";
 import { Throbber } from "../../utils";
 
@@ -267,36 +269,35 @@ export class UnwrappedLoginForm extends React.PureComponent<RouterProps, LoginFo
             return;
         }
 
-        // const endPoint = apis.user.create;
+        const endPoint = apis.user.authenticate;
 
-        // try {
-        //     this.setState({ isPending: true });
-        //     const startedAt = performance.now();
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
 
-        //     await fetch(endPoint, {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             password: this.state.password,
-        //             email: this.state.email,
-        //         })
-        //     });
+            const body = JSON.stringify({
+                password: this.state.password,
+                email: this.state.email
+            });
 
-        //     await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-        // } catch (err) {
-        //     alert("Either your password or email doesn't match, please try again.");
-        // } finally {
-        //     this.setState({ isPending: false });
-        // }
+            const response = await fetch(endPoint, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body
+            });
 
-        // Dummy
-        this.setState({ isPending: true });
-        setTimeout(
-            () => {
-                this.setState({ isPending: false });
-                this.props.history.push(routes.root.path);
-            },
-            2000,
-        );
+            const token = await response.text();
+
+            window.localStorage.setItem("userJWT", token);
+
+            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+            this.props.history.push(routes.root.path);
+
+        } catch (err) {
+            alert("Either your password or email is not correct, please try again.");
+        } finally {
+            this.setState({ isPending: false });
+        }
     }
 }
 
