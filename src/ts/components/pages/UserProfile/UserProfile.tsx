@@ -11,8 +11,8 @@ import profile from "src/assets/data/profile.json";
 import { getSVG } from "src/assets/svg";
 import { UserModel } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
-import { isNullOrUndefined } from "util";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
+import { isNullOrUndefined } from "util";
 
 export type UserProps = {
     /**

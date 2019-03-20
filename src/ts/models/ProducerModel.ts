@@ -8,7 +8,7 @@ import { UserModel, UserModelData } from "./UserModel";
  */
 // tslint:disable completed-docs
 export type ProducerModelData = {
-    wallet: string;
+    wallet?: string;
 } & UserModelData;
 // tslint:enable completed-docs
 
@@ -55,7 +55,7 @@ export class ProducerModel extends UserModel {
     /**
      * The Obyte wallet of the user
      */
-    public readonly wallet: string;
+    public readonly wallet?: string;
 
     constructor(data: ProducerModelData) {
         super(data);
