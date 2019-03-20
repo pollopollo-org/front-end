@@ -21,6 +21,11 @@ type EditProfileProps = {
 
 type EditProfileState = {
     /**
+     * user ID
+     */
+    userId: number;
+
+    /**
      * first name
      */
     firstName: string;
@@ -79,6 +84,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      * State of the component
      */
     public state: EditProfileState = {
+        userId: 0,
         firstName: "",
         lastName: "",
         email: "",
@@ -100,6 +106,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
 
         if (store.user) {
             this.setState({
+                userId: store.user.id,
                 firstName: store.user.firstName,
                 lastName: store.user.surName,
                 email: store.user.email,
@@ -591,6 +598,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             await fetch(endPoint,{
                 method: "PUT",
                 body: JSON.stringify({
+                    id: this.state.userId,
                     firstName: this.state.firstName,
                     lastName: this.state.lastName,
                     email: this.state.email,
@@ -614,6 +622,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         const formData = new FormData();
         return formData.append("file",this.state.profilePicture||"");
     }
+
 }
 
 export const EditProfile = withRouter(injectStore((store) => ({ store }), UnwrappedEditProfile));
