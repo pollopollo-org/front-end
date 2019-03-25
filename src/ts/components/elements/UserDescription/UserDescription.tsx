@@ -13,7 +13,7 @@ type UserDescriptionProps = {
     /**
      * Contains all the information about the user that should be described
      */
-    user: UserModel;
+    user?: UserModel;
 }
 
 /**
@@ -23,8 +23,12 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
     /**
      * Main render method
      */
-    public render(): JSX.Element {
+    public render(): React.ReactNode {
         const { user } = this.props;
+
+        if (!user) {
+            return <h1>There is no user available for rendering</h1>;
+        }
 
         return (
             <div className="information">

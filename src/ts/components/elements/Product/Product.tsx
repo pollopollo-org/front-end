@@ -9,6 +9,9 @@ import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts } from "src/ts/config";
+import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
+import { UserModel } from "src/ts/models/UserModel";
+import { fetchUser } from "src/ts/store/createStore";
 
 export type ProductProps = {
     /**
@@ -40,6 +43,12 @@ export type ProductState = {
      * smaller viewports
      */
     isSmall: boolean;
+
+    /**
+     * Specifies the loaded producer of the application (if any). Will first be
+     * loaded if the user wishes to see information about the producer
+     */
+    producer?: UserModel;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -57,7 +66,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         expanded: false,
         isSmall: false,
         showImage: false,
-        showProducer: false,
+        showProducer: true,
     };
 
     /**
@@ -391,7 +400,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     <p>
                         {product.description}
                     </p>
-                    <button className="profile-link"><i className="user-icon">{getSVG("user2")}</i> Producer profile</button>
+                    <button 
+                        className="profile-link"
+                        onClick={this.openProducerLightbox}
+                    >
+                        <i className="user-icon">{getSVG("user2")}</i> Producer profile
+                    </button>
                 </div>
 
                 <style jsx>{`
@@ -558,22 +572,32 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderProducerLightbox = () => {
         return (
-            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox} />
+            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
+                <UserDescription user={this.state.producer} />
+            </Lightbox>
         );
     }
 
-    // /**
-    //  * Listener that'll open the producer lightbox once it has been executed
-    //  */
-    // private openProducerLightbox = () => {
-    //     this.setState({ showImage: true });
-    // }
+    /**
+     * Listener that'll open the producer lightbox once it has been executed
+     */
+    private openProducerLightbox = async () => {
+        // TODO: Display throbber while loading!!!!!!!
+        if (!this.state.producer) {
+            const producerId = this.props.product.producerId;
+            const producer = await fetchUser(String(producerId));
+
+            this.setState({ producer, showProducer: true });
+        } else {
+            this.setState({ showProducer: true });
+        }
+    }
 
     /**
      * Mehtod that'll close the producer dropdown once it has been executed
      */
     private closeProducerLightbox = () => {
-        this.setState({ showImage: false });
+        this.setState({ showProducer: false });
     }
 
     /**
