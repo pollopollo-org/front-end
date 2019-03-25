@@ -29,7 +29,7 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps>{
         return (
             <select
                 required
-                onBlur={this.onSelectCountry}
+                onChange={this.onSelectCountry}
                 className={`${!this.props.currentCountry ? "inactive" : "active"}`}
                 value={this.props.currentCountry || ""}
             >

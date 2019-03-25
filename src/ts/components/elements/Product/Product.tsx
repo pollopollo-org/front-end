@@ -4,11 +4,12 @@ import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
 import { ProductModel } from "src/ts/models/ProductModel";
-import { Button, Chevron } from "src/ts/components/utils";
+import { Chevron } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts } from "src/ts/config";
+import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 
 export type ProductProps = {
     /**
@@ -28,6 +29,12 @@ export type ProductState = {
      * lightbox in full size
      */
     showImage: boolean;
+
+    /**
+     * Specifies if the edit dropdown should currently be shown when producer
+     * views their own products.
+     */
+    showDropdown?: boolean;
 
     /**
      * Specifies whether or not the producer profile should currently be displayed
@@ -75,6 +82,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
+     * Will contain a reference to the user name wrapper, so that we can make
+     * the dropdown point towards it properly.
+     */
+    protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+    /**
      * Determine the breakpoint we're currently in as soon as the component mounts,
      * and prepare for
      */
@@ -106,7 +119,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                             { this.renderContentSection() }
                         </div>
 
-                        { this.renderApplyButton() }
+                        { this.renderProductEdit() }
 
                         { this.state.isSmall && (
                             this.renderDescriptionTeaser()
@@ -273,7 +286,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`}>{product.title}</span>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`}> <span>{product.title}</span> <span className="price">- ${product.price}</span> </span>
 
                 { !this.state.isSmall && (
                     this.renderDescriptionTeaser()
@@ -294,6 +307,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Setup font */
                         font-size: 18px;
                         line-height: 1.3em;
+
+
+                        display: flex;
+                        flex-direction: row;
 
                         /**
                          * Force product to be at max two lines
@@ -316,6 +333,11 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                          */
                         overflow: hidden;
                         max-height: calc(18px * 2 * 1.3 + 0.25em);
+                    }
+
+                    .product .price {
+                        font-style: italic;
+                        font-size: 0.87em;
                     }
                 `}</style>
             </section>
@@ -529,30 +551,267 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     /**
      * Internal renderer that renders the apply button of the product
      */
-    private renderApplyButton = () => {
+    // private renderApplyButton = () => {
+    //     return(
+    //         <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+    //             <Button text={`Apply`} />
+
+    //             <style jsx>{`
+    //                 .button-wrapper {
+    //                     /** Position the apply button in the top right corner */
+    //                     position: absolute;
+    //                     right: 5px;
+    //                     top: 0;
+    //                     z-index: 10;
+
+    //                     /** When mobile size, position button in the middle */
+    //                     &.isSmall {
+    //                         left: 105px;
+    //                         top: 35px;
+    //                         right: unset;
+    //                     }
+    //                 }
+    //             `}</style>
+    //         </div>
+    //     );
+    // }
+
+    /**
+     * heyhey
+     */
+    private renderProductEdit = () => {
         return(
-            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button text={`Apply`} />
+            <div className={`product-more ${this.state.isSmall ? "isSmall" : ""}`}>
+
+                { !this.state.isSmall && (
+                    <div className="edit-button-section">
+                        <button className="edit-button">Edit</button>
+                        <button className="status-button">Deactivate</button>
+                    </div>
+                )}
+
+                { this.state.isSmall && (
+                    <div
+                        className={`${ this.state.showDropdown ? "active" : "" }`}
+                        ref={ this.wrapperRef }
+                        onClick={ this.toggleDropdownState }
+                        role="button"
+                    >
+                        <i> 
+                            {getSVG("more-vertical")}
+                        </i>
+                        { this.renderDropdown() }
+                    </div>
+                )}
 
                 <style jsx>{`
-                    .button-wrapper {
-                        /** Position the apply button in the top right corner */
-                        position: absolute;
-                        right: 5px;
-                        top: 0;
-                        z-index: 10;
+                    .edit-button-section {
+                        display: flex;
+                        flex-direction: row;
+                    }
+                    
+                    .edit-button-section button {
+                        background-color: transparent;
+                        border: none;
+                        cursor: pointer;
+                        padding: 5px;
+                        font-style: bold;
+                        font-family: ${ fonts.text };
+                        font-size: 12px;
+                    }
 
-                        /** When mobile size, position button in the middle */
-                        &.isSmall {
-                            left: 105px;
-                            top: 35px;
-                            right: unset;
-                        }
+                    .edit-button-section button:hover {
+                        background-color: ${ colors.pale };
+                    }
+
+                    .edit-button-section .edit-button {
+                        border-right: 1px solid ${ colors.pale };
+                    }
+
+                    .product-more {
+                        position: absolute;
+                        right: 0;
+                        top: -6px;
+                        z-index: 12;
+                    }
+
+                    .product-more i {
+                        display: block;
+
+                        height: 24px;
+                        width: 24px;
+                        cursor: pointer;
                     }
                 `}</style>
             </div>
         );
     }
+
+    
+    /**
+     * Renders the dropdown that'll become visible when the user clicks his own
+     * profile name.
+     */
+    protected renderDropdown(): JSX.Element {
+        return (
+            <Dropdown
+                active={ this.state.showDropdown }
+                pointAt={ this.wrapperRef }
+                onClose={ this.toggleDropdownState }
+            >
+                <div className="wrapper">
+                    { this.renderInformation() }
+                </div>
+
+                <style jsx>{`
+                    .wrapper {
+                        /** Apply internal padding */
+                        padding: 10px 0;
+
+                        /**
+                         * Enforce a minimum width on the userInfo making sure
+                         * that it always renders nicely
+                         */
+                        min-width: 175px;
+
+                        /** By default element isn't clickable */
+                        cursor: default;
+                    }
+                `}</style>
+            </Dropdown>
+        );
+    }
+
+
+    /**
+     * Internal helper that renders all information related to the user
+     */
+    protected renderInformation(): JSX.Element {
+        return (
+            <React.Fragment>
+                <span className="link" onClick={this.toggleDropdownState} role="link">
+                    <i className="edit">{ getSVG("edit") }</i>
+                    Edit
+                </span>
+                <span className="link" onClick={ this.toggleDropdownState} role="link">
+                    <i className="status">{ getSVG("check-square") }</i>
+                    Deactivate
+                </span>
+
+                <style jsx>{`
+                    button,
+                    .link {
+                        /** Override defaults */
+                        background: none;
+                        -webkit-appearance: none;
+                        border: none;
+
+                        /** Center items within vertically */
+                        display: flex;
+                        align-items: center;
+
+                        /** Allow button to fill the whole dropdown */
+                        width: 100%;
+
+                        /**
+                         * Set up basic padding around the element (the 6px top
+                         * padding is applied to take into account that the icon
+                         * will push text further down, and we want the white-
+                         * space to visually align with the text instead of the
+                         * icon).
+                         */
+                        padding: 10px 20px;
+                        margin: 0;
+
+                        /**
+                         * Indicate that items are clickable
+                         */
+                        cursor: pointer;
+
+                        /** Prevent line-breaks within the label */
+                        white-space: nowrap;
+
+                        /** Set up text styling */
+                        font-size: 12px;
+                        color: ${ colors.black };
+                        line-height: 1em;
+                        text-decoration: none;
+
+                        /** Prepare hover transition */
+                        transition:
+                            background-color 0.1s linear,
+                            color 0.1s linear;
+
+                        & i {
+                            /** Set up icon sizing */
+                            display: inline-block;
+                            width: 22px;
+                            height: 22px;
+
+                            /** Apply margin between icon and text */
+                            margin-right: 10px;
+
+                            & > :global(.svgIcon) > :global(svg) > :global(path) {
+                                /** Apply default font color */
+                                stroke: ${ colors.black };
+                            }
+                        }
+
+                        /** Apply highlight color on hover */
+                        &:hover {
+                            background-color: rgba(69, 50, 102, 0.1);
+                            color: ${ colors.primary };
+
+                            & i > :global(.svgIcon) > :global(svg) > :global(path) {
+                                stroke: ${ colors.primary };
+                            }
+                        }
+                    }
+
+                    .link {
+                        /**
+                         * Override width on items in dropdown to ensure they take
+                         * padding into account when achieving width of 100%
+                         */
+                        width: calc(100% - 40px);
+
+                        & :global(> a) {
+                            /** Align icon and text within icon properly */
+                            display: flex;
+                            align-items: center;
+
+                            /** Override default colors */
+                            color: ${ colors.black };
+                            text-decoration: none;
+                        }
+
+                        & .edit {
+                            height: 23px;
+                            width: 23px;
+                        }
+                    }
+
+                    @media (max-width: 768px) {
+                        /** Force white colors, on mobile the background will be dark */
+                        button,
+                        .link :global(> a) {
+                            color: ${ colors.whiteSmoke } !important;
+                        }
+
+                        i > :global(.svgIcon) > :global(svg) > :global(path) {
+                            stroke: ${ colors.primary } !important;
+                        }
+
+                        i {
+                            /** We slightly shrink icons as well to fit better */
+                            transform: scale(0.75);
+                        }
+                    }
+                `}</style>
+            </React.Fragment>
+        );
+    }
+
 
     /**
      * Internal renderer that'll render the producer lightbox which will be displayed
@@ -667,5 +926,17 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         }
 
         this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
+
+        if (this.state.isSmall) {
+            this.setState({ showDropdown: false });
+        }
+    }
+
+    /**
+     * Listener that's triggered when the producer somehow prompts for the
+     * dropdown to appear or disappear
+     */
+    protected toggleDropdownState = () => {
+        this.setState({ showDropdown: !this.state.showDropdown });
     }
 }
