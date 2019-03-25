@@ -177,7 +177,7 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                 <div className="currentPictureDiv">
                     {(
                         isNullOrUndefined(this.state.productPicture) 
-                            ? <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>
+                            ? <i className="user">{getSVG("image", { strokeColor: colors.primary }) }</i>
                             : <img className="currentPicture" src={ this.getProductPictureURL() } alt="" role="presentation"/>  
                     )}
                 </div>
@@ -192,7 +192,7 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                     .currentPictureDiv{
                         height: 258px;
                         width: 258px;
-                        margin: 10px 0;
+                        margin: 15px 0;
                         background-color: ${colors.pale};
                         border: 2px solid ${colors.pale};
                     }
@@ -226,7 +226,7 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                         padding: 0.5rem 20px;
                         width: 105px;
                         display: block;
-                        margin: 18px auto 0 auto;
+                        margin: -2px auto 0 auto;
                     }
 
                     [type="file"] + label:hover {

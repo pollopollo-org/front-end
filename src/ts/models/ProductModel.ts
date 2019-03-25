@@ -20,7 +20,7 @@ type ProductModelData = {
 // tslint:enable completed-docs
 
 /**
- * Product model
+ *  Product model reflecting the data of a product
  */
 export class ProductModel {
     /**
