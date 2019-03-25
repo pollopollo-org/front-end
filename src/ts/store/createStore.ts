@@ -5,6 +5,7 @@ import { DataProviders, Store } from "./Store";
 import { apis } from "../config/apis";
 
 import jwt_decode from "jwt-decode";
+import { ProductModel } from "../models/ProductModel";
 import { ReceiverModel, ReceiverModelData } from "../models/ReceiverModel";
 import { UserToken } from "../models/UserModel";
 
@@ -25,8 +26,9 @@ export const createStore = () => {
                 // it and resolve immediately :-)
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
                 const user = await fetchUser();
+                const products = await ProductModel.CREATE_COLLECTION(DataProviders.DUMMY);
 
-                resolve(new Store({applications, user}));
+                resolve(new Store({applications, user, products}));
             } catch (err) {
                 reject(err);
             }
