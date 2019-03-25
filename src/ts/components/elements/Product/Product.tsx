@@ -5,6 +5,7 @@ import { colors } from "src/ts/config/colors";
 import { easings } from "src/ts/config/easings";
 import { ProductModel } from "src/ts/models/ProductModel";
 import { Button, Chevron } from "src/ts/components/utils";
+import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 
 export type ProductProps = {
     /**
@@ -188,7 +189,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
                         /** Display sections alongside each other */
-                        margin: 10px;
+                        margin: 7px;
                         display: flex;
                         flex-direction: row;
 
@@ -209,12 +210,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <section className="section-thumbnail">
-                <img 
-                    className="thumbnail" 
-                    src={require("src/assets/dummy/sif.PNG")} 
-                    role="presentation" 
-                    alt="" 
-                />
+                <div className="thumbnail">
+                    <Thumbnail src={require("src/assets/dummy/sif.PNG")} />
+                </div>
                 <img    
                     className="flag" 
                     title={product.country} 
@@ -421,11 +419,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderChevron = () => {
         return (
-<<<<<<< HEAD
-            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} role="presentation">
-=======
             <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} role="button">
->>>>>>> ee888c76abbb42ecff20ce04505165169e7c2d2e
                 <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
@@ -476,7 +470,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     .button-wrapper {
                         /** Position the apply button in the top right corner */
                         position: absolute;
-                        right: 0;
+                        right: 5px;
                         top: 0;
                         z-index: 10;
 
