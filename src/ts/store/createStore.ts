@@ -3,7 +3,8 @@ import { DataProviders, Store } from "src/ts/store/Store";
 
 import { apis } from "src/ts/config/apis";
 
-import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
+import { ProductModel } from "src/ts/models/ProductModel";
 import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
 import { UserToken } from "src/ts/models/UserModel";
 
@@ -24,8 +25,9 @@ export const createStore = () => {
                 // it and resolve immediately :-)
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
                 const user = await fetchUser();
+                const products = await ProductModel.CREATE_COLLECTION(DataProviders.DUMMY);
 
-                resolve(new Store({applications, user}));
+                resolve(new Store({applications, user, products}));
             } catch (err) {
                 reject(err);
             }
@@ -47,7 +49,7 @@ export async function fetchUser(userId?: string) {
         return;
     }
 
-    const parsedToken = <UserToken> jwt_decode(token);
+    const parsedToken = <UserToken> jwtDecode(token);
 
     const endPoint = apis.user.get.replace("{userId}", userId || parsedToken.nameid);
 

@@ -5,6 +5,8 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
 import { colors, fonts } from "src/ts/config";
+import { Product } from "src/ts/components/elements/Product/Product";
+
 import { Application } from "src/ts/components/elements/Application/Application";
 
 export type FrontPageProps = {
@@ -28,12 +30,16 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
             <div>
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
+                    <Product product={this.props.store.products[0]} />
+
                     {this.props.store.applications.map((application, index) => {
                         return <Application key={index} application={application} />;
                     })}
                 </div>
 
+
                 <style jsx>{`
+
                     h1{
                         /** Override defaults */
                         margin: 15px 15px 0;
