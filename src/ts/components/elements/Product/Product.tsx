@@ -6,6 +6,7 @@ import { easings } from "src/ts/config/easings";
 import { ProductModel } from "src/ts/models/ProductModel";
 import { Button, Chevron } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
+import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 
 export type ProductProps = {
     /**
@@ -19,6 +20,18 @@ export type ProductState = {
      * A boolean that tracks whether the product is expanded, and should
      */
     expanded: boolean;
+
+    /**
+     * Specifies whether or not the product image should be displayed within a
+     * lightbox in full size
+     */
+    showImage: boolean;
+
+    /**
+     * Specifies whether or not the producer profile should currently be displayed
+     * in a lightbox
+     */
+    showProducer: boolean;
 
     /**
      * Specifies whether the product should be rendered to be compatible with
@@ -41,6 +54,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     public state: ProductState = {
         expanded: false,
         isSmall: false,
+        showImage: false,
+        showProducer: false,
     };
 
     /**
@@ -100,6 +115,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     </div>
                     { this.renderDescription() }
                 </div>
+
+                { this.renderProducerLightbox() }
+                { this.renderImageLightbox() }
 
 				<style jsx>{`
 
@@ -211,7 +229,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         return (
             <section className="section-thumbnail">
                 <div className="thumbnail">
-                    <Thumbnail src={require("src/assets/dummy/sif.PNG")} />
+                    <Thumbnail src={require("src/assets/dummy/product.jpg")} callback={ this.openImageLightbox } />
                 </div>
                 <img    
                     className="flag" 
@@ -226,7 +244,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     .thumbnail {
                         height: 70px;
                         width: 70px;
-
                         margin-right: 30px;
                     }
 
@@ -240,7 +257,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         top: -5px;
                         left: 50px;
 
-                        z-index: 1;
+                        z-index: 2;
                     }
                 `}</style>
             </section>
@@ -484,6 +501,65 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Internal renderer that'll render the producer lightbox which will be displayed
+     * when desired
+     */
+    private renderProducerLightbox = () => {
+        return (
+            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox} />
+        );
+    }
+
+    // /**
+    //  * Listener that'll open the producer lightbox once it has been executed
+    //  */
+    // private openProducerLightbox = () => {
+    //     this.setState({ showImage: true });
+    // }
+
+    /**
+     * Mehtod that'll close the producer dropdown once it has been executed
+     */
+    private closeProducerLightbox = () => {
+        this.setState({ showImage: false });
+    }
+
+    /**
+     * Internal renderer that'll render the image lightbox which will display
+     * the product image in fullscreen.
+     */
+    private renderImageLightbox = () => {
+        return (
+            <Lightbox active={this.state.showImage} onClose={ this.closeImageLightbox }>
+                <img src={require("src/assets/dummy/product.jpg")} alt="" role="presentation" />
+
+                <style jsx>{`
+                    img {
+                        /** Remove unwanted margin below image */
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                    }    
+                `}</style>
+            </Lightbox>
+        );
+    }
+
+    /**
+     * Listener that'll open the image lightbox once it has been executed
+     */
+    private openImageLightbox = () => {
+        this.setState({ showImage: true });
+    }
+
+    /**
+     * Mehtod that'll close the image dropdown once it has been executed
+     */
+    private closeImageLightbox = () => {
+        this.setState({ showImage: false });
     }
 
     /**
