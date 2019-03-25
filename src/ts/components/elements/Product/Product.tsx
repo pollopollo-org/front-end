@@ -55,8 +55,7 @@ const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
 const MOBILE_BREAKPOINT = 440;
 
 /**
- * Application template to contain information about the donation
- * of a single application
+ * Product template to contain information about a single product
  */
 export class Product extends React.PureComponent<ProductProps, ProductState> {
     /**
@@ -66,7 +65,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         expanded: false,
         isSmall: false,
         showImage: false,
-        showProducer: true,
+        showProducer: false,
     };
 
     /**
@@ -80,7 +79,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /** 
-     * Reference to the div tag with class name application-border 
+     * Reference to the div tag with class name product-border 
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -251,7 +250,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                 <style jsx>{`
 
-                    /** Thumbnail img in the .section-user */
+                    /** Thumbnail img in the .section-thumbnail */
                     .thumbnail {
                         height: 70px;
                         width: 70px;
@@ -404,7 +403,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         className="profile-link"
                         onClick={this.openProducerLightbox}
                     >
-                        <i className="user-icon">{getSVG("user2")}</i> Producer profile
+                        <i className="user-icon">{getSVG("user2")}</i> 
+                        Producer profile
                     </button>
                 </div>
 
