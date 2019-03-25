@@ -2,8 +2,8 @@
     {
         "title": "5 chickens",
         "price": 20,
-        "description": "I want five chickens to get the amount of eggs to regularly sustain my family. I would appreciate your help.",
-        "country": "SE",
+        "description": "These chickens are of the best quality in this country, you'll find no better chickens.",
+        "country": "VE",
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },

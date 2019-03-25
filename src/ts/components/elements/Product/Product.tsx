@@ -6,6 +6,12 @@ import { easings } from "src/ts/config/easings";
 import { ProductModel } from "src/ts/models/ProductModel";
 import { Button, Chevron } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
+import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
+import { getSVG } from "src/assets/svg";
+import { fonts } from "src/ts/config";
+import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
+import { UserModel } from "src/ts/models/UserModel";
+import { fetchUser } from "src/ts/store/createStore";
 
 export type ProductProps = {
     /**
@@ -21,18 +27,35 @@ export type ProductState = {
     expanded: boolean;
 
     /**
+     * Specifies whether or not the product image should be displayed within a
+     * lightbox in full size
+     */
+    showImage: boolean;
+
+    /**
+     * Specifies whether or not the producer profile should currently be displayed
+     * in a lightbox
+     */
+    showProducer: boolean;
+
+    /**
      * Specifies whether the product should be rendered to be compatible with
      * smaller viewports
      */
     isSmall: boolean;
+
+    /**
+     * Specifies the loaded producer of the application (if any). Will first be
+     * loaded if the user wishes to see information about the producer
+     */
+    producer?: UserModel;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
 const MOBILE_BREAKPOINT = 440;
 
 /**
- * Application template to contain information about the donation
- * of a single application
+ * Product template to contain information about a single product
  */
 export class Product extends React.PureComponent<ProductProps, ProductState> {
     /**
@@ -41,6 +64,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     public state: ProductState = {
         expanded: false,
         isSmall: false,
+        showImage: false,
+        showProducer: false,
     };
 
     /**
@@ -54,7 +79,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /** 
-     * Reference to the div tag with class name application-border 
+     * Reference to the div tag with class name product-border 
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -100,6 +125,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     </div>
                     { this.renderDescription() }
                 </div>
+
+                { this.renderProducerLightbox() }
+                { this.renderImageLightbox() }
 
 				<style jsx>{`
 
@@ -189,7 +217,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
                         /** Display sections alongside each other */
-                        margin: 7px;
+                        margin: 7px 7px 5px 7px;
                         display: flex;
                         flex-direction: row;
 
@@ -211,7 +239,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         return (
             <section className="section-thumbnail">
                 <div className="thumbnail">
-                    <Thumbnail src={require("src/assets/dummy/sif.PNG")} />
+                    <Thumbnail src={require("src/assets/dummy/product.jpg")} callback={ this.openImageLightbox } />
                 </div>
                 <img    
                     className="flag" 
@@ -222,11 +250,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                 <style jsx>{`
 
-                    /** Thumbnail img in the .section-user */
+                    /** Thumbnail img in the .section-thumbnail */
                     .thumbnail {
                         height: 70px;
                         width: 70px;
-
                         margin-right: 30px;
                     }
 
@@ -240,7 +267,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         top: -5px;
                         left: 50px;
 
-                        z-index: 1;
+                        z-index: 2;
                     }
                 `}</style>
             </section>
@@ -349,7 +376,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                             max-width: calc(100% - 60px);
 
                             margin-top: 8px;
-                            margin-left: 12px;
+                            margin-left: 7px;
                         }
                     }
                 `}</style>
@@ -372,7 +399,13 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     <p>
                         {product.description}
                     </p>
-                    <span>See producer profile</span>
+                    <button 
+                        className="profile-link"
+                        onClick={this.openProducerLightbox}
+                    >
+                        <i className="user-icon">{getSVG("user2")}</i> 
+                        Producer profile
+                    </button>
                 </div>
 
                 <style jsx>{`
@@ -404,10 +437,54 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         margin: 4px 0 14px;
                     }
 
-                    /** Placement styling */
+                    /** Placement styling of description content */
                     .description-content {
-                        margin: 10px;
+                        margin: 7px;
                         border-top: 1px solid ${colors.secondary};
+                    }
+
+                    /** Button to producers profile */
+                    .profile-link {
+                        /** Positioning the icon and button text horizontally */
+                        display: flex;
+                        flex-direction: row;
+
+                        /** Colors and fonts */
+                        background-color: transparent;
+                        font-style: bold;
+                        font-family: ${ fonts.text };
+
+                        /** Size and border */
+                        border: none;
+                        border-radius: 5px;
+                        padding: 10px;
+
+                        /** Setup effects when hover */
+                        transition: background-color 0.1s linear;
+                        cursor: pointer;
+
+                        /** 
+                         * Positioning the button just outside the border of its
+                         * parent, so it does not look as malplaced when not
+                         * hovering
+                         */
+                        margin-left: -5px;
+
+                    }
+
+                    .profile-link:hover {
+                        background-color: rgba(219,208,239,0.5);
+                    }
+
+                    /** User icon placed in button */
+                    .profile-link i {
+                        height: 17px;
+                        width: 17px;
+
+                        color: ${ colors.primary };
+
+                        /** Some space between icon and button text */
+                        margin-right: 5px;
                     }
                 `}</style>
             </div>
@@ -429,8 +506,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         position: absolute;
 
                         /** Placing the chevron so it lines up with the other elements */
-                        bottom: 5px;
-                        right: 10px;
+                        bottom: 0;
+                        right: 8px;
 
                         /** Specify dimensions of chevron within */
                         display: block;
@@ -444,9 +521,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         z-index: 10;
 
                         /** When mobile size, make chevron smaller */
-                        &.isSmall {
+                        &.isSmall {                            
                             height: 15px;
                             width: 21px;
+
+                            /** Position Chevron a bit higher when mobile size */
+                            bottom: 3px;
                         }
 
                         &:hover {
@@ -476,7 +556,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                         /** When mobile size, position button in the middle */
                         &.isSmall {
-                            left: 110px;
+                            left: 105px;
                             top: 35px;
                             right: unset;
                         }
@@ -484,6 +564,75 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Internal renderer that'll render the producer lightbox which will be displayed
+     * when desired
+     */
+    private renderProducerLightbox = () => {
+        return (
+            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
+                <UserDescription user={this.state.producer} />
+            </Lightbox>
+        );
+    }
+
+    /**
+     * Listener that'll open the producer lightbox once it has been executed
+     */
+    private openProducerLightbox = async () => {
+        // TODO: Display throbber while loading!!!!!!!
+        if (!this.state.producer) {
+            const producerId = this.props.product.producerId;
+            const producer = await fetchUser(String(producerId));
+
+            this.setState({ producer, showProducer: true });
+        } else {
+            this.setState({ showProducer: true });
+        }
+    }
+
+    /**
+     * Mehtod that'll close the producer dropdown once it has been executed
+     */
+    private closeProducerLightbox = () => {
+        this.setState({ showProducer: false });
+    }
+
+    /**
+     * Internal renderer that'll render the image lightbox which will display
+     * the product image in fullscreen.
+     */
+    private renderImageLightbox = () => {
+        return (
+            <Lightbox active={this.state.showImage} onClose={ this.closeImageLightbox }>
+                <img src={require("src/assets/dummy/product.jpg")} alt="" role="presentation" />
+
+                <style jsx>{`
+                    img {
+                        /** Remove unwanted margin below image */
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                    }    
+                `}</style>
+            </Lightbox>
+        );
+    }
+
+    /**
+     * Listener that'll open the image lightbox once it has been executed
+     */
+    private openImageLightbox = () => {
+        this.setState({ showImage: true });
+    }
+
+    /**
+     * Mehtod that'll close the image dropdown once it has been executed
+     */
+    private closeImageLightbox = () => {
+        this.setState({ showImage: false });
     }
 
     /**
