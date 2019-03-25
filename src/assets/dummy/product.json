@@ -4,6 +4,7 @@
         "price": 20,
         "description": "These chickens are of the best quality in this country, you'll find no better chickens.",
         "country": "VE",
+        "isActive": false,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
@@ -12,6 +13,7 @@
         "price": 2835,
         "description": "Lorem voluptate exercitation deserunt exercitation veniam. Dolor duis in quis occaecat commodo aliquip ullamco nulla consequat occaecat. Enim sunt in deserunt nulla aute culpa nisi cillum in ad adipisicing minim nulla. Mollit consectetur laborum mollit proident culpa excepteur sint exercitation esse est consectetur. Anim commodo sunt in ea duis minim minim deserunt. Amet nulla ea proident velit deserunt qui sit mollit nisi voluptate fugiat elit laborum excepteur. Pariatur aute proident anim in culpa.\r\n",
         "country": "BE",
+        "isActive": true,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
@@ -20,6 +22,7 @@
         "price": 3410,
         "description": "Ea nostrud deserunt mollit quis. Qui Lorem aute voluptate officia dolor sit adipisicing elit laborum eu occaecat. Occaecat velit ipsum ad eiusmod minim dolore tempor laborum consequat eu cillum qui. Consectetur est quis adipisicing incididunt anim ipsum in duis. Sint incididunt quis magna est quis sit quis. Incididunt eu est mollit cillum ullamco ex deserunt aute.\r\n",
         "country": "BZ",
+        "isActive": true,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
@@ -28,6 +31,7 @@
         "price": 2922,
         "description": "Nisi sit proident elit minim qui sunt laboris ipsum Lorem aliqua ullamco ea irure. Et ex aliquip consequat nulla amet. Amet laborum excepteur et culpa occaecat laborum reprehenderit. Tempor ullamco enim reprehenderit id veniam dolor duis. Ea anim veniam esse pariatur et et ullamco officia enim irure voluptate. Voluptate eu voluptate deserunt eiusmod cillum. Sint cupidatat voluptate reprehenderit consectetur et nostrud consectetur amet ex occaecat amet fugiat.\r\n",
         "country": "CF",
+        "isActive": false,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
@@ -36,6 +40,7 @@
         "price": 4061,
         "description": "Do aliqua aliquip irure quis amet sunt reprehenderit amet eiusmod qui ipsum adipisicing. Id duis ullamco est magna nulla laboris. Labore aute non duis Lorem quis ut duis. Elit in duis deserunt nisi occaecat consectetur do excepteur anim nulla aliquip aute. Tempor et aute commodo aliquip consectetur sit pariatur consectetur. Irure amet est ea aute laboris velit et exercitation magna excepteur id eiusmod.\r\n",
         "country": "BR",
+        "isActive": true,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
@@ -44,6 +49,7 @@
         "price": 2400,
         "description": "In duis aliqua nulla reprehenderit veniam reprehenderit Lorem nisi. Commodo quis ullamco ea voluptate nulla laborum velit velit dolore. Do do ipsum cillum ipsum dolore. Enim cupidatat mollit nisi aute ullamco commodo sint sunt. Excepteur ea occaecat deserunt velit ea sunt aliquip proident officia culpa aliquip quis amet velit. Pariatur dolore et esse do.\r\n",
         "country": "BV",
+        "isActive": true,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
@@ -52,6 +58,7 @@
         "price": 4839,
         "description": "Enim amet Lorem amet commodo consectetur. Excepteur enim deserunt commodo irure id laborum officia ex aliqua minim velit. Nostrud cillum ut minim quis laborum. Esse in consequat nulla non et occaecat officia enim elit fugiat dolore enim. Dolor id qui quis esse officia sint mollit exercitation officia Lorem ullamco nisi. Reprehenderit labore sit laborum irure eiusmod elit anim nostrud culpa amet.\r\n",
         "country": "KH",
+        "isActive": false,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     }

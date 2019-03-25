@@ -26,7 +26,7 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
         return createPortal(
             <LightboxTransition in={this.props.active}>
                 <div className="lightbox__wrapper" onClick={this.props.onClose} role="none">
-                    <div className="lightbox">
+                    <div className="lightbox" onClick={this.stopPropagation} role="article">
                         {this.props.children}
                         {this.renderCloseButton()}
                     </div>
@@ -132,5 +132,13 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                 `}</style>
             </span>
         );
+    }
+
+    /**
+     * We need to stop propagation on clicks of the actual lightbox to avoid
+     * closing the lightbox simply by clicking on it
+     */
+    private stopPropagation = (evt: React.MouseEvent) => {
+        evt.stopPropagation();
     }
 }

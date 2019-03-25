@@ -10,6 +10,9 @@ import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
+import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
+import { UserModel } from "src/ts/models/UserModel";
+import { fetchUser } from "src/ts/store/createStore";
 
 export type ProductProps = {
     /**
@@ -47,6 +50,12 @@ export type ProductState = {
      * smaller viewports
      */
     isSmall: boolean;
+
+    /**
+     * Specifies the loaded producer of the application (if any). Will first be
+     * loaded if the user wishes to see information about the producer
+     */
+    producer?: UserModel;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -412,7 +421,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     <p>
                         {product.description}
                     </p>
-                    <button className="profile-link">
+                    <button 
+                        className="profile-link"
+                        onClick={this.openProducerLightbox}
+                    >
                         <i className="user-icon">{getSVG("user2")}</i> 
                         Producer profile
                     </button>
@@ -577,16 +589,27 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     // }
 
     /**
-     * heyhey
+     * Internal renderer that renders the edit functionality of the product
+     * 
+     * TODO: White inline comments
      */
     private renderProductEdit = () => {
+        const { product } = this.props;
+
         return(
             <div className={`product-more ${this.state.isSmall ? "isSmall" : ""}`}>
 
                 { !this.state.isSmall && (
                     <div className="edit-button-section">
-                        <button className="edit-button">Edit</button>
-                        <button className="status-button">Deactivate</button>
+                        <button className="edit-button"><i className="edit">{ getSVG("edit") }</i></button>
+                        {  
+                            product.isActive &&
+                            <button className="status-button"><i className="status">{ getSVG("check-square") }</i></button>
+                        }
+                        {  
+                            !product.isActive &&
+                            <button className="status-button"><i className="status">{ getSVG("square") }</i></button>
+                        }
                     </div>
                 )}
 
@@ -614,14 +637,17 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         background-color: transparent;
                         border: none;
                         cursor: pointer;
-                        padding: 5px;
+                        padding: 2px 5px;
                         font-style: bold;
                         font-family: ${ fonts.text };
-                        font-size: 12px;
+                    }
+
+                    .edit-button-section i {
+                        transform: scale(0.75);
                     }
 
                     .edit-button-section button:hover {
-                        background-color: ${ colors.pale };
+                        color: ${ colors.secondary };
                     }
 
                     .edit-button-section .edit-button {
@@ -642,6 +668,11 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         width: 24px;
                         cursor: pointer;
                     }
+
+                    .product-more i:hover {
+
+                    }
+
                 `}</style>
             </div>
         );
@@ -687,15 +718,30 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal helper that renders all information related to the user
      */
     protected renderInformation(): JSX.Element {
+        const { product } = this.props;
+
         return (
             <React.Fragment>
                 <span className="link" onClick={this.toggleDropdownState} role="link">
                     <i className="edit">{ getSVG("edit") }</i>
-                    Edit
+                    <span>Edit</span>
                 </span>
-                <span className="link" onClick={ this.toggleDropdownState} role="link">
-                    <i className="status">{ getSVG("check-square") }</i>
-                    Deactivate
+                <span onClick={ this.toggleDropdownState} role="button">
+
+                        {   product.isActive &&
+                            <div className="link">
+                                <i className="status">{ getSVG("check-square") }</i>
+                                <span>Deactivate</span>
+                            </div>
+                            
+                        }
+                        {   !product.isActive && 
+                            <div className="link">
+                                <i className="status">{ getSVG("square") }</i>
+                                <span>Activate</span>
+                            </div>
+                        }
+
                 </span>
 
                 <style jsx>{`
@@ -819,22 +865,32 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderProducerLightbox = () => {
         return (
-            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox} />
+            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
+                <UserDescription user={this.state.producer} />
+            </Lightbox>
         );
     }
 
-    // /**
-    //  * Listener that'll open the producer lightbox once it has been executed
-    //  */
-    // private openProducerLightbox = () => {
-    //     this.setState({ showImage: true });
-    // }
+    /**
+     * Listener that'll open the producer lightbox once it has been executed
+     */
+    private openProducerLightbox = async () => {
+        // TODO: Display throbber while loading!!!!!!!
+        if (!this.state.producer) {
+            const producerId = this.props.product.producerId;
+            const producer = await fetchUser(String(producerId));
+
+            this.setState({ producer, showProducer: true });
+        } else {
+            this.setState({ showProducer: true });
+        }
+    }
 
     /**
      * Mehtod that'll close the producer dropdown once it has been executed
      */
     private closeProducerLightbox = () => {
-        this.setState({ showImage: false });
+        this.setState({ showProducer: false });
     }
 
     /**
