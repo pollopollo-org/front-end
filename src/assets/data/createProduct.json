@@ -1,7 +1,7 @@
 {
     "title": "Create Product",
     "productTitle": "Product title",
-    "productPrice": "Price of the product",
+    "productPrice": "Price of the product in USD",
     "productDescription": "Product description", 
     "imageTypeAlert": "The file type of the uploaded image is not supprted. Please upload another image. The supported file types are: .png, .jpg, .jpeg.",
     "uploadPicture": "Upload picture",

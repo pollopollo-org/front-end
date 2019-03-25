@@ -110,15 +110,23 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                 <input
                     className="leftInput"
                     placeholder={createProductJson.productTitle}
+                    maxLength={255}
                     required
                     aria-required={true}
                     onChange={this.onTitleChanged}
                 />
                 <input
+                    type="number"
                     className="leftInput"
                     placeholder={createProductJson.productPrice}
+                    min={1}
+                    max={1000000}
+                    maxLength={255}
                     required
                     aria-required={true}
+                    aria-valuemin={1}
+                    aria-valuemax={1000000}
+                    aria-valuenow={this.state.price}
                     onChange={this.onPriceChanged}
                 />
                 <textarea
