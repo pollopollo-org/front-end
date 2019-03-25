@@ -1,7 +1,7 @@
-import { DataProviders } from "../store/Store";
+import { DataProviders } from "src/ts/store/Store";
 
-import Countries from "../../assets/countries.json";
-import { CountryCodes } from "./CountryCodes";
+import countriesJson from "src/assets/countries.json";
+import { CountryCodes } from "src/ts/models/CountryCodes";
 
 /**
  * Defines the data required to create an application model.
@@ -29,7 +29,7 @@ export class ApplicationModel {
      */
     public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ApplicationModel[]> {
         if (dataProivder === DataProviders.BACKEND) {
-            const data = Array.from((await import("../../assets/dummy/application.json")).default) as ApplicationModelData[];
+            const data = Array.from(<ApplicationModelData[]> (await import("../../assets/dummy/application.json")).default);
             const applications = [];
 
             for (const application of data) {
@@ -38,7 +38,7 @@ export class ApplicationModel {
 
             return applications;
         } else {
-            const data = Array.from((await import("../../assets/dummy/application.json")).default) as ApplicationModelData[];
+            const data = Array.from(<ApplicationModelData[]> (await import("../../assets/dummy/application.json")).default);
             const applications = [];
 
             for (const application of data) {
@@ -109,7 +109,7 @@ export class ApplicationModel {
 
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
-        const country = Countries.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
+        const country = countriesJson.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
 
         if (!country) {
             console.warn("Unable to find country from countryCode!");

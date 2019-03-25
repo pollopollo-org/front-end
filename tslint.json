@@ -1,5 +1,5 @@
 {
-  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "extends": ["tslint-microsoft-contrib/recommended"],
   "rules": {
     "interface-over-type-literal": false,
     "completed-docs": true,
@@ -8,7 +8,23 @@
       "double"
     ],
     "no-console": false,
-    "object-literal-sort-keys": false
+    "use-simple-attributes": false,
+    "no-string-based-set-timeout": false,
+    "no-suspicious-comment": false,
+    "object-literal-sort-keys": false,
+    "react-a11y-anchors": false,
+    "react-a11y-input-elements": false,
+    // We're going to slightly increase the allowed function body length, as
+    // we're using styled jsx a lot of places (and such render methods can
+    // quite easily grow above 100 lines - even in cases where we cannot
+    // break down the logic in smaller functions!)
+    "max-func-body-length": [
+      true,
+      140,
+      {
+        "ignore-parameters-to-function-regex": "^describe$"
+      }
+    ]
   },
   "linterOptions": {
     "exclude": [

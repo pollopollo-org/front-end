@@ -129,9 +129,10 @@ export class Menu extends React.Component<MenuProps> {
             }
 
             const isActive = this.props.history.location.pathname === link.path;
+            const className = isActive ? "active" : ""; 
 
             return (
-                <li key={link.name} className={isActive ? "active" : ""} onClick={this.props.closeHeader}>
+                <li key={link.name} className={className} onClick={this.props.closeHeader} role="link">
                     <Link to={link.path}>{link.name}</Link>
                     <span className="underline" />
 

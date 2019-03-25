@@ -1,6 +1,6 @@
 import { observable } from "mobx";
 
-import { DataProviders } from "../store/Store";
+import { DataProviders } from "src/ts/store/Store";
 
 type DummyModelData = {
     /**

@@ -2,7 +2,7 @@ import React from "react";
 
 import { getSVG } from "src/assets/svg";
 
-import { colors } from "../../config/colors";
+import { colors } from "src/ts/config/colors";
 
 type ThrobberProps = {
     /**

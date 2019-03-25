@@ -44,7 +44,7 @@ export type UserModelData = {
 // tslint:enable completed-docs
 
 /**
- * User model
+ * User model describing all content required on a user
  */
 export class UserModel {
     /**
