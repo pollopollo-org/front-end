@@ -200,7 +200,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             id="fileInput"
                             onChange={this.chooseImage}
                         />
-                        <label htmlFor="fileInput">Choose a file</label>
+                        <label htmlFor="fileInput">{editProfileJson.uploadPicture}</label>
                         <textarea
                             className="description"
                             value={this.state.description || ""}
@@ -400,7 +400,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     font-family: ${ fonts.heading };
                     font-weight: 300;
                     padding: 0.5rem 20px;
-                    width: 90px;
+                    width: 105px;
                     display: block;
                     margin: 10px auto 20px auto;
 
@@ -412,9 +412,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
 
                 .description{
                     box-shadow: none;
-                    width: 252px;
+                    width: 240px;
                     height: 139px;
-                    text-indent: 9px;
+                    padding: 10px 9px;
                     border: 1px solid ${ colors.pale };
                     color: ${ colors.black };
                     border-radius: 3px;

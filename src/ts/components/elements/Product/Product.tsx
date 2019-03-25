@@ -7,6 +7,8 @@ import { ProductModel } from "src/ts/models/ProductModel";
 import { Button, Chevron } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
+import { getSVG } from "src/assets/svg";
+import { fonts } from "src/ts/config";
 
 export type ProductProps = {
     /**
@@ -207,7 +209,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
                         /** Display sections alongside each other */
-                        margin: 7px;
+                        margin: 7px 7px 5px 7px;
                         display: flex;
                         flex-direction: row;
 
@@ -366,7 +368,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                             max-width: calc(100% - 60px);
 
                             margin-top: 8px;
-                            margin-left: 12px;
+                            margin-left: 7px;
                         }
                     }
                 `}</style>
@@ -389,7 +391,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     <p>
                         {product.description}
                     </p>
-                    <span>See producer profile</span>
+                    <button className="profile-link"><i className="user-icon">{getSVG("user2")}</i> Producer profile</button>
                 </div>
 
                 <style jsx>{`
@@ -421,10 +423,54 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         margin: 4px 0 14px;
                     }
 
-                    /** Placement styling */
+                    /** Placement styling of description content */
                     .description-content {
-                        margin: 10px;
+                        margin: 7px;
                         border-top: 1px solid ${colors.secondary};
+                    }
+
+                    /** Button to producers profile */
+                    .profile-link {
+                        /** Positioning the icon and button text horizontally */
+                        display: flex;
+                        flex-direction: row;
+
+                        /** Colors and fonts */
+                        background-color: transparent;
+                        font-style: bold;
+                        font-family: ${ fonts.text };
+
+                        /** Size and border */
+                        border: none;
+                        border-radius: 5px;
+                        padding: 10px;
+
+                        /** Setup effects when hover */
+                        transition: background-color 0.1s linear;
+                        cursor: pointer;
+
+                        /** 
+                         * Positioning the button just outside the border of its
+                         * parent, so it does not look as malplaced when not
+                         * hovering
+                         */
+                        margin-left: -5px;
+
+                    }
+
+                    .profile-link:hover {
+                        background-color: rgba(219,208,239,0.5);
+                    }
+
+                    /** User icon placed in button */
+                    .profile-link i {
+                        height: 17px;
+                        width: 17px;
+
+                        color: ${ colors.primary };
+
+                        /** Some space between icon and button text */
+                        margin-right: 5px;
                     }
                 `}</style>
             </div>
@@ -446,8 +492,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         position: absolute;
 
                         /** Placing the chevron so it lines up with the other elements */
-                        bottom: 5px;
-                        right: 10px;
+                        bottom: 0;
+                        right: 8px;
 
                         /** Specify dimensions of chevron within */
                         display: block;
@@ -461,9 +507,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         z-index: 10;
 
                         /** When mobile size, make chevron smaller */
-                        &.isSmall {
+                        &.isSmall {                            
                             height: 15px;
                             width: 21px;
+
+                            /** Position Chevron a bit higher when mobile size */
+                            bottom: 3px;
                         }
 
                         &:hover {
@@ -493,7 +542,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                         /** When mobile size, position button in the middle */
                         &.isSmall {
-                            left: 110px;
+                            left: 105px;
                             top: 35px;
                             right: unset;
                         }

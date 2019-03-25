@@ -3,12 +3,15 @@ import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom
 
 import { routes } from "src/ts/config/routes";
 
+
+import { CreateProduct } from "src/ts/components/pages/CreateProduct/CreateProduct";
 import { EditProfile } from "src/ts/components/pages/EditProfile/EditProfile";
 import { FrontPage } from "src/ts/components/pages/FrontPage/FrontPage";
 import { LoginForm } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterForm } from "src/ts/components/pages/RegisterForm/RegisterForm";
 import { UserProfile } from "src/ts/components/pages/UserProfile/UserProfile";
 import { Footer } from "src/ts/components/layout/Footer/Footer";
+
 
 /**
  * The main container is responsible for wrapper all pages within it, while also
@@ -30,6 +33,7 @@ export class UnwrappedMainContainer extends React.PureComponent<RouteComponentPr
                         <Route exact path={routes.viewProfile.path} component={UserProfile} />
                         <Route exact path={routes.login.path} component={LoginForm} />
                         <Route exact path={routes.editProfile.path} component={EditProfile} />
+                        <Route exact path={routes.createProduct.path} component={CreateProduct} />
                     </Switch>
                 </main>
 
