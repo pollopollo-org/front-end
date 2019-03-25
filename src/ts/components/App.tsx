@@ -2,16 +2,16 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { TransitionGroup } from "react-transition-group";
 
-import { createStore } from "../store/createStore";
-import { StoreProvider } from "../store/injectStore";
-import { Store } from "../store/Store";
+import { createStore } from "src/ts/store/createStore";
+import { StoreProvider } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
 
-import { asyncTimeout } from "../utils";
-import { CSS } from "./layout/CSS";
-import { Header } from "./layout/Header/Header";
-import { HeaderFade } from "./layout/Header/HeaderFade";
-import { MainContainer } from "./layout/MainContainer";
-import { InitialFade } from "./transitions/InitialFade";
+import { asyncTimeout } from "src/ts/utils";
+import { CSS } from "src/ts/components/layout/CSS";
+import { Header } from "src/ts/components/layout/Header/Header";
+import { HeaderFade } from "src/ts/components/layout/Header/HeaderFade";
+import { MainContainer } from "src/ts/components/layout/MainContainer";
+import { InitialFade } from "src/ts/components/transitions/InitialFade";
 
 type AppState = {
 	/**

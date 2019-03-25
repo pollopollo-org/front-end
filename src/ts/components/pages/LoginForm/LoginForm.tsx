@@ -6,13 +6,13 @@ import { colors } from "src/ts/config/colors";
 import { fonts } from "src/ts/config/fonts";
 import { routes } from "src/ts/config/routes";
 
-import LoginFormLabels from "src/assets/data/loginForm.json";
+import loginFormJson from "src/assets/data/loginForm.json";
 import { apis } from "src/ts/config/apis";
 import { fetchUser } from "src/ts/store/createStore";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
-import { Throbber } from "../../utils";
+import { Throbber } from "src/ts/components/utils";
 
 type LoginFormProps = {
     /**
@@ -49,11 +49,12 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
     /**
      * Render the component
      */
+    // tslint:disable-next-line max-func-body-length
     public render(): JSX.Element {
         return (
             <div className="loginCenterWrapper">
                 <div className="loginSpacer">
-                    <h1>{LoginFormLabels.title}</h1>
+                    <h1>{loginFormJson.title}</h1>
                     <div className="loginFormContainer">
                         <div className="container">
                             <form onSubmit={this.onSubmit}>
@@ -61,31 +62,33 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                                     <input
                                         type="email"
                                         className="loginInput Email"
-                                        placeholder={ LoginFormLabels.EmailInputLabel }
+                                        placeholder={ loginFormJson.EmailInputLabel }
                                         id="user_name"
                                         required
-                                        onChange={event => this.setState({ email: event.target.value, })}
+                                        aria-required={true}
+                                        onChange={this.onEmailChanged}
                                     />
                                 </div>
                                 <div className="loginForm Password">
                                     <input
                                         type="password"
                                         className="loginInput Password"
-                                        placeholder={ LoginFormLabels.PasswordInputLabel }
+                                        placeholder={ loginFormJson.PasswordInputLabel }
                                         id="user_password"
                                         required
-                                        onChange={event => this.setState({ password: event.target.value, })}
+                                        aria-required={true}
+                                        onChange={this.onPasswordChanged}
                                     />
                                 </div>
                                 <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                                    <span className="text">{LoginFormLabels.buttonText}</span>
+                                    <span className="text">{loginFormJson.buttonText}</span>
                                     <span className="throbber">
                                         <Throbber size={30} relative={true} inverted={true} />
                                     </span>
                                 </button>
                             </form>
                             <Link className="link registerLink" to={routes.register.path}>
-                                {LoginFormLabels.linkQuestion} <b>{LoginFormLabels.linkSignUpText}</b>
+                                {loginFormJson.linkQuestion} <b>{loginFormJson.linkSignUpText}</b>
                             </Link>
                         </div>
                     </div>
@@ -255,6 +258,22 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onEmailChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ email: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ password: evt.currentTarget.value });
     }
 
     /**

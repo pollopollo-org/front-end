@@ -3,13 +3,15 @@ import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom
 
 import { routes } from "src/ts/config/routes";
 
-import { CreateProduct } from "../pages/CreateProduct/CreateProduct";
-import { EditProfile } from "../pages/EditProfile/EditProfile";
-import { FrontPage } from "../pages/FrontPage/FrontPage";
-import { LoginForm } from "../pages/LoginForm/LoginForm";
-import { RegisterForm } from "../pages/RegisterForm/RegisterForm";
-import { UserProfile } from "../pages/UserProfile/UserProfile";
-import { Footer } from "./Footer/Footer";
+
+import { CreateProduct } from "src/ts/components/pages/CreateProduct/CreateProduct";
+import { EditProfile } from "src/ts/components/pages/EditProfile/EditProfile";
+import { FrontPage } from "src/ts/components/pages/FrontPage/FrontPage";
+import { LoginForm } from "src/ts/components/pages/LoginForm/LoginForm";
+import { RegisterForm } from "src/ts/components/pages/RegisterForm/RegisterForm";
+import { UserProfile } from "src/ts/components/pages/UserProfile/UserProfile";
+import { Footer } from "src/ts/components/layout/Footer/Footer";
+
 
 /**
  * The main container is responsible for wrapper all pages within it, while also

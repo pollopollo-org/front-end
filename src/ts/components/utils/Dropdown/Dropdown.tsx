@@ -1,7 +1,7 @@
 import React from "react";
 import { TransitionGroup } from "react-transition-group";
 import { colors } from "src/ts/config";
-import { Fade } from "./Fade";
+import { Fade } from "src/ts/components/utils/Dropdown/Fade";
 
 /**
  * Enumeration of different directions that the dropdowns can be pointing

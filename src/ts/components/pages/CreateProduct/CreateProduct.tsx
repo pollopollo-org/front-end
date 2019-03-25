@@ -1,5 +1,5 @@
 import React from "react";
-import createProduct from "src/assets/data/createProduct.json";
+import createProductJson from "src/assets/data/createProduct.json";
 import { colors, fonts } from "src/ts/config";
 
 /**
@@ -38,28 +38,31 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
         return (
             <div>
                 <div className="content">
-                    <h1>{createProduct.title}</h1>
+                    <h1>{createProductJson.title}</h1>
                     <form>
                         <div className="formInput">
                             <div className="leftColumn">
                                 <input
                                     className="leftInput"
-                                    placeholder={createProduct.productTitle}
+                                    placeholder={createProductJson.productTitle}
                                     required
-                                    onChange={event => this.setState({ title: event.target.value, })}
+                                    aria-required={true}
+                                    onChange={this.onTitleChanged}
                                 />
                                 <input
                                     className="leftInput"
-                                    placeholder={createProduct.productPrice}
+                                    placeholder={createProductJson.productPrice}
                                     required
-                                    onChange={event => this.setState({ price: event.target.value, })}
+                                    aria-required={true}
+                                    onChange={this.onPriceChanged}
                                 />
                                 <textarea
                                     className="leftInput"
                                     value={this.state.description || ""}
-                                    placeholder={ createProduct.productDescription }
+                                    placeholder={ createProductJson.productDescription }
                                     required
-                                    onChange={event => this.setState({description: event.target.value})}
+                                    aria-required={true}
+                                    onChange={this.onDescriptionChanged}
                                 />
                             </div>
                             <div className="rightColumn">
@@ -83,7 +86,7 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                         display: flex;
                     }
 
-$                   /**
+                    /**
                      * Set styling of input fields and textareas to match the
                      * one generally used in the project
                      */
@@ -156,5 +159,29 @@ $                   /**
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onTitleChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ title: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onPriceChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ price: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onDescriptionChanged = (evt: React.FormEvent<HTMLTextAreaElement>) => {
+        this.setState({ description: evt.currentTarget.value });
     }
 }

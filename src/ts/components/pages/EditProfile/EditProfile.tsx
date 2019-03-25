@@ -1,6 +1,6 @@
 import React from "react";
 import { RouterProps, withRouter } from "react-router";
-import EditProfileLabels from "src/assets/data/editProfile.json";
+import editProfileJson from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
 import { colors, fonts, routes } from "src/ts/config";
 import { apis } from "src/ts/config/apis";
@@ -9,8 +9,8 @@ import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
-import { Throbber } from "../../utils";
-import { SelectCountry } from "../../utils/SelectCountry";
+import { Throbber } from "src/ts/components/utils";
+import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 
 type EditProfileProps = {
     /**
@@ -125,6 +125,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Main render method for the entire component
      */
+    // tslint:disable-next-line max-func-body-length
     public render(): JSX.Element{
         if (!this.props.store.user) {
             return <h1>No user currently logged in!</h1>;
@@ -132,23 +133,25 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
 
         return(
             <div className="allSection">
-            <h1>{ EditProfileLabels.title }</h1>
+            <h1>{ editProfileJson.title }</h1>
             <form onSubmit={this.sendToBackEnd}>
                 <div className="inputPicDescSection">
                     <div className="inputFieldsSection">
                         <input
                             className="input name first"
                             required
+                            aria-required={true}
                             value={this.state.firstName}
-                            placeholder={ EditProfileLabels.firstName }
-                            onChange={event => this.setState({firstName: event.target.value })}
+                            placeholder={ editProfileJson.firstName }
+                            onChange={this.onFirstnameChanged}
                         />
                         <input
                             className="input name last"
                             required
+                            aria-required={true}
                             value={this.state.lastName}
-                            placeholder={ EditProfileLabels.lastName }
-                            onChange={event => this.setState({lastName: event.target.value })}
+                            placeholder={ editProfileJson.lastName }
+                            onChange={this.onLastnameChanged}
                         />
                         <div className="SelectCountryDiv">
                             <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
@@ -158,44 +161,51 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input email"
                             required
                             value={this.state.email}
-                            placeholder={ EditProfileLabels.email }
-                            onChange={event => this.setState({email: event.target.value })}
+                            aria-required={true}
+                            placeholder={ editProfileJson.email }
+                            onChange={this.onEmailChanged}
                         />
                         {this.state.userType === "Producer" &&
                             <input
                             className="input wallet"
                             value={this.state.wallet}
-                            placeholder={ EditProfileLabels.wallet}
-                            onChange={event => this.setState({wallet: event.target.value})}
+                            aria-required={true}
+                            placeholder={ editProfileJson.wallet}
+                            onChange={this.onWalletChanged}
                             />
                         }
                         <input
                             type="password"
                             className="input password first"
                             value={this.state.password}
-                            placeholder={ EditProfileLabels.password }
-                            onChange={event => this.setState({password: event.target.value })}/>
+                            placeholder={ editProfileJson.password }
+                            onChange={this.onPasswordChanged}/>
                         <input
                             type="password"
                             className="input password second"
                             value={this.state.repeatedPassword}
-                            placeholder={ EditProfileLabels.confirmPassword }
-                            onChange={event => this.setState({repeatedPassword: event.target.value })}/>
+                            placeholder={ editProfileJson.confirmPassword }
+                            onChange={this.onValidationPasswordChanged}/>
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                                {(isNullOrUndefined(this.state.profilePicture) && <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
+                                {(
+                                    isNullOrUndefined(this.state.profilePicture) 
+                                        ? <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>
+                                        : <img className="currentPicture" src={ this.getProfilePictureURL() } alt="" role="presentation"/>  
+                                )}
                         </div>
                         <input
                             type="file"
                             id="fileInput"
-                            onChange={event => this.chooseImage(event)}/>
+                            onChange={this.chooseImage}
+                        />
                         <label htmlFor="fileInput">Choose a file</label>
                         <textarea
                             className="description"
                             value={this.state.description || ""}
-                            placeholder={ EditProfileLabels.decription }
-                            onChange={event => this.setState({description: event.target.value })}/>
+                            placeholder={ editProfileJson.decription }
+                            onChange={this.onDescriptionChanged}/>
                     </div>
                 </div>
                 <div className="borderLine"/>
@@ -205,13 +215,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             type="password"
                             className="input password old"
                             required
+                            aria-required={true}
                             value={this.state.oldPassword}
-                            placeholder={ EditProfileLabels.oldPassword }
-                            onChange={event => this.setState({oldPassword: event.target.value })}/>
+                            placeholder={ editProfileJson.oldPassword }
+                            onChange={this.onOldPasswordChanged}/>
                     </div>
                     <div className="submitDiv">
                         <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                            <span className="text">{EditProfileLabels.saveButton}</span>
+                            <span className="text">{editProfileJson.saveButton}</span>
                             <span className="throbber">
                                 <Throbber size={30} relative={true} inverted={true} />
                             </span>
@@ -522,6 +533,70 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     }
 
     /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onFirstnameChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ firstName: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onLastnameChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ lastName: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onEmailChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ email: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onWalletChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ wallet: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ password: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onValidationPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ repeatedPassword: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onDescriptionChanged = (evt: React.FormEvent<HTMLTextAreaElement>) => {
+        this.setState({ description: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onOldPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ oldPassword: evt.currentTarget.value });
+    }
+
+    /**
      * Is passed down to SelectCountry and allows us to extract its value
      */
     private newCountrySelected = (newCountry:string) => {
@@ -541,7 +616,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 )
                 )
                 {
-                    alert(EditProfileLabels.imageTypeAlert);
+                    alert(editProfileJson.imageTypeAlert);
                     return;
                 }
 
@@ -599,7 +674,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     newPassword: this.state.repeatedPassword,
                     password: this.state.oldPassword,
                     thumbnail: this.imageToData(),
-                    wallet: this.state.wallet
+                    wallet: this.state.wallet,
+                    description: this.state.description,
                 })
             });
 

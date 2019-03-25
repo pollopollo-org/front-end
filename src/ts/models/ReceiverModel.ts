@@ -1,5 +1,5 @@
-import { DataProviders } from "../store/Store";
-import { UserModel, UserModelData } from "./UserModel";
+import { DataProviders } from "src/ts/store/Store";
+import { UserModel, UserModelData } from "src/ts/models/UserModel";
 
 /**
  * Defines the data required to create a receiver model.
@@ -48,7 +48,7 @@ export class ReceiverModel extends UserModel {
         } else {
             // Use dummydata
             const data = await import("../../assets/dummy/receiverUser.json");
-            return new ReceiverModel(data as ReceiverModelData);
+            return new ReceiverModel(<ReceiverModelData> data);
         }
     }
 

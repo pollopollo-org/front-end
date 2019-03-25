@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 
-import { ApplicationModel } from "../models/ApplicationModel";
-import { UserModel } from "../models/UserModel";
+import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { UserModel } from "src/ts/models/UserModel";
 
 /**
  * Specifies where the created models should fetch their data from.
@@ -10,7 +10,7 @@ export enum DataProviders {
     DUMMY = "dummy",
     BACKEND = "backend",
     LOCALBACKEND = "localBackend",
-};
+}
 
 /**
  * Specifies the arguments required to create a store.

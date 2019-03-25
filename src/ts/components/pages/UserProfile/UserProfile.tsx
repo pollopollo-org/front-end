@@ -6,7 +6,7 @@ import { colors } from "src/ts/config/colors";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
-import profile from "src/assets/data/profile.json";
+import profileJson from "src/assets/data/profile.json";
 
 import { getSVG } from "src/assets/svg";
 import { UserModel } from "src/ts/models/UserModel";
@@ -75,6 +75,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     /**
      * Main render method, used to render ProfilePage
      */
+    // tslint:disable-next-line max-func-body-length
     public render() : JSX.Element{
         const { renderedUser: user } = this.state;
 
@@ -102,20 +103,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <div className="image">
                                     { (isNullOrUndefined(user.thumbnail)
                                         ? <i className="user">{ getSVG("user2", {strokeColor: colors.primary}) }</i>
-                                        : <img src={require("src/assets/dummy/sif.PNG")} />)
+                                        : <img src={require("src/assets/dummy/sif.PNG")} alt="" role="presentation" />)
                                     }
                                 </div>
-                                <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
-                                <p><span className="bold">{profile.country}</span> {this.extractCountry()}</p>
-                                <p><span className="bold">{profile.email}</span> {user.email}</p>
+                                <p><span className="bold">{profileJson.name}</span> {user.firstName} {user.surName}</p>
+                                <p><span className="bold">{profileJson.country}</span> {this.extractCountry()}</p>
+                                <p><span className="bold">{profileJson.email}</span> {user.email}</p>
                                 <div className="twoliner">
-                                    <p><span className="bold">{profile.desc}</span> </p>
+                                    <p><span className="bold">{profileJson.desc}</span> </p>
                                     {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
                                 </div>
 
                                 {isProducerUser(user) && (
                                     <div className="twoliner">
-                                        <p><span className="bold">{profile.wallet}</span> </p>
+                                        <p><span className="bold">{profileJson.wallet}</span> </p>
                                         {isNullOrUndefined(user.wallet) ? <p><i>There is no wallet string to show.</i></p> : <p>{user.wallet}</p>}
                                     </div>
                                 )}
