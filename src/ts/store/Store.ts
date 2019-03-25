@@ -1,5 +1,6 @@
 import { observable } from "mobx";
 
+import { ProductModel } from "src/ts/models/ProductModel";
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { UserModel } from "src/ts/models/UserModel";
 
@@ -21,6 +22,7 @@ export enum DataProviders {
 type StoreArgs = {
     applications: ApplicationModel[];
     user?: UserModel;
+    products: ProductModel[];
 }
 // tslint:enable completed-docs
 
@@ -39,6 +41,13 @@ export class Store {
     public readonly applications: ApplicationModel[];
 
     /**
+     * Contains a reference to the ProductModel, which contains fetched data
+     * about an product.
+     */
+    @observable
+    public readonly products: ProductModel[];
+
+    /**
      * Contains a reference to the UserModel, which contains fetched data
      * about a user - either a producer or a receiver.
      */
@@ -54,6 +63,7 @@ export class Store {
     public didMount: boolean = false;
 
     constructor(initial: StoreArgs) {
+        this.products = initial.products;
         this.applications = initial.applications;
         this.user = initial.user;
     }
