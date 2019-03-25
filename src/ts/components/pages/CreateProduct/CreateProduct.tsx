@@ -50,7 +50,7 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
         return (
             <div className="content">
                 <h1>{createProductJson.title}</h1>
-                <form>
+                <form onSubmit={this.sendToBackEnd}>
                     <div className="formInput">
                         { this.renderLeftColumn() }
                         { this.renderRightColumn() }
@@ -76,7 +76,25 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                     .formInput {
                         display: flex;
                     }
-                    
+
+                    /* For mobile phones */
+                    @media (max-width: 666px) {
+                        h1 {
+                            margin-top: 30px;
+                        }
+
+                        .content {
+                            text-align: center;
+                            width: 100%;
+                        }
+
+                        .formInput {
+                            max-width: 400px;
+                            margin: 0 auto;
+                            padding: 0 15px;
+                            flex-direction: column;
+                        }
+                    }
                 `}</style>
             </div>
         );
@@ -92,15 +110,23 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                 <input
                     className="leftInput"
                     placeholder={createProductJson.productTitle}
+                    maxLength={255}
                     required
                     aria-required={true}
                     onChange={this.onTitleChanged}
                 />
                 <input
+                    type="number"
                     className="leftInput"
                     placeholder={createProductJson.productPrice}
+                    min={1}
+                    max={1000000}
+                    maxLength={255}
                     required
                     aria-required={true}
+                    aria-valuemin={1}
+                    aria-valuemax={1000000}
+                    aria-valuenow={this.state.price}
                     onChange={this.onPriceChanged}
                 />
                 <textarea
@@ -163,6 +189,27 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                         padding: 10px 9px;
                         resize: none;
                     }
+
+                    /* For mobile phones */
+                    @media (max-width: 666px) {
+                        .leftColumn {
+                            order: 2;
+                        }
+
+                        input, textarea {
+                            margin: 0 auto;
+                            margin: 15px 0;
+                        }
+
+                        input {
+                            width: 100%;
+                        }
+
+                        textarea {
+                            width: calc(100% - 16px);
+                            
+                        }
+                    }
                 `}</style>
             </div>
         );
@@ -189,12 +236,17 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                 <label htmlFor="fileInput"> {createProductJson.uploadPicture}</label>
 
                 <style jsx>{`
-                    .currentPictureDiv{
+                    .currentPictureDiv {
                         height: 258px;
                         width: 258px;
                         margin: 15px 0;
                         background-color: ${colors.pale};
                         border: 2px solid ${colors.pale};
+                    }
+
+                    img {
+                        height: 258px;
+                        width: 258px;
                     }
 
                     i {
@@ -232,6 +284,23 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                     [type="file"] + label:hover {
                         background: ${colors.primary};
                     }
+
+                    /* For mobile phones */
+                    @media (max-width: 666px) {
+                        .rightColumn {
+                            order: 1;
+                        }
+
+                        .currentPictureDiv {
+                            margin: 0 auto 15px auto;
+                            max-width: 100%;
+                        }
+
+                        [type="file"] + label {
+                            margin-bottom: 15px;
+                        }
+                    }
+
                 `}</style>
             </div>
         );
@@ -268,18 +337,20 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
 
                         & .throbber {
                             /**
-                                * Position a throbber in the middle to be displayed
-                                * while requests are ongoing
-                                */
+                            * Position a throbber in the middle to be displayed
+                            * while requests are ongoing
+                            */
                             position: absolute;
                             left: calc(50% - 15px);
                             top: calc(50% - 15px);
                             opacity: 0;
                             overflow: hidden;
+                            width: 140px;
+                            height: 40px;
 
                             /**
-                                * prepare transitions
-                                */
+                            * prepare transitions
+                            */
                             transition: opacity 0.2s linear;
                         }
 
@@ -307,6 +378,16 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
                     button:hover {
                         background-color: ${ colors.primary };
                     }
+
+                    /* For mobile phones */
+                    @media (max-width: 666px) {
+                        button {
+                            margin: 15px auto;
+                            margin-bottom: 35px;
+                            max-width: 100%;
+                        }
+                    }
+
                 `}</style>
             </button>
         );
@@ -366,6 +447,17 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
             return "";
         } else{
             return window.URL.createObjectURL(this.state.productPicture);
+        }
+    }
+
+    /**
+     * Send the information to the backend
+     */
+    private sendToBackEnd = async (evt: React.FormEvent) => {
+        evt.preventDefault();
+
+        if (this.state.isPending) {
+            return;
         }
     }
 }
