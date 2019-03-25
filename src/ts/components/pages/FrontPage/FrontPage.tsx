@@ -30,21 +30,15 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
             <div>
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
+                    <Product product={this.props.store.products[0]} />
+
                     {this.props.store.applications.map((application, index) => {
                         return <Application key={index} application={application} />;
                     })}
                 </div>
-                <div className="product-example">
-                    <Product product={this.props.store.products[0]} />
-                </div>
+
 
                 <style jsx>{`
-
-                    /** temp */
-                    .product-example {
-                        width: 50%;
-                        margin: 20px 0;
-                    }
 
                     h1{
                         /** Override defaults */

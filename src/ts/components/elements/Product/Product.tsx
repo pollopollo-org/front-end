@@ -89,15 +89,15 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                             { this.renderContentSection() }
                         </div>
 
-                        { this.renderDonateButton() }
+                        { this.renderApplyButton() }
 
                         { this.state.isSmall && (
-                            this.renderMotivationTeaser()
+                            this.renderDescriptionTeaser()
                         )}
 
                         { this.renderChevron() }
                     </div>
-                    { this.renderMotivation() }
+                    { this.renderDescription() }
                 </div>
 
 				<style jsx>{`
@@ -183,13 +183,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     /** The product itself  */
                     .product {
                         position: relative;
-                        overflow: hidden;
                     }
 
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
                         /** Display sections alongside each other */
-                        margin: 0 0 0 10px;
+                        margin: 10px;
                         display: flex;
                         flex-direction: row;
 
@@ -227,23 +226,21 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                     /** Thumbnail img in the .section-user */
                     .thumbnail {
-                        height: 60px;
-                        width: 60px;
+                        height: 70px;
+                        width: 70px;
 
-                        /** Margin between this and the name element */
-                        margin-bottom: 4px;
+                        margin-right: 30px;
                     }
 
                     /** Flag showing the users country */
                     .flag {
                         position: absolute;
-                        overflow: initial;
                         height: 20px;
                         width: 30px;
 
                         /** Positioning it on the top-right of the thumbnail */
                         top: -5px;
-                        left: 45px;
+                        left: 50px;
 
                         z-index: 1;
                     }
@@ -263,7 +260,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 <span className={`product ${this.state.isSmall ? "isSmall" : ""}`}>{product.title}</span>
 
                 { !this.state.isSmall && (
-                    this.renderMotivationTeaser()
+                    this.renderDescriptionTeaser()
                 )}
 
                 <style jsx>{`
@@ -310,15 +307,15 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Internal renderer that renders the motivation teaser section of the
+     * Internal renderer that renders the description teaser section of the
      * product
      */
-    private renderMotivationTeaser = () => {
+    private renderDescriptionTeaser = () => {
         const { product } = this.props;
 
         return (
             <span
-                className={`motivation__teaser ${this.state.isSmall ? "isSmall" : ""}`}
+                className={`description__teaser ${this.state.isSmall ? "isSmall" : ""}`}
                 style={{
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
@@ -327,12 +324,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 {product.description}
 
                 <style jsx>{`
-                    .motivation__teaser {
+                    .description__teaser {
                         /** Position the teaser on the bottom of the content section */
                         position: absolute;
                         bottom: 0;
 
-                        /** Force motivation to remain on one line and crop on overflow */
+                        /** Force description to remain on one line and crop on overflow */
                         white-space: nowrap;
                         text-overflow: ellipsis;
                         overflow: hidden;
@@ -345,7 +342,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         transition: opacity 0.15s linear;
 
                         /**
-                        *   When mobile size, motivation teaser is positioned
+                        *   When mobile size, description teaser is positioned
                         *   at the bottom
                         */
                         &.isSmall {
@@ -363,20 +360,21 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Internal renderer that renders the motivation section of the product
+     * Internal renderer that renders the description section of the product
      */
-    private renderMotivation = () => {
+    private renderDescription = () => {
         const { product } = this.props;
 
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className="description-content">
-                    <h3>Requested product</h3>
+                    <h3>Product</h3>
                     <p>{product.title}</p>
-                    <h3>Motivation</h3>
+                    <h3>Description</h3>
                     <p>
                         {product.description}
                     </p>
+                    <span>See producer profile</span>
                 </div>
 
                 <style jsx>{`
@@ -423,7 +421,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderChevron = () => {
         return (
-            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} alt="" role="presentation">
+            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} role="presentation">
                 <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
@@ -463,18 +461,16 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Internal renderer that renders the donate button of the product
+     * Internal renderer that renders the apply button of the product
      */
-    private renderDonateButton = () => {
-        const { product } = this.props;
-
+    private renderApplyButton = () => {
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button text={`Donate $${product.price}`} />
+                <Button text={`Apply`} />
 
                 <style jsx>{`
                     .button-wrapper {
-                        /** Position the donate button in the top right corner */
+                        /** Position the apply button in the top right corner */
                         position: absolute;
                         right: 0;
                         top: 0;
@@ -482,8 +478,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                         /** When mobile size, position button in the middle */
                         &.isSmall {
-                            left: 100px;
-                            top: 40px;
+                            left: 110px;
+                            top: 35px;
                             right: unset;
                         }
                     }
