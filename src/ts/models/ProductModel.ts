@@ -4,7 +4,7 @@ import countriesJson from "src/assets/countries.json";
 import { CountryCodes } from "src/ts/models/CountryCodes";
 
 /**
- * Defines the data required to create an application model.
+ * Defines the data required to create a producer model.
  *
  * the fields have been commented in length within the actual class
  */
@@ -20,11 +20,11 @@ type ProductModelData = {
 // tslint:enable completed-docs
 
 /**
- * Example of a model, and how to implement one.
+ * Product model
  */
 export class ProductModel {
     /**
-     * Helper that instantiates a dummy model, populated with required data.
+     * Helper that instantiates a model, populated with required data.
      */
     public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ProductModel[]> {
         if (dataProivder === DataProviders.BACKEND) {
@@ -49,7 +49,7 @@ export class ProductModel {
     }
 
     /**
-     * Helper that instantiates a dummy model, populated with required data.
+     * Helper that instantiates a model, populated with required data.
      */
     public static async CREATE(dataProivder: DataProviders): Promise<ProductModel> {
         if (dataProivder === DataProviders.BACKEND) {
@@ -65,12 +65,12 @@ export class ProductModel {
     }
 
     /**
-     * Defines the countryCode of the country that applicant is coming from
+     * Defines the countryCode of the country that the producer is coming from
      */
     public readonly countryCode: CountryCodes;
 
     /**
-     * Defines the country that the applicant is coming from.
+     * Defines the country that the producer is coming from.
      */
     public readonly country: string;
 
@@ -97,7 +97,7 @@ export class ProductModel {
     public readonly producerId: number;
 
     /**
-     * Contains a thumbnail of the applicant
+     * Contains a thumbnail of the producer
      */
     public readonly thumbnail: string;
 
