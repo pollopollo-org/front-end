@@ -2,16 +2,16 @@ import React from "react";
 import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config/colors";
 
-import footer from "src/assets/data/footer.json";
+import footerJson from "src/assets/data/footer.json";
 
 /**
  * Footer to be placed at the bottom of all pages
  */
 export class Footer extends React.PureComponent {
-
 	/**
 	 * Main render method, used to render Footer
 	 */
+	// tslint:disable-next-line max-func-body-length
 	public render(): JSX.Element {
 		return (
 			<div>
@@ -20,14 +20,14 @@ export class Footer extends React.PureComponent {
 						{/* Contact information */}
 						<div className="col">
 							<div className="contactInfo">
-								<h4 className="title">{footer.contacttitle}</h4>
-								<h5>{footer.pressTitle}</h5>
+								<h4 className="title">{footerJson.contacttitle}</h4>
+								<h5>{footerJson.pressTitle}</h5>
 								<p>
-									<a href={`mailto:${footer.email}`}>{footer.email}</a>
+									<a href={`mailto:${footerJson.email}`}>{footerJson.email}</a>
 								</p>
-								<h5>{footer.community}</h5>
+								<h5>{footerJson.community}</h5> 
 								<p>
-									<a href={footer.discordURL} target="_blank">{footer.discord}</a>
+									<a href={footerJson.discordURL} target="_blank" rel="noreferrer">{footerJson.discord}</a>
 								</p>
 							</div>
 						</div>
@@ -42,24 +42,24 @@ export class Footer extends React.PureComponent {
 						{/* Contributors */}
 						<div className="col">
 							<div className="contributorsInfo">
-							<h4 className="title">{footer.contributorstitle}</h4>
+							<h4 className="title">{footerJson.contributorstitle}</h4>
 								<ul>
 									<li>
-										<a href="https://obyte.org/" target="_blank">
+										<a href="https://obyte.org/" target="_blank" rel="noreferrer">
 											<i className="obyte">
 												{ getSVG("obyte", {fillColor: "white"}) }
 											</i>
 										</a>
 									</li>
 									<li>
-										<a href="https://www.scrumwise.com/" target="_blank">
+										<a href="https://www.scrumwise.com/" target="_blank" rel="noreferrer">
 											<i className="scrumwise">
 												{getSVG("scrumwise")}
 											</i>
 										</a>
 									</li>
 									<li>
-										<a href="https://en.itu.dk/" target="_blank">
+										<a href="https://en.itu.dk/" target="_blank" rel="noreferrer">
 											<i className="itu">
 												{getSVG("itu")}
 											</i>

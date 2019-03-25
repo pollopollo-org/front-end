@@ -88,6 +88,7 @@
     "styled-jsx-plugin-postcss": "^2.0.0",
     "svgo": "^1.2.0",
     "svgo-loader": "^2.2.0",
+    "tslint-microsoft-contrib": "^6.1.0",
     "typescript": "^3.3.3333"
   },
   "jest": {

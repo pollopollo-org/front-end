@@ -4,7 +4,7 @@ import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
 import { ProductModel } from "src/ts/models/ProductModel";
-import { Button, Chevron } from "../../utils";
+import { Button, Chevron } from "src/ts/components/utils";
 
 export type ProductProps = {
     /**
@@ -47,10 +47,14 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private isTransitioning: boolean = false;
 
-    /** Reference to the div tag with class name description */
+    /** 
+     * Reference to the div tag with class name description 
+     */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** Reference to the div tag with class name application-border */
+    /** 
+     * Reference to the div tag with class name application-border 
+     */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
@@ -206,8 +210,18 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <section className="section-thumbnail">
-                <img className="thumbnail" src={require("src/assets/dummy/sif.PNG")} />
-                <img className="flag" title={product.country} src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`} />
+                <img 
+                    className="thumbnail" 
+                    src={require("src/assets/dummy/sif.PNG")} 
+                    role="presentation" 
+                    alt="" 
+                />
+                <img    
+                    className="flag" 
+                    title={product.country} 
+                    src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`} 
+                    alt={product.country} 
+                />
 
                 <style jsx>{`
 
@@ -409,7 +423,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderChevron = () => {
         return (
-            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible}>
+            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} alt="" role="presentation">
                 <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`

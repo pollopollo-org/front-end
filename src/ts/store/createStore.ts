@@ -1,13 +1,12 @@
-import { ApplicationModel } from "../models/ApplicationModel";
-import { ProducerModel, ProducerModelData } from "../models/ProducerModel";
-import { DataProviders, Store } from "./Store";
+import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { DataProviders, Store } from "src/ts/store/Store";
 
-import { apis } from "../config/apis";
+import { apis } from "src/ts/config/apis";
 
-import jwt_decode from "jwt-decode";
-import { ProductModel } from "../models/ProductModel";
-import { ReceiverModel, ReceiverModelData } from "../models/ReceiverModel";
-import { UserToken } from "../models/UserModel";
+import jwtDecode from "jwt-decode";
+import { ProductModel } from "src/ts/models/ProductModel";
+import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
+import { UserToken } from "src/ts/models/UserModel";
 
 /**
  * Cache used to prevent re-creating a store over and over again.
@@ -50,7 +49,7 @@ export async function fetchUser(userId?: string) {
         return;
     }
 
-    const parsedToken = jwt_decode(token) as UserToken;
+    const parsedToken = <UserToken> jwtDecode(token);
 
     const endPoint = apis.user.get.replace("{userId}", userId || parsedToken.nameid);
 
@@ -67,11 +66,11 @@ export async function fetchUser(userId?: string) {
 
         if (response.ok) {
             // Determine whether we're dealing with a producer or a receiver
-            if (true) {
-                return new ReceiverModel(userData as ReceiverModelData);
-            } else {
-                return new ProducerModel(userData as ProducerModelData);
-            }
+            // if (true) {
+                return new ReceiverModel(<ReceiverModelData> userData);
+            // } else {
+            //     return new ProducerModel(userData as ProducerModelData);
+            // }
         } else {
             return;
         }

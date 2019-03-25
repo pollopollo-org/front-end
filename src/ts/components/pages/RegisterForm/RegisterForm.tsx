@@ -3,9 +3,9 @@ import { colors, routes } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
 import { RouterProps, withRouter } from "react-router";
-import RegisterFormLabels from "src/assets/data/registerForm.json";
+import registerFormJson from "src/assets/data/registerForm.json";
 
-import { SelectCountry } from "../../utils/SelectCountry";
+import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 
 import { apis } from "src/ts/config/apis";
 import { ProducerModel, ProducerModelData } from "src/ts/models/ProducerModel";
@@ -13,7 +13,7 @@ import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
-import { Throbber } from "../../utils";
+import { Throbber } from "src/ts/components/utils";
 
 type RegisterFormProps = {
     /**
@@ -70,25 +70,28 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * Render the component
      */
+    // tslint:disable-next-line max-func-body-length
     public render(): JSX.Element {
         return (
             <div className="allSection">
-                <h1>{ RegisterFormLabels.title }</h1>
+                <h1>{ registerFormJson.title }</h1>
                 <form onSubmit={this.onSubmit}>
                     {/* First and last name */}
                     <div className="section">
                         <input
                             className="leftInput"
-                            placeholder={RegisterFormLabels.firstName}
+                            placeholder={registerFormJson.firstName}
                             maxLength={255}
                             required
-                            onChange={event => this.setState({ firstName: event.target.value })}
+                            aria-required={true}
+                            onChange={this.onFirstnameChanged}
                         />
                         <input
-                            placeholder={RegisterFormLabels.lastName}
+                            placeholder={registerFormJson.lastName}
                             maxLength={255}
                             required
-                            onChange={event => this.setState({ lastName: event.target.value })}
+                            aria-required={true}
+                            onChange={this.onLastnameChanged}
                         />
                     </div>
                     {/* Email and country */}
@@ -96,10 +99,11 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         <input
                             type="email"
                             className="leftInput"
-                            placeholder={ RegisterFormLabels.email }
+                            placeholder={ registerFormJson.email }
                             maxLength={255}
                             required
-                            onChange={event => this.setState({email: event.target.value,})}
+                            aria-required={true}
+                            onChange={this.onEmailChanged}
                         />
                         <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
                     </div>
@@ -108,21 +112,23 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         <input
                             type="password"
                             className="leftInput"
-                            placeholder={RegisterFormLabels.password}
+                            placeholder={registerFormJson.password}
                             required
-                            onChange={event => this.setState({ password: event.target.value, })}
+                            aria-required={true}
+                            onChange={this.onPasswordChanged}
                         />
                         <input
                             type="password"
-                            placeholder={RegisterFormLabels.confirmPassword}
+                            placeholder={registerFormJson.confirmPassword}
                             required
-                            onChange={event => this.setState({ repeatedPassword: event.target.value, })}
+                            aria-required={true}
+                            onChange={this.onValidationPasswordChanged}
                         />
                     </div>
                     {/* Usertype */}
                     <div className="grid">
                         <div>
-                            <h4>{RegisterFormLabels.userType__title}</h4>
+                            <h2>{registerFormJson.userType__title}</h2>
                             <div className="radioSection">
                                 <div className="userType P">
                                     <input
@@ -131,10 +137,11 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                                         name="userType"
                                         id="Producer"
                                         value="Producer"
+                                        aria-checked={this.state.userType === "Producer"}
                                         checked={this.state.userType === "Producer"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                    <label htmlFor="Producer">{RegisterFormLabels.userType__producer}</label>
+                                    <label htmlFor="Producer">{registerFormJson.userType__producer}</label>
                                 </div>
                                 <div className="userType R">
                                     <input
@@ -143,17 +150,18 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                                         name="userType"
                                         id="Receiver"
                                         value="Receiver"
+                                        aria-checked={this.state.userType === "Receiver"}
                                         checked={this.state.userType === "Receiver"}
                                         onChange={this.onUserTypeClick}
                                     />
-                                    <label htmlFor="Receiver">{RegisterFormLabels.userType__reciever}</label>
+                                    <label htmlFor="Receiver">{registerFormJson.userType__reciever}</label>
                                 </div>
                             </div>
                         </div>
                         {/* Submit button */}
                         <div>
                             <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                                <span className="text">{RegisterFormLabels.submit}</span>
+                                <span className="text">{registerFormJson.submit}</span>
                                 <span className="throbber">
                                     <Throbber size={24} relative={true} inverted={true} />
                                 </span>
@@ -171,7 +179,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
 
                     }
 
-                    h4 {
+                    h2 {
                         margin-top: 5px;
                     }
 
@@ -342,7 +350,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             margin-bottom: 20px;
                         }
 
-                        h4 {
+                        h2 {
                             margin: 10px 0;
                         }
 
@@ -398,6 +406,47 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
 
             </div>
         );
+    }
+
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onFirstnameChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ firstName: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onLastnameChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ lastName: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onEmailChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ email: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ password: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onValidationPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ repeatedPassword: evt.currentTarget.value });
     }
 
     /**
