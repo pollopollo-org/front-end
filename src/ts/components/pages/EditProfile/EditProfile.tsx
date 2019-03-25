@@ -599,7 +599,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     newPassword: this.state.repeatedPassword,
                     password: this.state.oldPassword,
                     thumbnail: this.imageToData(),
-                    wallet: this.state.wallet
+                    wallet: this.state.wallet,
+                    description: this.state.description,
                 })
             });
 
