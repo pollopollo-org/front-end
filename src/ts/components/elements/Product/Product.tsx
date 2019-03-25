@@ -423,7 +423,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderChevron = () => {
         return (
-            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} alt="" role="presentation">
+            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} role="button">
                 <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
