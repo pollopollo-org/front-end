@@ -16,6 +16,7 @@ import { ProducerModel } from "src/ts/models/ProducerModel";
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
+import { colors } from "src/ts/config";
 
 export type UserProps = {
     /**
@@ -85,7 +86,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         <div className="header">
                             <h1>{userProfileJson.profile}</h1>
                             {this.state.isSelf && (
-                                <Link className="editProfile" to={routes.editProfile.path}>
+                                <Link className="link editProfile" to={routes.editProfile.path} title="Edit profile">
                                     <i>
                                         {getSVG("edit")}
                                     </i>
@@ -99,7 +100,16 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     <div className="list">
                         {isProducerUser(user) && (
                             <>
-                                <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
+                                <div className="list__header">
+                                    <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
+                                    {this.state.isSelf && (
+                                        <Link className="link" to={routes.createProduct.path} title="Create new product">
+                                            <i>
+                                                {getSVG("plus-square")}
+                                            </i>
+                                        </Link>
+                                    )}
+                                </div>
                                 { this.renderProducts() }
                             </>
                         )}
@@ -146,8 +156,32 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                     h2 {
                         margin: 0;
-                        margin-bottom: 15px;
                     }
+
+                    /* Link to edit profile page, centered under image */
+                    :global(.link) {
+                        color: ${colors.primary};
+                        text-decoration: none;
+                        display: inline-block;
+                    }
+
+                    :global(.editProfile) {
+                        margin-top: 30px;
+                        margin-left: 10px;
+                    }
+
+                    :global(.link):hover {
+                        color: ${colors.secondary};
+                    }
+
+                    .link i {
+                        & :global(> span > svg) {
+                            width: 24px;
+                            margin-left: 5px;
+                            /* Allign with h1 */
+                            margin-bottom: -2px;
+                        }
+                    } 
 
                     /**
                      * List of user's products/applications,
@@ -156,6 +190,16 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     .list {
                         margin-top: 80px;
                         width: 50%;
+                    }
+
+                    .list__header {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 15px;
+
+                        & h2 {
+                            margin-right: 10px;
+                        }
                     }
 
                     /* Make more room for applications/products when the width is less than 820px */
@@ -187,6 +231,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                         h2 {
                             margin-top: 20px;
+                        }
+
+                        .profile__information {
+                            position: static;
+
+                            & :global(.information) {
+                                max-height: unset;
+                            }
                         }
 
                         /* Make the list wide enough to fill the  screen. */
