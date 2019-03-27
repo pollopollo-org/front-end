@@ -14,6 +14,7 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
 import { Throbber } from "src/ts/components/utils";
+import { alertApiError } from "src/ts/utils/alertApiError";
 
 type RegisterFormProps = {
     /**
@@ -490,7 +491,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             return;
         }
 
-        const endPoint = apis.user.create;
+        const endPoint = apis.user.create.path;
 
         try {
             this.setState({ isPending: true });
@@ -524,14 +525,11 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
             } else {
-                throw new Error(
-                    response.status === 409
-                        ? "The passed email is already present in our system, please log in instead." 
-                        : "Something went wrong when attempting to create your profile., please try again."
-                );
+                alertApiError(response.status, apis.user.create.errors);
+                this.setState({ isPending: false });
             }
         } catch (err) {
-            alert((err as Error).message);
+            alert("Something went wrong while sending your request, please try again later.");
             this.setState({ isPending: false });
         }
     }
