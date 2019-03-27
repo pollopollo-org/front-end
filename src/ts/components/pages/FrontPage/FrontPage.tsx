@@ -32,7 +32,11 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
                     <Product product={this.props.store.products[0]} userType={ UserTypes.PRODUCER } isOwnProduct={ true } />
-                    <Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } />
+                    <Product product={this.props.store.products[1]} userType={ UserTypes.PRODUCER } isOwnProduct={ false } />
+                    <Product product={this.props.store.products[2]} userType={ UserTypes.PRODUCER } isOwnProduct={ true } />
+                    <Product product={this.props.store.products[3]} userType={ UserTypes.RECEIVER } isOwnProduct={ true } />
+
+                    <br/>
 
                     {this.props.store.applications.map((application, index) => {
                         return <Application key={index} application={application} />;
