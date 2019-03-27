@@ -4,17 +4,24 @@ import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
 import { ProductModel } from "src/ts/models/ProductModel";
-import { Chevron } from "src/ts/components/utils";
+import { Chevron, Button } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
-import { UserModel } from "src/ts/models/UserModel";
+import { UserTypes } from "src/ts/models/UserModel";
 import { fetchUser } from "src/ts/store/createStore";
+import { ProducerModel } from "src/ts/models/ProducerModel";
 
 export type ProductProps = {
+
+    /**
+     * Contains a reference to the users role, is either producer or receiver
+     */
+    userType: UserTypes;
+
     /**
      * Contains a reference to the product model that should be rendered
      */
@@ -52,10 +59,10 @@ export type ProductState = {
     isSmall: boolean;
 
     /**
-     * Specifies the loaded producer of the application (if any). Will first be
+     * Specifies the loaded producer of the product (if any). Will first be
      * loaded if the user wishes to see information about the producer
      */
-    producer?: UserModel;
+    producer?: ProducerModel;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -119,6 +126,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Main render method, used to render Product
      */
 	public render(): JSX.Element {
+
 		return (
 			<React.Fragment>
                 <div className="product-border" ref={ this.borderRef }>
@@ -128,7 +136,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                             { this.renderContentSection() }
                         </div>
 
-                        { this.renderProductEdit() }
+                        { this.props.userType === UserTypes.PRODUCER && 
+                            this.renderProductEdit() }
+                        { this.props.userType === UserTypes.RECEIVER && 
+                            this.renderApplyButton() }
 
                         { this.state.isSmall && (
                             this.renderDescriptionTeaser()
@@ -563,30 +574,30 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     /**
      * Internal renderer that renders the apply button of the product
      */
-    // private renderApplyButton = () => {
-    //     return(
-    //         <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-    //             <Button text={`Apply`} />
+    private renderApplyButton = () => {
+        return(
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <Button text={`Apply`} />
 
-    //             <style jsx>{`
-    //                 .button-wrapper {
-    //                     /** Position the apply button in the top right corner */
-    //                     position: absolute;
-    //                     right: 5px;
-    //                     top: 0;
-    //                     z-index: 10;
+                <style jsx>{`
+                    .button-wrapper {
+                        /** Position the apply button in the top right corner */
+                        position: absolute;
+                        right: 5px;
+                        top: 0;
+                        z-index: 10;
 
-    //                     /** When mobile size, position button in the middle */
-    //                     &.isSmall {
-    //                         left: 105px;
-    //                         top: 35px;
-    //                         right: unset;
-    //                     }
-    //                 }
-    //             `}</style>
-    //         </div>
-    //     );
-    // }
+                        /** When mobile size, position button in the middle */
+                        &.isSmall {
+                            left: 105px;
+                            top: 35px;
+                            right: unset;
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
 
     /**
      * Internal renderer that renders the edit functionality of the product

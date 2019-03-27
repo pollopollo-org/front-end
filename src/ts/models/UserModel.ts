@@ -1,5 +1,5 @@
 
-enum UserTypes {
+export enum UserTypes {
     PRODUCER = "producer",
     RECEIVER = "receiver"
 }
