@@ -335,15 +335,23 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that'll render the content section of the product
      */
     private renderContentSection = () => {
-        const { product } = this.props;
+        const { product, userType } = this.props;
 
         return (
             <section className="section-content">
                 <div className="product-wrapper">
-                    <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={product.title}> {product.title} </span>
+
+                    <span   
+                        className={`product ${this.state.isSmall ? "isSmall" : ""} 
+                                            ${userType === UserTypes.RECEIVER ? "isReceiver" : ""}`} 
+                        title={product.title}
+                    > 
+                        {product.title} 
+                    </span>
+
                     { 
                         this.props.userType === UserTypes.PRODUCER &&
-                        <span className="price">${ product.price }</span>
+                        <span className={`price ${this.state.isSmall ? "isSmall" : ""}`}>${ product.price }</span>
                     }
                 </div>
 
@@ -367,7 +375,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         font-size: 18px;
                         line-height: 1.3em;
 
-
                         display: flex;
                         flex-direction: row;
 
@@ -382,8 +389,16 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                         /** When mobile size, force product text to one line */
                         &.isSmall {
-                            -webkit-line-clamp: 1;
                             max-width: 100%;
+
+                            /** 
+                             * If user is a receiver, there should be a button 
+                             * below the product content, therefore, restrict
+                             * content to be at only 1 line
+                             */
+                            &.isReceiver {
+                                -webkit-line-clamp: 1;
+                            }
                         }
 
                         /**
@@ -401,8 +416,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     }
 
                     .price {
-                        font-size: 1.2em;
-                        margin: 2px 75px 0 0;
+                        font-size: 1.3em;
+                        margin-right: 75px;
+
+                        &.isSmall {
+                            margin: 0 25px 0 10px;
+                        }
                     }
                 `}</style>
             </section>
@@ -686,9 +705,11 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that renders the edit functionality of the product
      */
     private renderProductEdit = () => {
-        
+        const { product, isOwnProduct, userType } = this.props;
 
-        const { product } = this.props;
+        if(!isOwnProduct || userType === UserTypes.RECEIVER) {
+            return;
+        }
 
         return(
             <div className={`product-more ${this.state.isSmall ? "isSmall" : ""}`}>
@@ -750,6 +771,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         position: absolute;
                         right: 0;
                         top: -6px;
+
+                        &.isSmall {
+                            top: -4px;
+                        }
                         z-index: 12;
                     }
 
