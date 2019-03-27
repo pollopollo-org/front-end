@@ -27,7 +27,9 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
             <LightboxTransition in={this.props.active}>
                 <div className="lightbox__wrapper" onClick={this.props.onClose} role="none">
                     <div className="lightbox" onClick={this.stopPropagation} role="article">
-                        {this.props.children}
+                        <div className="lightbox__content">
+                            {this.props.children}                        
+                        </div>
                         {this.renderCloseButton()}
                     </div>
                 </div>
@@ -49,6 +51,12 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                         top: 50%;
                         left: 50%;
                         transform: translate(-50%, -50%);
+                    }
+
+                    .lightbox__content {
+                        /** Ensure scroll is enabled in case lightbox overflows */
+                        overflow: auto;
+                        -webkit-overflow-scrolling: touch;
 
                         /** Enforce max-width of the lightbox */
                         width: max-content;
