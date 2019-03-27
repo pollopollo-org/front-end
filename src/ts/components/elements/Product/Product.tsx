@@ -673,32 +673,42 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 
 
                 <style jsx>{`
+
+                    /** Align icon buttons horizontially */
                     .edit-button-section {
                         display: flex;
                         flex-direction: row;
                     }
                     
+                    /** 
+                     * Button should not be visible and act as a wrapper for
+                     * the icon
+                     */
                     .edit-button-section button {
                         background-color: transparent;
                         border: none;
-                        cursor: pointer;
-                        padding: 2px 5px;
                         font-style: bold;
                         font-family: ${ fonts.text };
+
+                        padding: 2px 5px;
                     }
 
+                    /** Make icon slightly smaller to fit better */
                     .edit-button-section i {
                         transform: scale(0.75);
                     }
 
+                    /** Indicate it is clickable */
                     .edit-button-section button:hover {
                         color: ${ colors.secondary };
                     }
 
+                    /** Create a pale line between the icons to seperate them */
                     .edit-button-section .edit-button {
                         border-right: 1px solid ${ colors.pale };
                     }
 
+                    /** Position the icons */
                     .product-more {
                         position: absolute;
                         right: 0;
@@ -706,6 +716,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         z-index: 12;
                     }
 
+                    /** Default for all icons */
                     .product-more i {
                         display: block;
 

@@ -299,7 +299,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
 
         // Bail out if the reference node isn't currently mounted
         if (!this.props.pointAt.current) {
-            throw new Error("<Dropdown />.calculatePosition(): Unable to calculate position for unmounted pointAt ref!");
+            return;
         }
 
         // Bail out if the node isn't currently mounted
