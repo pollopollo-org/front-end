@@ -178,17 +178,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
 						}
 
-                        /*
-                         * Make the information box wide enough to fill the
-                         * screen and center it.
-                         */
-                        .information {
-                            width: calc(100% - 20px);
-                            max-width: 100%;
-                            margin: 0 10px;
-                            text-align: center;
-                        }
-
                         .header {
                             text-align: center;
                         }

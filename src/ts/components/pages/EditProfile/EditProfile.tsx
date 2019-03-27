@@ -675,20 +675,38 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     userRole: this.state.userType,
                     newPassword: this.state.repeatedPassword,
                     password: this.state.oldPassword,
-                    thumbnail: this.imageToData(),
+                    thumbnail: this.state.profilePicture,
                     wallet: this.state.wallet,
                     description: this.state.description,
                 })
             });
 
+            let imageResult: Response | undefined = undefined;
+
+            if (this.state.profilePicture) {
+                imageResult = await fetch(apis.user.image.path, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": this.state.profilePicture.type,
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: this.imageToData(),
+                })
+            }
+
             this.props.store.user = await fetchSelf();
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
-            if (result.ok) {
+            if (result.ok && (!imageResult || imageResult.ok)) {
                 this.props.history.push(routes.profile.path);
             } else {
                 alertApiError(result.status, apis.user.put.errors);
+
+                if (imageResult) {
+                    alertApiError(imageResult.status, apis.user.image.errors);
+                }
+
                 this.setState({ isPending: false });
             }
         } catch (err) {
@@ -700,9 +718,15 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Validates the image by checking for malformed/corrupted data
      */
-    private imageToData = () => {
+    private imageToData = (): FormData => {
         const formData = new FormData();
-        return formData.append("file",this.state.profilePicture || "");
+
+        if (this.state.profilePicture) {
+            formData.append("userId", String(this.state.userId));
+            formData.append("file", this.state.profilePicture);
+        }
+
+        return formData;
     }
 
 }

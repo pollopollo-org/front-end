@@ -32,6 +32,10 @@ export const apis = {
                 403: "You are not authorized to edit this user!",
             }
         },
+        image: {
+            path: `${basePath}/users/image`,
+            errors: {},
+        },
         authenticate: {
             path: `${basePath}/users/authenticate`,
             errors: {

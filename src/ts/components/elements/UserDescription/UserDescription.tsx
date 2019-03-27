@@ -25,7 +25,6 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
      */
     public render(): React.ReactNode {
         const { user } = this.props;
-
         if (!user) {
             return <h1>There is no user available for rendering</h1>;
         }
@@ -142,6 +141,23 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                         -moz-hyphens: auto;
                         -ms-hyphens: auto;
                         hyphens: auto;
+                    }
+
+                    @media (max-width: 690px) {
+                        /*
+                         * Make the information box wide enough to fill the
+                         * screen and center it.
+                         */
+                        .information {
+                            width: calc(100% - 20px);
+                            max-width: 100%;
+                            margin: 0 10px;
+                            text-align: center;
+                        }      
+
+                        .twoliner p {
+                            text-align: center;
+                        }                  
                     }
                 `}</style>
             </div>
