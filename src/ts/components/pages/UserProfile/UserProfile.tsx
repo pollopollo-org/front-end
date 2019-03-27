@@ -12,12 +12,16 @@ import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import { fetchUser } from "src/ts/utils/fetchUser";
 import userProfileJson from "src/assets/data/userProfile.json";
+import { ProducerModel } from "src/ts/models/ProducerModel";
+import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { Store } from "src/ts/store/Store";
+import { Application } from "src/ts/components/elements/Application/Application";
 
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
      */
-    user: UserModel;
+    store: Store;
 } & RouteComponentProps;
 
 export type UserState = {
@@ -31,6 +35,16 @@ export type UserState = {
      * we should render edit functionality etc.
      */
     isSelf: boolean;
+
+    /**
+     * Contains an array of products to be rendered if any
+     */
+    products?: ProducerModel[];
+
+    /**
+     * Contains an array of applications to be rendered if any
+     */
+    applications?: ApplicationModel[];
 }
 
 /**
@@ -43,30 +57,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     public state: UserState = {
         isSelf: false,
-        renderedUser: this.props.user,
+        renderedUser: this.props.store.user,
     }
 
     /**
      * Determine if we should render a different user than self
      */
     public async componentDidMount(): Promise<void> {
-        // tslint:disable-next-line completed-docs
-        const readonlyUserId = (this.props.match.params as { userId: string }).userId;
-
-        // If we have a match on the route, that means we should attempt to 
-        // render the given user in readonly mode
-        if (readonlyUserId) {
-            const user = await fetchUser(readonlyUserId);
-
-            this.setState({
-                isSelf: false,
-                renderedUser: user,
-            });
-        } else {
-            // ... however, if we doesn't match, then we should render our own
-            // user
-            this.setState({ isSelf: true });
-        }
+        this.loadUser();
     }
 
     /**
@@ -83,7 +81,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         return (
             <div className="page">
                 <div className="wrapper">
-                    <div>
+                    <div className="profile__information">
                         <div className="header">
                             <h1>{userProfileJson.profile}</h1>
                             {this.state.isSelf && (
@@ -100,15 +98,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     {/* List of the user's products/applications */}
                     <div className="list">
                         {isProducerUser(user) && (
-                            <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
+                            <>
+                                <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
+                                { this.renderProducts() }
+                            </>
                         )}
                         {isReceiverUser(user) && (
-                            <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
-                        )
-                        }
-                        {/* Dummy items for the list */}
-                        <div className="item"></div>
-                        <div className="item"></div>
+                            <>
+                                <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
+                                { this.renderApplications() }
+                            </>
+                            
+                        )}
                     </div>
                 </div>
 
@@ -121,6 +122,17 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     .wrapper {
                         display: flex;
                         justify-content: space-evenly;
+                    }
+
+                    .profile__information {
+                        position: sticky;
+                        top: 0;
+                        height: min-content;
+
+                        & :global(.information) {
+                            max-height: calc(100vh - 120px);
+                            overflow: auto;
+                        }
                     }
 
                     h1 {
@@ -142,17 +154,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                      * move down to align with information box
                      */
                     .list {
-                        margin-top: 63px;
+                        margin-top: 80px;
                         width: 50%;
-                    }
-
-                    /* Dummy products/applications for list, replace later */
-                    .item {
-                        height: 90px;
-                        border: 1px solid rgba(139,72,156, 0.15);
-                        border-radius: 2px;
-                        background-color: rgba(219,208,239, 0.15);
-                        margin-top: 15px;
                     }
 
                     /* Make more room for applications/products when the width is less than 820px */
@@ -197,6 +200,78 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             </div>
         )
     }
+
+    /**
+     * Internal render method that'll render all products associated to a user
+     */
+    private renderProducts = () => {
+        return (
+            <h1>wutwut</h1>
+        );
+    }
+
+    /**
+     * Internal helper that'll load all products related to a user
+     */
+    private loadProducts = () => {
+
+    }
+
+    /**
+     * Internal render method that'll render all applications associated to a user
+     */
+    private renderApplications = () => {
+        // DISPLAY A THROBBER WHILE APPLICATIONS ARE LOADING!!!
+        if (!this.state.applications) {
+            return null;
+        }
+
+        return (this.state.applications.map((application, index) => {
+            return <Application key={index} application={application} />;
+        }));
+    }
+
+    /**
+     * Internal helper that'll load all applications related to a user
+     */
+    private loadApplications = () => {
+        console.log("HI");
+        this.setState({ applications: this.props.store.applications });
+    }
+
+    /**
+     * Internal method that'll load the user to be rendered within the application
+     */
+    private loadUser = async () => {
+        // tslint:disable-next-line completed-docs
+        const readonlyUserId = (this.props.match.params as { userId: string }).userId;
+        let user: UserModel | undefined;
+
+        // If we have a match on the route, that means we should attempt to 
+        // render the given user in readonly mode
+        if (readonlyUserId) {
+            user = await fetchUser(readonlyUserId);
+
+            this.setState({
+                isSelf: false,
+                renderedUser: user,
+            });
+        } else {
+            user = this.props.store.user;
+
+            // ... however, if we doesn't match, then we should render our own
+            // user
+            this.setState({ isSelf: true });
+        }
+
+        // Begin loading the desired additional data based on the user to display
+        if (user && isReceiverUser(user)) {
+            this.loadApplications();
+        } else if (user && isProducerUser(user)) {
+            this.loadProducts();
+        }
+
+    }
 }
 
-export const UserProfile = injectStore((store) => ({user: store.user}), UnwrappedUserProfile);
+export const UserProfile = injectStore((store) => ({store}), UnwrappedUserProfile);

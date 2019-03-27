@@ -1,15 +1,15 @@
 [
     {
-        "title": "5 chickens",
+        "title": "Active product when producer is owner",
         "price": 20,
         "description": "These chickens are of the best quality in this country, you'll find no better chickens.",
         "country": "VE",
-        "isActive": false,
+        "isActive": true,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
     {
-        "title": "ipsum duis dolore adipisicing deserunt",
+        "title": "Product when producer is not owner",
         "price": 2835,
         "description": "Lorem voluptate exercitation deserunt exercitation veniam. Dolor duis in quis occaecat commodo aliquip ullamco nulla consequat occaecat. Enim sunt in deserunt nulla aute culpa nisi cillum in ad adipisicing minim nulla. Mollit consectetur laborum mollit proident culpa excepteur sint exercitation esse est consectetur. Anim commodo sunt in ea duis minim minim deserunt. Amet nulla ea proident velit deserunt qui sit mollit nisi voluptate fugiat elit laborum excepteur. Pariatur aute proident anim in culpa.\r\n",
         "country": "BE",
@@ -18,20 +18,20 @@
         "producerId": 1
     },
     {
-        "title": "non id do esse consequat",
+        "title": "Inactive product when producer is owner",
         "price": 3410,
         "description": "Ea nostrud deserunt mollit quis. Qui Lorem aute voluptate officia dolor sit adipisicing elit laborum eu occaecat. Occaecat velit ipsum ad eiusmod minim dolore tempor laborum consequat eu cillum qui. Consectetur est quis adipisicing incididunt anim ipsum in duis. Sint incididunt quis magna est quis sit quis. Incididunt eu est mollit cillum ullamco ex deserunt aute.\r\n",
         "country": "BZ",
-        "isActive": true,
+        "isActive": false,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
     {
-        "title": "nisi duis amet fugiat elit",
+        "title": "Product from receivers perspective",
         "price": 2922,
         "description": "Nisi sit proident elit minim qui sunt laboris ipsum Lorem aliqua ullamco ea irure. Et ex aliquip consequat nulla amet. Amet laborum excepteur et culpa occaecat laborum reprehenderit. Tempor ullamco enim reprehenderit id veniam dolor duis. Ea anim veniam esse pariatur et et ullamco officia enim irure voluptate. Voluptate eu voluptate deserunt eiusmod cillum. Sint cupidatat voluptate reprehenderit consectetur et nostrud consectetur amet ex occaecat amet fugiat.\r\n",
         "country": "CF",
-        "isActive": false,
+        "isActive": true,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },
