@@ -18,6 +18,11 @@ import { ProducerModel } from "src/ts/models/ProducerModel";
 export type ProductProps = {
 
     /**
+     * Determines if current user is owner of the product
+     */
+    isOwnProduct: boolean;
+
+    /**
      * Contains a reference to the users role, is either producer or receiver
      */
     userType: UserTypes;
@@ -681,6 +686,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that renders the edit functionality of the product
      */
     private renderProductEdit = () => {
+        if() {
+
+        }
+
         const { product } = this.props;
 
         return(
