@@ -12,6 +12,7 @@ import { isNullOrUndefined } from "util";
 import { Throbber } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 import { alertApiError } from "src/ts/utils/alertApiError";
+import { fetchSelf } from "src/ts/utils/fetchUser";
 
 type EditProfileProps = {
     /**
@@ -679,6 +680,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     description: this.state.description,
                 })
             });
+
+            this.props.store.user = await fetchSelf();
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 

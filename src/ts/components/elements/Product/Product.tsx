@@ -8,7 +8,7 @@ import { Chevron, Button } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
-import { fonts } from "src/ts/config";
+import { fonts, routes } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import { UserTypes } from "src/ts/models/UserModel";
@@ -952,9 +952,63 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * when desired
      */
     private renderProducerLightbox = () => {
+        if (!this.state.producer) {
+            return;
+        }
+
+        console.log(this.state.producer.id);
+
         return (
             <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
                 <UserDescription user={this.state.producer} />
+                <div>
+                    <a 
+                        href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <span className="chevron">
+                            <Chevron/>
+                        </span>
+                        <span className="text">Go to producer profile</span>
+                    </a>
+                </div>
+
+                <style jsx>{`
+                    div {
+                        /** Setup dimensions that match the userDescription */
+                        padding: 0 50px 30px;
+                        background-color: ${ colors.pale };
+                    }    
+
+                    a {
+                        /** Setup font */
+                        font-size: 14px;
+                        color: ${ colors.black };
+                        font-family: ${ fonts.text };
+                        font-weight: 300;
+                        text-decoration: none;
+
+                        /** Ensure chevron and text is vertically aligned */
+                        display: flex;
+                        align-items: center;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+
+                    .chevron {
+                        /** Setup dimensions in which the chevron fits */
+                        display: block;
+                        position: relative;
+                        width: 14px;
+                        height: 10px;
+
+                        /** Setup spacing between chevron and text */
+                        margin-right: 5px;
+                    }
+                `}</style>
             </Lightbox>
         );
     }
