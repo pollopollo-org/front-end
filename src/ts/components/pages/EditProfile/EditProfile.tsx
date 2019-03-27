@@ -11,6 +11,7 @@ import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Throbber } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
+import { alertApiError } from "src/ts/utils/alertApiError";
 
 type EditProfileProps = {
     /**
@@ -651,7 +652,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             return;
         }
 
-        const endPoint = apis.user.put;
+        const endPoint = apis.user.put.path;
 
         try {
             this.setState({ isPending: true });
@@ -665,12 +666,12 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    id: this.state.userId,
+                    userId: this.state.userId,
                     firstName: this.state.firstName,
-                    surname: this.state.lastName,
+                    surName: this.state.lastName,
                     email: this.state.email,
                     country: this.state.country,
-                    userRole: this.state.userType,
+                    role: this.state.userType,
                     newPassword: this.state.repeatedPassword,
                     password: this.state.oldPassword,
                     thumbnail: this.imageToData(),
@@ -684,11 +685,12 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             if (result.ok) {
                 this.props.history.push(routes.profile.path);
             } else {
-                throw new Error("Something went wrong, please try again.");
+                alertApiError(result.status, apis.user.put.errors);
+                this.setState({ isPending: false });
             }
         } catch (err) {
             this.setState({ isPending: false });
-            alert((err as Error).message);
+            alert("Something went wrong while attempting to update your profile, please try again later.");
         }
     }
 

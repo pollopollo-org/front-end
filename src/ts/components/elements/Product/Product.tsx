@@ -12,7 +12,7 @@ import { fonts } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import { UserTypes } from "src/ts/models/UserModel";
-import { fetchUser } from "src/ts/store/createStore";
+import { fetchUser } from "src/ts/utils/fetchUser";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 
 export type ProductProps = {
@@ -957,7 +957,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
             const producerId = this.props.product.producerId;
             const producer = await fetchUser(String(producerId));
 
-            this.setState({ producer, showProducer: true });
+            // Only display producer if one exists with the given id
+            if (producer) {
+                this.setState({ producer, showProducer: true });
+            } else {
+                alert("Failed to fetch producer related to product. Please try again later.");
+            }
         } else {
             this.setState({ showProducer: true });
         }

@@ -31,10 +31,10 @@ export type UserToken = {
  */
 // tslint:disable completed-docs
 export type UserModelData = {
-    id: number;
+    userId: number;
     email: string;
     firstName: string;
-    surname: string;
+    surName: string;
     country: string;
     city?: string;
     description?: string;
@@ -88,10 +88,10 @@ export class UserModel {
     public readonly thumbnail?: string;
 
     constructor(data: UserModelData) {
-        this.id = data.id;
+        this.id = data.userId;
         this.email = data.email;
         this.firstName = data.firstName;
-        this.surName = data.surname;
+        this.surName = data.surName;
         this.country = data.country;
         this.city = data.city;
         this.description = data.description;

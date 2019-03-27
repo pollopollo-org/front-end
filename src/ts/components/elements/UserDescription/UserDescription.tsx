@@ -41,7 +41,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                     </div>
                     <p><span className="bold">{profileJson.name}</span> {user.firstName} {user.surName}</p>
                     <p><span className="bold">{profileJson.country}</span> {this.extractCountry()}</p>
-                    <p><span className="bold">{profileJson.email}</span> {user.email}</p>
+                    {user.email && <p><span className="bold">{profileJson.email}</span> {user.email}</p>}
                     <div className="twoliner">
                         <p><span className="bold">{profileJson.desc}</span> </p>
                         {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
@@ -56,7 +56,6 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                 </div>
 
                 <style jsx>{`
-
                     /* Box for user information */
                     .information {
                         padding: 10px 0;

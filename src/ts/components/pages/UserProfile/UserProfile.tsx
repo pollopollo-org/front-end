@@ -9,8 +9,9 @@ import { UserModel } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
-import { fetchUser } from "src/ts/store/createStore";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
+import { fetchUser } from "src/ts/utils/fetchUser";
+import userProfileJson from "src/assets/data/userProfile.json";
 
 export type UserProps = {
     /**
@@ -49,12 +50,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Determine if we should render a different user than self
      */
     public async componentDidMount(): Promise<void> {
+        // tslint:disable-next-line completed-docs
+        const readonlyUserId = (this.props.match.params as { userId: string }).userId;
+
         // If we have a match on the route, that means we should attempt to 
         // render the given user in readonly mode
-        if (this.props.match.params) {
-            // tslint:disable-next-line completed-docs
-            const userId = (this.props.match.params as { userId: string }).userId;
-            const user = await fetchUser(userId);
+        if (readonlyUserId) {
+            const user = await fetchUser(readonlyUserId);
 
             this.setState({
                 isSelf: false,
@@ -75,7 +77,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         const { renderedUser: user } = this.state;
 
         if (!user) {
-            return <h1>wut</h1>;
+            return <h1>There's no user available to be rendered!</h1>;
         }
 
         return (
@@ -83,7 +85,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 <div className="wrapper">
                     <div>
                         <div className="header">
-                            <h1>Profile</h1>
+                            <h1>{userProfileJson.profile}</h1>
                             {this.state.isSelf && (
                                 <Link className="editProfile" to={routes.editProfile.path}>
                                     <i>
@@ -98,10 +100,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     {/* List of the user's products/applications */}
                     <div className="list">
                         {isProducerUser(user) && (
-                            <h2>Your products</h2>
+                            <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
                         )}
                         {isReceiverUser(user) && (
-                            <h2>Your applications</h2>
+                            <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
                         )
                         }
                         {/* Dummy items for the list */}
