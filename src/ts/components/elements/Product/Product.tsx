@@ -686,9 +686,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that renders the edit functionality of the product
      */
     private renderProductEdit = () => {
-        if() {
-
-        }
+        
 
         const { product } = this.props;
 
