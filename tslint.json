@@ -10,6 +10,7 @@
     "no-console": false,
     "use-simple-attributes": false,
     "no-string-based-set-timeout": false,
+    "react-a11y-no-onchange": false,
     "no-suspicious-comment": false,
     "object-literal-sort-keys": false,
     "react-a11y-anchors": false,

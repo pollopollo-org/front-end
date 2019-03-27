@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { TransitionGroup } from "react-transition-group";
 import { colors } from "src/ts/config";
 import { Fade } from "src/ts/components/utils/Dropdown/Fade";
@@ -109,10 +110,11 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
      * needed.
      */
     public render(): JSX.Element {
-        return (
+        return ReactDOM.createPortal(
             <TransitionGroup component={ React.Fragment }>
                 { this.props.active ? this.renderDropdown() : undefined }
-            </TransitionGroup>
+            </TransitionGroup>,
+            document.body,
         );
     }
 
@@ -155,7 +157,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                     .dropdown {
                         /** Prepare positioning of the dropdown */
                         position: absolute;
-                        z-index: 1000;
+                        z-index: 10000;
 
                         /** Apply basic styling of the dropdown */
                         background: ${ colors.white };
@@ -236,7 +238,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                         left: 0;
                         right: 0;
                         top: 0;
-                        z-index: 999;
+                        z-index: 9999;
 
                         /** Disable cursor inheriting */
                         cursor: default;

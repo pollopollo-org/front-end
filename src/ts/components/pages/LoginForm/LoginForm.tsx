@@ -8,11 +8,12 @@ import { routes } from "src/ts/config/routes";
 
 import loginFormJson from "src/assets/data/loginForm.json";
 import { apis } from "src/ts/config/apis";
-import { fetchUser } from "src/ts/store/createStore";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
 import { Throbber } from "src/ts/components/utils";
+import { alertApiError } from "src/ts/utils/alertApiError";
+import { createUser } from "src/ts/utils/createUser";
 
 type LoginFormProps = {
     /**
@@ -286,7 +287,7 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
             return;
         }
 
-        const endPoint = apis.user.authenticate;
+        const endPoint = apis.user.authenticate.path;
 
         try {
             this.setState({ isPending: true });
@@ -304,21 +305,19 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
             });
 
             if (response.ok) {
-                const token = await response.text();
-                localStorage.setItem("userJWT", token);
-
-                this.props.store.user = await fetchUser();
+                const data = await response.json();
+                localStorage.setItem("userJWT", data.token);
+                this.props.store.user = createUser(data.userDTO);
 
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
             } else {
-                throw new Error("Either your password or email is not correct, please try again.")
+                alertApiError(response.status, apis.user.authenticate.errors);
+                this.setState({ isPending: false });
             }
-
-
         } catch (err) {
             this.setState({ isPending: false });
-            alert("Either your password or email is not correct, please try again.");
+            alert("Something with your request when wrong, please try again later");
         }
     }
 }
