@@ -14,6 +14,7 @@ import { UserDescription } from "src/ts/components/elements/UserDescription/User
 import { UserTypes } from "src/ts/models/UserModel";
 import { fetchUser } from "src/ts/utils/fetchUser";
 import { ProducerModel } from "src/ts/models/ProducerModel";
+import { Dialog } from "src/ts/components/utils/Dialog";
 
 export type ProductProps = {
 
@@ -58,6 +59,11 @@ export type ProductState = {
     showProducer: boolean;
 
     /**
+     * hey
+     */
+    showDialog: boolean;
+
+    /**
      * Specifies whether the product should be rendered to be compatible with
      * smaller viewports
      */
@@ -85,6 +91,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         isSmall: false,
         showImage: false,
         showProducer: false,
+        showDialog: false
     };
 
     /**
@@ -128,7 +135,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Main render method, used to render Product
+     *   Product
      */
 	public render(): JSX.Element {
 
@@ -141,6 +148,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                 { this.renderProducerLightbox() }
                 { this.renderImageLightbox() }
+                { this.renderConfirmDialog() }
 
 				<style jsx>{`
 
@@ -718,6 +726,22 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
+     * Dialog to confirm whether producer would active or deactivate product
+     */
+    private renderConfirmDialog() {
+        const action = this.props.product.isActive ? "deactivate" : "activate";
+
+        return(
+            <Dialog title="Confirm"
+                    text={`Are you sure you want to ${ action } this product?`}
+                    active={ this.state.showDialog } 
+                    onClose={ this.closeConfirmationDialog } 
+                    confirmAction= { this.closeConfirmationDialog }
+            />
+        );
+    }
+
+    /**
      * Internal renderer that renders the edit functionality of the product
      */
     private renderProductEdit = () => {
@@ -735,11 +759,13 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         <button className="edit-button" title="Edit"><i className="edit">{ getSVG("edit") }</i></button>
                         {  
                             product.isActive &&
-                            <button className="status-button" title="Deactivate"><i className="status">{ getSVG("check-square") }</i></button>
+                            <button onClick={ this.openConfirmationDialog } className="status-button" title="Deactivate">
+                                <i className="status">{ getSVG("check-square") }</i>
+                            </button>
                         }
                         {  
                             !product.isActive &&
-                            <button className="status-button"><i className="status" title="Activate">{ getSVG("square") }</i></button>
+                            <button onClick={ this.openConfirmationDialog } className="status-button"><i className="status" title="Activate">{ getSVG("square") }</i></button>
                         }
                     </div>
                 )}
@@ -1157,6 +1183,20 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
+     * Listener that'll open the confirmation dialog once it has been executed
+     */
+    private openConfirmationDialog = () => {
+        this.setState({ showDialog: true });
+    }
+
+    /**
+     * Listener that'll close the dialog once it has been executed
+     */
+    private closeConfirmationDialog = () => {
+        this.setState({ showDialog: false });
+    }
+
+    /**
      * Method that'll trigger the transition to expand/collapse the description
      * of the product
      */
@@ -1223,4 +1263,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     protected toggleDropdownState = () => {
         this.setState({ showDropdown: !this.state.showDropdown });
     }
+
+    
 }
