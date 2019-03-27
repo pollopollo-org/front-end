@@ -216,6 +216,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                             background: rgba(139,72,156, 0.06);
                         }
 
+                        /** Hover effect when inactive should be removed */
                         &.isInactive {
                             opacity: 0.5;
                             background: rgba(167,167,167, 0.06);
@@ -230,23 +231,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                             }
                         }
                     }
-
-                    /** The product itself  */
-                    .product {
-                        position: relative;
-                    }
-
-                    /** Contans different sections to manage placement with flexbox */
-					.sections {
-                        /** Display sections alongside each other */
-                        margin: 7px 7px 5px 7px;
-                        display: flex;
-                        flex-direction: row;
-
-                        /** Position on top of hover pseudo element */
-                        position: relative;
-                        z-index: 2;
-					}
 				`}</style>
 			</React.Fragment>
 		);
@@ -350,7 +334,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`}> <span>{product.title}</span> <span className="price">- ${product.price}</span> </span>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={product.title}> <span>{product.title}</span>  </span>
 
                 { !this.state.isSmall && (
                     this.renderDescriptionTeaser()
@@ -469,20 +453,16 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className="description-content">
+                <div className={`description-content ${ !product.isActive ? "isInactive" : "" }`}>
                     <h3>Product</h3>
                     <p>{product.title}</p>
                     <h3>Description</h3>
                     <p>
                         {product.description}
                     </p>
-                    <button 
-                        className="profile-link"
-                        onClick={this.openProducerLightbox}
-                    >
-                        <i className="user-icon">{getSVG("user2")}</i> 
-                        Producer profile
-                    </button>
+
+                    { this.renderProducerLink() }
+
                 </div>
 
                 <style jsx>{`
@@ -518,7 +498,35 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     .description-content {
                         margin: 7px;
                         border-top: 1px solid ${colors.secondary};
+
+                        /** When inactive, we want no definitive colors */
+                        &.isInactive {
+                            border-top: 1px solid ${colors.gray};
+                        }
                     }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Render button link to producer profile info
+     */
+
+    private renderProducerLink() {
+        if(this.props.userType === UserTypes.PRODUCER) {
+            return;
+        }
+
+        return(
+                <button 
+                    className="profile-link"
+                    onClick={this.openProducerLightbox}
+                >
+                    <i className="user-icon">{getSVG("user2")}</i> 
+                    Producer profile
+
+                <style jsx>{`
 
                     /** Button to producers profile */
                     .profile-link {
@@ -541,10 +549,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         cursor: pointer;
 
                         /** 
-                         * Positioning the button just outside the border of its
-                         * parent, so it does not look as malplaced when not
-                         * hovering
-                         */
+                        * Positioning the button just outside the border of its
+                        * parent, so it does not look as malplaced when not
+                        * hovering
+                        */
                         margin-left: -5px;
 
                     }
@@ -564,7 +572,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         margin-right: 5px;
                     }
                 `}</style>
-            </div>
+            </button>
         );
     }
 
@@ -621,7 +629,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     private renderApplyButton = () => {
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button text={`Apply`} />
+                <Button text={`Apply $${ this.props.product.price }`} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -645,8 +653,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
     /**
      * Internal renderer that renders the edit functionality of the product
-     * 
-     * TODO: White inline comments
      */
     private renderProductEdit = () => {
         const { product } = this.props;
@@ -656,21 +662,19 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                 { !this.state.isSmall && (
                     <div className="edit-button-section">
-                        <button className="edit-button"><i className="edit">{ getSVG("edit") }</i></button>
+                        <button className="edit-button" title="Edit"><i className="edit">{ getSVG("edit") }</i></button>
                         {  
                             product.isActive &&
-                            <button className="status-button"><i className="status">{ getSVG("check-square") }</i></button>
+                            <button className="status-button" title="Deactivate"><i className="status">{ getSVG("check-square") }</i></button>
                         }
                         {  
                             !product.isActive &&
-                            <button className="status-button"><i className="status">{ getSVG("square") }</i></button>
+                            <button className="status-button"><i className="status" title="Activate">{ getSVG("square") }</i></button>
                         }
                     </div>
                 )}
 
-                
                 { this.renderEditMenuMobile() }
-                
 
                 <style jsx>{`
 
@@ -689,8 +693,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         border: none;
                         font-style: bold;
                         font-family: ${ fonts.text };
-
                         padding: 2px 5px;
+                        cursor: pointer;
                     }
 
                     /** Make icon slightly smaller to fit better */
@@ -718,11 +722,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                     /** Default for all icons */
                     .product-more i {
+                        /** React as expected */
                         display: block;
 
+                        /** Icon size */
                         height: 24px;
                         width: 24px;
-                        cursor: pointer;
                     }
 
                 `}</style>
