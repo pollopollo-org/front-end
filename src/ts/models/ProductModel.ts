@@ -14,6 +14,7 @@ type ProductModelData = {
     description: string;
     title: string;
     price: number;
+    isActive: boolean;
     thumbnail: string;
     producerId: number;
 };
@@ -92,6 +93,11 @@ export class ProductModel {
     public readonly price: number;
 
     /**
+     * Defines whether the isActive of the product is active.
+     */
+    public readonly isActive: boolean;
+
+    /**
      * Describes the PRODUCER who is selling the product
      */
     public readonly producerId: number;
@@ -116,6 +122,7 @@ export class ProductModel {
         this.description = data.description;
         this.title = data.title;
         this.price = data.price;
+        this.isActive = data.isActive;
         this.producerId = data.producerId;
         this.thumbnail = data.thumbnail;
     }

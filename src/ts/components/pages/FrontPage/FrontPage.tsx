@@ -8,6 +8,7 @@ import { colors, fonts } from "src/ts/config";
 import { Product } from "src/ts/components/elements/Product/Product";
 
 import { Application } from "src/ts/components/elements/Application/Application";
+import { UserTypes } from "src/ts/models/UserModel";
 
 export type FrontPageProps = {
     /**
@@ -30,7 +31,8 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
             <div>
                 <h1>Recent applications</h1>
                 <div className="list-of-applications">
-                    <Product product={this.props.store.products[0]} />
+                    <Product product={this.props.store.products[0]} userType={ UserTypes.PRODUCER } />
+                    <Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } />
 
                     {this.props.store.applications.map((application, index) => {
                         return <Application key={index} application={application} />;

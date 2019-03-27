@@ -1,7 +1,7 @@
 
 export enum UserTypes {
-    PRODUCER = "producer",
-    RECEIVER = "receiver"
+    PRODUCER = "Producer",
+    RECEIVER = "Receiver"
 }
 
 /**
@@ -39,7 +39,7 @@ export type UserModelData = {
     city?: string;
     description?: string;
     thumbnail?: string;
-    userType: UserTypes;
+    userRole: UserTypes;
 };
 // tslint:enable completed-docs
 
