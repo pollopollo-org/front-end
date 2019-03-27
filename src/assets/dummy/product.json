@@ -4,7 +4,7 @@
         "price": 20,
         "description": "These chickens are of the best quality in this country, you'll find no better chickens.",
         "country": "VE",
-        "isActive": false,
+        "isActive": true,
         "thumbnail": "src/assets/dummy/sif.PNG",
         "producerId": 1
     },

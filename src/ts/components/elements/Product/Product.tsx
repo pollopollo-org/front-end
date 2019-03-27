@@ -335,7 +335,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that'll render the content section of the product
      */
     private renderContentSection = () => {
-        const { product, userType } = this.props;
+        const { product, userType, isOwnProduct } = this.props;
 
         return (
             <section className="section-content">
@@ -351,7 +351,11 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                     { 
                         this.props.userType === UserTypes.PRODUCER &&
-                        <span className={`price ${this.state.isSmall ? "isSmall" : ""}`}>${ product.price }</span>
+                        <span className={`price ${this.state.isSmall ? "isSmall" : ""} 
+                                                ${isOwnProduct ? "isOwnProduct" : ""}`}
+                        >
+                            ${ product.price }
+                        </span>
                     }
                 </div>
 
@@ -374,9 +378,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Setup font */
                         font-size: 18px;
                         line-height: 1.3em;
-
-                        display: flex;
-                        flex-direction: row;
 
                         /**
                          * Force product to be at max two lines
@@ -409,18 +410,30 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         max-height: calc(18px * 2 * 1.3 + 0.25em);
                     }
 
+                    /** Positions the product title and price horizontally */
                     .product-wrapper {
+                        color: rgba(57,57,57, 0.9);
+
                         display: flex;
                         flex-direction: row;
                         justify-content: space-between;
                     }
 
+                    /** Displays the price of the product */
                     .price {
                         font-size: 1.3em;
-                        margin-right: 75px;
+                        margin-left: 10px;
 
-                        &.isSmall {
-                            margin: 0 25px 0 10px;
+                        /** 
+                         * Owner of product will see edit buttons, therefore 
+                         * position price a bit to the right
+                         */
+                        &.isOwnProduct {
+                            margin-right: 75px;
+
+                            &.isSmall {
+                                margin-right: 25px;
+                            }
                         }
                     }
                 `}</style>
@@ -649,6 +662,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         width: 30px;
                         height: 20px;
 
+                        /** Setup color */
+                        color: rgba(57,57,57, 0.75);
+
                         /** Indicate that chevron is clickable */
                         cursor: pointer;
 
@@ -749,6 +765,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         font-family: ${ fonts.text };
                         padding: 2px 5px;
                         cursor: pointer;
+                        color: rgba(57,57,57, 0.75);
                     }
 
                     /** Make icon slightly smaller to fit better */
@@ -786,6 +803,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Icon size */
                         height: 24px;
                         width: 24px;
+
+                        
                     }
 
                 `}</style>
@@ -817,10 +836,11 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                     /** Indicate the icon is clickable */
                     .show-more-icon {
+                        color:  rgba(57,57,57, 0.75);
                         cursor: pointer;
 
                         &:hover {
-                            color: ${ colors.gray };
+                            color: ${ colors.secondary };
                         }
                     }
                 `}</style>
