@@ -66,7 +66,7 @@ type EditProfileState = {
     /**
      * profile image
      */
-    profilePicture?:Blob;
+    profilePicture?: File;
     /**
      * wallet address
      */
@@ -170,7 +170,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         {this.state.userType === "Producer" &&
                             <input
                             className="input wallet"
-                            value={this.state.wallet}
+                            value={this.state.wallet || ""}
                             aria-required={true}
                             placeholder={ editProfileJson.wallet}
                             onChange={this.onWalletChanged}
@@ -672,7 +672,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     surName: this.state.lastName,
                     email: this.state.email,
                     country: this.state.country,
-                    role: this.state.userType,
+                    userRole: this.state.userType,
                     newPassword: this.state.repeatedPassword,
                     password: this.state.oldPassword,
                     thumbnail: this.imageToData(),
@@ -702,7 +702,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      */
     private imageToData = () => {
         const formData = new FormData();
-        return formData.append("file",this.state.profilePicture||"");
+        return formData.append("file",this.state.profilePicture || "");
     }
 
 }

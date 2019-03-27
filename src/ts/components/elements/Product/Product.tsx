@@ -961,8 +961,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
             return;
         }
 
-        console.log(this.state.producer.id);
-
         return (
             <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
                 <UserDescription user={this.state.producer} />

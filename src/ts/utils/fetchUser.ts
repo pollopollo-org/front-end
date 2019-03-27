@@ -1,6 +1,6 @@
-import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
 import { apis } from "src/ts/config/apis";
 import { alertApiError } from "src/ts/utils/alertApiError";
+import { createUser } from "src/ts/utils/createUser";
 
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
@@ -26,12 +26,7 @@ export async function fetchUser(userId: string) {
         const userData = await response.json();
 
         if (response.ok) {
-            // Determine whether we're dealing with a producer or a receiver
-            // if (true) {
-                return new ReceiverModel(<ReceiverModelData> userData);
-            // } else {
-            //     return new ProducerModel(userData as ProducerModelData);
-            // }
+            return createUser(userData);
         } else {
             alertApiError(response.status, apis.user.get.errors);
             return;
@@ -68,12 +63,7 @@ export async function fetchSelf() {
         const userData = await response.json();
 
         if (response.ok) {
-            // Determine whether we're dealing with a producer or a receiver
-            // if (true) {
-                return new ReceiverModel(<ReceiverModelData> userData);
-            // } else {
-            //     return new ProducerModel(userData as ProducerModelData);
-            // }
+            return createUser(userData);
         }
         
         return;

@@ -8,13 +8,12 @@ import registerFormJson from "src/assets/data/registerForm.json";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 
 import { apis } from "src/ts/config/apis";
-import { ProducerModel, ProducerModelData } from "src/ts/models/ProducerModel";
-import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
 import { Throbber } from "src/ts/components/utils";
 import { alertApiError } from "src/ts/utils/alertApiError";
+import { createUser } from "src/ts/utils/createUser";
 
 type RegisterFormProps = {
     /**
@@ -502,7 +501,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 surname: this.state.lastName,
                 password: this.state.password,
                 email: this.state.email,
-                role: this.state.userType,
+                userRole: this.state.userType,
                 country: this.state.country
             });
 
@@ -516,11 +515,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 const data = await response.json();
                 localStorage.setItem("userJWT", data.token);
 
-                if (this.state.userType === "Receiver") {
-                    this.props.store.user = new ReceiverModel(data.userDTO as ReceiverModelData);
-                } else {
-                    this.props.store.user = new ProducerModel(data.userDTO as ProducerModelData);
-                }
+                this.props.store.user = createUser(data.userDTO);
 
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
