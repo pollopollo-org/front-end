@@ -129,24 +129,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
 		return (
 			<React.Fragment>
-                <div className="product-border" ref={ this.borderRef }>
-                    <div className="product">
-                        <div className="sections">
-                            { this.renderThumbnailSection() }
-                            { this.renderContentSection() }
-                        </div>
-
-                        { this.props.userType === UserTypes.PRODUCER && 
-                            this.renderProductEdit() }
-                        { this.props.userType === UserTypes.RECEIVER && 
-                            this.renderApplyButton() }
-
-                        { this.state.isSmall && (
-                            this.renderDescriptionTeaser()
-                        )}
-
-                        { this.renderChevron() }
-                    </div>
+                <div className={`product-border ${!this.props.product.isActive ? "isInactive" : ""}`} ref={ this.borderRef }>
+                    { this.renderProduct() }
                     { this.renderDescription() }
                 </div>
 
@@ -231,6 +215,20 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         &:nth-child(odd) {
                             background: rgba(139,72,156, 0.06);
                         }
+
+                        &.isInactive {
+                            opacity: 0.5;
+                            background: rgba(167,167,167, 0.06);
+
+                            &::before {
+                                content: none;
+                            }
+                            
+                            &:hover {
+                                box-shadow: none;
+                                border: 1px solid rgba(139,72,156, 0.15);
+                            }
+                        }
                     }
 
                     /** The product itself  */
@@ -252,6 +250,52 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 				`}</style>
 			</React.Fragment>
 		);
+    }
+
+    /**
+     * Renders the primary information of the product when collapsed
+     */
+    private renderProduct() {
+        return (
+            <div className="product">
+                <div className="sections">
+                    { this.renderThumbnailSection() }
+                    { this.renderContentSection() }
+                </div>
+
+                { this.props.userType === UserTypes.PRODUCER && 
+                    this.renderProductEdit() }
+                { this.props.userType === UserTypes.RECEIVER && 
+                    this.renderApplyButton() }
+
+                { this.state.isSmall && (
+                    this.renderDescriptionTeaser()
+                )}
+
+                { this.renderChevron() }
+                
+                <style jsx>{`
+
+                    /** The product itself  */
+                    .product {
+                        position: relative;
+                    }
+
+                    /** Contans different sections to manage placement with flexbox */
+                    .sections {
+                        /** Display sections alongside each other */
+                        margin: 7px 7px 5px 7px;
+                        display: flex;
+                        flex-direction: row;
+
+                        /** Position on top of hover pseudo element */
+                        position: relative;
+                        z-index: 2;
+                    }
+                `}</style>
+
+            </div>
+        );
     }
 
     /**
@@ -624,19 +668,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     </div>
                 )}
 
-                { this.state.isSmall && (
-                    <div
-                        className={`${ this.state.showDropdown ? "active" : "" }`}
-                        ref={ this.wrapperRef }
-                        onClick={ this.toggleDropdownState }
-                        role="button"
-                    >
-                        <i> 
-                            {getSVG("more-vertical")}
-                        </i>
-                        { this.renderDropdown() }
-                    </div>
-                )}
+                
+                { this.renderEditMenuMobile() }
+                
 
                 <style jsx>{`
                     .edit-button-section {
@@ -680,13 +714,45 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         cursor: pointer;
                     }
 
-                    .product-more i:hover {
-
-                    }
-
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Rendering a dropdown menu on mobile size
+     */
+    protected renderEditMenuMobile() {
+        if (!this.state.isSmall) {
+            return;
+        }
+
+        return (
+            <div 
+                className={`show-more-icon ${ this.state.showDropdown ? "active" : "" }`}
+                ref={ this.wrapperRef }
+                onClick={ this.toggleDropdownState }
+                role="button"
+            >
+                <i > 
+                    {getSVG("more-vertical")}
+                </i>
+                { this.renderDropdown() }
+
+                <style jsx>{`
+
+                    /** Indicate the icon is clickable */
+                    .show-more-icon {
+                        cursor: pointer;
+
+                        &:hover {
+                            color: ${ colors.gray };
+                        }
+                    }
+                `}</style>
+
+            </div>
+        )
     }
 
     
