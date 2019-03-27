@@ -21,7 +21,7 @@ export const Button: React.SFC<ButtonProps> = ({ text }) => {
 		    <style jsx>{`
                 button {
                     width: 110px;
-                    background-color: ${ colors.secondary };
+                    background-color: rgba(139, 72, 156, 0.9);
                     color: ${ colors.white };
                     border: none;
                     border-radius: 2px;
