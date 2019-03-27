@@ -334,7 +334,13 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={product.title}> {product.title} </span>
+                <div className="product-wrapper">
+                    <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={product.title}> {product.title} </span>
+                    { 
+                        this.props.userType === UserTypes.PRODUCER &&
+                        <span className="price">${ product.price }</span>
+                    }
+                </div>
 
                 { !this.state.isSmall && (
                     this.renderDescriptionTeaser()
@@ -383,9 +389,15 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         max-height: calc(18px * 2 * 1.3 + 0.25em);
                     }
 
-                    .product .price {
-                        font-style: italic;
-                        font-size: 0.87em;
+                    .product-wrapper {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                    }
+
+                    .price {
+                        font-size: 1.2em;
+                        margin: 2px 75px 0 0;
                     }
                 `}</style>
             </section>
@@ -455,10 +467,14 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
             <div className="description" ref={this.descriptionRef}>
                 <div className={`description-content ${ !product.isActive ? "isInactive" : "" }`}>
                     <h3>Product</h3>
-                    <p>{product.title}</p>
+                    <div className="description-product">
+                        <p>{ product.title }</p>
+                        <p className="price">(${ product.price })</p>
+                    </div>
+                    
                     <h3>Description</h3>
                     <p>
-                        {product.description}
+                        { product.description }
                     </p>
 
                     { this.renderProducerLink() }
@@ -503,6 +519,16 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         &.isInactive {
                             border-top: 1px solid ${colors.gray};
                         }
+                    }
+
+                    .description-product {
+                        display: flex;
+                        flex-direction: row;
+                    }
+
+                    .description-product .price {
+                        margin-left: 7px;
+                        font-style: italic;
                     }
                 `}</style>
             </div>
