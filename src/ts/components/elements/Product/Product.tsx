@@ -334,7 +334,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={product.title}> <span>{product.title}</span>  </span>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={product.title}> {product.title} </span>
 
                 { !this.state.isSmall && (
                     this.renderDescriptionTeaser()
@@ -629,7 +629,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     private renderApplyButton = () => {
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button text={`Apply $${ this.props.product.price }`} />
+                <Button text={"Apply"} />
 
                 <style jsx>{`
                     .button-wrapper {
