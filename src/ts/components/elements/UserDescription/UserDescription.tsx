@@ -94,29 +94,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                         height: 70px;
                         width: 70px;
                         padding-top: 45px;
-                    } 
-
-                    /* Link to edit profile page, centered under image */
-                    :global(.editProfile) {
-                        margin-top: 30px;
-                        margin-left: 10px;
-                        color: ${colors.primary};
-                        text-decoration: none;
-                        display: inline-block;
                     }
-
-                    :global(.editProfile):hover {
-                        color: ${colors.secondary};
-                    }
-
-                    .editProfile i {
-                        & :global(> span > svg) {
-                            width: 24px;
-                            margin-left: 5px;
-                            /* Allign with h1 */
-                            margin-bottom: -2px;
-                        }
-                    } 
 
                     p {
                         margin: 15px 0;

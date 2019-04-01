@@ -452,13 +452,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         }
                     }
 
-                    .link :global(> a) {
-                        /**
-                         * Override width on items in dropdown to ensure they take
-                         * padding into account when achieving width of 100%
-                         */
-                        width: calc(100% - 40px);
+                    .link {
+                        width: 100%;
+                    }
 
+                    .link :global(> a) {
+                        width: auto;
+                        
                         /** Align icon and text within icon properly */
                         display: flex;
                         align-items: center;

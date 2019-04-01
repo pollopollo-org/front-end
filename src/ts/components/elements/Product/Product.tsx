@@ -14,6 +14,7 @@ import { UserDescription } from "src/ts/components/elements/UserDescription/User
 import { UserTypes } from "src/ts/models/UserModel";
 import { fetchUser } from "src/ts/utils/fetchUser";
 import { ProducerModel } from "src/ts/models/ProducerModel";
+import { Dialog } from "src/ts/components/utils/Dialog";
 
 export type ProductProps = {
 
@@ -58,6 +59,11 @@ export type ProductState = {
     showProducer: boolean;
 
     /**
+     * hey
+     */
+    showDialog: boolean;
+
+    /**
      * Specifies whether the product should be rendered to be compatible with
      * smaller viewports
      */
@@ -85,6 +91,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         isSmall: false,
         showImage: false,
         showProducer: false,
+        showDialog: false
     };
 
     /**
@@ -128,7 +135,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Main render method, used to render Product
+     *   Product
      */
 	public render(): JSX.Element {
 
@@ -141,6 +148,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                 { this.renderProducerLightbox() }
                 { this.renderImageLightbox() }
+                { this.renderConfirmDialog() }
 
 				<style jsx>{`
 
@@ -335,15 +343,27 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that'll render the content section of the product
      */
     private renderContentSection = () => {
-        const { product } = this.props;
+        const { product, userType, isOwnProduct } = this.props;
 
         return (
             <section className="section-content">
                 <div className="product-wrapper">
-                    <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={product.title}> {product.title} </span>
+
+                    <span   
+                        className={`product ${this.state.isSmall ? "isSmall" : ""} 
+                                            ${userType === UserTypes.RECEIVER ? "isReceiver" : ""}`} 
+                        title={product.title}
+                    > 
+                        {product.title} 
+                    </span>
+
                     { 
                         this.props.userType === UserTypes.PRODUCER &&
-                        <span className="price">${ product.price }</span>
+                        <span className={`price ${this.state.isSmall ? "isSmall" : ""} 
+                                                ${isOwnProduct ? "isOwnProduct" : ""}`}
+                        >
+                            ${ product.price }
+                        </span>
                     }
                 </div>
 
@@ -367,10 +387,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         font-size: 18px;
                         line-height: 1.3em;
 
-
-                        display: flex;
-                        flex-direction: row;
-
                         /**
                          * Force product to be at max two lines
                          */
@@ -382,8 +398,16 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                         /** When mobile size, force product text to one line */
                         &.isSmall {
-                            -webkit-line-clamp: 1;
                             max-width: 100%;
+
+                            /** 
+                             * If user is a receiver, there should be a button 
+                             * below the product content, therefore, restrict
+                             * content to be at only 1 line
+                             */
+                            &.isReceiver {
+                                -webkit-line-clamp: 1;
+                            }
                         }
 
                         /**
@@ -394,15 +418,31 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         max-height: calc(18px * 2 * 1.3 + 0.25em);
                     }
 
+                    /** Positions the product title and price horizontally */
                     .product-wrapper {
+                        color: rgba(57,57,57, 0.9);
+
                         display: flex;
                         flex-direction: row;
                         justify-content: space-between;
                     }
 
+                    /** Displays the price of the product */
                     .price {
-                        font-size: 1.2em;
-                        margin: 2px 75px 0 0;
+                        font-size: 1.3em;
+                        margin-left: 10px;
+
+                        /** 
+                         * Owner of product will see edit buttons, therefore 
+                         * position price a bit to the right
+                         */
+                        &.isOwnProduct {
+                            margin-right: 75px;
+
+                            &.isSmall {
+                                margin-right: 25px;
+                            }
+                        }
                     }
                 `}</style>
             </section>
@@ -630,6 +670,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         width: 30px;
                         height: 20px;
 
+                        /** Setup color */
+                        color: rgba(57,57,57, 0.75);
+
                         /** Indicate that chevron is clickable */
                         cursor: pointer;
 
@@ -683,12 +726,31 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
+     * Dialog to confirm whether producer would active or deactivate product
+     */
+    private renderConfirmDialog() {
+        const titleAction = this.props.product.isActive ? "deactivation" : "activation";
+        const action = this.props.product.isActive ? "deactivate" : "activate";
+
+        return(
+            <Dialog title={`Confirm ${ titleAction }`}
+                    text={`Are you sure you want to ${ action } this product?`}
+                    active={ this.state.showDialog } 
+                    onClose={ this.closeConfirmationDialog } 
+                    confirmAction= { this.updateProductActivation }
+            />
+        );
+    }
+
+    /**
      * Internal renderer that renders the edit functionality of the product
      */
     private renderProductEdit = () => {
-        
+        const { product, isOwnProduct, userType } = this.props;
 
-        const { product } = this.props;
+        if(!isOwnProduct || userType === UserTypes.RECEIVER) {
+            return;
+        }
 
         return(
             <div className={`product-more ${this.state.isSmall ? "isSmall" : ""}`}>
@@ -698,11 +760,13 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         <button className="edit-button" title="Edit"><i className="edit">{ getSVG("edit") }</i></button>
                         {  
                             product.isActive &&
-                            <button className="status-button" title="Deactivate"><i className="status">{ getSVG("check-square") }</i></button>
+                            <button onClick={ this.openConfirmationDialog } className="status-button" title="Deactivate">
+                                <i className="status">{ getSVG("check-square") }</i>
+                            </button>
                         }
                         {  
                             !product.isActive &&
-                            <button className="status-button"><i className="status" title="Activate">{ getSVG("square") }</i></button>
+                            <button onClick={ this.openConfirmationDialog } className="status-button"><i className="status" title="Activate">{ getSVG("square") }</i></button>
                         }
                     </div>
                 )}
@@ -728,6 +792,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         font-family: ${ fonts.text };
                         padding: 2px 5px;
                         cursor: pointer;
+                        color: rgba(57,57,57, 0.75);
                     }
 
                     /** Make icon slightly smaller to fit better */
@@ -750,6 +815,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         position: absolute;
                         right: 0;
                         top: -6px;
+
+                        &.isSmall {
+                            top: -4px;
+                        }
                         z-index: 12;
                     }
 
@@ -761,6 +830,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Icon size */
                         height: 24px;
                         width: 24px;
+
+                        
                     }
 
                 `}</style>
@@ -792,10 +863,11 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
                     /** Indicate the icon is clickable */
                     .show-more-icon {
+                        color:  rgba(57,57,57, 0.75);
                         cursor: pointer;
 
                         &:hover {
-                            color: ${ colors.gray };
+                            color: ${ colors.secondary };
                         }
                     }
                 `}</style>
@@ -1109,6 +1181,28 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private closeImageLightbox = () => {
         this.setState({ showImage: false });
+    }
+
+    /**
+     * Listener that'll open the confirmation dialog once it has been executed
+     */
+    private openConfirmationDialog = () => {
+        this.setState({ showDialog: true });
+    }
+
+    /**
+     * Listener that'll close the dialog once it has been executed
+     */
+    private closeConfirmationDialog = () => {
+        this.setState({ showDialog: false });
+    }
+
+    /**
+     * Listener that updates the product 
+     * TODO: Do real stuff with this function
+     */
+    private updateProductActivation = () => {
+        this.setState({ showDialog: false });
     }
 
     /**
