@@ -2,10 +2,11 @@ import React from "react";
 import { Product } from "src/ts/components/elements/Product/Product";
 import ProductsPageJson from "src/assets/data/productsPage.json";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { colors } from "src/ts/config";
+import { colors, fonts } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { UserTypes } from "src/ts/models/UserModel";
+import { Throbber } from "src/ts/components/utils";
 
 export type ProductsPageProps = {
     /**
@@ -19,6 +20,11 @@ type ProductsPageState = {
      * The country the user wants to see products from
      */
     filterCountry?: string;
+
+    /**
+     * Specifies whether or not we are currently attempting to access the backend
+     */
+    isPending?: boolean;
 }
 
 /**
@@ -46,19 +52,26 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     {this.state.filterCountry !== undefined && <span className="removeFilter" role="button" aria-label="Remove filter" onClick={this.removeFilter}>{ProductsPageJson.RemoveFilter}</span>}
                 </div>
                 <div className="flex">
-                <div className="productsList">
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                    <div className="productsList">
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                    </div>
+                    <div className="productsList">
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                    </div>
                 </div>
-                <div className="productsList">
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                    <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+                
+                <div className="pageNavigation">
+                    {this.renderButton(ProductsPageJson.PreviousPage)}
+                    <p>page 1 of 45</p>
+                    {this.renderButton(ProductsPageJson.NextPage)}
                 </div>
-                </div>
+                
                 <style jsx>{`
                     .countryFilter {
                         margin-left: 10px;
@@ -97,12 +110,17 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
                     .product {
                         /*width: 50%;*/
-
                         & :global(.product-border) {
                             margin: 0;
                             margin-bottom: 20px;
                         }
 
+                    }
+
+                    .pageNavigation {
+                        display: flex;
+                        justify-content: space-between;
+                        flex-wrap: wrap;
                     }
 
                     @media (max-width: 1200px) {
@@ -133,6 +151,93 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     }
                 `}</style>
             </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the create button
+     */
+    private renderButton = (text:String) => {
+        return (
+            <button className={this.state.isPending ? "isPending" : ""}>
+                <span className="text">{text}</span>
+                <span className="throbber">
+                    <Throbber size={30} relative={true} inverted={true} />
+                </span>
+
+                <style jsx>{`
+                    /** Style button to match the rest of the project */
+                    button {
+                        margin: 10px 0;
+                        background-color: ${ colors.secondary };
+                        color: ${colors.white};
+                        border: none;
+                        border-radius: 2px;
+                        transition: background-color 0.1s linear;
+                        font-size: 16px;
+                        font-family: ${ fonts.heading };
+                        font-weight: 300;
+                        width: 170px;
+                        cursor: pointer;
+                        height: 43px;
+                        position: relative;
+                        display: block;
+
+                        & .throbber {
+                            /**
+                            * Position a throbber in the middle to be displayed
+                            * while requests are ongoing
+                            */
+                            position: absolute;
+                            left: calc(50% - 15px);
+                            top: calc(50% - 15px);
+                            opacity: 0;
+                            overflow: hidden;
+                            width: 140px;
+                            height: 40px;
+
+                            /**
+                            * prepare transitions
+                            */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        & .text {
+                            opacity: 1;
+                            transform: scale(1);
+
+                            /**
+                             * prepare transitions
+                             */
+                            transition: opacity 0.2s linear;
+                        }
+
+                        &.isPending .throbber {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+
+                        &.isPending .text {
+                            opacity: 0;
+                            transform: scale(0.5);
+                        }
+                    }
+
+                    button:hover {
+                        background-color: ${ colors.primary };
+                    }
+
+                    /* For mobile phones */
+                    @media (max-width: 666px) {
+                        button {
+                            margin: 15px auto;
+                            margin-bottom: 35px;
+                            max-width: 100%;
+                        }
+                    }
+
+                `}</style>
+            </button>
         );
     }
 
