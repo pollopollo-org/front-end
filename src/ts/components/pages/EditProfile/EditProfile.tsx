@@ -133,6 +133,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             return <h1>No user currently logged in!</h1>;
         }
 
+        const picture = this.getProfilePictureURL();
+
         return(
             <div className="allSection">
             <h1>{ editProfileJson.title }</h1>
@@ -192,9 +194,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
                                 {(
-                                    isNullOrUndefined(this.state.profilePicture) 
+                                    isNullOrUndefined(picture) 
                                         ? <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>
-                                        : <img className="currentPicture" src={ this.getProfilePictureURL() } alt="" role="presentation"/>  
+                                        : <img className="currentPicture" src={ picture } alt="" role="presentation"/>  
                                 )}
                         </div>
                         <input
@@ -405,7 +407,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     width: 105px;
                     display: block;
                     margin: 10px auto 20px auto;
-
+                    text-align: center;
                 }
 
                 [type="file"] + label:hover {
@@ -632,7 +634,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      */
     private getProfilePictureURL = () => {
         if(isNullOrUndefined(this.state.profilePicture)){
-            return "";
+            return this.props.store.user ? this.props.store.user.getThumbnail() : "";
         } else{
             return window.URL.createObjectURL(this.state.profilePicture);
         }
@@ -708,7 +710,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 this.setState({ isPending: false });
             }
         } catch (err) {
-            console.log(err);
             this.setState({ isPending: false });
             alert("Something went wrong while attempting to update your profile, please try again later.");
         }

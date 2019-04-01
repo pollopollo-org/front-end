@@ -308,9 +308,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 </div>
                 <img    
                     className="flag" 
-                    title={product.country} 
+                    title={product.location} 
                     src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`} 
-                    alt={product.country} 
+                    alt={product.location} 
                 />
 
                 <style jsx>{`

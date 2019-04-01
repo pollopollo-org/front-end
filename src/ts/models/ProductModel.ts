@@ -1,7 +1,5 @@
-import { DataProviders } from "src/ts/store/Store";
-
-import countriesJson from "src/assets/countries.json";
 import { CountryCodes } from "src/ts/models/CountryCodes";
+import countriesJson from "src/assets/countries.json";
 
 /**
  * Defines the data required to create a producer model.
@@ -9,14 +7,14 @@ import { CountryCodes } from "src/ts/models/CountryCodes";
  * the fields have been commented in length within the actual class
  */
 // tslint:disable completed-docs
-type ProductModelData = {
-    country: CountryCodes;
+export type ProductModelData = {
+    productId: number;
+    location: CountryCodes;
     description: string;
     title: string;
     price: number;
-    isActive: boolean;
-    thumbnail: string;
-    producerId: number;
+    available: boolean;
+    userId: number;
 };
 // tslint:enable completed-docs
 
@@ -27,53 +25,24 @@ export class ProductModel {
     /**
      * Helper that instantiates a model, populated with required data.
      */
-    public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ProductModel[]> {
-        if (dataProivder === DataProviders.BACKEND) {
-            const data = Array.from(<ProductModelData[]> (await import("../../assets/dummy/product.json")).default);
-            const products = [];
-
-            for (const product of data) {
-                products.push(new ProductModel(product));
-            }
-
-            return products;
-        } else {
-            const data = Array.from(<ProductModelData[]> (await import("../../assets/dummy/product.json")).default);
-            const products = [];
-
-            for (const product of data) {
-                products.push(new ProductModel(product));
-            }
-
-            return products;
-        }
+    public static CREATE(productData: ProductModelData): ProductModel {
+        return new ProductModel(productData);
     }
 
     /**
-     * Helper that instantiates a model, populated with required data.
+     * Specifies the id of the current product
      */
-    public static async CREATE(dataProivder: DataProviders): Promise<ProductModel> {
-        if (dataProivder === DataProviders.BACKEND) {
-            const data = await import("../../assets/dummy/product.json");
-
-            // Actually fetch data from backend.. :-)
-            return new ProductModel(data[0]);
-        } else {
-            const data = await import("../../assets/dummy/product.json");
-
-            return new ProductModel(data[0]);
-        }
-    }
+    public readonly id: number;
 
     /**
-     * Defines the countryCode of the country that the producer is coming from
+     * Defines the location where the product is being sold
+     */
+    public readonly location: string;
+
+    /**
+     * Defines the countryCode of the country that applicant is coming from
      */
     public readonly countryCode: CountryCodes;
-
-    /**
-     * Defines the country that the producer is coming from.
-     */
-    public readonly country: string;
 
     /**
      * Description defines the product in detail, in order
@@ -109,21 +78,22 @@ export class ProductModel {
 
     constructor(data: ProductModelData) {
         // Parse the country from the supplied countryCode
-        const country = countriesJson.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
+        const country = countriesJson.find((c) => c.Code.toLowerCase() === data.location.toLowerCase());
 
         if (!country) {
             console.warn("Unable to find country from countryCode!");
-            this.country = "";
+            this.location = "";
         } else {
-            this.country = country.Name;
+            this.location = country.Name;
         }
 
-        this.countryCode = data.country;
+        this.id = data.productId;
         this.description = data.description;
+        this.countryCode = data.location;
         this.title = data.title;
         this.price = data.price;
-        this.isActive = data.isActive;
-        this.producerId = data.producerId;
-        this.thumbnail = data.thumbnail;
+        this.description = data.description;
+        this.isActive = data.available;
+        this.producerId = data.userId;
     }
 }

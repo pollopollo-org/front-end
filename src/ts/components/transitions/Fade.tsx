@@ -10,8 +10,8 @@ const DURATION = 175;
  * Simple css fade transition that'll fade the dropdown in / out when it's being
  * shown / hidden.
  */
-// tslint:disable-next-line variable-name
-export const Fade: React.SFC = (props) => {
+// tslint:disable-next-line variable-name completed-docs
+export const Fade: React.SFC<{in?: boolean}> = (props) => {
     return (
         <CSSTransition
             { ...props }

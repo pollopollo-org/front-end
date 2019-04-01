@@ -1,7 +1,6 @@
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { DataProviders, Store } from "src/ts/store/Store";
 
-import { ProductModel } from "src/ts/models/ProductModel";
 import { fetchSelf } from "src/ts/utils/fetchUser";
 
 /**
@@ -21,9 +20,8 @@ export const createStore = () => {
                 // it and resolve immediately :-)
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
                 const user = await fetchSelf();
-                const products = await ProductModel.CREATE_COLLECTION(DataProviders.DUMMY);
 
-                resolve(new Store({applications, user, products}));
+                resolve(new Store({applications, user}));
             } catch (err) {
                 reject(err);
             }
