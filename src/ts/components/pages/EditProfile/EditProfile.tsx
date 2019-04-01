@@ -407,7 +407,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     width: 105px;
                     display: block;
                     margin: 10px auto 20px auto;
-
+                    text-align: center;
                 }
 
                 [type="file"] + label:hover {
@@ -710,7 +710,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 this.setState({ isPending: false });
             }
         } catch (err) {
-            console.log(err);
             this.setState({ isPending: false });
             alert("Something went wrong while attempting to update your profile, please try again later.");
         }

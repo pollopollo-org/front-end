@@ -10,6 +10,7 @@ import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
 import { withRouter, RouterProps } from "react-router";
 import { alertApiError } from "src/ts/utils/alertApiError";
+import { invalidateCacheKey } from "src/ts/utils/fetchProducts";
 
 type CreateProductProps = {
     /**
@@ -292,6 +293,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                         width: 105px;
                         display: block;
                         margin: -2px auto 0 auto;
+                        text-align: center;
                     }
 
                     [type="file"] + label:hover {
@@ -497,6 +499,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
 
             if (result.ok) {
                 this.props.history.push(routes.profile.path);
+                invalidateCacheKey(`producer-${this.props.store.user.id}`);
             } else {
                 alertApiError(result.status, apis.user.put.errors);
                 this.setState({ isPending: false });

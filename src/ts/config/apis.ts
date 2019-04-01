@@ -50,9 +50,34 @@ export const apis = {
         post: {
             path: `${basePath}/products`,
             errors: {
-                400: "Invalid information passed, please correct your data and try again",
+                400: "Invalid information passed, please correct your data and try again.",
                 409: "A product with the given information already exists."
             }
-        }
+        },
+        put: {
+            path: `${basePath}/products/{productId}`,
+            errors: {
+                400: "Invalid information passed, please correct your data and try again.",
+                404: "The product you are attempting to update has not been created yet.",
+            },
+        },
+        getById: {
+            path: `${basePath}/products/{productId}`,
+            errors: {
+                404: "The requested products could not be found. Please try again later.",
+            }
+        },
+        getBatch: {
+            path: `${basePath}/products?first={start}&last={end}`,
+            errors: {
+                404: "The requested products could not be found. Please try again later.",
+            }
+        },
+        getByProducer: {
+            path: `${basePath}/products/producer/{producerId}`,
+            errors: {
+                404: "The requested products could not be found. Please try again later.",
+            }
+        },
     }
 }

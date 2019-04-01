@@ -5,6 +5,12 @@ import { Errors } from "src/ts/config/apis";
  * from the API is returned
  */
 export function alertApiError(statusCode: number, errors: Errors): void {
+    if (statusCode === 429) {
+        alert("You've exceeded the rate limit. Please wait a while and then try again");
+
+        return;
+    }
+
     const supportedErrors = Object.keys(errors);
 
     const errorKey = supportedErrors.find(code => Number(code) === statusCode);
