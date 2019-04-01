@@ -235,6 +235,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                         .profile__information {
                             position: static;
+                            margin: 0 10px;
 
                             & :global(.information) {
                                 max-height: unset;
