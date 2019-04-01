@@ -3,6 +3,7 @@ import { ProductModel, ProductModelData } from "src/ts/models/ProductModel";
 import { alertApiError } from "src/ts/utils/alertApiError";
 
 const productCache: Map<string, ProductModel[]> = new Map();
+let cachedCount: number = 0;
 
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
@@ -12,7 +13,10 @@ export async function fetchProductBatch(start: number, end: number) {
 
     // If we have the current request cached, then simply return that!
     if (productCache.has(cacheKey)) {
-        return productCache.get(cacheKey);
+        return {
+            count: cachedCount,
+            products: productCache.get(cacheKey),
+        };
     }
 
 
@@ -33,13 +37,18 @@ export async function fetchProductBatch(start: number, end: number) {
             }
         });
 
-        const productsData: ProductModelData[] = await response.json();
+        // tslint:disable-next-line completed-docs
+        const json: { count: number; list: ProductModelData[] } = await response.json();
 
         if (response.ok) {
-            const productArray = productsData.map((productData) => ProductModel.CREATE(productData));
+            const productArray = json.list.map((productData) => ProductModel.CREATE(productData));
             productCache.set(cacheKey, productArray);
+            cachedCount = json.count;
 
-            return productArray;
+            return {
+                count: json.count,
+                products: productArray
+            };
         } else {
             alertApiError(response.status, apis.products.getBatch.errors);
             return;
