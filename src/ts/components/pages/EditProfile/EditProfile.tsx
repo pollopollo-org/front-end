@@ -133,6 +133,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             return <h1>No user currently logged in!</h1>;
         }
 
+        const picture = this.getProfilePictureURL();
+
         return(
             <div className="allSection">
             <h1>{ editProfileJson.title }</h1>
@@ -192,9 +194,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
                                 {(
-                                    isNullOrUndefined(this.state.profilePicture) 
+                                    isNullOrUndefined(picture) 
                                         ? <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>
-                                        : <img className="currentPicture" src={ this.getProfilePictureURL() } alt="" role="presentation"/>  
+                                        : <img className="currentPicture" src={ picture } alt="" role="presentation"/>  
                                 )}
                         </div>
                         <input
@@ -632,7 +634,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      */
     private getProfilePictureURL = () => {
         if(isNullOrUndefined(this.state.profilePicture)){
-            return "";
+            return this.props.store.user ? this.props.store.user.getThumbnail() : "";
         } else{
             return window.URL.createObjectURL(this.state.profilePicture);
         }

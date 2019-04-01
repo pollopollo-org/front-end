@@ -287,7 +287,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal helper that'll load all applications related to a user
      */
     private loadApplications = () => {
-        console.log("HI");
         this.setState({ applications: this.props.store.applications });
     }
 
