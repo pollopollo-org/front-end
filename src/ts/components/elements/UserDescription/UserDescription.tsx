@@ -36,13 +36,15 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
             return <h1>There is no user available for rendering</h1>;
         }
 
+        const thumbnail = user.getThumbnail();
+
         return (
             <div className="information">
                 <div className="content">
                     <div className="image">
-                        {(isNullOrUndefined(user.thumbnail)
+                        {(isNullOrUndefined(thumbnail)
                             ? <i className="user">{getSVG("user2", { strokeColor: colors.primary })}</i>
-                            : <img src={require("src/assets/dummy/sif.PNG")} alt="" role="presentation" />)
+                            : <img src={thumbnail} alt="" role="presentation" />)
                         }
                     </div>
                     <p><span className="bold">{profileJson.name}</span> {user.firstName} {user.surName}</p>

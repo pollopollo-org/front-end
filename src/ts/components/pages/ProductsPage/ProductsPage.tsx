@@ -1,11 +1,9 @@
 import React from "react";
-import { Product } from "src/ts/components/elements/Product/Product";
 import ProductsPageJson from "src/assets/data/productsPage.json";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 import { colors, fonts } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { UserTypes } from "src/ts/models/UserModel";
 import { Throbber } from "src/ts/components/utils";
 import { ProductModel } from "src/ts/models/ProductModel";
 
@@ -78,16 +76,10 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                 </div>
                 <div className="flex">
                     <div className="productsListLeft">
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+
                     </div>
                     <div className="productsListRight">
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
-                        <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
+
                     </div>
                 </div>
                 

@@ -309,7 +309,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 <div className="thumbnail">
                     <Thumbnail src={require("src/assets/dummy/product.jpg")} callback={ this.openImageLightbox } />
                 </div>
-
                 <style jsx>{`
 
                     /** Thumbnail img in the .section-thumbnail */

@@ -25,6 +25,11 @@ export type UserToken = {
 }
 
 /**
+ * Contains the path to the backend which is used to resolve images
+ */
+const BACKEND_URL = "https://api.pollopollo.org";
+
+/**
  * Defines the data required to create a user model.
  *
  * The fields have been commented in length within the actual class
@@ -85,7 +90,7 @@ export class UserModel {
     /**
      * The path to the user's profile picture
      */
-    public readonly thumbnail?: string;
+    private readonly thumbnail?: string;
 
     constructor(data: UserModelData) {
         this.id = data.userId;
@@ -96,5 +101,17 @@ export class UserModel {
         this.city = data.city;
         this.description = data.description;
         this.thumbnail = data.thumbnail;
+    }
+
+    /**
+     * Internal helper that returns the absolute path to be rendered for a given
+     * profile
+     */
+    public getThumbnail(): string | undefined {
+        if (this.thumbnail) {
+            return `${BACKEND_URL}/${this.thumbnail}`;
+        } else {
+            return;
+        }
     }
 }

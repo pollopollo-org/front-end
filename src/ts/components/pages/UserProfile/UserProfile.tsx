@@ -5,18 +5,23 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
 import { getSVG } from "src/assets/svg";
-import { UserModel } from "src/ts/models/UserModel";
+import { UserModel, UserTypes } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import { fetchUser } from "src/ts/utils/fetchUser";
 import userProfileJson from "src/assets/data/userProfile.json";
-import { ProducerModel } from "src/ts/models/ProducerModel";
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { colors } from "src/ts/config";
+import { fetchProductByProducer } from "src/ts/utils/fetchProducts";
+import { ProductModel } from "src/ts/models/ProductModel";
+import { Product } from "src/ts/components/elements/Product/Product";
+import { getUserType } from "src/ts/utils/getUserType";
+import { Throbber } from "src/ts/components/utils";
+import { Fade } from "src/ts/components/transitions/Fade";
 
 export type UserProps = {
     /**
@@ -26,6 +31,11 @@ export type UserProps = {
 } & RouteComponentProps;
 
 export type UserState = {
+    /**
+     * Specifies the id of the currently rendered user
+     */
+    userId: number;
+
     /**
      * Specifies the user to be rendered
      */
@@ -40,7 +50,7 @@ export type UserState = {
     /**
      * Contains an array of products to be rendered if any
      */
-    products?: ProducerModel[];
+    products?: ProductModel[];
 
     /**
      * Contains an array of applications to be rendered if any
@@ -57,6 +67,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Setup initial state
      */
     public state: UserState = {
+        userId: this.props.store.user ? this.props.store.user.id : 0,
         isSelf: false,
         renderedUser: this.props.store.user,
     }
@@ -188,6 +199,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                      * move down to align with information box
                      */
                     .list {
+                        position: relative;
                         margin-top: 80px;
                         width: 50%;
                     }
@@ -229,7 +241,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             text-align: center;
                         }
 
-                        h2 {
+                        .list__header {
                             margin-top: 20px;
                         }
 
@@ -255,19 +267,74 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
+     * Simple helper that displays a throbber that can be rendered while products/
+     * applications are loading
+     */
+    private renderListThrobber = () => {
+        const throbberSize = 64;
+
+        return (
+            <i
+                style={{
+                    height: throbberSize,
+                    width: throbberSize,
+                }}
+            >
+                <Throbber size={throbberSize} relative={true} />
+
+                <style jsx>{`
+                    i {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                `}</style>
+            </i>
+        );
+    }
+
+    /**
      * Internal render method that'll render all products associated to a user
      */
     private renderProducts = () => {
         return (
-            <h1>wutwut</h1>
+            <>
+                <Fade in={!this.state.products} key="throbber">
+                    {this.renderListThrobber()}
+                </Fade>
+                <Fade in={!!this.state.products} key="products">
+                    <div>
+                        { this.state.products && this.state.products.map((product, index) => (
+                            <Product
+                                key={index}
+                                product={product}
+                                isOwnProduct={this.state.isSelf}
+                                userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
+                            />                    
+                        ))}
+                    </div>
+                </Fade>
+            </>
         );
     }
 
     /**
      * Internal helper that'll load all products related to a user
      */
-    private loadProducts = () => {
+    private loadProducts = async() => {
+        if (!this.state.userId) {
+            return;
+        }
 
+        const products = await fetchProductByProducer(this.state.userId);
+
+        if (!products) {
+            this.setState({ products: [] });
+        } else {
+            this.setState({ products });
+
+        }
     }
 
     /**
@@ -288,7 +355,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal helper that'll load all applications related to a user
      */
     private loadApplications = () => {
-        console.log("HI");
         this.setState({ applications: this.props.store.applications });
     }
 
@@ -306,6 +372,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             user = await fetchUser(readonlyUserId);
 
             this.setState({
+                userId: Number(readonlyUserId),
                 isSelf: false,
                 renderedUser: user,
             });
