@@ -1,9 +1,22 @@
 import React from "react";
 import createProductJson from "src/assets/data/createProduct.json";
-import { colors, fonts } from "src/ts/config";
+import { colors, fonts, routes } from "src/ts/config";
 import { getSVG } from "src/assets/svg";
 import { isNullOrUndefined } from "util";
 import { Throbber } from "src/ts/components/utils";
+import { apis } from "src/ts/config/apis";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
+import { asyncTimeout } from "src/ts/utils";
+import { withRouter, RouterProps } from "react-router";
+import { alertApiError } from "src/ts/utils/alertApiError";
+
+type CreateProductProps = {
+    /**
+     * Contains a reference to the root store
+     */
+    store: Store;
+} & RouterProps;
 
 /**
  * State of the component
@@ -32,12 +45,12 @@ type CreateProductState = {
      * Specifies whether or not we're currently attempting to create a user
      */
     isPending?: boolean;
-}
+};
 
 /**
  * A page where a producer can create a product
  */
-export class CreateProduct extends React.PureComponent<CreateProductState> {
+class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, CreateProductState> {
     /**
      * State of the create product form form, all fields initially set to null
      */
@@ -406,7 +419,7 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
      * properly update state
      */
     private onPriceChanged = (evt: React.FormEvent<HTMLInputElement>) => {
-        this.setState({ price: evt.currentTarget.value });
+        this.setState({ price: Number(evt.currentTarget.value) });
     }
 
     /**
@@ -456,8 +469,43 @@ export class CreateProduct extends React.PureComponent<CreateProductState> {
     private sendToBackEnd = async (evt: React.FormEvent) => {
         evt.preventDefault();
 
-        if (this.state.isPending) {
+        if (this.state.isPending || !this.props.store.user) {
             return;
+        }
+        
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
+            const token = localStorage.getItem("userJWT");
+
+            const result = await fetch(apis.products.post.path, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    producerId: this.props.store.user.id,
+                    title: this.state.title,
+                    price: this.state.price,
+                    description: this.state.description,
+                    location: this.props.store.user.country,
+                }),
+            });
+
+            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+
+            if (result.ok) {
+                this.props.history.push(routes.profile.path);
+            } else {
+                alertApiError(result.status, apis.user.put.errors);
+                this.setState({ isPending: false });
+            }
+        } catch (err) {
+            this.setState({ isPending: false });
+            alert("Something went wrong while attempting to create your product, please try again later.");
         }
     }
 }
+
+export const CreateProduct = withRouter(injectStore((store) => ({ store }), UnwrappedCreateProduct));
