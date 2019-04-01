@@ -1112,6 +1112,14 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Setup spacing between chevron and text */
                         margin-right: 5px;
                     }
+
+                    .userDesc {
+                        & :global(.information) {
+                            width: 100%;
+                            margin: 0;
+                        }
+
+                    }
                 `}</style>
             </Lightbox>
         );

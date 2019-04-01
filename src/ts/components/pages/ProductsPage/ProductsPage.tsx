@@ -146,6 +146,9 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
                     }
 
+                    /** Show number of pages, current page number and buttons
+                     * for navigating to next or previous page
+                     */
                     .pageNavigation {
                         display: flex;
                         justify-content: space-between;
