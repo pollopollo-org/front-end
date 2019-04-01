@@ -675,7 +675,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     userRole: this.state.userType,
                     newPassword: this.state.repeatedPassword,
                     password: this.state.oldPassword,
-                    thumbnail: this.state.profilePicture,
                     wallet: this.state.wallet,
                     description: this.state.description,
                 })
@@ -687,7 +686,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 imageResult = await fetch(apis.user.image.path, {
                     method: "PUT",
                     headers: {
-                        "Content-Type": this.state.profilePicture.type,
                         "Authorization": `Bearer ${token}`
                     },
                     body: this.imageToData(),
@@ -710,6 +708,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 this.setState({ isPending: false });
             }
         } catch (err) {
+            console.log(err);
             this.setState({ isPending: false });
             alert("Something went wrong while attempting to update your profile, please try again later.");
         }

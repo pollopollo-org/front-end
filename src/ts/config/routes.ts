@@ -34,7 +34,6 @@ export const routes = {
         path: "/profile/edit.html",
     },
     createProduct: {
-        path: "/createproduct.html",
-        name: "Create Product",
+        path: "/products/create.html",
     }
 }
