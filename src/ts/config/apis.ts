@@ -75,9 +75,7 @@ export const apis = {
         },
         getByProducer: {
             path: `${basePath}/products/producer/{producerId}`,
-            errors: {
-                404: "The requested products could not be found. Please try again later.",
-            }
+            errors: {},
         },
     }
 }

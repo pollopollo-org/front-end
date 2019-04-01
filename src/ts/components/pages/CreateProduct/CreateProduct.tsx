@@ -487,7 +487,6 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    id: 0,
                     userId: this.props.store.user.id,
                     title: this.state.title,
                     price: this.state.price,

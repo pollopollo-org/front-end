@@ -32,6 +32,11 @@ export type UserProps = {
 
 export type UserState = {
     /**
+     * Specifies the id of the currently rendered user
+     */
+    userId: number;
+
+    /**
      * Specifies the user to be rendered
      */
     renderedUser?: UserModel;
@@ -62,6 +67,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Setup initial state
      */
     public state: UserState = {
+        userId: this.props.store.user ? this.props.store.user.id : 0,
         isSelf: false,
         renderedUser: this.props.store.user,
     }
@@ -316,17 +322,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal helper that'll load all products related to a user
      */
     private loadProducts = async() => {
-        if (!this.state.renderedUser) {
+        if (!this.state.userId) {
             return;
         }
 
-        const products = await fetchProductByProducer(this.state.renderedUser.id);
+        const products = await fetchProductByProducer(this.state.userId);
 
         if (!products) {
             this.setState({ products: [] });
-        }
+        } else {
+            this.setState({ products });
 
-        this.setState({ products });
+        }
     }
 
     /**
@@ -364,6 +371,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             user = await fetchUser(readonlyUserId);
 
             this.setState({
+                userId: Number(readonlyUserId),
                 isSelf: false,
                 renderedUser: user,
             });
