@@ -487,7 +487,8 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    producerId: this.props.store.user.id,
+                    id: 0,
+                    userId: this.props.store.user.id,
                     title: this.state.title,
                     price: this.state.price,
                     description: this.state.description,
@@ -501,7 +502,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                 this.props.history.push(routes.profile.path);
                 invalidateCacheKey(`producer-${this.props.store.user.id}`);
             } else {
-                alertApiError(result.status, apis.user.put.errors);
+                alertApiError(result.status, apis.products.post.errors);
                 this.setState({ isPending: false });
             }
         } catch (err) {
