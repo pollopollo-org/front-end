@@ -35,6 +35,10 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                     <Product product={this.props.store.products[1]} userType={ UserTypes.PRODUCER } isOwnProduct={ false } />
                     <Product product={this.props.store.products[2]} userType={ UserTypes.PRODUCER } isOwnProduct={ true } />
                     <Product product={this.props.store.products[3]} userType={ UserTypes.RECEIVER } isOwnProduct={ true } />
+                    <Product product={this.props.store.products[4]} userType={ UserTypes.RECEIVER } isOwnProduct={ true } />
+                    <Product product={this.props.store.products[5]} userType={ UserTypes.RECEIVER } isOwnProduct={ true } />
+                    <Product product={this.props.store.products[6]} userType={ UserTypes.RECEIVER } isOwnProduct={ true } />
+
 
                     <br/>
 

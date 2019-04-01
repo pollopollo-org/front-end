@@ -254,7 +254,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderProduct() {
         return (
-            <div className="product">
+            <div className={`product ${this.state.isSmall ? "isSmall" : ""}`}>
                 <div className="sections">
                     { this.renderThumbnailSection() }
                     { this.renderContentSection() }
@@ -265,10 +265,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 { this.props.userType === UserTypes.RECEIVER && 
                     this.renderApplyButton() }
 
-                { this.state.isSmall && (
-                    this.renderDescriptionTeaser()
-                )}
-
+                { this.renderDescriptionTeaser() }
+                
                 { this.renderChevron() }
                 
                 <style jsx>{`
@@ -276,6 +274,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     /** The product itself  */
                     .product {
                         position: relative;
+                        overflow: hidden;
+                        width: 100%;
+                        
+                        &.isSmall {
+                            padding-bottom: 20px;
+                        }
                     }
 
                     /** Contans different sections to manage placement with flexbox */
@@ -319,7 +323,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     .thumbnail {
                         height: 70px;
                         width: 70px;
-                        margin-right: 30px;
+                        margin-right: 25px;
                     }
 
                     /** Flag showing the users country */
@@ -366,10 +370,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         </span>
                     }
                 </div>
-
-                { !this.state.isSmall && (
-                    this.renderDescriptionTeaser()
-                )}
 
                 <style jsx>{`
                     .section-content {
@@ -471,6 +471,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Position the teaser on the bottom of the content section */
                         position: absolute;
                         bottom: 0;
+                        margin-left: 100px;
 
                         /** Force description to remain on one line and crop on overflow */
                         white-space: nowrap;
@@ -489,12 +490,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         *   at the bottom
                         */
                         &.isSmall {
-                            position: relative;
-                            display: block;
                             max-width: calc(100% - 60px);
-
-                            margin-top: 8px;
-                            margin-left: 7px;
+                            left: 5px;
+                            margin: 0;
                         }
                     }
                 `}</style>
@@ -830,8 +828,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Icon size */
                         height: 24px;
                         width: 24px;
-
-                        
                     }
 
                 `}</style>
