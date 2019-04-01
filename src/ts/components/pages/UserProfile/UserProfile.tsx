@@ -305,14 +305,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 </Fade>
                 <Fade in={!!this.state.products} key="products">
                     <div>
-                        { this.state.products && this.state.products.map((product, index) => (
-                            <Product
-                                key={index}
-                                product={product}
-                                isOwnProduct={this.state.isSelf}
-                                userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
-                            />                    
-                        ))}
+                        { this.state.products && this.state.products.map((product, index) => {
+                            const isOnProducersPage = product.producerId === this.state.userId;
+                            const isOwnProduct = this.state.userId === product.producerId;
+
+                            return (
+                                <Product
+                                    key={index}
+                                    product={product}
+                                    isOnProducersPage={isOnProducersPage}
+                                    isOwnProduct={isOwnProduct}
+                                    userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
+                                />  
+                            );
+                        })}
                     </div>
                 </Fade>
             </>

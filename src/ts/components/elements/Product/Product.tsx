@@ -32,6 +32,12 @@ export type ProductProps = {
      * Contains a reference to the product model that should be rendered
      */
     product: ProductModel;
+
+    /**
+     * Specifies whether or not we're currently on the producer who made the product's
+     * page.
+     */
+    isOnProducersPage: boolean;
 }
 
 export type ProductState = {
@@ -563,7 +569,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
 
     private renderProducerLink() {
-        if(this.props.userType === UserTypes.PRODUCER) {
+        if (this.props.isOnProducersPage) {
             return;
         }
 
@@ -1043,18 +1049,20 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         return (
             <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
                 <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct}/>
-                <div>
-                    <a 
-                        href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        <span className="chevron">
-                            <Chevron/>
-                        </span>
-                        <span className="text">Go to producer profile</span>
-                    </a>
-                </div>
+                { !this.props.isOnProducersPage && (
+                    <div>
+                        <a
+                            href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <span className="chevron">
+                                <Chevron />
+                            </span>
+                            <span className="text">Go to producer profile</span>
+                        </a>
+                    </div>                    
+                )}
 
                 <style jsx>{`
                     div {
