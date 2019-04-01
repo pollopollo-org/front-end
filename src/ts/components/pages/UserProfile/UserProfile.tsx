@@ -32,7 +32,7 @@ export type UserState = {
     renderedUser?: UserModel;
 
     /**
-     * Specifies whehter the rendered user is the user him/herself, which means
+     * Specifies whehter the rendered user is the user themself, which means
      * we should render edit functionality etc.
      */
     isSelf: boolean;
@@ -94,7 +94,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             )}
                         </div>
                         {/* Information box */}
-                        <UserDescription user={user} />
+                        <UserDescription user={user} isSelf={this.state.isSelf} />
                     </div>
                     {/* List of the user's products/applications */}
                     <div className="list">

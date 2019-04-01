@@ -1064,7 +1064,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
-                <UserDescription user={this.state.producer} />
+                <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct}/>
                 <div>
                     <a 
                         href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
