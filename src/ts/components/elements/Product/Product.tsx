@@ -737,7 +737,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     text={`Are you sure you want to ${ action } this product?`}
                     active={ this.state.showDialog } 
                     onClose={ this.closeConfirmationDialog } 
-                    confirmAction= { this.closeConfirmationDialog }
+                    confirmAction= { this.updateProductActivation }
             />
         );
     }
@@ -1194,6 +1194,14 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Listener that'll close the dialog once it has been executed
      */
     private closeConfirmationDialog = () => {
+        this.setState({ showDialog: false });
+    }
+
+    /**
+     * Listener that updates the product 
+     * TODO: Do real stuff with this function
+     */
+    private updateProductActivation = () => {
         this.setState({ showDialog: false });
     }
 
