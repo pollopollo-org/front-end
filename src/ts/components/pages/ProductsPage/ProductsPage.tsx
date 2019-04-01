@@ -7,6 +7,7 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { UserTypes } from "src/ts/models/UserModel";
 import { Throbber } from "src/ts/components/utils";
+import { ProductModel } from "src/ts/models/ProductModel";
 
 export type ProductsPageProps = {
     /**
@@ -22,6 +23,21 @@ type ProductsPageState = {
     filterCountry?: string;
 
     /**
+     * The list of products to display
+     */
+    products?: ProductModel[];
+
+    /**
+     * The index of the first product to display in the current list
+     */
+    firstOfList: number;
+
+    /**
+     * The index of the last product to display in the current list
+     */
+    lastOfList: number;
+
+    /**
      * Specifies whether or not we are currently attempting to access the backend
      */
     isPending?: boolean;
@@ -33,8 +49,17 @@ type ProductsPageState = {
 class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, ProductsPageState> {
     /**
      * State of the register form, all fields initially set to null
-     */
+     
     public readonly state: ProductsPageState = {};
+    */
+
+    /**
+     * Setup initial state
+     */
+    public state: ProductsPageState = {
+        firstOfList: 0,
+        lastOfList: 19,
+    }
 
     /**
      * Main render method for the entire component
@@ -52,13 +77,13 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     {this.state.filterCountry !== undefined && <span className="removeFilter" role="button" aria-label="Remove filter" onClick={this.removeFilter}>{ProductsPageJson.RemoveFilter}</span>}
                 </div>
                 <div className="flex">
-                    <div className="productsList">
+                    <div className="productsListLeft">
                         <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
                         <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
                         <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
                         <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
                     </div>
-                    <div className="productsList">
+                    <div className="productsListRight">
                         <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
                         <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
                         <div className="product"><Product product={this.props.store.products[1]} userType={ UserTypes.RECEIVER } isOwnProduct={ false } /></div>
@@ -73,27 +98,28 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                 </div>
                 
                 <style jsx>{`
-                    .countryFilter {
-                        margin-left: 10px;
-                    }
+                    /** Filter function */
+                        .countryFilter {
+                            margin-left: 10px;
+                        }
 
-                    .removeFilter {
-                        margin-left: 10px;
-                        font-weight: 300;
-                        color: ${colors.secondary}; 
-                    }
+                        .removeFilter {
+                            margin-left: 10px;
+                            font-weight: 300;
+                            color: ${colors.secondary}; 
+                        }
 
-                    .removeFilter:hover {
-                        color:${colors.tulip};
-                        cursor: pointer;                        
-                    }
+                        .removeFilter:hover {
+                            color:${colors.tulip};
+                            cursor: pointer;                        
+                        }
 
                     .flex {
                         display: flex;
                         flex-direction: row;
                     }
 
-                    .productsList {
+                    .productsListLeft, .productsListRight {
                         /*
                         display: grid;
                         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -103,16 +129,19 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         display: flex;
                         flex-direction: column;
                         flex-wrap: wrap;
-                        width: 100%;
+                        width: 100%;                     
+                    }
 
-                        
+                    .productsListLeft {
+                        margin-right: 20px;
                     }
 
                     .product {
                         /*width: 50%;*/
                         & :global(.product-border) {
-                            margin: 0;
+                            margin: 0; 
                             margin-bottom: 20px;
+                            width: 100%;
                         }
 
                     }
@@ -121,6 +150,11 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         display: flex;
                         justify-content: space-between;
                         flex-wrap: wrap;
+                        margin-bottom: 20px;
+                    }
+
+                    .pageNavigation p {
+                        margin: auto;
                     }
 
                     @media (max-width: 1200px) {
@@ -155,7 +189,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     }
 
     /**
-     * Internal renderer that renders the create button
+     * Internal renderer that renders a button
      */
     private renderButton = (text:String) => {
         return (
@@ -169,17 +203,23 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     /** Style button to match the rest of the project */
                     button {
                         margin: 10px 0;
+
                         background-color: ${ colors.secondary };
                         color: ${colors.white};
+
                         border: none;
                         border-radius: 2px;
                         transition: background-color 0.1s linear;
+
                         font-size: 16px;
                         font-family: ${ fonts.heading };
                         font-weight: 300;
-                        width: 170px;
+                        
                         cursor: pointer;
+
+                        width: 170px;
                         height: 43px;
+
                         position: relative;
                         display: block;
 
@@ -230,9 +270,9 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     /* For mobile phones */
                     @media (max-width: 666px) {
                         button {
-                            margin: 15px auto;
-                            margin-bottom: 35px;
-                            max-width: 100%;
+                            font-size: 14px;
+                            width: 90px;
+                            height: 35px;
                         }
                     }
 
