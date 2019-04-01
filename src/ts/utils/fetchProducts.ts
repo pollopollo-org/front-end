@@ -1,6 +1,7 @@
 import { apis } from "src/ts/config/apis";
 import { ProductModel, ProductModelData } from "src/ts/models/ProductModel";
 import { alertApiError } from "src/ts/utils/alertApiError";
+import { Store } from "src/ts/store/Store";
 
 const productCache: Map<string, ProductModel[]> = new Map();
 let cachedCount: number = 0;
@@ -8,7 +9,7 @@ let cachedCount: number = 0;
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
-export async function fetchProductBatch(start: number, end: number) {
+export async function fetchProductBatch(start: number, end: number, store: Store) {
     const cacheKey = `${start}${end}`;
 
     // If we have the current request cached, then simply return that!
@@ -50,7 +51,7 @@ export async function fetchProductBatch(start: number, end: number) {
                 products: productArray
             };
         } else {
-            alertApiError(response.status, apis.products.getBatch.errors);
+            alertApiError(response.status, apis.products.getBatch.errors, store);
             return;
         }
 
@@ -62,7 +63,7 @@ export async function fetchProductBatch(start: number, end: number) {
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
-export async function fetchProductById(productId: number) {
+export async function fetchProductById(productId: number, store: Store) {
     const cacheKey = String(productId);
 
     if (productCache.has(cacheKey)) {
@@ -94,7 +95,7 @@ export async function fetchProductById(productId: number) {
 
             return productArray;
         } else {
-            alertApiError(response.status, apis.products.getById.errors);
+            alertApiError(response.status, apis.products.getById.errors, store);
             return;
         }
 
@@ -106,7 +107,7 @@ export async function fetchProductById(productId: number) {
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
-export async function fetchProductByProducer(producerId: number) {
+export async function fetchProductByProducer(producerId: number, store: Store) {
     const cacheKey = `producer-${producerId}`;
 
     if (productCache.has(cacheKey)) {
@@ -138,7 +139,7 @@ export async function fetchProductByProducer(producerId: number) {
 
             return productArray;
         } else {
-            alertApiError(response.status, apis.products.getByProducer.errors);
+            alertApiError(response.status, apis.products.getByProducer.errors, store);
             return;
         }
 

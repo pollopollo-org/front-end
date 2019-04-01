@@ -415,7 +415,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      * page.
      */
     private fetchData = async (pageIndex: number) => {
-        const response = await fetchProductBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE);
+        const response = await fetchProductBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.props.store);
 
         if (!response) {
             this.setState({ products: undefined });

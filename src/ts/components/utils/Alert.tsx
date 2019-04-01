@@ -14,29 +14,21 @@ type AlertProps = {
     active: boolean;
 
     /**
-     * Callback to be executed once the alert should be closed
+     * Callback to be triggered once the alert should be closed
      */
     onClose(): void;
 };
 
-type AlertState = {
-    // nothing here
-}
-
 /**
  * Alert hehe
  */
-export class Alert extends React.PureComponent<AlertProps, AlertState> {
+export class Alert extends React.PureComponent<AlertProps> {
 
     /**
      * Main render method, used to render Alert
      */
     render(): JSX.Element {
-        return(
-            <React.Fragment>
-                { this.renderAlertLightbox() }
-            </React.Fragment>
-        );
+        return this.renderAlertLightbox();
     }
 
     /**

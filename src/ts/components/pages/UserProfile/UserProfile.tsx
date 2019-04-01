@@ -333,7 +333,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             return;
         }
 
-        const products = await fetchProductByProducer(this.state.userId);
+        const products = await fetchProductByProducer(this.state.userId, this.props.store);
 
         if (!products) {
             this.setState({ products: [] });
@@ -375,7 +375,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         // If we have a match on the route, that means we should attempt to 
         // render the given user in readonly mode
         if (readonlyUserId) {
-            user = await fetchUser(readonlyUserId);
+            user = await fetchUser(readonlyUserId, this.props.store);
 
             this.setState({
                 userId: Number(readonlyUserId),

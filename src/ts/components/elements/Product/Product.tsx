@@ -16,6 +16,8 @@ import { fetchUser } from "src/ts/utils/fetchUser";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
 import { Alert } from "src/ts/components/utils/Alert";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
 
 export type ProductProps = {
 
@@ -39,6 +41,11 @@ export type ProductProps = {
      * page.
      */
     isOnProducersPage: boolean;
+
+    /**
+     * Contains a reference to the root store
+     */
+    store: Store;
 }
 
 export type ProductState = {
@@ -94,7 +101,7 @@ const MOBILE_BREAKPOINT = 440;
 /**
  * Product template to contain information about a single product
  */
-export class Product extends React.PureComponent<ProductProps, ProductState> {
+class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     /**
      * State of the component
      */
@@ -1125,10 +1132,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Listener that'll open the producer lightbox once it has been executed
      */
     private openProducerLightbox = async () => {
-        // TODO: Display throbber while loading!!!!!!!
         if (!this.state.producer) {
             const producerId = this.props.product.producerId;
-            const producer = await fetchUser(String(producerId));
+            const producer = await fetchUser(String(producerId), this.props.store);
 
 
             // Only display producer if one exists with the given id
@@ -1288,3 +1294,5 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         this.setState({ showDropdown: !this.state.showDropdown });
     }
 }
+
+export const Product = injectStore((store) => ({ store }), UnwrappedProduct);

@@ -344,8 +344,8 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
         // axis, based on the direction which it's going to be pointing
         const dropdownTop = (
             arrowDirection === DropdownArrowDirection.UP
-                ? refPos.top - parentPos.top + refSize.height + 15
-                : refPos.top - parentPos.top - dropdownSize.height - 15
+                ? refPos.top - parentPos.top + refSize.height + 15 - document.body.scrollTop
+                : refPos.top - parentPos.top - dropdownSize.height - 15 - document.body.scrollTop
         );
 
         // ... And we can then calculate the DESIRED position of the dropdown on
