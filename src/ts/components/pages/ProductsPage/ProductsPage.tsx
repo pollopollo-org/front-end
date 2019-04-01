@@ -86,63 +86,34 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      * Main render method for the entire component
      */
     public render(): JSX.Element{
-        if (!this.state.products) {
-            return <h1>No products available!</h1>;
-        }
-
         return (
             <div className="page">
                 {this.renderIntroduction()}
-                <div className="flex">
-                    { (this.state.isPending) && 
-                        <i className="throbber-wrapper">
-                            <Throbber size={64} relative={true} />
-                        </i>
-                    }
-                    <div className="productsListLeft">
-                        { this.state.products.map((product, index) => {
-                            if (index % 2 === 0) {
-                                const isOwnProduct = this.props.store.user 
-                                    ? this.props.store.user.id === product.producerId 
-                                    : false;
 
-                                return (
-                                    <Product 
-                                        product={product}
-                                        userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
-                                        isOnProducersPage={false}
-                                        isOwnProduct={isOwnProduct}
-                                    />
-                                );
-                            }
-
-                            return;
-                        }) }
+                {this.state.products
+                    ? <div className="flex">
+                        { (this.state.isPending) && 
+                            <i className="throbber-wrapper">
+                                <Throbber size={64} relative={true} />
+                            </i>
+                        }
+                        <div className="productsListLeft">
+                            {this.renderListOfProducts(true)}
+                        </div>
+                        <div className="productsListRight">
+                            {this.renderListOfProducts(false)}
+                        </div>
                     </div>
-                    <div className="productsListRight">
-                        { this.state.products.map((product, index) => {
-                            if (index % 2 === 1) {
-                                const isOwnProduct = this.props.store.user 
-                                    ? this.props.store.user.id === product.producerId 
-                                    : false;
-
-                                return (
-                                    <Product 
-                                        product={product}
-                                        userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
-                                        isOnProducersPage={false}
-                                        isOwnProduct={isOwnProduct}
-                                    />
-                                );
-                            }
-
-                            return;
-                        }) }
-                    </div>
-                </div>
+                    : <h2><i>There is no products available.</i></h2>}
+                
                 { this.renderNavigation() }
                 
                 <style jsx>{`
+                    h2 {
+                        margin: 50px 0;
+                        text-align: center;
+                    }
+
                     .flex {
                         display: flex;
                         flex-direction: row;
@@ -205,6 +176,39 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     }
                 `}</style>
             </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders a list of either even or uneven indexed
+     * products
+     */
+    private renderListOfProducts(renderEvenProducts: boolean): React.ReactNode {
+        if (!this.state.products) {
+            return;
+        }
+
+        const evenOrUneven = renderEvenProducts ? 0 : 1;
+
+        return (
+            this.state.products.map((product, index) => {
+                if (index % 2 === evenOrUneven) {
+                    const isOwnProduct = this.props.store.user 
+                        ? this.props.store.user.id === product.producerId 
+                        : false;
+
+                    return (
+                        <Product 
+                            product={product}
+                            userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
+                            isOnProducersPage={false}
+                            isOwnProduct={isOwnProduct}
+                        />
+                    );
+                }
+
+                return;
+            })
         );
     }
 
