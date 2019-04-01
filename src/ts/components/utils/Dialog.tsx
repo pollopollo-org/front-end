@@ -30,14 +30,24 @@ type DialogProps = {
 };
 
 type DialogState = {
-    // nothing here
+    /**
+     * Specifies whether the product should be rendered to be compatible with
+     * smaller viewports
+     */
+    isSmall: boolean;
 }
 
 /**
- * Dialog hehe
+ * Renders a dialog to confirm or cancel an action
  */
 export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
+    /**
+     * State of the component
+     */
+    public state: DialogState = {
+        isSmall: false
+    };
 
     /**
      * Main render method, used to render Dialog
@@ -57,7 +67,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
         return(
             <Lightbox active={ this.props.active } onClose={ this.props.onClose }>
-                <div className="dialog">
+                <div className={`dialog ${this.state.isSmall ? "isSmall" : ""}`}>
                     <h3>{ this.props.title }</h3>
                     <p>{ this.props.text }</p>
                     <div className="dialog-buttons">
@@ -72,6 +82,12 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
                         margin: 10px 20px;
                         width: max-content;
                         max-width: 500px;
+
+                        @media (max-width: 440px) {
+                            line-height: 1.3em;
+                            max-width: calc(100% - 40px);
+                            text-align: center;
+                        }
                     }
 
                     .dialog-buttons {

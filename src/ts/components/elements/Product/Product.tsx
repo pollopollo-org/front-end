@@ -303,19 +303,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that renders the user section of the product template
      */
     private renderThumbnailSection = () => {
-        const { product } = this.props;
 
         return (
             <section className="section-thumbnail">
                 <div className="thumbnail">
                     <Thumbnail src={require("src/assets/dummy/product.jpg")} callback={ this.openImageLightbox } />
                 </div>
-                <img    
-                    className="flag" 
-                    title={product.country} 
-                    src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`} 
-                    alt={product.country} 
-                />
 
                 <style jsx>{`
 
@@ -326,18 +319,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         margin-right: 25px;
                     }
 
-                    /** Flag showing the users country */
-                    .flag {
-                        position: absolute;
-                        height: 20px;
-                        width: 30px;
-
-                        /** Positioning it on the top-right of the thumbnail */
-                        top: -5px;
-                        left: 50px;
-
-                        z-index: 2;
-                    }
                 `}</style>
             </section>
         );
@@ -812,10 +793,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     .product-more {
                         position: absolute;
                         right: 0;
-                        top: -6px;
+                        top: 0;
 
                         &.isSmall {
-                            top: -4px;
+                            top: 3px;
                         }
                         z-index: 12;
                     }
@@ -923,19 +904,18 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 <span onClick={ this.toggleDropdownState} role="button">
 
                         {   product.isActive &&
-                            <div className="link">
+                            <div className="link" onClick={ this.openConfirmationDialog } role="button">
                                 <i className="status">{ getSVG("check-square") }</i>
                                 <span>Deactivate</span>
                             </div>
                             
                         }
                         {   !product.isActive && 
-                            <div className="link">
+                            <div className="link" onClick={ this.openConfirmationDialog } role="button">
                                 <i className="status">{ getSVG("square") }</i>
                                 <span>Activate</span>
                             </div>
                         }
-
                 </span>
 
                 <style jsx>{`
@@ -945,7 +925,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         background: none;
                         -webkit-appearance: none;
                         border: none;
-
                         /** Center items within vertically */
                         display: flex;
                         align-items: center;
