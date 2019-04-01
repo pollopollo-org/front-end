@@ -89,7 +89,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
                             text-align: center;
                         }
                     }
-
+                    
                     .dialog-buttons {
                         display: flex;
                         flex-direction: row;

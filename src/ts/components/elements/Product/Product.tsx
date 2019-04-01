@@ -15,6 +15,7 @@ import { UserTypes } from "src/ts/models/UserModel";
 import { fetchUser } from "src/ts/utils/fetchUser";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
+import { Alert } from "src/ts/components/utils/Alert";
 
 export type ProductProps = {
 
@@ -59,9 +60,14 @@ export type ProductState = {
     showProducer: boolean;
 
     /**
-     * hey
+     * Specifies whether or not the confirmation dialog should be displayed
      */
     showDialog: boolean;
+
+    /**
+     * Specifies whether or not the confirmation alert should be displayed
+     */
+    showAlert: boolean;
 
     /**
      * Specifies whether the product should be rendered to be compatible with
@@ -91,7 +97,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         isSmall: false,
         showImage: false,
         showProducer: false,
-        showDialog: false
+        showDialog: false,
+        showAlert: false
     };
 
     /**
@@ -149,6 +156,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 { this.renderProducerLightbox() }
                 { this.renderImageLightbox() }
                 { this.renderConfirmDialog() }
+
+                <Alert text={ "Failed to fetch producer related to product. Please try again later." } onClose={ this.closeAlert } active={ this.state.showAlert } />
+
 
 				<style jsx>{`
 
@@ -1113,11 +1123,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
             const producerId = this.props.product.producerId;
             const producer = await fetchUser(String(producerId));
 
+
             // Only display producer if one exists with the given id
             if (producer) {
                 this.setState({ producer, showProducer: true });
             } else {
-                alert("Failed to fetch producer related to product. Please try again later.");
+                this.openAlert();
             }
         } else {
             this.setState({ showProducer: true });
@@ -1178,6 +1189,20 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private closeConfirmationDialog = () => {
         this.setState({ showDialog: false });
+    }
+
+    /**
+     * Listener that'll open the confirmation alert once it has been executed
+     */
+    private openAlert = () => {
+        this.setState({ showAlert: true });
+    }
+
+    /**
+     * Listener that'll close the alert once it has been executed
+     */
+    private closeAlert = () => {
+        this.setState({ showAlert: false });
     }
 
     /**

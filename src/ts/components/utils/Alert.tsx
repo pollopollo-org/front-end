@@ -1,6 +1,6 @@
 import React from "react";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
-import { colors } from "src/ts/config";
+import { colors, fonts } from "src/ts/config";
 
 type AlertProps = {
     /**
@@ -47,7 +47,7 @@ export class Alert extends React.PureComponent<AlertProps, AlertState> {
         return(
             <Lightbox active={ this.props.active } onClose={ this.props.onClose }>
                 <div className="alert">
-                    <p>{ this.props.text }</p>
+                    <div>{ this.props.text }</div>
                     <button className="ok" onClick={ this.props.onClose }>Ok</button>
                 </div>
 
@@ -56,13 +56,24 @@ export class Alert extends React.PureComponent<AlertProps, AlertState> {
                         margin: 10px 20px;
                         width: max-content;
                         max-width: 500px;
+                        text-align: center;
+                        font-style: ${ fonts.text };
+
+                        @media (max-width: 600px) {
+                            line-height: 1.3em;
+                            max-width: calc(100% - 40px);
+                        }
+                    }
+
+                    .alert div {
+                        margin: 25px 10px;
                     }
 
                     .alert button {
-                        padding: 7px;
+                        padding: 12px;
                         margin: 5px;
 
-                        width: 50%;
+                        width: 150px;
 
                         border: none;
                         border-radius: 2px;
