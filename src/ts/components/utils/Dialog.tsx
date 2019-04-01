@@ -58,7 +58,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
         return(
             <Lightbox active={ this.props.active } onClose={ this.props.onClose }>
                 <div className="dialog">
-                    <h3>Confirm</h3>
+                    <h3>{ this.props.title }</h3>
                     <p>{ this.props.text }</p>
                     <div className="dialog-buttons">
                         <button className="confirm" onClick={ this.props.confirmAction }>Confirm</button>

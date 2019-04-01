@@ -729,10 +729,11 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Dialog to confirm whether producer would active or deactivate product
      */
     private renderConfirmDialog() {
+        const titleAction = this.props.product.isActive ? "deactivation" : "activation";
         const action = this.props.product.isActive ? "deactivate" : "activate";
 
         return(
-            <Dialog title="Confirm"
+            <Dialog title={`Confirm ${ titleAction }`}
                     text={`Are you sure you want to ${ action } this product?`}
                     active={ this.state.showDialog } 
                     onClose={ this.closeConfirmationDialog } 
@@ -1263,6 +1264,4 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
     protected toggleDropdownState = () => {
         this.setState({ showDropdown: !this.state.showDropdown });
     }
-
-    
 }
