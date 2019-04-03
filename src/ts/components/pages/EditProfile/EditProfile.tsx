@@ -230,7 +230,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                                 withThrobber={true} 
                                 text={editProfileJson.saveButton}
                                 width={260}
-                                heigth={43}
+                                height={43}
                                 fontSize={16}
                                 type={"submit"}
                                 isPending={this.state.isPending}

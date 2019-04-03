@@ -2,6 +2,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { LightboxTransition } from "src/ts/components/utils/Lightbox/LightboxTransition";
 import { colors } from "src/ts/config";
+import { TransitionGroup } from "react-transition-group";
 
 type LightboxProps = {
     /**
@@ -24,49 +25,53 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
      */
     public render(): JSX.Element {
         return createPortal(
-            <LightboxTransition in={this.props.active}>
-                <div className="lightbox__wrapper" onClick={this.props.onClose} role="none">
-                    <div className="lightbox" onClick={this.stopPropagation} role="article">
-                        <div className="lightbox__content">
-                            {this.props.children}                        
+            <TransitionGroup component={null} appear={true}>
+                {this.props.active && (
+                    <LightboxTransition key="lightbox">
+                        <div className="lightbox__wrapper" onClick={this.props.onClose} role="none">
+                            <div className="lightbox" onClick={this.stopPropagation} role="article">
+                                <div className="lightbox__content">
+                                    {this.props.children}                        
+                                </div>
+                                {this.renderCloseButton()}
+                            </div>
                         </div>
-                        {this.renderCloseButton()}
-                    </div>
-                </div>
-                <style jsx>{`
-                    .lightbox__wrapper {
-                        /** Fill the entire viewport, on top of other content */
-                        position: fixed;
-                        left: 0;
-                        right: 0;
-                        top: 0;
-                        bottom: 0;
-                        z-index: 1000;
-                        background-color: rgba(69, 50, 102, 0.8);
-                    }
+                        <style jsx>{`
+                            .lightbox__wrapper {
+                                /** Fill the entire viewport, on top of other content */
+                                position: fixed;
+                                left: 0;
+                                right: 0;
+                                top: 0;
+                                bottom: 0;
+                                z-index: 1000;
+                                background-color: rgba(69, 50, 102, 0.8);
+                            }
 
-                    .lightbox {
-                        /** Center the lightbox within the viewport */
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                    }
+                            .lightbox {
+                                /** Center the lightbox within the viewport */
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                            }
 
-                    .lightbox__content {
-                        /** Ensure scroll is enabled in case lightbox overflows */
-                        overflow: auto;
-                        -webkit-overflow-scrolling: touch;
+                            .lightbox__content {
+                                /** Ensure scroll is enabled in case lightbox overflows */
+                                overflow: auto;
+                                -webkit-overflow-scrolling: touch;
 
-                        /** Enforce max-width of the lightbox */
-                        width: max-content;
-                        height: auto;
-                        max-width: calc(100vw - 60px);
-                        max-height: calc(100vh - 60px);
-                        background: white;
-                    }
-                `}</style>
-            </LightboxTransition>,
+                                /** Enforce max-width of the lightbox */
+                                width: max-content;
+                                height: auto;
+                                max-width: calc(100vw - 60px);
+                                max-height: calc(100vh - 60px);
+                                background: white;
+                            }
+                        `}</style>
+                    </LightboxTransition>
+                )}
+            </TransitionGroup>,
             document.body,
         );
     }

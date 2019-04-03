@@ -6,6 +6,11 @@ import { Throbber } from "src/ts/components/utils/Throbber";
 
 type ButtonProps = {
     /**
+     * Optionally supply an additonal className to our button
+     */
+    className?: string;
+
+    /**
      * Should there be a throbber?
      */
     withThrobber: boolean;
@@ -18,17 +23,17 @@ type ButtonProps = {
     /**
      * The width the button should have
      */
-    width: number;
+    width: number | string;
 
     /**
-     * The heigth the button should have
+     * The height the button should have
      */
-    heigth: number;
+    height?: number;
 
     /**
      * The font size to use for the text in the button
      */
-    fontSize: number;
+    fontSize?: number;
 
     /**
      * What type should the button have?
@@ -55,23 +60,26 @@ type ButtonProps = {
 /**
  * Styled button to be used instead of html button tag
  */
-export const Button: React.SFC<ButtonProps> = ({withThrobber, text, width, heigth, fontSize, type, isPending, throbberSize, onClick }) => {
+export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, width, height, fontSize = 16, type, isPending, throbberSize, onClick }) => {
+    const buttonWidth = typeof width === "number" ? `${width}px` : width;
+    const buttonHeight = height ? `${height}px` : undefined;
+
     return (
-        <div>
+        <React.Fragment>
             {withThrobber
-                ? <button type={type} className={isPending ? "isPending" : ""} onClick={onClick}>
+                ? <button type={type} className={`${className} ${isPending ? "isPending" : ""}`} onClick={onClick}>
                     <span className="text">{text}</span>
                     <span className="throbber">
                     <Throbber size={throbberSize} relative={true} inverted={true} />
                     </span>
                 </button>
-                : <button>{text}</button>}
+                : <button type={type} className={className} onClick={onClick}>{text}</button>}
 
 		    <style jsx>{`
                 button {
                     /** Size */
-                    width: ${width}px;
-                    height: ${heigth}px;
+                    width: ${buttonWidth};
+                    height: ${buttonHeight};
                     padding: 10px 5px;
 
                     /** Colors */
@@ -89,6 +97,7 @@ export const Button: React.SFC<ButtonProps> = ({withThrobber, text, width, heigt
                     font-weight: 300;
 
                     /** Other */
+                    position: relative;
                     cursor: pointer;
                     overflow: hidden;
 
@@ -98,12 +107,12 @@ export const Button: React.SFC<ButtonProps> = ({withThrobber, text, width, heigt
                         * while requests are ongoing
                         */
                         position: absolute;
-                        left: calc(50% - 15px);
-                        top: calc(50% - 15px);
+                        left: calc(50% - ${(throbberSize || 0) / 2}px);
+                        top: calc(50% - ${(throbberSize || 0) / 2}px);
                         opacity: 0;
                         overflow: hidden;
-                        width: 140px;
-                        height: 40px;
+                        width: ${throbberSize}px;
+                        height: ${throbberSize}px;
                         pointer-events: none;
 
                         /**
@@ -137,6 +146,6 @@ export const Button: React.SFC<ButtonProps> = ({withThrobber, text, width, heigt
                     background-color: ${ colors.primary };
                 }
 			`}</style>
-		</div>
+		</React.Fragment>
     );
 }

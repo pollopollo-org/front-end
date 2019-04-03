@@ -86,7 +86,7 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                                         withThrobber={true} 
                                         text={loginFormJson.buttonText}
                                         width={352}
-                                        heigth={46}
+                                        height={46}
                                         fontSize={16}
                                         type={"submit"}
                                         isPending={this.state.isPending}

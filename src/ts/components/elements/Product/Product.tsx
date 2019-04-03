@@ -715,7 +715,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderApplyButton = () => {
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={"Apply"} width={110} heigth={35} fontSize={12}/>
+                <Button withThrobber={false} text={"Apply"} width={110} height={35} fontSize={12}/>
 
                 <style jsx>{`
                     .button-wrapper {

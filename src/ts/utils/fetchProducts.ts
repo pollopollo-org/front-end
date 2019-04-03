@@ -111,7 +111,6 @@ export async function fetchProductByProducer(producerId: number, store: Store) {
     const cacheKey = `producer-${producerId}`;
 
     if (productCache.has(cacheKey)) {
-        console.log("cache hit");
         return productCache.get(cacheKey);
     }
 

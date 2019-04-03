@@ -22,6 +22,7 @@ import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { Throbber } from "src/ts/components/utils";
 import { Fade } from "src/ts/components/transitions/Fade";
+import { asyncTimeout } from "src/ts/utils";
 
 export type UserProps = {
     /**
@@ -422,6 +423,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             this.setState({ isSelf: true, renderedUser: user, userId: user ? user.id : 0 });
         }
 
+        await asyncTimeout(0);
+        
         // Begin loading the desired additional data based on the user to display
         if (user && isReceiverUser(user)) {
             this.loadApplications();

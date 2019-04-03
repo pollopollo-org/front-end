@@ -369,7 +369,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     withThrobber={true} 
                     text={registerFormJson.submit}
                     width={254}
-                    heigth={43}
+                    height={43}
                     fontSize={16}
                     type={"submit"}
                     isPending={this.state.isPending}

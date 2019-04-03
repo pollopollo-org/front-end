@@ -1,7 +1,7 @@
 import React from "react";
 import ProductsPageJson from "src/assets/data/productsPage.json";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { colors} from "src/ts/config";
+import { colors, fonts} from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
@@ -343,7 +343,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     withThrobber={true} 
                     text={text}
                     width={170}
-                    heigth={43}
+                    height={43}
                     fontSize={16}
                     isPending={isLoading}
                     throbberSize={30}
