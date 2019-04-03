@@ -1,5 +1,5 @@
 import React from "react";
-import { easings } from "src/ts/config";
+import { easings, colors } from "src/ts/config";
 import { getSVG } from "src/assets/svg";
 
 export type ThumbnailProps = {
@@ -62,7 +62,7 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
                     <img src={this.props.src} alt="" role="presentation" />
                 </i>                 
                 <i className="placeholder">
-                    { getSVG("image") }
+                    { getSVG("image", { strokeColor: colors.primary }) }
                 </i>
 
                 <style jsx>{`
