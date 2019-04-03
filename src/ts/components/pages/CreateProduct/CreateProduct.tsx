@@ -3,7 +3,7 @@ import createProductJson from "src/assets/data/createProduct.json";
 import { colors, fonts, routes } from "src/ts/config";
 import { getSVG } from "src/assets/svg";
 import { isNullOrUndefined } from "util";
-import { Throbber } from "src/ts/components/utils";
+import { Button } from "src/ts/components/utils";
 import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
@@ -287,7 +287,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                         cursor: pointer;
                         transition: background-color 0.1s linear;
                         font-size: 16px;
-                        font-family: ${ fonts.heading };
+                        font-family: ${ fonts.text };
                         font-weight: 300;
                         padding: 0.5rem 20px;
                         width: 105px;
@@ -326,85 +326,38 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
      */
     private renderCreateButton = () => {
         return (
-            <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                <span className="text">{createProductJson.buttonText}</span>
-                <span className="throbber">
-                    <Throbber size={30} relative={true} inverted={true} />
-                </span>
+            <div className="button">
+                <Button 
+                    withThrobber={true} 
+                    text={createProductJson.buttonText}
+                    width={254}
+                    heigth={43}
+                    fontSize={16}
+                    type={"submit"}
+                    isPending={this.state.isPending}
+                    throbberSize={30}/>
 
                 <style jsx>{`
-                    /** Style button to match the rest of the project */
-                    button {
+
+                    .button {
                         margin: 10px 0;
-                        background-color: ${ colors.secondary };
-                        color: ${colors.white};
-                        border: none;
-                        border-radius: 2px;
-                        transition: background-color 0.1s linear;
-                        font-size: 16px;
-                        font-family: ${ fonts.heading };
-                        font-weight: 300;
-                        width: 254px;
-                        cursor: pointer;
-                        height: 43px;
                         position: relative;
                         display: block;
-
-                        & .throbber {
-                            /**
-                            * Position a throbber in the middle to be displayed
-                            * while requests are ongoing
-                            */
-                            position: absolute;
-                            left: calc(50% - 15px);
-                            top: calc(50% - 15px);
-                            opacity: 0;
-                            overflow: hidden;
-                            width: 140px;
-                            height: 40px;
-
-                            /**
-                            * prepare transitions
-                            */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        & .text {
-                            opacity: 1;
-                            transform: scale(1);
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        &.isPending .throbber {
-                            opacity: 1;
-                            transform: scale(1);
-                        }
-
-                        &.isPending .text {
-                            opacity: 0;
-                            transform: scale(0.5);
-                        }
-                    }
-
-                    button:hover {
-                        background-color: ${ colors.primary };
                     }
 
                     /* For mobile phones */
                     @media (max-width: 666px) {
-                        button {
+                        .button {
                             margin: 15px auto;
                             margin-bottom: 35px;
-                            max-width: 100%;
+                            & :global(button) {
+                                max-width: 100%;
+                            }
                         }
                     }
 
                 `}</style>
-            </button>
+            </div>
         );
     }
 

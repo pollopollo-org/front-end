@@ -11,7 +11,7 @@ import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
-import { Throbber } from "src/ts/components/utils";
+import { Button } from "src/ts/components/utils";
 import { alertApiError } from "src/ts/utils/alertApiError";
 import { createUser } from "src/ts/utils/createUser";
 
@@ -81,12 +81,17 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                                         onChange={this.onPasswordChanged}
                                     />
                                 </div>
-                                <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                                    <span className="text">{loginFormJson.buttonText}</span>
-                                    <span className="throbber">
-                                        <Throbber size={30} relative={true} inverted={true} />
-                                    </span>
-                                </button>
+                                <div className="button">
+                                    <Button 
+                                        withThrobber={true} 
+                                        text={loginFormJson.buttonText}
+                                        width={352}
+                                        heigth={46}
+                                        fontSize={16}
+                                        type={"submit"}
+                                        isPending={this.state.isPending}
+                                        throbberSize={30}/>
+                                </div>
                             </form>
                             <Link className="link registerLink" to={routes.register.path}>
                                 {loginFormJson.linkQuestion} <b>{loginFormJson.linkSignUpText}</b>
@@ -173,69 +178,13 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                         margin-bottom: 30px;
                     }
 
-                    button {
+                    .button {
                         position: relative;
-                        padding: 0.75rem 1.25rem;
-                        width: 100%;
-                        cursor: pointer;
 
-                        /* Set color styling */
-                        background-color: ${ colors.secondary};
-                        color: ${colors.white};
-
-                        /* Set border styling */
-                        border: none;
-                        border-radius: 3px;
-                        transition: background-color 0.1s linear;
-
-                        /* Set font styling */
-                        font-size: 1.25rem;
-                        font-family: ${ fonts.heading};
-
-                        & .throbber {
-                            /**
-                             * Position a throbber in the middle to be displayed
-                             * while requests are ongoing
-                             */
-                            position: absolute;
-                            left: calc(50% - 15px);
-                            top: calc(50% - 15px);
-                            opacity: 0;
-                            overflow: hidden;
-
-                            /* Make sure throbber does not overlap the register link */
-                            height: 40px;
-                            width: 190px;
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
+                        & :global(> button) {
+                            font-size: 1.25rem;
+                            padding: 0.75rem 1.25rem;
                         }
-
-                        & .text {
-                            opacity: 1;
-                            transform: scale(1);
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        &.isPending .throbber {
-                            opacity: 1;
-                            transform: scale(1);
-                        }
-
-                        &.isPending .text {
-                            opacity: 0;
-                            transform: scale(0.5);
-                        }
-                    }
-
-                    button:hover {
-                        background-color: ${ colors.primary};
                     }
 
                     /* Set link styling */

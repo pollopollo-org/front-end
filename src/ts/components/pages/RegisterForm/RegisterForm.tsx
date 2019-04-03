@@ -11,7 +11,7 @@ import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
-import { Throbber } from "src/ts/components/utils";
+import { Button } from "src/ts/components/utils";
 import { alertApiError } from "src/ts/utils/alertApiError";
 import { createUser } from "src/ts/utils/createUser";
 
@@ -159,13 +159,16 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             </div>
                         </div>
                         {/* Submit button */}
-                        <div>
-                            <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                                <span className="text">{registerFormJson.submit}</span>
-                                <span className="throbber">
-                                    <Throbber size={24} relative={true} inverted={true} />
-                                </span>
-                            </button>
+                        <div className="button">
+                            <Button 
+                                withThrobber={true} 
+                                text={registerFormJson.submit}
+                                width={254}
+                                heigth={43}
+                                fontSize={16}
+                                type={"submit"}
+                                isPending={this.state.isPending}
+                                throbberSize={24}/>
                         </div>
                     </div>
                 </form>
@@ -272,62 +275,10 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     /**
                      * Submit button
                      */
-                    button {
+                    .button {
                         float: right;
                         margin: 30px auto auto 49px;
-                        background-color: ${ colors.secondary };
-                        color: ${colors.white};
-                        border: none;
-                        border-radius: 2px;
-                        padding: 10px 104px;
-                        transition: background-color 0.1s linear;
-                        font-size: 16px;
-                        font-family: ${ fonts.heading };
-                        font-weight: 300;
-                        width: 254px;
-                        cursor: pointer;
                         position: relative;
-
-                        & .throbber {
-                            /**
-                             * Position a throbber in the middle to be displayed
-                             * while requests are ongoing
-                             */
-                            position: absolute;
-                            left: calc(50% - 12px);
-                            top: calc(50% - 12px);
-                            opacity: 0;
-                            overflow: hidden;
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        & .text {
-                            opacity: 1;
-                            transform: scale(1);
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        &.isPending .throbber {
-                            opacity: 1;
-                            transform: scale(1);
-                        }
-
-                        &.isPending .text {
-                            opacity: 0;
-                            transform: scale(0.5);
-                        }
-                    }
-
-                    button:hover {
-                        background-color: ${ colors.primary };
                     }
 
                     /**
@@ -395,11 +346,16 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             margin-right: 0;
                         }
 
-                        button {
-                            margin: 15px;
-                            padding: 12px 15px;
+                        .button {
+                            margin: 10px auto 20px auto;
                             float: none;
+
+                            & :global(button) {
+                                width: 100%;
+                                max-width: 400px;
+                            }
                         }
+
 
                     }
                 `}</style>
