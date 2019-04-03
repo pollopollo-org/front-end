@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { TransitionGroup } from "react-transition-group";
 import { colors } from "src/ts/config";
 import { Fade } from "src/ts/components/utils/Dropdown/Fade";
+import { isIOS } from "src/ts/utils/isIOS";
 
 /**
  * Enumeration of different directions that the dropdowns can be pointing
@@ -344,8 +345,8 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
         // axis, based on the direction which it's going to be pointing
         const dropdownTop = (
             arrowDirection === DropdownArrowDirection.UP
-                ? refPos.top - parentPos.top + refSize.height + 15 - document.body.scrollTop
-                : refPos.top - parentPos.top - dropdownSize.height - 15 - document.body.scrollTop
+                ? refPos.top - parentPos.top + refSize.height + 15 - (isIOS() ? 0 : document.body.scrollTop)
+                : refPos.top - parentPos.top - dropdownSize.height - 15 - (isIOS() ? 0 : document.body.scrollTop)
         );
 
         // ... And we can then calculate the DESIRED position of the dropdown on

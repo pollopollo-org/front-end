@@ -89,7 +89,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         
         if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
             this.loadUser(); 
-        } else if (!readonlyUserId && this.props.store.user!.id !== Number(this.state.userId)) {
+        } else if (!readonlyUserId && this.props.store.user && this.props.store.user.id !== Number(this.state.userId)) {
             this.loadUser();
         }
     }
@@ -129,7 +129,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <div className="list__header">
                                     <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
                                     {this.state.isSelf && (
-                                        <Link className="link" to={routes.createProduct.path} title="Create new product">
+                                        <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
                                             <i>
                                                 {getSVG("plus-square")}
                                             </i>
@@ -194,6 +194,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     :global(.editProfile) {
                         margin-top: 30px;
                         margin-left: 10px;
+
+                        & i {
+                            display: block;
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+
+                    :global(.newProduct > i) {
+                        display: block;
+                        width: 24px;
+                        height: 24px;
                     }
 
                     :global(.link):hover {

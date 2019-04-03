@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { LightboxTransition } from "src/ts/components/utils/Lightbox/LightboxTransition";
 import { colors } from "src/ts/config";
 import { TransitionGroup } from "react-transition-group";
+import { isIOS } from "src/ts/utils/isIOS";
 
 type LightboxProps = {
     /**
@@ -65,7 +66,7 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                                 width: max-content;
                                 height: auto;
                                 max-width: calc(100vw - 60px);
-                                max-height: calc(100vh - 60px);
+                                max-height: calc(100vh - ${isIOS() ? "100px" : "60px"});
                                 background: white;
                             }
                         `}</style>

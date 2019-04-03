@@ -20,13 +20,6 @@ export async function fetchProductBatch(start: number, end: number, store: Store
         };
     }
 
-
-    const token = localStorage.getItem("userJWT");
-
-    if (!token) {
-        return;
-    }
-
     const endPoint = apis.products.getBatch.path.replace("{start}", String(start)).replace("{end}", String(end));
 
     try {
@@ -34,7 +27,6 @@ export async function fetchProductBatch(start: number, end: number, store: Store
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             }
         });
 

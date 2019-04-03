@@ -85,7 +85,7 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                                     <Button 
                                         withThrobber={true} 
                                         text={loginFormJson.buttonText}
-                                        width={352}
+                                        width="100%"
                                         height={46}
                                         fontSize={16}
                                         type={"submit"}
@@ -180,6 +180,7 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
 
                     .button {
                         position: relative;
+                        width: 100%;
 
                         & :global(> button) {
                             font-size: 1.25rem;

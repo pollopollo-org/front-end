@@ -876,6 +876,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         color:  rgba(57,57,57, 0.75);
                         cursor: pointer;
 
+                        & i {
+                            display: block;
+                            width: 24px;
+                            height: 24px;
+                        }
+
                         &:hover {
                             color: ${ colors.secondary };
                         }
