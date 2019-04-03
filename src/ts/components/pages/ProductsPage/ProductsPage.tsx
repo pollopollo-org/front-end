@@ -333,7 +333,6 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     width={170}
                     heigth={43}
                     fontSize={16}
-                    type={"submit"}
                     isPending={isLoading}
                     throbberSize={30}
                     onClick={onClick}/>

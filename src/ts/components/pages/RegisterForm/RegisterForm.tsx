@@ -76,103 +76,12 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             <div className="allSection">
                 <h1>{ registerFormJson.title }</h1>
                 <form onSubmit={this.onSubmit}>
-                    {/* First and last name */}
-                    <div className="section">
-                        <input
-                            className="leftInput"
-                            placeholder={registerFormJson.firstName}
-                            maxLength={255}
-                            required
-                            aria-required={true}
-                            onChange={this.onFirstnameChanged}
-                        />
-                        <input
-                            placeholder={registerFormJson.lastName}
-                            maxLength={255}
-                            required
-                            aria-required={true}
-                            onChange={this.onLastnameChanged}
-                        />
-                    </div>
-                    {/* Email and country */}
-                    <div className="section">
-                        <input
-                            type="email"
-                            className="leftInput"
-                            placeholder={ registerFormJson.email }
-                            maxLength={255}
-                            required
-                            aria-required={true}
-                            onChange={this.onEmailChanged}
-                        />
-                        <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
-                    </div>
-                    {/* Password */}
-                    <div className="section">
-                        <input
-                            type="password"
-                            className="leftInput"
-                            placeholder={registerFormJson.password}
-                            required
-                            aria-required={true}
-                            onChange={this.onPasswordChanged}
-                        />
-                        <input
-                            type="password"
-                            placeholder={registerFormJson.confirmPassword}
-                            required
-                            aria-required={true}
-                            onChange={this.onValidationPasswordChanged}
-                        />
-                    </div>
-                    {/* Usertype */}
+                    {this.renderInputFields()}
                     <div className="grid">
-                        <div>
-                            <h2>{registerFormJson.userType__title}</h2>
-                            <div className="radioSection">
-                                <div className="userType P">
-                                    <input
-                                        type="radio"
-                                        className="userTypeButton"
-                                        name="userType"
-                                        id="Producer"
-                                        value="Producer"
-                                        aria-checked={this.state.userType === "Producer"}
-                                        checked={this.state.userType === "Producer"}
-                                        onChange={this.onUserTypeClick}
-                                    />
-                                    <label htmlFor="Producer">{registerFormJson.userType__producer}</label>
-                                </div>
-                                <div className="userType R">
-                                    <input
-                                        type="radio"
-                                        className="userTypeButton"
-                                        name="userType"
-                                        id="Receiver"
-                                        value="Receiver"
-                                        aria-checked={this.state.userType === "Receiver"}
-                                        checked={this.state.userType === "Receiver"}
-                                        onChange={this.onUserTypeClick}
-                                    />
-                                    <label htmlFor="Receiver">{registerFormJson.userType__reciever}</label>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Submit button */}
-                        <div className="button">
-                            <Button 
-                                withThrobber={true} 
-                                text={registerFormJson.submit}
-                                width={254}
-                                heigth={43}
-                                fontSize={16}
-                                type={"submit"}
-                                isPending={this.state.isPending}
-                                throbberSize={24}/>
-                        </div>
+                        {this.renderRadioButtons()}
+                        {this.renderSubmitButton()}
                     </div>
                 </form>
-
 
                 <style jsx>{`
                     h1 {
@@ -196,6 +105,104 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         justify-content: center;
                     }
 
+                    /**
+                     * Layout for radio buttons
+                     */
+                    .grid {
+                        display: flex;
+                        width: 100%;
+                    }
+
+                    /**
+                     * Restyling to fit smaller screens and mobile
+                     */
+                    @media only screen and (max-width: 768px) {
+                        /* Center in the middle */
+                        .allSection {
+                            margin: auto;
+                            text-align: center;
+                            width: 100%;
+                            height: 100%;
+                            box-sizing: border-box;
+                            padding: 0 15px;
+                        }
+
+                        h1 {
+                            font-size: 28px;
+                            margin-top: 20px;
+                            margin-bottom: 20px;
+                        }
+
+                        h2 {
+                            margin: 10px 0;
+                        }
+
+                        .grid {
+                            display: block;
+                        }
+                    }
+                `}</style>
+
+            </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the input fields
+     */
+    private renderInputFields(): React.ReactNode {
+        return (
+            <React.Fragment>
+            {/* First and last name */}
+            <div className="section">
+                <input
+                    className="leftInput"
+                    placeholder={registerFormJson.firstName}
+                    maxLength={255}
+                    required
+                    aria-required={true}
+                    onChange={this.onFirstnameChanged}
+                />
+                <input
+                    placeholder={registerFormJson.lastName}
+                    maxLength={255}
+                    required
+                    aria-required={true}
+                    onChange={this.onLastnameChanged}
+                />
+            </div>
+            {/* Email and country */}
+            <div className="section">
+                <input
+                    type="email"
+                    className="leftInput"
+                    placeholder={ registerFormJson.email }
+                    maxLength={255}
+                    required
+                    aria-required={true}
+                    onChange={this.onEmailChanged}
+                />
+                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
+            </div>
+            {/* Password */}
+            <div className="section">
+                <input
+                    type="password"
+                    className="leftInput"
+                    placeholder={registerFormJson.password}
+                    required
+                    aria-required={true}
+                    onChange={this.onPasswordChanged}
+                />
+                <input
+                    type="password"
+                    placeholder={registerFormJson.confirmPassword}
+                    required
+                    aria-required={true}
+                    onChange={this.onValidationPasswordChanged}
+                />
+            </div>
+            <style jsx>{`
                     /**
                      * Sections surrounding the input fields
                      */
@@ -243,20 +250,76 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     }
 
                     /**
+                     * Restyling to fit smaller screens and mobile
+                     */
+                    @media only screen and (max-width: 768px) {
+                        .section {
+                            margin: 0;
+                        }
+
+                        input {
+                            margin: 15px 0;
+                            width: 100%;
+                            box-sizing: border-box;
+                            max-width: 400px;
+                        }
+
+                        /**
+                         * All input fields are now made to be in a single column rather than two
+                         */
+                        .leftInput {
+                            margin: 0;
+                        }
+                    }
+                `}</style>
+            </React.Fragment>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the radio buttons for choosing user type
+     */
+    private renderRadioButtons(): React.ReactNode {
+        return (
+            <div>
+                <h2>{registerFormJson.userType__title}</h2>
+                <div className="radioSection">
+                    <div className="userType P">
+                        <input
+                            type="radio"
+                            className="userTypeButton"
+                            name="userType"
+                            id="Producer"
+                            value="Producer"
+                            aria-checked={this.state.userType === "Producer"}
+                            checked={this.state.userType === "Producer"}
+                            onChange={this.onUserTypeClick}
+                        />
+                        <label htmlFor="Producer">{registerFormJson.userType__producer}</label>
+                    </div>
+                    <div className="userType R">
+                        <input
+                            type="radio"
+                            className="userTypeButton"
+                            name="userType"
+                            id="Receiver"
+                            value="Receiver"
+                            aria-checked={this.state.userType === "Receiver"}
+                            checked={this.state.userType === "Receiver"}
+                            onChange={this.onUserTypeClick}
+                        />
+                        <label htmlFor="Receiver">{registerFormJson.userType__reciever}</label>
+                    </div>
+                </div>
+
+                <style jsx>{`
+                    /**
                      * Radio buttons for usertype
                      */
                     input.userTypeButton {
                         height: 17px;
                         width: 17px;
                         margin: 0px 10 0 0px;
-                    }
-
-                    /**
-                     * Layout for radio buttons
-                     */
-                    .grid {
-                        display: flex;
-                        width: 100%;
                     }
 
                     /**
@@ -273,64 +336,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     }
 
                     /**
-                     * Submit button
-                     */
-                    .button {
-                        float: right;
-                        margin: 30px auto auto 49px;
-                        position: relative;
-                    }
-
-                    /**
                      * Restyling to fit smaller screens and mobile
                      */
                     @media only screen and (max-width: 768px) {
-                        /* Center in the middle */
-                        .allSection {
-                            margin: auto;
-                            text-align: center;
-                            width: 100%;
-                            height: 100%;
-                            box-sizing: border-box;
-                            padding: 0 15px;
-                        }
-
-                        h1 {
-                            font-size: 28px;
-                            margin-top: 20px;
-                            margin-bottom: 20px;
-                        }
-
-                        h2 {
-                            margin: 10px 0;
-                        }
-
-                        .section {
-                            margin: 0;
-                        }
-
-                        input {
-                            margin: 15px 0;
-                            width: 100%;
-                            box-sizing: border-box;
-                            max-width: 400px;
-                        }
-
-                        input.userTypeButton {
-                            margin: 10px 0;
-                        }
-
-                        /**
-                         * All input fields are now made to be in a single column rather than two
-                         */
-                        .leftInput {
-                            margin: 0;
-                        }
-
-                        .grid {
-                            display: block;
-                        }
-
                         .radioSection {
                             text-align: center;
                             font-family: ${ fonts.text };
@@ -345,7 +353,38 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             margin-left: 7px;
                             margin-right: 0;
                         }
+                    }
+                `}</style>
+            </div>
+        );
+    }
 
+    /**
+     * Internal renderer that renders the submit button
+     */
+    private renderSubmitButton(): React.ReactNode {
+        return (
+            <div className="button">
+                <Button 
+                    withThrobber={true} 
+                    text={registerFormJson.submit}
+                    width={254}
+                    heigth={43}
+                    fontSize={16}
+                    type={"submit"}
+                    isPending={this.state.isPending}
+                    throbberSize={24}/>
+                <style jsx>{`
+                    .button {
+                        float: right;
+                        margin: 30px auto auto 49px;
+                        position: relative;
+                    }
+
+                    /**
+                     * Restyling to fit smaller screens and mobile
+                     */
+                    @media only screen and (max-width: 768px) {
                         .button {
                             margin: 10px auto 20px auto;
                             float: none;
@@ -355,11 +394,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                                 max-width: 400px;
                             }
                         }
-
-
                     }
                 `}</style>
-
             </div>
         );
     }
