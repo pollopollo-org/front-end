@@ -1,10 +1,10 @@
 import React from "react";
 import ProductsPageJson from "src/assets/data/productsPage.json";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { colors, fonts } from "src/ts/config";
+import { colors} from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { Throbber } from "src/ts/components/utils";
+import { Throbber, Button } from "src/ts/components/utils";
 import { ProductModel } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
@@ -326,83 +326,29 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      */
     private renderButton = (text: string, isLoading: boolean, onClick: () => void) => {
         return (
-            <button className={isLoading ? "isPending" : ""} onClick={onClick}>
-                <span className="text">{text}</span>
-                <span className="throbber">
-                    <Throbber size={30} relative={true} inverted={true} />
-                </span>
+            <div className="button">
+                <Button 
+                    withThrobber={true} 
+                    text={text}
+                    width={170}
+                    heigth={43}
+                    fontSize={16}
+                    type={"submit"}
+                    isPending={isLoading}
+                    throbberSize={30}
+                    onClick={onClick}/>
 
                 <style jsx>{`
                     /** Style button to match the rest of the project */
-                    button {
+                    .button {
                         margin: 10px 0;
-
-                        background-color: ${ colors.secondary };
-                        color: ${colors.white};
-
-                        border: none;
-                        border-radius: 2px;
-                        transition: background-color 0.1s linear;
-
-                        font-size: 16px;
-                        font-family: ${ fonts.heading };
-                        font-weight: 300;
-                        
-                        cursor: pointer;
-
-                        width: 170px;
-                        height: 43px;
-
                         position: relative;
                         display: block;
-
-                        & .throbber {
-                            /**
-                            * Position a throbber in the middle to be displayed
-                            * while requests are ongoing
-                            */
-                            position: absolute;
-                            left: calc(50% - 15px);
-                            top: calc(50% - 15px);
-                            opacity: 0;
-                            overflow: hidden;
-                            width: 140px;
-                            height: 40px;
-
-                            /**
-                            * prepare transitions
-                            */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        & .text {
-                            opacity: 1;
-                            transform: scale(1);
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        &.isPending .throbber {
-                            opacity: 1;
-                            transform: scale(1);
-                        }
-
-                        &.isPending .text {
-                            opacity: 0;
-                            transform: scale(0.5);
-                        }
-                    }
-
-                    button:hover {
-                        background-color: ${ colors.primary };
                     }
 
                     /* For mobile phones */
                     @media (max-width: 666px) {
-                        button {
+                        .button :global(button) {
                             font-size: 14px;
                             width: 90px;
                             height: 35px;
@@ -410,7 +356,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     }
 
                 `}</style>
-            </button>
+            </div>
         );
     }
 

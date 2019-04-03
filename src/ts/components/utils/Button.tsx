@@ -45,16 +45,21 @@ type ButtonProps = {
      */
     throbberSize?: number;
 
+    /**
+     * Optional function for onClick
+     */
+    onClick?(): void;
+
 };
 
 /**
  * Styled button to be used instead of html button tag
  */
-export const Button: React.SFC<ButtonProps> = ({withThrobber, text, width, heigth, fontSize, type, isPending, throbberSize }) => {
+export const Button: React.SFC<ButtonProps> = ({withThrobber, text, width, heigth, fontSize, type, isPending, throbberSize, onClick }) => {
     return (
         <div>
             {withThrobber
-                ? <button type={type} className={isPending ? "isPending" : ""}>
+                ? <button type={type} className={isPending ? "isPending" : ""} onClick={onClick}>
                     <span className="text">{text}</span>
                     <span className="throbber">
                     <Throbber size={throbberSize} relative={true} inverted={true} />
