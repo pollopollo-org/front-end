@@ -106,6 +106,12 @@ export async function fetchProductByProducer(producerId: number, store: Store) {
         return productCache.get(cacheKey);
     }
 
+    const token = localStorage.getItem("userJWT");
+
+    if (!token) {
+        return;
+    }
+
     const endPoint = apis.products.getByProducer.path.replace("{producerId}", String(producerId));
 
     try {
@@ -113,6 +119,7 @@ export async function fetchProductByProducer(producerId: number, store: Store) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             }
         });
 
