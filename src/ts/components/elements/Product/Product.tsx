@@ -715,7 +715,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderApplyButton = () => {
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={"Apply"} width={110} heigth={35} fontSize={12}/>
+                <Button withThrobber={false} text={"Apply"} width={110} height={35} fontSize={12}/>
 
                 <style jsx>{`
                     .button-wrapper {
@@ -875,6 +875,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     .show-more-icon {
                         color:  rgba(57,57,57, 0.75);
                         cursor: pointer;
+
+                        & i {
+                            display: block;
+                            width: 24px;
+                            height: 24px;
+                        }
 
                         &:hover {
                             color: ${ colors.secondary };

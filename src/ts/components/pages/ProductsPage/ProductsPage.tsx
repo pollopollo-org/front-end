@@ -343,7 +343,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     withThrobber={true} 
                     text={text}
                     width={170}
-                    heigth={43}
+                    height={43}
                     fontSize={16}
                     isPending={isLoading}
                     throbberSize={30}

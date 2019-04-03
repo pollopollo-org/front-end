@@ -1,6 +1,7 @@
 import React from "react";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { colors } from "src/ts/config";
+import { Button } from "src/ts/components/utils/Button";
 
 type DialogProps = {
     /**
@@ -31,10 +32,9 @@ type DialogProps = {
 
 type DialogState = {
     /**
-     * Specifies whether the product should be rendered to be compatible with
-     * smaller viewports
+     * Specifies whether or not the confirm request is currently being processed
      */
-    isSmall: boolean;
+    isConfirming: boolean;
 }
 
 /**
@@ -46,13 +46,22 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
      * State of the component
      */
     public state: DialogState = {
-        isSmall: false
+        isConfirming: false,
     };
+
+    /**
+     * Ensure that isConfirming state is reset once the dialog closes
+     */
+    public componentDidUpdate(): void {
+        if (!this.props.active && this.state.isConfirming) {
+            this.setState({ isConfirming: false });
+        }
+    }
 
     /**
      * Main render method, used to render Dialog
      */
-    render(): JSX.Element {
+    public render(): JSX.Element {
         return(
             <React.Fragment>
                 { this.renderDialogLightbox() }
@@ -64,15 +73,28 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
      * Renders the dialog box itself
      */
     private renderDialogLightbox() {
-
         return(
             <Lightbox active={ this.props.active } onClose={ this.props.onClose }>
-                <div className={`dialog ${this.state.isSmall ? "isSmall" : ""}`}>
+                <div className="dialog">
                     <h3>{ this.props.title }</h3>
                     <p>{ this.props.text }</p>
                     <div className="dialog-buttons">
-                        <button className="confirm" onClick={ this.props.confirmAction }>Confirm</button>
-                        <button className="cancel" onClick={ this.props.onClose }>Cancel</button>
+                        <Button 
+                            className="confirm" 
+                            isPending={this.state.isConfirming} 
+                            throbberSize={24} 
+                            width="50%" 
+                            withThrobber={true} 
+                            onClick={ this.onConfirmClick } 
+                            text="Confirm" 
+                        />
+                        <Button 
+                            withThrobber={false} 
+                            width="50%" 
+                            className="cancel" 
+                            onClick={this.onCancelClick} 
+                            text="Cancel" 
+                        />
                     </div>
                 </div>
                 
@@ -89,11 +111,16 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
                             text-align: center;
                         }
                     }
+
+                    p {
+                        margin: 20px 0;
+                    }
                     
                     .dialog-buttons {
                         display: flex;
                         flex-direction: row;
                         justify-content: flex-end;
+                        margin-bottom: 20px;
                     }
 
                     .dialog button {
@@ -108,17 +135,20 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
                         cursor: pointer;
                     }
 
-                    .dialog .confirm {
+                    .dialog :global(.confirm) {
                         color: ${ colors.white };
                         background-color: ${ colors.secondary };
+                        margin-right: 10px;
 
                         &:hover {
                             background-color: ${ colors.primary };
                         }
                     }
 
-                    .dialog .cancel {
+                    .dialog :global(.cancel) {
+                        margin-left: 10px;
                         background-color: ${ colors.whiteSmoke };
+                        color: ${ colors.black };
                         border: 1px solid rgba(167,167,167, 0.2);
 
                         &:hover {
@@ -129,5 +159,29 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
                 `}</style>
             </Lightbox>
         );
-    }   
+    }
+
+    /**
+     * Callback to be executed once the dialogs confirm button is clicked, in order
+     * to trigger the confirm callback
+     */
+    private onConfirmClick = () => {
+        if (this.state.isConfirming) {
+            return;
+        }
+
+        this.setState({ isConfirming: true });
+        this.props.confirmAction();
+    }
+
+    /**
+     * Callback to be executed once the dialogs cancel button is clicked
+     */
+    private onCancelClick = () => {
+        if (this.state.isConfirming) {
+            return;
+        }
+
+        this.props.onClose();
+    }
 }

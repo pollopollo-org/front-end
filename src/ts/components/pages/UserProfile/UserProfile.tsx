@@ -22,6 +22,7 @@ import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { Throbber } from "src/ts/components/utils";
 import { Fade } from "src/ts/components/transitions/Fade";
+import { asyncTimeout } from "src/ts/utils";
 
 export type UserProps = {
     /**
@@ -88,7 +89,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         
         if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
             this.loadUser(); 
-        } else if (!readonlyUserId && this.props.store.user!.id !== Number(this.state.userId)) {
+        } else if (!readonlyUserId && this.props.store.user && this.props.store.user.id !== Number(this.state.userId)) {
             this.loadUser();
         }
     }
@@ -128,7 +129,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <div className="list__header">
                                     <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
                                     {this.state.isSelf && (
-                                        <Link className="link" to={routes.createProduct.path} title="Create new product">
+                                        <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
                                             <i>
                                                 {getSVG("plus-square")}
                                             </i>
@@ -193,6 +194,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     :global(.editProfile) {
                         margin-top: 30px;
                         margin-left: 10px;
+
+                        & i {
+                            display: block;
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+
+                    :global(.newProduct > i) {
+                        display: block;
+                        width: 24px;
+                        height: 24px;
                     }
 
                     :global(.link):hover {
@@ -422,6 +435,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             this.setState({ isSelf: true, renderedUser: user, userId: user ? user.id : 0 });
         }
 
+        await asyncTimeout(0);
+        
         // Begin loading the desired additional data based on the user to display
         if (user && isReceiverUser(user)) {
             this.loadApplications();

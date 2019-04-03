@@ -331,7 +331,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     withThrobber={true} 
                     text={createProductJson.buttonText}
                     width={254}
-                    heigth={43}
+                    height={43}
                     fontSize={16}
                     type={"submit"}
                     isPending={this.state.isPending}
@@ -486,7 +486,6 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
     private imageToData = (productId: number): FormData => {
         const formData = new FormData();
 
-        console.log(productId);
         if (this.state.productPicture) {
             formData.append("userId", String(this.props.store.user!.id));
             formData.append("productId", String(productId));

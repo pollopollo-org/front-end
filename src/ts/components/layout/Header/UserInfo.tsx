@@ -266,6 +266,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         div {
                             /** Force all elements to fall below the header itself */
                             position: relative;
+                            width: 100%;
 
                             /** Override normal styles and display content below each other */
                             display: inline-flex;
@@ -301,6 +302,10 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                             & .underline,
                             & .chevron {
                                 display: none;
+                            }
+
+                            & .icon {
+                                margin-right: unset;
                             }
 
                             &.noUser {
