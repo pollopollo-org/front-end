@@ -317,7 +317,8 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
             }
         } catch (err) {
             this.setState({ isPending: false });
-            alert("Something with your request when wrong, please try again later");
+
+            this.props.store.currentErrorMessage = "Something with your request when wrong, please try again later";
         }
     }
 }

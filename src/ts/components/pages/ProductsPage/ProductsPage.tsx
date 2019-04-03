@@ -80,6 +80,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      */
     public async componentDidMount(): Promise<void> {
         await this.fetchData(this.state.currentPage);
+        this.setState({ isPending: false });
     }
 
     /**
@@ -193,16 +194,13 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         return (
             this.state.products.map((product, index) => {
                 if (index % 2 === evenOrUneven) {
-                    const isOwnProduct = this.props.store.user 
-                        ? this.props.store.user.id === product.producerId 
-                        : false;
-
                     return (
                         <Product 
+                            key={index}
                             product={product}
                             userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
                             isOnProducersPage={false}
-                            isOwnProduct={isOwnProduct}
+                            isOwnProduct={false}
                         />
                     );
                 }
@@ -294,27 +292,41 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         }
 
         const isFirstPage = this.state.currentPage === 0;
-        const isLastPage = this.state.currentPage === this.getAmountOfPages();
+        const isLastPage = this.state.currentPage === this.getAmountOfPages() - 1;
 
         return (
             <div className="pageNavigation">
-                { !isFirstPage && this.renderButton(ProductsPageJson.PreviousPage, !!this.state.isFetchingPrevious, this.goToPreviousPage)}
-                <span>Page {this.state.currentPage} of {this.getAmountOfPages()}</span>
-                { !isLastPage && this.renderButton(ProductsPageJson.NextPage, !!this.state.isFetchingNext, this.goToNextPage)}
+                <span className="left">
+                    {!isFirstPage && this.renderButton(ProductsPageJson.PreviousPage, !!this.state.isFetchingPrevious, this.goToPreviousPage)}
+                </span>
+                <span className="info">Page {this.state.currentPage + 1} of {this.getAmountOfPages()}</span>
+                <span className="right">
+                    {!isLastPage && this.renderButton(ProductsPageJson.NextPage, !!this.state.isFetchingNext, this.goToNextPage)}
+                </span>
 
                 <style jsx>{`
                     /** Show number of pages, current page number and buttons
                      * for navigating to next or previous page
                      */
                     .pageNavigation {
-                        display: flex;
-                        justify-content: space-between;
-                        flex-wrap: wrap;
+                        position: relative;
                         margin-bottom: 20px;
+                        height: 63px;
                     }
 
-                    .pageNavigation span {
-                        margin: auto;
+                    .pageNavigation .right {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                    }
+
+                    .pageNavigation .info {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-family: ${ fonts.text };
+                        font-weight: 300;
                     }               
                 `}</style>
             </div>
@@ -436,7 +448,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      * Internal helper that when called will navigate the user to the next page
      */
     private goToNextPage = async () => {
-        const isLastPage = this.state.currentPage === this.getAmountOfPages();
+        const isLastPage = this.state.currentPage === this.getAmountOfPages() - 1;
 
         if (isLastPage) {
             return;

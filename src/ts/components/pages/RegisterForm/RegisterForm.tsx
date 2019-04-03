@@ -462,18 +462,21 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
      */
     private validate = () => {
         if (this.state.country === null) {
-            alert("Please choose a country.");
+            this.props.store.currentErrorMessage = "Please choose a country.";
             return false;
         }
         else if (!this.state.country || !this.state.country.match(/[^0-9]+/)) {
-            alert("There was an error with the selected country.")
+            this.props.store.currentErrorMessage = "There was an error with the selected country.";
+
             return false;
         }
         else if (this.state.password !== this.state.repeatedPassword) {
-            alert("Passwords must match.");
+            this.props.store.currentErrorMessage = "Passwords must match.";
+
             return false;
         } else if (!this.state.password || this.state.password.length < 8) {
-            alert("Passwords must contain more than or 8 characters.");
+            this.props.store.currentErrorMessage = "Passwords must contain more than or 8 characters.";
+
             return false;
         }
 
@@ -524,8 +527,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 this.setState({ isPending: false });
             }
         } catch (err) {
-            alert("Something went wrong while sending your request, please try again later.");
             this.setState({ isPending: false });
+
+            this.props.store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
         }
     }
 

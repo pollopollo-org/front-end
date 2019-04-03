@@ -80,6 +80,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
+     * When the component changes, determine if we should load a new user
+     */
+    public async componentDidUpdate(): Promise<void> {
+        // tslint:disable-next-line completed-docs
+        const readonlyUserId = (this.props.match.params as { userId: string }).userId;
+
+        if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
+            this.loadUser(); 
+        } else if (this.props.store.user!.id !== Number(this.state.userId)) {
+            this.loadUser();
+        }
+    }
+
+    /**
      * Main render method, used to render ProfilePage
      */
     // tslint:disable-next-line max-func-body-length
@@ -307,7 +321,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     <div>
                         { this.state.products && this.state.products.map((product, index) => {
                             const isOnProducersPage = product.producerId === this.state.userId;
-                            const isOwnProduct = this.state.userId === product.producerId;
+                            const isOwnProduct = this.props.store.user 
+                                ? this.props.store.user.id === product.producerId
+                                : false;
+
+                            const updateProduct = this.updateProduct.bind(this, index);
 
                             return (
                                 <Product
@@ -315,6 +333,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     product={product}
                                     isOnProducersPage={isOnProducersPage}
                                     isOwnProduct={isOwnProduct}
+                                    updateProduct={updateProduct}
                                     userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
                                 />  
                             );
@@ -344,10 +363,23 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
+     * Simple callback that should be executed once a product should be updated.
+     * (e.g. when toggling the product on and off)
+     */
+    private updateProduct = (index: number, newProduct: ProductModel) => {
+        const newProductList = this.state.products;
+
+        if (newProductList) {
+            newProductList[index] = newProduct;
+
+            this.setState({ products: newProductList });
+        }
+    }
+
+    /**
      * Internal render method that'll render all applications associated to a user
      */
     private renderApplications = () => {
-        // DISPLAY A THROBBER WHILE APPLICATIONS ARE LOADING!!!
         if (!this.state.applications) {
             return null;
         }
@@ -387,7 +419,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
             // ... however, if we doesn't match, then we should render our own
             // user
-            this.setState({ isSelf: true });
+            this.setState({ isSelf: true, renderedUser: user, userId: user ? user.id : 0 });
         }
 
         // Begin loading the desired additional data based on the user to display

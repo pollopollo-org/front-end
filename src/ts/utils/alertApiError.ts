@@ -7,7 +7,13 @@ import { Store } from "src/ts/store/Store";
  */
 export function alertApiError(statusCode: number, errors: Errors, store: Store): void {
     if (statusCode === 429) {
-        store.currentErrorMessage = "You've exceeded the rate limit. Please wait a while and then try again"
+        store.currentErrorMessage = "You've exceeded the rate limit. Please wait a while and then try again";
+
+        return;
+    }
+
+    if (statusCode === 500) {
+        store.currentErrorMessage = "Something went wrong while trying to process your request. Please try again later.";
 
         return;
     }

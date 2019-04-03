@@ -41,7 +41,7 @@ type CreateProductState = {
     /**
      * Image of the product
      */
-    productPicture?: Blob;
+    productPicture?: File;
     /**
      * Specifies whether or not we're currently attempting to create a user
      */
@@ -445,7 +445,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                 )
                 )
                 {
-                    alert(createProductJson.imageTypeAlert);
+                    this.props.store.currentErrorMessage = createProductJson.imageTypeAlert;
                     return;
                 }
 
@@ -491,23 +491,56 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     title: this.state.title,
                     price: this.state.price,
                     description: this.state.description,
-                    location: this.props.store.user.country,
+                    country: this.props.store.user.country,
                 }),
             });
+
+            let imageResult: Response | undefined = undefined;
+
+            if (this.state.productPicture) {
+                imageResult = await fetch(apis.products.postImage.path, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: this.imageToData((await result.json()).productId),
+                })
+            }
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
             if (result.ok) {
-                this.props.history.push(routes.profile.path);
                 invalidateCacheKey(`producer-${this.props.store.user.id}`);
+                this.props.history.push(routes.profile.path);
             } else {
                 alertApiError(result.status, apis.products.post.errors, this.props.store);
+
+                if (imageResult) {
+                    alertApiError(imageResult.status, apis.products.postImage.errors, this.props.store);
+                }
+
                 this.setState({ isPending: false });
             }
         } catch (err) {
             this.setState({ isPending: false });
-            alert("Something went wrong while attempting to create your product, please try again later.");
+            this.props.store.currentErrorMessage = "Something went wrong while attempting to create your product, please try again later.";
         }
+    }
+
+    /**
+     * Validates the image by checking for malformed/corrupted data
+     */
+    private imageToData = (productId: number): FormData => {
+        const formData = new FormData();
+
+        console.log(productId);
+        if (this.state.productPicture) {
+            formData.append("userId", String(this.props.store.user!.id));
+            formData.append("productId", String(productId));
+            formData.append("file", this.state.productPicture);
+        }
+
+        return formData;
     }
 }
 
