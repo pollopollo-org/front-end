@@ -1,11 +1,12 @@
 import { apis } from "src/ts/config/apis";
 import { alertApiError } from "src/ts/utils/alertApiError";
 import { createUser } from "src/ts/utils/createUser";
+import { Store } from "src/ts/store/Store";
 
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
-export async function fetchUser(userId: string) {
+export async function fetchUser(userId: string, store: Store) {
     const token = localStorage.getItem("userJWT");
 
     if (!token) {
@@ -28,7 +29,7 @@ export async function fetchUser(userId: string) {
         if (response.ok) {
             return createUser(userData);
         } else {
-            alertApiError(response.status, apis.user.get.errors);
+            alertApiError(response.status, apis.user.get.errors, store);
             return;
         }
 

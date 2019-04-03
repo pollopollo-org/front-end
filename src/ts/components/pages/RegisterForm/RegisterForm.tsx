@@ -520,7 +520,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
             } else {
-                alertApiError(response.status, apis.user.create.errors);
+                alertApiError(response.status, apis.user.create.errors, this.props.store);
                 this.setState({ isPending: false });
             }
         } catch (err) {

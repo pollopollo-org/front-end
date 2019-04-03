@@ -42,7 +42,7 @@ export type UserState = {
     renderedUser?: UserModel;
 
     /**
-     * Specifies whehter the rendered user is the user him/herself, which means
+     * Specifies whehter the rendered user is the user themself, which means
      * we should render edit functionality etc.
      */
     isSelf: boolean;
@@ -105,7 +105,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             )}
                         </div>
                         {/* Information box */}
-                        <UserDescription user={user} />
+                        <UserDescription user={user} isSelf={this.state.isSelf} />
                     </div>
                     {/* List of the user's products/applications */}
                     <div className="list">
@@ -247,6 +247,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                         .profile__information {
                             position: static;
+                            margin: 0 10px;
 
                             & :global(.information) {
                                 max-height: unset;
@@ -332,7 +333,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             return;
         }
 
-        const products = await fetchProductByProducer(this.state.userId);
+        const products = await fetchProductByProducer(this.state.userId, this.props.store);
 
         if (!products) {
             this.setState({ products: [] });
@@ -374,7 +375,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         // If we have a match on the route, that means we should attempt to 
         // render the given user in readonly mode
         if (readonlyUserId) {
-            user = await fetchUser(readonlyUserId);
+            user = await fetchUser(readonlyUserId, this.props.store);
 
             this.setState({
                 userId: Number(readonlyUserId),

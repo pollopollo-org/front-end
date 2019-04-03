@@ -701,10 +701,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             if (result.ok && (!imageResult || imageResult.ok)) {
                 this.props.history.push(routes.profile.path);
             } else {
-                alertApiError(result.status, apis.user.put.errors);
+                alertApiError(result.status, apis.user.put.errors, this.props.store);
 
                 if (imageResult) {
-                    alertApiError(imageResult.status, apis.user.image.errors);
+                    alertApiError(imageResult.status, apis.user.image.errors, this.props.store);
                 }
 
                 this.setState({ isPending: false });

@@ -53,6 +53,13 @@ export class Store {
     @observable
     public didMount: boolean = false;
 
+    /**
+     * Specifies the error message that should be displayed at any given point
+     * in time
+     */
+    @observable
+    public currentErrorMessage: string;
+
     constructor(initial: StoreArgs) {
         this.applications = initial.applications;
         this.user = initial.user;

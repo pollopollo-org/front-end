@@ -312,7 +312,7 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
             } else {
-                alertApiError(response.status, apis.user.authenticate.errors);
+                alertApiError(response.status, apis.user.authenticate.errors, this.props.store);
                 this.setState({ isPending: false });
             }
         } catch (err) {

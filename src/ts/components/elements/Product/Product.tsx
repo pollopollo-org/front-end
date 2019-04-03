@@ -15,6 +15,9 @@ import { UserTypes } from "src/ts/models/UserModel";
 import { fetchUser } from "src/ts/utils/fetchUser";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
+import { Alert } from "src/ts/components/utils/Alert";
+import { injectStore } from "src/ts/store/injectStore";
+import { Store } from "src/ts/store/Store";
 
 export type ProductProps = {
 
@@ -38,6 +41,11 @@ export type ProductProps = {
      * page.
      */
     isOnProducersPage: boolean;
+
+    /**
+     * Contains a reference to the root store
+     */
+    store: Store;
 }
 
 export type ProductState = {
@@ -65,9 +73,14 @@ export type ProductState = {
     showProducer: boolean;
 
     /**
-     * hey
+     * Specifies whether or not the confirmation dialog should be displayed
      */
     showDialog: boolean;
+
+    /**
+     * Specifies whether or not the confirmation alert should be displayed
+     */
+    showAlert: boolean;
 
     /**
      * Specifies whether the product should be rendered to be compatible with
@@ -88,7 +101,7 @@ const MOBILE_BREAKPOINT = 440;
 /**
  * Product template to contain information about a single product
  */
-export class Product extends React.PureComponent<ProductProps, ProductState> {
+class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     /**
      * State of the component
      */
@@ -97,7 +110,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         isSmall: false,
         showImage: false,
         showProducer: false,
-        showDialog: false
+        showDialog: false,
+        showAlert: false
     };
 
     /**
@@ -155,6 +169,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 { this.renderProducerLightbox() }
                 { this.renderImageLightbox() }
                 { this.renderConfirmDialog() }
+
+                <Alert text={ "Failed to fetch producer related to product. Please try again later." } onClose={ this.closeAlert } active={ this.state.showAlert } />
+
 
 				<style jsx>{`
 
@@ -260,7 +277,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderProduct() {
         return (
-            <div className="product">
+            <div className={`product ${this.state.isSmall ? "isSmall" : ""}`}>
                 <div className="sections">
                     { this.renderThumbnailSection() }
                     { this.renderContentSection() }
@@ -271,10 +288,8 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 { this.props.userType === UserTypes.RECEIVER && 
                     this.renderApplyButton() }
 
-                { this.state.isSmall && (
-                    this.renderDescriptionTeaser()
-                )}
-
+                { this.renderDescriptionTeaser() }
+                
                 { this.renderChevron() }
                 
                 <style jsx>{`
@@ -282,6 +297,12 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     /** The product itself  */
                     .product {
                         position: relative;
+                        overflow: hidden;
+                        width: 100%;
+                        
+                        &.isSmall {
+                            padding-bottom: 20px;
+                        }
                     }
 
                     /** Contans different sections to manage placement with flexbox */
@@ -305,41 +326,21 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that renders the user section of the product template
      */
     private renderThumbnailSection = () => {
-        const { product } = this.props;
 
         return (
             <section className="section-thumbnail">
                 <div className="thumbnail">
                     <Thumbnail src={require("src/assets/dummy/product.jpg")} callback={ this.openImageLightbox } />
                 </div>
-                <img    
-                    className="flag" 
-                    title={product.location} 
-                    src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`} 
-                    alt={product.location} 
-                />
-
                 <style jsx>{`
 
                     /** Thumbnail img in the .section-thumbnail */
                     .thumbnail {
                         height: 70px;
                         width: 70px;
-                        margin-right: 30px;
+                        margin-right: 25px;
                     }
 
-                    /** Flag showing the users country */
-                    .flag {
-                        position: absolute;
-                        height: 20px;
-                        width: 30px;
-
-                        /** Positioning it on the top-right of the thumbnail */
-                        top: -5px;
-                        left: 50px;
-
-                        z-index: 2;
-                    }
                 `}</style>
             </section>
         );
@@ -372,10 +373,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         </span>
                     }
                 </div>
-
-                { !this.state.isSmall && (
-                    this.renderDescriptionTeaser()
-                )}
 
                 <style jsx>{`
                     .section-content {
@@ -477,6 +474,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Position the teaser on the bottom of the content section */
                         position: absolute;
                         bottom: 0;
+                        margin-left: 100px;
 
                         /** Force description to remain on one line and crop on overflow */
                         white-space: nowrap;
@@ -495,12 +493,9 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         *   at the bottom
                         */
                         &.isSmall {
-                            position: relative;
-                            display: block;
                             max-width: calc(100% - 60px);
-
-                            margin-top: 8px;
-                            margin-left: 7px;
+                            left: 5px;
+                            margin: 0;
                         }
                     }
                 `}</style>
@@ -820,10 +815,10 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                     .product-more {
                         position: absolute;
                         right: 0;
-                        top: -6px;
+                        top: 0;
 
                         &.isSmall {
-                            top: -4px;
+                            top: 3px;
                         }
                         z-index: 12;
                     }
@@ -836,8 +831,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Icon size */
                         height: 24px;
                         width: 24px;
-
-                        
                     }
 
                 `}</style>
@@ -933,19 +926,18 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                 <span onClick={ this.toggleDropdownState} role="button">
 
                         {   product.isActive &&
-                            <div className="link">
+                            <div className="link" onClick={ this.openConfirmationDialog } role="button">
                                 <i className="status">{ getSVG("check-square") }</i>
                                 <span>Deactivate</span>
                             </div>
                             
                         }
                         {   !product.isActive && 
-                            <div className="link">
+                            <div className="link" onClick={ this.openConfirmationDialog } role="button">
                                 <i className="status">{ getSVG("square") }</i>
                                 <span>Activate</span>
                             </div>
                         }
-
                 </span>
 
                 <style jsx>{`
@@ -955,7 +947,6 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         background: none;
                         -webkit-appearance: none;
                         border: none;
-
                         /** Center items within vertically */
                         display: flex;
                         align-items: center;
@@ -1074,7 +1065,7 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
-                <UserDescription user={this.state.producer} />
+                <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct}/>
                 { !this.props.isOnProducersPage && (
                     <div>
                         <a
@@ -1124,6 +1115,14 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
                         /** Setup spacing between chevron and text */
                         margin-right: 5px;
                     }
+
+                    .userDesc {
+                        & :global(.information) {
+                            width: 100%;
+                            margin: 0;
+                        }
+
+                    }
                 `}</style>
             </Lightbox>
         );
@@ -1133,16 +1132,16 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      * Listener that'll open the producer lightbox once it has been executed
      */
     private openProducerLightbox = async () => {
-        // TODO: Display throbber while loading!!!!!!!
         if (!this.state.producer) {
             const producerId = this.props.product.producerId;
-            const producer = await fetchUser(String(producerId));
+            const producer = await fetchUser(String(producerId), this.props.store);
+
 
             // Only display producer if one exists with the given id
             if (producer) {
                 this.setState({ producer, showProducer: true });
             } else {
-                alert("Failed to fetch producer related to product. Please try again later.");
+                this.openAlert();
             }
         } else {
             this.setState({ showProducer: true });
@@ -1203,6 +1202,20 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
      */
     private closeConfirmationDialog = () => {
         this.setState({ showDialog: false });
+    }
+
+    /**
+     * Listener that'll open the confirmation alert once it has been executed
+     */
+    private openAlert = () => {
+        this.setState({ showAlert: true });
+    }
+
+    /**
+     * Listener that'll close the alert once it has been executed
+     */
+    private closeAlert = () => {
+        this.setState({ showAlert: false });
     }
 
     /**
@@ -1281,3 +1294,5 @@ export class Product extends React.PureComponent<ProductProps, ProductState> {
         this.setState({ showDropdown: !this.state.showDropdown });
     }
 }
+
+export const Product = injectStore((store) => ({ store }), UnwrappedProduct);

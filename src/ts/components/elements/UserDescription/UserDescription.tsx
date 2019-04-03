@@ -14,6 +14,12 @@ type UserDescriptionProps = {
      * Contains all the information about the user that should be described
      */
     user?: UserModel;
+
+    /**
+     * Specifies whehter the rendered user is the user themself, which means
+     * we should render wallet info if the user is also a producer
+     */
+    isSelf: boolean;
 }
 
 /**
@@ -25,6 +31,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
      */
     public render(): React.ReactNode {
         const { user } = this.props;
+
         if (!user) {
             return <h1>There is no user available for rendering</h1>;
         }
@@ -48,7 +55,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                         {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
                     </div>
 
-                    {isProducerUser(user) && (
+                    {isProducerUser(user) && this.props.isSelf && (
                         <div className="twoliner">
                             <p><span className="bold">{profileJson.wallet}</span> </p>
                             {isNullOrUndefined(user.wallet) ? <p><i>There is no wallet string to show.</i></p> : <p>{user.wallet}</p>}
@@ -129,9 +136,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                          * screen and center it.
                          */
                         .information {
-                            width: calc(100% - 20px);
                             max-width: 100%;
-                            margin: 0 10px;
                             text-align: center;
                         }      
 

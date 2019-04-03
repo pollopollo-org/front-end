@@ -33,6 +33,10 @@ export const routes = {
     editProfile: {
         path: "/profile/edit.html",
     },
+    productsPage: {
+        path: "/products.html",
+        name: "Products",
+    },
     createProduct: {
         path: "/products/create.html",
     }

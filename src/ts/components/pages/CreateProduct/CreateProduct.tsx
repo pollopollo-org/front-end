@@ -501,7 +501,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                 this.props.history.push(routes.profile.path);
                 invalidateCacheKey(`producer-${this.props.store.user.id}`);
             } else {
-                alertApiError(result.status, apis.products.post.errors);
+                alertApiError(result.status, apis.products.post.errors, this.props.store);
                 this.setState({ isPending: false });
             }
         } catch (err) {
