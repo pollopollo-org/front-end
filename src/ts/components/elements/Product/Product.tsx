@@ -105,9 +105,7 @@ export type ProductState = {
      * Specifies the loaded producer of the product (if any). Will first be
      * loaded if the user wishes to see information about the producer
      */
-    producer?: ProducerModel;
-
-    
+    producer?: ProducerModel;  
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
