@@ -5,7 +5,7 @@
     "email": "Email",
     "password": "New password",
     "confirmPassword": "Confirm password",
-    "uploadPicture": "Upload a picture",
+    "uploadPicture": "Upload picture",
     "decription": "Describe yourself",
     "oldPassword": "Confirm with old password",
     "saveButton": "Save",

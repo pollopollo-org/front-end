@@ -1,40 +1,62 @@
 import { observer } from "mobx-react";
 import React from "react";
 
-import { colors } from "src/ts/config/colors";
-
 import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
-import profile from "src/assets/data/profile.json";
-
 import { getSVG } from "src/assets/svg";
-import { UserModel } from "src/ts/models/UserModel";
+import { UserModel, UserTypes } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
-import { isNullOrUndefined } from "util";
 
-import Countries from "src/assets/countries.json";
-import { fetchUser } from "src/ts/store/createStore";
+import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
+import { fetchUser } from "src/ts/utils/fetchUser";
+import userProfileJson from "src/assets/data/userProfile.json";
+import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { Store } from "src/ts/store/Store";
+import { Application } from "src/ts/components/elements/Application/Application";
+import { colors } from "src/ts/config";
+import { fetchProductByProducer } from "src/ts/utils/fetchProducts";
+import { ProductModel } from "src/ts/models/ProductModel";
+import { Product } from "src/ts/components/elements/Product/Product";
+import { getUserType } from "src/ts/utils/getUserType";
+import { Throbber } from "src/ts/components/utils";
+import { Fade } from "src/ts/components/transitions/Fade";
+import { asyncTimeout } from "src/ts/utils";
 
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
      */
-    user: UserModel;
+    store: Store;
 } & RouteComponentProps;
 
 export type UserState = {
+    /**
+     * Specifies the id of the currently rendered user
+     */
+    userId: number;
+
     /**
      * Specifies the user to be rendered
      */
     renderedUser?: UserModel;
 
     /**
-     * Specifies whehter the rendered user is the user him/herself, which means
+     * Specifies whehter the rendered user is the user themself, which means
      * we should render edit functionality etc.
      */
     isSelf: boolean;
+
+    /**
+     * Contains an array of products to be rendered if any
+     */
+    products?: ProductModel[];
+
+    /**
+     * Contains an array of applications to be rendered if any
+     */
+    applications?: ApplicationModel[];
 }
 
 /**
@@ -46,50 +68,51 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Setup initial state
      */
     public state: UserState = {
+        userId: this.props.store.user ? this.props.store.user.id : 0,
         isSelf: false,
-        renderedUser: this.props.user,
+        renderedUser: this.props.store.user,
     }
 
     /**
      * Determine if we should render a different user than self
      */
     public async componentDidMount(): Promise<void> {
-        // If we have a match on the route, that means we should attempt to 
-        // render the given user in readonly mode
-        if (this.props.match.params) {
-            // tslint:disable-next-line completed-docs
-            const userId = (this.props.match.params as { userId: string }).userId;
-            const user = await fetchUser(userId);
+        this.loadUser();
+    }
 
-            this.setState({
-                isSelf: false,
-                renderedUser: user,
-            });
-        } else {
-            // ... however, if we doesn't match, then we should render our own
-            // user
-            this.setState({ isSelf: true });
+    /**
+     * When the component changes, determine if we should load a new user
+     */
+    public async componentDidUpdate(): Promise<void> {
+        // tslint:disable-next-line completed-docs
+        const readonlyUserId = (this.props.match.params as { userId: string }).userId;
+        
+        if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
+            this.loadUser(); 
+        } else if (!readonlyUserId && this.props.store.user && this.props.store.user.id !== Number(this.state.userId)) {
+            this.loadUser();
         }
     }
 
     /**
      * Main render method, used to render ProfilePage
      */
+    // tslint:disable-next-line max-func-body-length
     public render() : JSX.Element{
         const { renderedUser: user } = this.state;
 
         if (!user) {
-            return <h1>wut</h1>;
+            return <h1>There's no user available to be rendered!</h1>;
         }
 
         return (
             <div className="page">
                 <div className="wrapper">
-                    <div>
+                    <div className="profile__information">
                         <div className="header">
-                            <h1>Profile</h1>
+                            <h1>{userProfileJson.profile}</h1>
                             {this.state.isSelf && (
-                                <Link className="editProfile" to={routes.editProfile.path}>
+                                <Link className="link editProfile" to={routes.editProfile.path} title="Edit profile">
                                     <i>
                                         {getSVG("edit")}
                                     </i>
@@ -97,43 +120,32 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             )}
                         </div>
                         {/* Information box */}
-                        <div className="information">
-                            <div className="content">
-                                <div className="image">
-                                    { (isNullOrUndefined(user.thumbnail)
-                                        ? <i className="user">{ getSVG("user2", {strokeColor: colors.primary}) }</i>
-                                        : <img src={require("src/assets/dummy/sif.PNG")} />)
-                                    }
-                                </div>
-                                <p><span className="bold">{profile.name}</span> {user.firstName} {user.surName}</p>
-                                <p><span className="bold">{profile.country}</span> {this.extractCountry()}</p>
-                                <p><span className="bold">{profile.email}</span> {user.email}</p>
-                                <div className="twoliner">
-                                    <p><span className="bold">{profile.desc}</span> </p>
-                                    {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
-                                </div>
-
-                                {isProducerUser(user) && (
-                                    <div className="twoliner">
-                                        <p><span className="bold">{profile.wallet}</span> </p>
-                                        {isNullOrUndefined(user.wallet) ? <p><i>There is no wallet string to show.</i></p> : <p>{user.wallet}</p>}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        <UserDescription user={user} isSelf={this.state.isSelf} />
                     </div>
                     {/* List of the user's products/applications */}
                     <div className="list">
                         {isProducerUser(user) && (
-                            <h2>Your products</h2>
+                            <>
+                                <div className="list__header">
+                                    <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
+                                    {this.state.isSelf && (
+                                        <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
+                                            <i>
+                                                {getSVG("plus-square")}
+                                            </i>
+                                        </Link>
+                                    )}
+                                </div>
+                                { this.renderProducts() }
+                            </>
                         )}
                         {isReceiverUser(user) && (
-                            <h2>Your applications</h2>
-                        )
-                        }
-                        {/* Dummy items for the list */}
-                        <div className="item"></div>
-                        <div className="item"></div>
+                            <>
+                                <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
+                                { this.renderApplications() }
+                            </>
+                            
+                        )}
                     </div>
                 </div>
 
@@ -148,120 +160,85 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         justify-content: space-evenly;
                     }
 
+                    .profile__information {
+                        position: sticky;
+                        top: 0;
+                        height: min-content;
+
+                        & :global(.information) {
+                            max-height: calc(100vh - 120px);
+                            overflow: auto;
+                        }
+                    }
+
                     h1 {
                         margin-top: 25px;
                         display: inline-block;
-                    }
-
-                    /* Box for user information */
-                    .information {
-                        padding: 10px 0;
-                        max-width: 350px;
-                        border-radius: 3px;
-                        background-color: ${colors.pale};
-                        color: ${colors.licorice};
-
-                    }
-
-                    /* The content of the information box */
-                    .content {
-                        margin: 20px 50px;
-                    }
-
-                    /* Profile picture, centered within information box */
-                    .image {
-                        display: block;
-                        height: 160px;
-                        width: 160px;
-                        border-radius: 50%;
-                        border: 2px solid ${colors.primary};
-                        margin: 0 auto;
-                        margin-bottom: 25px;
-                        overflow: hidden;
-
-                        & img {
-                            height: 100%;
-                            width: 100%;
-                            object-fit: cover;
-                        }
-                    }
-
-                    .image i {
-                        margin: auto;
-                        display: block;
-                        height: 70px;
-                        width: 70px;
-                        padding-top: 45px;
-                    }
-
-                    /* Link to edit profile page, centered under image */
-                    :global(.editProfile) {
-                        margin-top: 30px;
-                        margin-left: 10px;
-                        color: ${colors.primary};
-                        text-decoration: none;
-                        display: inline-block;
-                    }
-
-                    :global(.editProfile):hover {
-                        color: ${colors.secondary};
-                    }
-
-                    .editProfile i {
-                        & :global(> span > svg) {
-                            width: 24px;
-                            margin-left: 5px;
-                            /* Allign with h1 */
-                            margin-bottom: -2px;
-                        }
                     }
 
                     p {
                         margin: 15px 0;
                     }
 
-                    /* A section of the information box where header and content are on different lines */
-                    .twoliner {
-                        margin-top: 25px;
-                    }
-
-                    /* Justify text and split words */
-                    .twoliner p {
-                        text-align: left;
-                        line-height: 1.3;
-                        margin: 5px 0 0 0;
-                        -webkit-hyphens: auto;
-                        -moz-hyphens: auto;
-                        -ms-hyphens: auto;
-                        hyphens: auto;
-                    }
-
-                    .bold {
-                        font-weight: bold;
-                        margin: 0;
-                    }
-
                     h2 {
                         margin: 0;
-                        margin-bottom: 15px;
                     }
+
+                    /* Link to edit profile page, centered under image */
+                    :global(.link) {
+                        color: ${colors.primary};
+                        text-decoration: none;
+                        display: inline-block;
+                    }
+
+                    :global(.editProfile) {
+                        margin-top: 30px;
+                        margin-left: 10px;
+
+                        & i {
+                            display: block;
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+
+                    :global(.newProduct > i) {
+                        display: block;
+                        width: 24px;
+                        height: 24px;
+                    }
+
+                    :global(.link):hover {
+                        color: ${colors.secondary};
+                    }
+
+                    .link i {
+                        & :global(> span > svg) {
+                            width: 24px;
+                            margin-left: 5px;
+                            /* Allign with h1 */
+                            margin-bottom: -2px;
+                        }
+                    } 
 
                     /**
                      * List of user's products/applications,
                      * move down to align with information box
                      */
                     .list {
-                        margin-top: 63px;
+                        position: relative;
+                        margin-top: 80px;
                         width: 50%;
                     }
 
-                    /* Dummy products/applications for list, replace later */
-                    .item {
-                        height: 90px;
-                        border: 1px solid rgba(139,72,156, 0.15);
-                        border-radius: 2px;
-                        background-color: rgba(219,208,239, 0.15);
-                        margin-top: 15px;
+                    .list__header {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 15px;
+
+                        & h2 {
+                            margin-right: 10px;
+                        }
                     }
 
                     /* Make more room for applications/products when the width is less than 820px */
@@ -287,23 +264,21 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
 						}
 
-                        /*
-                         * Make the information box wide enough to fill the
-                         * screen and center it.
-                         */
-                        .information {
-                            width: calc(100% - 20px);
-                            max-width: 100%;
-                            margin: 0 10px;
-                            text-align: center;
-                        }
-
                         .header {
                             text-align: center;
                         }
 
-                        h2 {
+                        .list__header {
                             margin-top: 20px;
+                        }
+
+                        .profile__information {
+                            position: static;
+                            margin: 0 10px;
+
+                            & :global(.information) {
+                                max-height: unset;
+                            }
                         }
 
                         /* Make the list wide enough to fill the  screen. */
@@ -319,20 +294,157 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal helper that extracts the country of the user based on the users
-     * country code
+     * Simple helper that displays a throbber that can be rendered while products/
+     * applications are loading
      */
-    private extractCountry = () => {
-        const user = this.state.renderedUser;
+    private renderListThrobber = () => {
+        const throbberSize = 64;
 
-        if (!user) {
-            return "Unknown";
+        return (
+            <i
+                style={{
+                    height: throbberSize,
+                    width: throbberSize,
+                }}
+            >
+                <Throbber size={throbberSize} relative={true} />
+
+                <style jsx>{`
+                    i {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                `}</style>
+            </i>
+        );
+    }
+
+    /**
+     * Internal render method that'll render all products associated to a user
+     */
+    private renderProducts = () => {
+        return (
+            <>
+                <Fade in={!this.state.products} key="throbber">
+                    {this.renderListThrobber()}
+                </Fade>
+                <Fade in={!!this.state.products} key="products">
+                    <div>
+                        { this.state.products && this.state.products.map((product, index) => {
+                            const isOnProducersPage = product.producerId === this.state.userId;
+                            const isOwnProduct = this.props.store.user 
+                                ? this.props.store.user.id === product.producerId
+                                : false;
+
+                            const updateProduct = this.updateProduct.bind(this, index);
+
+                            return (
+                                <Product
+                                    key={index}
+                                    product={product}
+                                    isOnProducersPage={isOnProducersPage}
+                                    isOwnProduct={isOwnProduct}
+                                    updateProduct={updateProduct}
+                                    userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
+                                />  
+                            );
+                        })}
+                    </div>
+                </Fade>
+            </>
+        );
+    }
+
+    /**
+     * Internal helper that'll load all products related to a user
+     */
+    private loadProducts = async() => {
+        if (!this.state.userId) {
+            return;
         }
 
-        const countryData = Countries.find((country) => country.Code === user.country);
+        const products = await fetchProductByProducer(this.state.userId, this.props.store);
 
-        return countryData ? countryData.Name : "Unknown";
+        if (!products) {
+            this.setState({ products: [] });
+        } else {
+            this.setState({ products });
+
+        }
+    }
+
+    /**
+     * Simple callback that should be executed once a product should be updated.
+     * (e.g. when toggling the product on and off)
+     */
+    private updateProduct = (index: number, newProduct: ProductModel) => {
+        const newProductList = this.state.products;
+
+        if (newProductList) {
+            newProductList[index] = newProduct;
+
+            this.setState({ products: newProductList });
+        }
+    }
+
+    /**
+     * Internal render method that'll render all applications associated to a user
+     */
+    private renderApplications = () => {
+        if (!this.state.applications) {
+            return null;
+        }
+
+        return (this.state.applications.map((application, index) => {
+            return <Application key={index} application={application} />;
+        }));
+    }
+
+    /**
+     * Internal helper that'll load all applications related to a user
+     */
+    private loadApplications = () => {
+        this.setState({ applications: this.props.store.applications });
+    }
+
+    /**
+     * Internal method that'll load the user to be rendered within the application
+     */
+    private loadUser = async () => {
+        // tslint:disable-next-line completed-docs
+        const readonlyUserId = (this.props.match.params as { userId: string }).userId;
+        let user: UserModel | undefined;
+
+        // If we have a match on the route, that means we should attempt to 
+        // render the given user in readonly mode
+        if (readonlyUserId) {
+            user = await fetchUser(readonlyUserId, this.props.store);
+
+            this.setState({
+                userId: Number(readonlyUserId),
+                isSelf: false,
+                renderedUser: user,
+            });
+        } else {
+            user = this.props.store.user;
+
+            // ... however, if we doesn't match, then we should render our own
+            // user
+            this.setState({ isSelf: true, renderedUser: user, userId: user ? user.id : 0 });
+        }
+
+        await asyncTimeout(0);
+        
+        // Begin loading the desired additional data based on the user to display
+        if (user && isReceiverUser(user)) {
+            this.loadApplications();
+        } else if (user && isProducerUser(user)) {
+            this.loadProducts();
+        }
+
     }
 }
 
-export const UserProfile = injectStore((store) => ({user: store.user}), UnwrappedUserProfile);
+export const UserProfile = injectStore((store) => ({store}), UnwrappedUserProfile);

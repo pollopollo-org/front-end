@@ -5,8 +5,8 @@ import { RouterProps } from "react-router";
 import { getSVG } from "src/assets/svg";
 import { easings, routes } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
-import { Menu } from "./Menu";
-import { UserInfo } from "./UserInfo";
+import { Menu } from "src/ts/components/layout/Header/Menu";
+import { UserInfo } from "src/ts/components/layout/Header/UserInfo";
 
 type HeaderState = {
     /**
@@ -15,7 +15,9 @@ type HeaderState = {
      */
     hasUserToggled: boolean;
 
-    /** Specifies if the navigation layer is currently active */
+    /** 
+     * Specifies if the navigation layer is currently active 
+     */
     isContentToggled: boolean;
 
     /**
@@ -33,7 +35,9 @@ type HeaderState = {
  * Header to be placed at the top of all pages
  */
 export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderState> {
-    /** Setup initial state */
+    /** 
+     * Setup initial state 
+     */
     public state: HeaderState = {
         hasUserToggled: false,
         isContentToggled: false,
@@ -183,12 +187,16 @@ export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderStat
         );
     }
 
-    /** Internal helper that renders the top line of the icon */
+    /** 
+     * Internal helper that renders the top line of the icon 
+     */
     protected renderTopLine(): JSX.Element {
         const { hasUserToggled } = this.state;
 
+        const className = this.state.isContentToggled ? "cross" : !hasUserToggled ? "" : "line";
+
         return (
-            <div className={this.state.isContentToggled ? "cross" : !hasUserToggled ? "" : "line"}>
+            <div className={className}>
                 <style jsx>{`
                     div {
                         /** Render the single line of the menu-icon */
@@ -259,12 +267,16 @@ export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderStat
         );
     }
 
-    /** Internal helper that renders the middle line of the icon */
+    /** 
+     * Internal helper that renders the middle line of the icon 
+     */
     protected renderMiddleLine(): JSX.Element {
         const { hasUserToggled } = this.state;
 
+        const className = this.state.isContentToggled ? "cross" : !hasUserToggled ? "" : "line";
+
         return (
-            <div className={this.state.isContentToggled ? "cross" : !hasUserToggled ? "" : "line"}>
+            <div className={className}>
                 <style jsx>{`
                     div {
                         /** Render the single line of the menu-icon */
@@ -322,12 +334,16 @@ export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderStat
         );
     }
 
-    /** Internal helper that renders the bottom line of the icon */
+    /** 
+     * Internal helper that renders the bottom line of the icon 
+     */
     protected renderBottomLine(): JSX.Element {
         const { hasUserToggled } = this.state;
 
+        const className = this.state.isContentToggled ? "cross" : !hasUserToggled ? "" : "line";
+
         return (
-            <div className={this.state.isContentToggled ? "cross" : !hasUserToggled ? "" : "line"}>
+            <div className={className}>
                 <style jsx>{`
                     div {
                         /** Render the single line of the menu-icon */
@@ -385,7 +401,9 @@ export class UnwrappedHeader extends React.PureComponent<RouterProps, HeaderStat
         );
     }
 
-    /** Internal helper that toggles the navigation */
+    /** 
+     * Internal helper that toggles the navigation 
+     */
     protected toggleContent = () => {
         // Bail out if a transition is already running
         if (this.state.isTransitioning || window.innerWidth > 768) {

@@ -19,11 +19,6 @@ export const CSS: React.SFC = () => (
                 box-sizing: border-box;
                 width: 100%;
                 height: 100%;
-
-                /** We should aspire to never having overflow on the x-axis on the body layer  */
-                overflow-x: hidden;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
             }
 
             body {
@@ -52,6 +47,7 @@ export const CSS: React.SFC = () => (
                 font-size: 2em;
                 font-family: ${ fonts.heading };
                 font-weight: 500;
+                line-height: 1;
                 color: ${ colors.licorice };
             }
 
@@ -60,9 +56,14 @@ export const CSS: React.SFC = () => (
             h4,
             h5,
             h6 {
+                line-height: 1;
                 font-family: ${ fonts.heading };
                 font-weight: 400;
                 color: ${ colors.licorice };
+            }
+
+            h2 {
+                font-size: 1.3em;
             }
 
             p {

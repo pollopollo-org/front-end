@@ -2,8 +2,8 @@ import React from "react";
 import { colors } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
-import Countries from "src/assets/countries.json";
-import PrioritisedCountries from "src/assets/data/prioritisedCountries.json";
+import countriesJson from "src/assets/countries.json";
+import prioritisedCountriesJson from "src/assets/data/prioritisedCountries.json";
 
 type SelectCountryProps = {
     /**
@@ -29,28 +29,39 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps>{
         return (
             <select
                 required
-                onChange={event => this.props.onChange(event.target.value)}
+                onChange={this.onSelectCountry}
                 className={`${!this.props.currentCountry ? "inactive" : "active"}`}
                 value={this.props.currentCountry || ""}
             >
-                <option disabled value="">Select country</option>
+                <option disabled value="" aria-selected={this.props.currentCountry === ""}>Select country</option>
                 <optgroup>
-                    { PrioritisedCountries.map((country) => {
+                    { prioritisedCountriesJson.map((country) => {
                         return (
-                            <option key={country.Code} value={country.Code}>{country.Name}</option>
+                            <option 
+                                key={country.Code} 
+                                value={country.Code} 
+                                aria-selected={this.props.currentCountry === country.Code}>
+                                    {country.Name}
+                                </option>
                         );
                     }) }
                 </optgroup>
                 <optgroup>
-                    { Countries.map((country) => {
+                    { countriesJson.map((country) => {
                         // Only render non-prioritised countries in this list
                         // (important countries has already been rendered)
-                        if (PrioritisedCountries.findIndex((priority) => priority.Code !== country.Code)) {
+                        if (prioritisedCountriesJson.findIndex((priority) => priority.Code !== country.Code)) {
                             return null;
                         }
 
                         return (
-                            <option key={country.Code} value={country.Code}>{country.Name}</option>
+                            <option 
+                                key={country.Code} 
+                                value={country.Code}
+                                aria-selected={this.props.currentCountry === country.Code}
+                            >
+                                {country.Name}
+                            </option>
                         );
                     }) }
                 </optgroup>
@@ -98,5 +109,13 @@ export class SelectCountry extends React.PureComponent<SelectCountryProps>{
                 `}</style>
             </select>
         );
+    }
+
+    /**
+     * Method that'll get triggered every time a new country has been selected
+     * in order to reflect this to the parent component
+     */
+    private onSelectCountry = (evt: React.FormEvent<HTMLSelectElement>) => {
+        this.props.onChange(evt.currentTarget.value);
     }
 }

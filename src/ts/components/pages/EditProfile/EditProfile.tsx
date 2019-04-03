@@ -1,6 +1,6 @@
 import React from "react";
 import { RouterProps, withRouter } from "react-router";
-import EditProfileLabels from "src/assets/data/editProfile.json";
+import editProfileJson from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
 import { colors, fonts, routes } from "src/ts/config";
 import { apis } from "src/ts/config/apis";
@@ -9,8 +9,10 @@ import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
-import { Throbber } from "../../utils";
-import { SelectCountry } from "../../utils/SelectCountry";
+import { Button } from "src/ts/components/utils";
+import { SelectCountry } from "src/ts/components/utils/SelectCountry";
+import { alertApiError } from "src/ts/utils/alertApiError";
+import { fetchSelf } from "src/ts/utils/fetchUser";
 
 type EditProfileProps = {
     /**
@@ -64,7 +66,7 @@ type EditProfileState = {
     /**
      * profile image
      */
-    profilePicture?:Blob;
+    profilePicture?: File;
     /**
      * wallet address
      */
@@ -125,30 +127,35 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Main render method for the entire component
      */
+    // tslint:disable-next-line max-func-body-length
     public render(): JSX.Element{
         if (!this.props.store.user) {
             return <h1>No user currently logged in!</h1>;
         }
 
+        const picture = this.getProfilePictureURL();
+
         return(
             <div className="allSection">
-            <h1>{ EditProfileLabels.title }</h1>
+            <h1>{ editProfileJson.title }</h1>
             <form onSubmit={this.sendToBackEnd}>
                 <div className="inputPicDescSection">
                     <div className="inputFieldsSection">
                         <input
                             className="input name first"
                             required
+                            aria-required={true}
                             value={this.state.firstName}
-                            placeholder={ EditProfileLabels.firstName }
-                            onChange={event => this.setState({firstName: event.target.value })}
+                            placeholder={ editProfileJson.firstName }
+                            onChange={this.onFirstnameChanged}
                         />
                         <input
                             className="input name last"
                             required
+                            aria-required={true}
                             value={this.state.lastName}
-                            placeholder={ EditProfileLabels.lastName }
-                            onChange={event => this.setState({lastName: event.target.value })}
+                            placeholder={ editProfileJson.lastName }
+                            onChange={this.onLastnameChanged}
                         />
                         <div className="SelectCountryDiv">
                             <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
@@ -158,44 +165,51 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             className="input email"
                             required
                             value={this.state.email}
-                            placeholder={ EditProfileLabels.email }
-                            onChange={event => this.setState({email: event.target.value })}
+                            aria-required={true}
+                            placeholder={ editProfileJson.email }
+                            onChange={this.onEmailChanged}
                         />
                         {this.state.userType === "Producer" &&
                             <input
                             className="input wallet"
-                            value={this.state.wallet}
-                            placeholder={ EditProfileLabels.wallet}
-                            onChange={event => this.setState({wallet: event.target.value})}
+                            value={this.state.wallet || ""}
+                            aria-required={true}
+                            placeholder={ editProfileJson.wallet}
+                            onChange={this.onWalletChanged}
                             />
                         }
                         <input
                             type="password"
                             className="input password first"
                             value={this.state.password}
-                            placeholder={ EditProfileLabels.password }
-                            onChange={event => this.setState({password: event.target.value })}/>
+                            placeholder={ editProfileJson.password }
+                            onChange={this.onPasswordChanged}/>
                         <input
                             type="password"
                             className="input password second"
                             value={this.state.repeatedPassword}
-                            placeholder={ EditProfileLabels.confirmPassword }
-                            onChange={event => this.setState({repeatedPassword: event.target.value })}/>
+                            placeholder={ editProfileJson.confirmPassword }
+                            onChange={this.onValidationPasswordChanged}/>
                     </div>
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
-                                {(isNullOrUndefined(this.state.profilePicture) && <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>)|| <img className="currentPicture" src={ this.getProfilePictureURL() }/>}
+                                {(
+                                    isNullOrUndefined(picture) 
+                                        ? <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>
+                                        : <img className="currentPicture" src={ picture } alt="" role="presentation"/>  
+                                )}
                         </div>
                         <input
                             type="file"
                             id="fileInput"
-                            onChange={event => this.chooseImage(event)}/>
-                        <label htmlFor="fileInput">Choose a file</label>
+                            onChange={this.chooseImage}
+                        />
+                        <label htmlFor="fileInput">{editProfileJson.uploadPicture}</label>
                         <textarea
                             className="description"
                             value={this.state.description || ""}
-                            placeholder={ EditProfileLabels.decription }
-                            onChange={event => this.setState({description: event.target.value })}/>
+                            placeholder={ editProfileJson.decription }
+                            onChange={this.onDescriptionChanged}/>
                     </div>
                 </div>
                 <div className="borderLine"/>
@@ -205,29 +219,35 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             type="password"
                             className="input password old"
                             required
+                            aria-required={true}
                             value={this.state.oldPassword}
-                            placeholder={ EditProfileLabels.oldPassword }
-                            onChange={event => this.setState({oldPassword: event.target.value })}/>
+                            placeholder={ editProfileJson.oldPassword }
+                            onChange={this.onOldPasswordChanged}/>
                     </div>
                     <div className="submitDiv">
-                        <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                            <span className="text">{EditProfileLabels.saveButton}</span>
-                            <span className="throbber">
-                                <Throbber size={30} relative={true} inverted={true} />
-                            </span>
-                        </button>
+                        <div className="button">
+                            <Button 
+                                withThrobber={true} 
+                                text={editProfileJson.saveButton}
+                                width={260}
+                                height={43}
+                                fontSize={16}
+                                type={"submit"}
+                                isPending={this.state.isPending}
+                                throbberSize={30}/>
+                        </div>
                     </div>
                 </div>
             </form>
 
             <style jsx>{`
-                h1{
+                h1 {
                     margin: 0 0 8px;
                     line-height: 30px;
                     text-align: center;
                 }
 
-                input{
+                input {
                     box-shadow: none;
                     height: 39px;
                     width: 252px;
@@ -263,62 +283,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     border-radius: 50%;
                 }
 
-                button {
+                .button {
                     float: center;
                     margin: 10px 0;
-                    background-color: ${ colors.secondary };
-                    color: ${colors.white};
-                    border: none;
-                    border-radius: 2px;
-                    transition: background-color 0.1s linear;
-                    font-size: 16px;
-                    font-family: ${ fonts.heading };
-                    font-weight: 300;
-                    width: 260px;
-                    cursor: pointer;
-                    height: 43px;
                     position: relative;
-
-                    & .throbber {
-                        /**
-                            * Position a throbber in the middle to be displayed
-                            * while requests are ongoing
-                            */
-                        position: absolute;
-                        left: calc(50% - 15px);
-                        top: calc(50% - 15px);
-                        opacity: 0;
-                        overflow: hidden;
-
-                        /**
-                            * prepare transitions
-                            */
-                        transition: opacity 0.2s linear;
-                    }
-
-                    & .text {
-                        opacity: 1;
-                        transform: scale(1);
-
-                        /**
-                            * prepare transitions
-                            */
-                        transition: opacity 0.2s linear;
-                    }
-
-                    &.isPending .throbber {
-                        opacity: 1;
-                        transform: scale(1);
-                    }
-
-                    &.isPending .text {
-                        opacity: 0;
-                        transform: scale(0.5);
-                    }
-                }
-
-                button:hover {
-                    background-color: ${ colors.primary };
                 }
 
 
@@ -386,13 +354,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     cursor: pointer;
                     transition: background-color 0.1s linear;
                     font-size: 16px;
-                    font-family: ${ fonts.heading };
+                    font-family: ${ fonts.text };
                     font-weight: 300;
                     padding: 0.5rem 20px;
-                    width: 90px;
+                    width: 105px;
                     display: block;
                     margin: 10px auto 20px auto;
-
+                    text-align: center;
                 }
 
                 [type="file"] + label:hover {
@@ -401,9 +369,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
 
                 .description{
                     box-shadow: none;
-                    width: 252px;
+                    width: 240px;
                     height: 139px;
-                    text-indent: 9px;
+                    padding: 10px 9px;
                     border: 1px solid ${ colors.pale };
                     color: ${ colors.black };
                     border-radius: 3px;
@@ -514,11 +482,79 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     .oldPassSubmitSection {
                         display: block;
                     }
+
+                    .button :global(button) {
+                        width: 100%;
+                    }
                 }
 
             `}</style>
             </div>
         );
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onFirstnameChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ firstName: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onLastnameChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ lastName: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onEmailChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ email: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onWalletChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ wallet: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ password: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onValidationPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ repeatedPassword: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onDescriptionChanged = (evt: React.FormEvent<HTMLTextAreaElement>) => {
+        this.setState({ description: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onOldPasswordChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ oldPassword: evt.currentTarget.value });
     }
 
     /**
@@ -541,7 +577,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 )
                 )
                 {
-                    alert(EditProfileLabels.imageTypeAlert);
+                    this.props.store.currentErrorMessage = editProfileJson.imageTypeAlert;
                     return;
                 }
 
@@ -555,7 +591,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      */
     private getProfilePictureURL = () => {
         if(isNullOrUndefined(this.state.profilePicture)){
-            return "";
+            return this.props.store.user ? this.props.store.user.getThumbnail() : "";
         } else{
             return window.URL.createObjectURL(this.state.profilePicture);
         }
@@ -572,11 +608,11 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         }
 
         if(this.state.password && this.state.password !== this.state.repeatedPassword){
-            alert("Your passwords must match");
+            this.props.store.currentErrorMessage = "Your passwords must match";
             return;
         }
 
-        const endPoint = apis.user.put;
+        const endPoint = apis.user.put.path;
 
         try {
             this.setState({ isPending: true });
@@ -590,40 +626,66 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    id: this.state.userId,
+                    userId: this.state.userId,
                     firstName: this.state.firstName,
-                    surname: this.state.lastName,
+                    surName: this.state.lastName,
                     email: this.state.email,
                     country: this.state.country,
                     userRole: this.state.userType,
                     newPassword: this.state.repeatedPassword,
                     password: this.state.oldPassword,
-                    thumbnail: this.imageToData(),
-                    wallet: this.state.wallet
+                    wallet: this.state.wallet,
+                    description: this.state.description,
                 })
             });
 
+            let imageResult: Response | undefined = undefined;
+
+            if (this.state.profilePicture) {
+                imageResult = await fetch(apis.user.image.path, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: this.imageToData(),
+                })
+            }
+
+            this.props.store.user = await fetchSelf();
+
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
-            if (result.ok) {
+            if (result.ok && (!imageResult || imageResult.ok)) {
                 this.props.history.push(routes.profile.path);
             } else {
-                throw new Error("Something went wrong, please try again.");
+                alertApiError(result.status, apis.user.put.errors, this.props.store);
+
+                if (imageResult) {
+                    alertApiError(imageResult.status, apis.user.image.errors, this.props.store);
+                }
+
+                this.setState({ isPending: false });
             }
         } catch (err) {
             this.setState({ isPending: false });
-            alert((err as Error).message);
+
+            this.props.store.currentErrorMessage = "Something went wrong while attempting to update your profile, please try again later.";
         }
     }
 
     /**
      * Validates the image by checking for malformed/corrupted data
      */
-    private imageToData = () => {
+    private imageToData = (): FormData => {
         const formData = new FormData();
-        return formData.append("file",this.state.profilePicture||"");
-    }
 
+        if (this.state.profilePicture) {
+            formData.append("userId", String(this.state.userId));
+            formData.append("file", this.state.profilePicture);
+        }
+
+        return formData;
+    }
 }
 
 export const EditProfile = withRouter(injectStore((store) => ({ store }), UnwrappedEditProfile));

@@ -1,7 +1,7 @@
 
-enum UserTypes {
-    PRODUCER = "producer",
-    RECEIVER = "receiver"
+export enum UserTypes {
+    PRODUCER = "Producer",
+    RECEIVER = "Receiver"
 }
 
 /**
@@ -25,26 +25,31 @@ export type UserToken = {
 }
 
 /**
+ * Contains the path to the backend which is used to resolve images
+ */
+const BACKEND_URL = "https://api.pollopollo.org";
+
+/**
  * Defines the data required to create a user model.
  *
  * The fields have been commented in length within the actual class
  */
 // tslint:disable completed-docs
 export type UserModelData = {
-    id: number;
+    userId: number;
     email: string;
     firstName: string;
-    surname: string;
+    surName: string;
     country: string;
     city?: string;
     description?: string;
     thumbnail?: string;
-    userType: UserTypes;
+    userRole: UserTypes;
 };
 // tslint:enable completed-docs
 
 /**
- * User model
+ * User model describing all content required on a user
  */
 export class UserModel {
     /**
@@ -85,16 +90,28 @@ export class UserModel {
     /**
      * The path to the user's profile picture
      */
-    public readonly thumbnail?: string;
+    private readonly thumbnail?: string;
 
     constructor(data: UserModelData) {
-        this.id = data.id;
+        this.id = data.userId;
         this.email = data.email;
         this.firstName = data.firstName;
-        this.surName = data.surname;
+        this.surName = data.surName;
         this.country = data.country;
         this.city = data.city;
         this.description = data.description;
         this.thumbnail = data.thumbnail;
+    }
+
+    /**
+     * Internal helper that returns the absolute path to be rendered for a given
+     * profile
+     */
+    public getThumbnail(): string | undefined {
+        if (this.thumbnail) {
+            return `${BACKEND_URL}/${this.thumbnail}`;
+        } else {
+            return;
+        }
     }
 }

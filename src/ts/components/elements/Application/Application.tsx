@@ -4,7 +4,7 @@ import { colors } from "src/ts/config/colors";
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
-import { Button, Chevron } from "../../utils";
+import { Button, Chevron } from "src/ts/components/utils";
 
 export type ApplicationProps = {
     /**
@@ -47,10 +47,14 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      */
     private isTransitioning: boolean = false;
 
-    /** Reference to the div tag with class name description */
+    /** 
+     * Reference to the div tag with class name description 
+     */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** Reference to the div tag with class name application-border */
+    /** 
+     * Reference to the div tag with class name application-border 
+     */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
@@ -206,8 +210,13 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         return (
             <section className="section-user">
-                <img className="thumbnail" src={require("src/assets/dummy/sif.PNG")} />
-                <img className="flag" title={application.country} src={`${process.env.PUBLIC_URL}/flags/${application.countryCode.toLowerCase()}.svg`} />
+                <img className="thumbnail" src={require("src/assets/dummy/sif.PNG")} alt="" role="presentation" />
+                <img 
+                    className="flag" 
+                    title={application.country} 
+                    src={`${process.env.PUBLIC_URL}/flags/${application.countryCode.toLowerCase()}.svg`} 
+                    alt={application.country}
+                />
                 <div className="name">{this.nameEstimator()}</div>
 
                 <style jsx>{`
@@ -427,9 +436,11 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      * Internal renderer that renders the chevron of the application
      */
     private renderChevron = () => {
+        const chevronSize = this.state.isSmall ? 15 : 20;
+
         return (
-            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible}>
-                <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
+            <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} role="button">
+                <Chevron size={ chevronSize } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
                     /** The wrapper around the chevron arrow */
@@ -475,7 +486,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button text={`Donate $${application.price}`} />
+                <Button withThrobber={false} text={`Donate $${application.price}`} width={110} height={35} fontSize={12}/>
 
                 <style jsx>{`
                     .button-wrapper {

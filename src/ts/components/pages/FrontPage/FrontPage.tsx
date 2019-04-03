@@ -5,7 +5,8 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
 import { colors, fonts } from "src/ts/config";
-import { Application } from "../../elements/Application/Application";
+
+import { Application } from "src/ts/components/elements/Application/Application";
 
 export type FrontPageProps = {
     /**
@@ -33,7 +34,9 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                     })}
                 </div>
 
+
                 <style jsx>{`
+
                     h1{
                         /** Override defaults */
                         margin: 15px 15px 0;

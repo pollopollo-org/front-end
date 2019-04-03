@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
 
-import { Store } from "./Store";
+import { Store } from "src/ts/store/Store";
 
 /**
  * Creates a React context (ie. a Provider / Consumer pair), which allows us to

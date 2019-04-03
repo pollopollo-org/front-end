@@ -1,6 +1,6 @@
-import { ProducerModel } from "../models/ProducerModel";
-import { ReceiverModel } from "../models/ReceiverModel";
-import { UserModel } from "../models/UserModel";
+import { ProducerModel } from "src/ts/models/ProducerModel";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
+import { UserModel } from "src/ts/models/UserModel";
 
 /**
  * Check if the user is a producer
