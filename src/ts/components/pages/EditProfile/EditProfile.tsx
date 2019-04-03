@@ -9,7 +9,7 @@ import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
-import { Throbber } from "src/ts/components/utils";
+import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 import { alertApiError } from "src/ts/utils/alertApiError";
 import { fetchSelf } from "src/ts/utils/fetchUser";
@@ -225,24 +225,29 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             onChange={this.onOldPasswordChanged}/>
                     </div>
                     <div className="submitDiv">
-                        <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                            <span className="text">{editProfileJson.saveButton}</span>
-                            <span className="throbber">
-                                <Throbber size={30} relative={true} inverted={true} />
-                            </span>
-                        </button>
+                        <div className="button">
+                            <Button 
+                                withThrobber={true} 
+                                text={editProfileJson.saveButton}
+                                width={260}
+                                heigth={43}
+                                fontSize={16}
+                                type={"submit"}
+                                isPending={this.state.isPending}
+                                throbberSize={30}/>
+                        </div>
                     </div>
                 </div>
             </form>
 
             <style jsx>{`
-                h1{
+                h1 {
                     margin: 0 0 8px;
                     line-height: 30px;
                     text-align: center;
                 }
 
-                input{
+                input {
                     box-shadow: none;
                     height: 39px;
                     width: 252px;
@@ -278,62 +283,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     border-radius: 50%;
                 }
 
-                button {
+                .button {
                     float: center;
                     margin: 10px 0;
-                    background-color: ${ colors.secondary };
-                    color: ${colors.white};
-                    border: none;
-                    border-radius: 2px;
-                    transition: background-color 0.1s linear;
-                    font-size: 16px;
-                    font-family: ${ fonts.heading };
-                    font-weight: 300;
-                    width: 260px;
-                    cursor: pointer;
-                    height: 43px;
                     position: relative;
-
-                    & .throbber {
-                        /**
-                            * Position a throbber in the middle to be displayed
-                            * while requests are ongoing
-                            */
-                        position: absolute;
-                        left: calc(50% - 15px);
-                        top: calc(50% - 15px);
-                        opacity: 0;
-                        overflow: hidden;
-
-                        /**
-                            * prepare transitions
-                            */
-                        transition: opacity 0.2s linear;
-                    }
-
-                    & .text {
-                        opacity: 1;
-                        transform: scale(1);
-
-                        /**
-                            * prepare transitions
-                            */
-                        transition: opacity 0.2s linear;
-                    }
-
-                    &.isPending .throbber {
-                        opacity: 1;
-                        transform: scale(1);
-                    }
-
-                    &.isPending .text {
-                        opacity: 0;
-                        transform: scale(0.5);
-                    }
-                }
-
-                button:hover {
-                    background-color: ${ colors.primary };
                 }
 
 
@@ -401,7 +354,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     cursor: pointer;
                     transition: background-color 0.1s linear;
                     font-size: 16px;
-                    font-family: ${ fonts.heading };
+                    font-family: ${ fonts.text };
                     font-weight: 300;
                     padding: 0.5rem 20px;
                     width: 105px;
@@ -528,6 +481,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
 
                     .oldPassSubmitSection {
                         display: block;
+                    }
+
+                    .button :global(button) {
+                        width: 100%;
                     }
                 }
 

@@ -486,7 +486,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button text={`Donate $${application.price}`} />
+                <Button withThrobber={false} text={`Donate $${application.price}`} width={110} heigth={35} fontSize={12}/>
 
                 <style jsx>{`
                     .button-wrapper {
