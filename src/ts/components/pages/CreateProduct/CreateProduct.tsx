@@ -41,7 +41,7 @@ type CreateProductState = {
     /**
      * Image of the product
      */
-    productPicture?:Blob;
+    productPicture?: Blob;
     /**
      * Specifies whether or not we're currently attempting to create a user
      */
