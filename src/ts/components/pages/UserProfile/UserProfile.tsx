@@ -85,10 +85,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     public async componentDidUpdate(): Promise<void> {
         // tslint:disable-next-line completed-docs
         const readonlyUserId = (this.props.match.params as { userId: string }).userId;
-
+        
         if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
             this.loadUser(); 
-        } else if (this.props.store.user!.id !== Number(this.state.userId)) {
+        } else if (!readonlyUserId && this.props.store.user!.id !== Number(this.state.userId)) {
             this.loadUser();
         }
     }
