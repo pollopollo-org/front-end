@@ -325,12 +325,15 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 ? this.props.store.user.id === product.producerId
                                 : false;
 
+                            const updateProduct = this.updateProduct.bind(this, index);
+
                             return (
                                 <Product
                                     key={index}
                                     product={product}
                                     isOnProducersPage={isOnProducersPage}
                                     isOwnProduct={isOwnProduct}
+                                    updateProduct={updateProduct}
                                     userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
                                 />  
                             );
@@ -356,6 +359,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         } else {
             this.setState({ products });
 
+        }
+    }
+
+    /**
+     * Simple callback that should be executed once a product should be updated.
+     * (e.g. when toggling the product on and off)
+     */
+    private updateProduct = (index: number, newProduct: ProductModel) => {
+        const newProductList = this.state.products;
+
+        if (newProductList) {
+            newProductList[index] = newProduct;
+
+            this.setState({ products: newProductList });
         }
     }
 

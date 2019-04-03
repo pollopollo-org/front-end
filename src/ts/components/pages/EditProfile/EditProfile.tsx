@@ -620,7 +620,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 )
                 )
                 {
-                    alert(editProfileJson.imageTypeAlert);
+                    this.props.store.currentErrorMessage = editProfileJson.imageTypeAlert;
                     return;
                 }
 
@@ -651,7 +651,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         }
 
         if(this.state.password && this.state.password !== this.state.repeatedPassword){
-            alert("Your passwords must match");
+            this.props.store.currentErrorMessage = "Your passwords must match";
             return;
         }
 
@@ -711,7 +711,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             }
         } catch (err) {
             this.setState({ isPending: false });
-            alert("Something went wrong while attempting to update your profile, please try again later.");
+
+            this.props.store.currentErrorMessage = "Something went wrong while attempting to update your profile, please try again later.";
         }
     }
 

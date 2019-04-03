@@ -15,11 +15,9 @@ import { UserTypes } from "src/ts/models/UserModel";
 import { fetchUser } from "src/ts/utils/fetchUser";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
-import { Alert } from "src/ts/components/utils/Alert";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { alertApiError } from "src/ts/utils/alertApiError";
-import { invalidateCacheKey } from "src/ts/utils/fetchProducts";
 import { asyncTimeout } from "src/ts/utils";
 import { apis } from "src/ts/config/apis";
 
@@ -50,6 +48,12 @@ export type ProductProps = {
      * Contains a reference to the root store
      */
     store: Store;
+
+    /**
+     * Method that can optinally be executed once the prodcut updates in order
+     * to reflect this in the ui
+     */
+    updateProduct?(newProduct: ProductModel): void;
 }
 
 export type ProductState = {
@@ -181,9 +185,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 { this.renderProducerLightbox() }
                 { this.renderImageLightbox() }
                 { this.renderConfirmDialog() }
-
-                <Alert text={ "Failed to fetch producer related to product. Please try again later." } onClose={ this.closeAlert } active={ this.state.showAlert } />
-
 
 				<style jsx>{`
 
@@ -1153,7 +1154,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             if (producer) {
                 this.setState({ producer, showProducer: true });
             } else {
-                this.openAlert();
+                this.props.store.currentErrorMessage = "Failed to fetch producer related to product. Please try again later."
             }
         } else {
             this.setState({ showProducer: true });
@@ -1217,20 +1218,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Listener that'll open the confirmation alert once it has been executed
-     */
-    private openAlert = () => {
-        this.setState({ showAlert: true });
-    }
-
-    /**
-     * Listener that'll close the alert once it has been executed
-     */
-    private closeAlert = () => {
-        this.setState({ showAlert: false });
-    }
-
-    /**
      * Listener that updates the product 
      */
     private updateProductActivation = async () => {
@@ -1268,22 +1255,19 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
-            
-
             if (result.ok) {
-                invalidateCacheKey(`producer-${this.props.store.user.id}`);
+                if (this.props.updateProduct) {
+                    const newProduct = new ProductModel({ ...this.props.product, isActive: !product.isActive });
+                    this.props.updateProduct(newProduct);
+                }
             } else {
                 alertApiError(result.status, apis.products.post.errors, this.props.store);
-                this.setState({ isPending: false });
             }
         } catch (err) {
-            this.setState({ isPending: false });
-
             // Show error message
-            <Alert  text={"Something went wrong while attempting to update your product, please try again later."}
-                    onClose={ this.closeAlert }      
-                    active={ this.state.showAlert }  
-            />
+            this.props.store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
+        } finally {
+            this.setState({ isPending: false });
         }
     }
 

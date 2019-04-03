@@ -445,7 +445,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                 )
                 )
                 {
-                    alert(createProductJson.imageTypeAlert);
+                    this.props.store.currentErrorMessage = createProductJson.imageTypeAlert;
                     return;
                 }
 
@@ -523,7 +523,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
             }
         } catch (err) {
             this.setState({ isPending: false });
-            alert("Something went wrong while attempting to create your product, please try again later.");
+            this.props.store.currentErrorMessage = "Something went wrong while attempting to create your product, please try again later.";
         }
     }
 

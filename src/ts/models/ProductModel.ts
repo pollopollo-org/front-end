@@ -17,6 +17,18 @@ export type ProductModelData = {
     userId: number;
     thumbnail: string;
 };
+
+export type ProductModelFields = {
+    id: number;
+    location: string;
+    countryCode: CountryCodes;
+    description: string;
+    title: string;
+    price: number;
+    isActive: boolean;
+    producerId: number;
+    thumbnail?: string;
+}
 // tslint:enable completed-docs
 
 /**
@@ -31,8 +43,29 @@ export class ProductModel {
     /**
      * Helper that instantiates a model, populated with required data.
      */
-    public static CREATE(productData: ProductModelData): ProductModel {
-        return new ProductModel(productData);
+    public static CREATE(data: ProductModelData): ProductModel {
+        // Parse the country from the supplied countryCode
+        const country = countriesJson.find((c) => !data.country ? false : c.Code.toLowerCase() === data.country.toLowerCase());
+        const thumbnail = data.thumbnail ? `${BACKEND_URL}/${data.thumbnail}` : undefined;
+        let location = "";
+
+        if (!country) {
+            console.warn("Unable to find country from countryCode!");
+            location = "";
+        } else {
+            location = country.Name;
+        }
+
+
+        return new ProductModel({
+            ...data,
+            id: data.productId,
+            producerId: data.userId,
+            countryCode: data.country,
+            isActive: data.available,
+            location,
+            thumbnail, 
+        });
     }
 
     /**
@@ -82,25 +115,16 @@ export class ProductModel {
      */
     public readonly thumbnail?: string;
 
-    constructor(data: ProductModelData) {
-        // Parse the country from the supplied countryCode
-        const country = countriesJson.find((c) => !data.country ? false : c.Code.toLowerCase() === data.country.toLowerCase());
-
-        if (!country) {
-            console.warn("Unable to find country from countryCode!");
-            this.location = "";
-        } else {
-            this.location = country.Name;
-        }
-
-        this.id = data.productId;
+    constructor(data: ProductModelFields) {
+        this.id = data.id;
         this.description = data.description;
-        this.countryCode = data.country;
+        this.countryCode = data.countryCode;
         this.title = data.title;
         this.price = data.price;
         this.description = data.description;
-        this.isActive = data.available;
-        this.producerId = data.userId;
-        this.thumbnail = data.thumbnail ? `${BACKEND_URL}/${data.thumbnail}` : undefined;
+        this.isActive = data.isActive;
+        this.producerId = data.producerId;
+        this.location = data.location;
+        this.thumbnail = data.thumbnail;
     }
 }

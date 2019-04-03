@@ -59,7 +59,7 @@ type ProductsPageState = {
 /**
  * Specifies the amount of products to load on a single page
  */
-const BATCH_SIZE = 20;
+const BATCH_SIZE = 10;
 
 /**
  * A page where a user can see a list of all active products
@@ -194,17 +194,13 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         return (
             this.state.products.map((product, index) => {
                 if (index % 2 === evenOrUneven) {
-                    const isOwnProduct = this.props.store.user 
-                        ? this.props.store.user.id === product.producerId 
-                        : false;
-
                     return (
                         <Product 
                             key={index}
                             product={product}
                             userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
                             isOnProducersPage={false}
-                            isOwnProduct={isOwnProduct}
+                            isOwnProduct={false}
                         />
                     );
                 }
