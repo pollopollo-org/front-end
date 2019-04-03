@@ -18,6 +18,7 @@ export const LightboxTransition: React.SFC<{in?: boolean; unmountOnExit?: boolea
             { ...props }
             mountOnEnter
             unmountOnExit
+            appear
             timeout={ DURATION }
             classNames="utils__lightbox"
         >

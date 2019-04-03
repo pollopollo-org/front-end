@@ -728,7 +728,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
 
         return formData;
     }
-
 }
 
 export const EditProfile = withRouter(injectStore((store) => ({ store }), UnwrappedEditProfile));

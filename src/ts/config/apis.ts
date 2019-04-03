@@ -54,6 +54,12 @@ export const apis = {
                 409: "A product with the given information already exists."
             }
         },
+        postImage: {
+            path: `${basePath}/products/image`,
+            errors: {
+                403: "You are not authorized to upload an image to this product.",
+            },
+        },
         put: {
             path: `${basePath}/products/{productId}`,
             errors: {

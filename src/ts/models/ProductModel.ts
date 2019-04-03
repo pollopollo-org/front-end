@@ -9,14 +9,20 @@ import countriesJson from "src/assets/countries.json";
 // tslint:disable completed-docs
 export type ProductModelData = {
     productId: number;
-    location: CountryCodes;
+    country: CountryCodes;
     description: string;
     title: string;
     price: number;
     available: boolean;
     userId: number;
+    thumbnail: string;
 };
 // tslint:enable completed-docs
+
+/**
+ * Contains the path to the backend which is used to resolve images
+ */
+const BACKEND_URL = "https://api.pollopollo.org";
 
 /**
  *  Product model reflecting the data of a product
@@ -74,11 +80,11 @@ export class ProductModel {
     /**
      * Contains a thumbnail of the producer
      */
-    public readonly thumbnail: string;
+    public readonly thumbnail?: string;
 
     constructor(data: ProductModelData) {
         // Parse the country from the supplied countryCode
-        const country = countriesJson.find((c) => c.Code.toLowerCase() === data.location.toLowerCase());
+        const country = countriesJson.find((c) => !data.country ? false : c.Code.toLowerCase() === data.country.toLowerCase());
 
         if (!country) {
             console.warn("Unable to find country from countryCode!");
@@ -89,11 +95,12 @@ export class ProductModel {
 
         this.id = data.productId;
         this.description = data.description;
-        this.countryCode = data.location;
+        this.countryCode = data.country;
         this.title = data.title;
         this.price = data.price;
         this.description = data.description;
         this.isActive = data.available;
         this.producerId = data.userId;
+        this.thumbnail = data.thumbnail ? `${BACKEND_URL}/${data.thumbnail}` : undefined;
     }
 }

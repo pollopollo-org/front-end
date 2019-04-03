@@ -80,6 +80,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      */
     public async componentDidMount(): Promise<void> {
         await this.fetchData(this.state.currentPage);
+        this.setState({ isPending: false });
     }
 
     /**
@@ -199,6 +200,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
                     return (
                         <Product 
+                            key={index}
                             product={product}
                             userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
                             isOnProducersPage={false}

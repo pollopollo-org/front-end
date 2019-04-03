@@ -330,7 +330,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <section className="section-thumbnail">
                 <div className="thumbnail">
-                    <Thumbnail src={require("src/assets/dummy/product.jpg")} callback={ this.openImageLightbox } />
+                    <Thumbnail src={this.props.product.thumbnail} callback={ this.openImageLightbox } />
                 </div>
                 <style jsx>{`
 
@@ -1162,7 +1162,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderImageLightbox = () => {
         return (
             <Lightbox active={this.state.showImage} onClose={ this.closeImageLightbox }>
-                <img src={require("src/assets/dummy/product.jpg")} alt="" role="presentation" />
+                <img src={this.props.product.thumbnail} alt="" role="presentation" />
 
                 <style jsx>{`
                     img {
