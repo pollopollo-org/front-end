@@ -18,6 +18,10 @@ import { Dialog } from "src/ts/components/utils/Dialog";
 import { Alert } from "src/ts/components/utils/Alert";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
+import { alertApiError } from "src/ts/utils/alertApiError";
+import { invalidateCacheKey } from "src/ts/utils/fetchProducts";
+import { asyncTimeout } from "src/ts/utils";
+import { apis } from "src/ts/config/apis";
 
 export type ProductProps = {
 
@@ -89,10 +93,17 @@ export type ProductState = {
     isSmall: boolean;
 
     /**
+     * Specifies whether or not we're currently attempting to update a product
+     */
+    isPending?: boolean;
+
+    /**
      * Specifies the loaded producer of the product (if any). Will first be
      * loaded if the user wishes to see information about the producer
      */
     producer?: ProducerModel;
+
+    
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -111,7 +122,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         showImage: false,
         showProducer: false,
         showDialog: false,
-        showAlert: false
+        showAlert: false,
+        isPending: false
     };
 
     /**
@@ -1220,10 +1232,59 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
     /**
      * Listener that updates the product 
-     * TODO: Do real stuff with this function
      */
-    private updateProductActivation = () => {
+    private updateProductActivation = async () => {
+        await this.toggleAvailability();
         this.setState({ showDialog: false });
+    }
+
+    /**
+     * Update availability and send it to the backend
+     */
+    private toggleAvailability = async () => {
+        let { product } = this.props;
+
+        if (this.state.isPending || !this.props.store.user) {
+            return;
+        }
+        
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
+            const token = localStorage.getItem("userJWT");
+
+            const result = await fetch(apis.products.put.path.replace("{productId}", String(product.id)), {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: product.id,
+                    userId: this.props.store.user.id,
+                    available: !product.isActive, // Updating availability
+                }),
+            });
+
+            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+
+            
+
+            if (result.ok) {
+                invalidateCacheKey(`producer-${this.props.store.user.id}`);
+            } else {
+                alertApiError(result.status, apis.products.post.errors, this.props.store);
+                this.setState({ isPending: false });
+            }
+        } catch (err) {
+            this.setState({ isPending: false });
+
+            // Show error message
+            <Alert  text={"Something went wrong while attempting to update your product, please try again later."}
+                    onClose={ this.closeAlert }      
+                    active={ this.state.showAlert }  
+            />
+        }
     }
 
     /**
