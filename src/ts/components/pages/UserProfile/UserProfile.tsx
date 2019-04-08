@@ -43,10 +43,15 @@ export type UserState = {
     renderedUser?: UserModel;
 
     /**
-     * Specifies whehter the rendered user is the user themself, which means
+     * Specifies whether the rendered user is the user themself, which means
      * we should render edit functionality etc.
      */
     isSelf: boolean;
+
+    /**
+     * Specifies whether itr should render active or inactive products
+     */
+    filterActive: boolean;
 
     /**
      * Contains an array of products to be rendered if any
@@ -54,9 +59,21 @@ export type UserState = {
     products?: ProductModel[];
 
     /**
+     * Contains an array of all products
+     */
+    activeProducts?: ProductModel[];
+
+    /**
+     * Contains an array of all products
+     */
+    inactiveProducts?: ProductModel[];
+
+    /**
      * Contains an array of applications to be rendered if any
      */
     applications?: ApplicationModel[];
+
+    
 }
 
 /**
@@ -71,6 +88,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         userId: this.props.store.user ? this.props.store.user.id : 0,
         isSelf: false,
         renderedUser: this.props.store.user,
+        filterActive: true
     }
 
     /**
@@ -129,11 +147,15 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <div className="list__header">
                                     <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
                                     {this.state.isSelf && (
-                                        <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
-                                            <i>
-                                                {getSVG("plus-square")}
-                                            </i>
-                                        </Link>
+                                        <div className="product-action-buttons">
+                                            { this.renderFilterButtons() }
+                                            <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
+                                                <i>
+                                                    {getSVG("plus-square")}
+                                                </i>
+                                            </Link>
+                                        </div>    
+                                        
                                     )}
                                 </div>
                                 { this.renderProducts() }
@@ -169,6 +191,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             max-height: calc(100vh - 120px);
                             overflow: auto;
                         }
+                    }
+
+                    .product-action-buttons {
+                        display: flex;
+                        flex-direction: row;
                     }
 
                     h1 {
@@ -325,14 +352,21 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal render method that'll render all products associated to a user
      */
     private renderProducts = () => {
+        let products = null;
+        if(this.state.filterActive) {
+            products = this.state.activeProducts;
+        } else {
+            products = this.state.inactiveProducts;
+        }
+
         return (
             <>
-                <Fade in={!this.state.products} key="throbber">
+                <Fade in={!products} key="throbber">
                     {this.renderListThrobber()}
                 </Fade>
-                <Fade in={!!this.state.products} key="products">
+                <Fade in={!!products} key="products">
                     <div>
-                        { this.state.products && this.state.products.map((product, index) => {
+                        { products && products.map((product, index) => {
                             const isOnProducersPage = product.producerId === this.state.userId;
                             const isOwnProduct = this.props.store.user 
                                 ? this.props.store.user.id === product.producerId
@@ -358,6 +392,61 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
+     * Internal helper to render filter buttons
+     */
+    private renderFilterButtons() {
+        return(
+            <div className="filter-buttons">
+                <button className="filter-active" onClick={ this.filterActiveProducts }>
+                    <i>{ getSVG("check-square") }</i>
+                    <span>Active</span> 
+                </button>
+                <button className="filter-inactive" onClick={ this.filterInactiveProducts }>
+                    <i>{ getSVG("square") }</i>
+                    <span>Inactive</span>
+                </button>
+
+                <style jsx>{`
+                    .filter-buttons {
+                        display: flex;
+                        flex-direction: row;
+
+                        padding: 0;
+                    }
+
+                    .filter-buttons button {
+                        display: flex;
+                        flex-direction: row;
+
+                        margin-right: 5px;
+
+                        background-color: transparent;
+                        color: ${ colors.primary };
+
+                        border: none;
+                        border-bottom: 1px solid transparent;
+
+                        cursor: pointer;
+                    }
+
+                    .filter-buttons span {
+                        align-self: center;
+                        padding-left: 3px;
+
+                        font-size: 1.2em;
+                    }
+
+                    .filter-buttons button:hover {
+                        color: ${ colors.secondary };
+
+                        border-bottom: 1px solid ${ colors.secondary };
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
      * Internal helper that'll load all products related to a user
      */
     private loadProducts = async() => {
@@ -368,10 +457,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         const products = await fetchProductByProducer(this.state.userId, this.props.store);
 
         if (!products) {
-            this.setState({ products: [] });
+            this.setState({ activeProducts: [] });
+            this.setState({ inactiveProducts: [] });
         } else {
-            this.setState({ products });
-
+            this.setState({ activeProducts: products.filter(p => p.isActive) });
+            this.setState({ inactiveProducts: products.filter(p => !p.isActive) });
         }
     }
 
@@ -380,12 +470,22 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * (e.g. when toggling the product on and off)
      */
     private updateProduct = (index: number, newProduct: ProductModel) => {
-        const newProductList = this.state.products;
+        const newActiveProductList = this.state.activeProducts;
+        const newInactiveProductList = this.state.inactiveProducts;
 
-        if (newProductList) {
-            newProductList[index] = newProduct;
+        if (newActiveProductList && newInactiveProductList) {
 
-            this.setState({ products: newProductList });
+            if(newProduct.isActive) {
+                this.setState({ inactiveProducts: newInactiveProductList.splice(index, 1) });
+
+                newActiveProductList.unshift(newProduct);
+                this.setState({ activeProducts: newActiveProductList });
+            } else {
+                this.setState({ activeProducts: newActiveProductList.splice(index, 1) });
+
+                newInactiveProductList.unshift(newProduct);
+                this.setState({ inactiveProducts: newInactiveProductList });
+            }
         }
     }
 
@@ -444,6 +544,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             this.loadProducts();
         }
 
+    }
+
+    /**
+     * Internal helper that'll filter active products
+     */
+    private filterActiveProducts = () => {
+        this.setState({ filterActive: true });
+    }
+
+    /**
+     * Internal helper that'll filter inactive products
+     */
+    private filterInactiveProducts = () => {
+        this.setState({ filterActive: false });
     }
 }
 
