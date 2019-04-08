@@ -104,18 +104,17 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                     /* For mobile phones */
                     @media (max-width: 666px) {
                         h1 {
-                            margin-top: 30px;
+                            margin-top: 10px;
                         }
 
                         .content {
                             text-align: center;
-                            width: 100%;
+                            width: calc(100% - 20px);
+                            magin: 10px;
                         }
 
                         .formInput {
-                            max-width: 400px;
                             margin: 0 auto;
-                            padding: 0 15px;
                             flex-direction: column;
                         }
                     }
@@ -218,12 +217,15 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                             margin: 15px 0;
                         }
 
+                        .motivation {
+                            padding: 0px;
+                        }
                         input {
                             width: 100%;
                         }
 
                         textarea {
-                            width: calc(100% - 16px);
+                            width: calc(100% - 36px);
                             
                         }
                     }
