@@ -337,12 +337,19 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that renders the user section of the product template
      */
     private renderThumbnailSection = () => {
+        const { product } = this.props;
 
         return (
             <section className="section-thumbnail">
                 <div className="thumbnail">
                     <Thumbnail src={this.props.product.thumbnail} callback={ this.openImageLightbox } />
                 </div>
+                <img 
+                    className="flag" 
+                    title={ product.location } 
+                    src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`} 
+                    alt={ product.location }
+                />
                 <style jsx>{`
 
                     /** Thumbnail img in the .section-thumbnail */
@@ -350,6 +357,17 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         height: 70px;
                         width: 70px;
                         margin-right: 25px;
+                    }
+
+                    /** Flag showing the users country */
+                    .flag {
+                        position: absolute;
+                        height: 20px;
+                        width: 30px;
+
+                        /** Positioning it on the top-right of the thumbnail */
+                        top: -5px;
+                        left: 55px;
                     }
 
                 `}</style>
