@@ -23,6 +23,7 @@ import { getUserType } from "src/ts/utils/getUserType";
 import { Throbber } from "src/ts/components/utils";
 import { Fade } from "src/ts/components/transitions/Fade";
 import { asyncTimeout } from "src/ts/utils";
+import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 
 export type UserProps = {
     /**
@@ -54,17 +55,18 @@ export type UserState = {
     filterActive: boolean;
 
     /**
-     * Contains an array of products to be rendered if any
+     * Specifies if the filter dropdown should currently be shown when producer
+     * views their own profile.
      */
-    products?: ProductModel[];
+    showDropdown?: boolean;
 
     /**
-     * Contains an array of all products
+     * Contains an array of active products to be rendered if any
      */
     activeProducts?: ProductModel[];
 
     /**
-     * Contains an array of all products
+     * Contains an array of inactive products to be rendered if any
      */
     inactiveProducts?: ProductModel[];
 
@@ -90,6 +92,12 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         renderedUser: this.props.store.user,
         filterActive: true
     }
+
+    /**
+     * Will contain a reference to the user name wrapper, so that we can make
+     * the dropdown point towards it properly.
+     */
+    protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
      * Determine if we should render a different user than self
@@ -148,14 +156,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
                                     {this.state.isSelf && (
                                         <div className="product-action-buttons">
-                                            { this.renderFilterButtons() }
                                             <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
                                                 <i>
                                                     {getSVG("plus-square")}
                                                 </i>
                                             </Link>
-                                        </div>    
-                                        
+                                            
+                                            { this.renderFilterDropdown() }
+                                        </div>
                                     )}
                                 </div>
                                 { this.renderProducts() }
@@ -196,6 +204,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     .product-action-buttons {
                         display: flex;
                         flex-direction: row;
+
+                        justify-content: space-between;
+
+                        width: 100%;
                     }
 
                     h1 {
@@ -209,6 +221,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                     h2 {
                         margin: 0;
+                        flex-shrink: 0;
                     }
 
                     /* Link to edit profile page, centered under image */
@@ -392,7 +405,63 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal helper to render filter buttons
+     * dd
+     */
+    private renderFilterDropdown() {
+        return(
+            <div    
+                className={`filter-section ${ this.state.showDropdown ? "active" : "" }`}
+                onClick={ this.toggleDropdownState }
+                ref={ this.wrapperRef }
+                role="button"
+            >   
+                <span>Show: </span>
+                <div className="show-filter">
+                    { this.state.filterActive && <span>Active products</span> }
+                    { !this.state.filterActive && <span>Inactive products</span> }
+                </div>
+                
+                { this.renderDropdown() }
+
+                <style jsx>{`
+                    .filter-section {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
+                    }
+
+                    .show-filter {
+                        margin-left: 5px;
+                        padding: 8px;
+                        cursor: pointer;
+
+                        border: 1px solid ${ colors.primary };
+
+
+                        /** Prepare hover transition */
+                        transition:
+                            background-color 0.1s linear,
+                            color 0.1s linear;
+                    }
+
+                    .show-filter:hover {
+                        background-color: ${ colors.pale };
+                    }
+
+                    span {
+                        font-weight: bold;
+                        color: ${ colors.primary };
+                    }
+
+                    
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal render method to render filter buttons
      */
     private renderFilterButtons() {
         return(
@@ -424,7 +493,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         color: ${ colors.primary };
 
                         border: none;
-                        border-bottom: 1px solid transparent;
 
                         cursor: pointer;
                     }
@@ -434,15 +502,48 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         padding-left: 3px;
 
                         font-size: 1.2em;
+                        font-weight: bold;
                     }
 
                     .filter-buttons button:hover {
                         color: ${ colors.secondary };
-
-                        border-bottom: 1px solid ${ colors.secondary };
                     }
                 `}</style>
             </div>
+        );
+    }
+
+    /**
+     * Renders the dropdown that'll become visible when the user clicks his own
+     * profile name.
+     */
+    protected renderDropdown(): JSX.Element {
+        return (
+            <Dropdown
+                active={ this.state.showDropdown }
+                pointAt={ this.wrapperRef }
+                onClose={ this.toggleDropdownState }
+            >
+                <div className="wrapper">
+                    { this.renderFilterButtons() }
+                </div>
+
+                <style jsx>{`
+                    .wrapper {
+                        /** Apply internal padding */
+                        padding: 10px 0;
+
+                        /**
+                         * Enforce a minimum width on the userInfo making sure
+                         * that it always renders nicely
+                         */
+                        min-width: 175px;
+
+                        /** By default element isn't clickable */
+                        cursor: default;
+                    }
+                `}</style>
+            </Dropdown>
         );
     }
 
@@ -469,21 +570,27 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Simple callback that should be executed once a product should be updated.
      * (e.g. when toggling the product on and off)
      */
-    private updateProduct = (index: number, newProduct: ProductModel) => {
+    private updateProduct = (index: number, chosenProduct: ProductModel) => {
         const newActiveProductList = this.state.activeProducts;
         const newInactiveProductList = this.state.inactiveProducts;
 
+        // Null check
         if (newActiveProductList && newInactiveProductList) {
 
-            if(newProduct.isActive) {
-                this.setState({ inactiveProducts: newInactiveProductList.splice(index, 1) });
+            // If new product is active, then remove it from inactiveProducts list,
+            // and add it to activeProducts list
+            if(chosenProduct.isActive) {
+                newInactiveProductList.splice(index, 1);
+                this.setState({ inactiveProducts: newInactiveProductList });
 
-                newActiveProductList.unshift(newProduct);
+                newActiveProductList.unshift(chosenProduct);
                 this.setState({ activeProducts: newActiveProductList });
             } else {
-                this.setState({ activeProducts: newActiveProductList.splice(index, 1) });
+                // ...else 
+                newActiveProductList.splice(index, 1);
+                this.setState({ activeProducts: newActiveProductList });
 
-                newInactiveProductList.unshift(newProduct);
+                newInactiveProductList.unshift(chosenProduct);
                 this.setState({ inactiveProducts: newInactiveProductList });
             }
         }
@@ -543,7 +650,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         } else if (user && isProducerUser(user)) {
             this.loadProducts();
         }
-
     }
 
     /**
@@ -558,6 +664,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private filterInactiveProducts = () => {
         this.setState({ filterActive: false });
+    }
+
+    /**
+     * Listener that's triggered when the producer somehow prompts for the
+     * dropdown to appear or disappear
+     */
+    protected toggleDropdownState = () => {
+        this.setState({ showDropdown: !this.state.showDropdown });
     }
 }
 
