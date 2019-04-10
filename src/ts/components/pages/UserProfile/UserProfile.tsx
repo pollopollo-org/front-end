@@ -204,6 +204,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     .product-action-buttons {
                         display: flex;
                         flex-direction: row;
+                        align-items: center;
 
                         justify-content: space-between;
 
@@ -405,9 +406,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * dd
+     * Internal render method that'll render the button that manage the 
+     * dropdown for filtering
      */
     private renderFilterDropdown() {
+        const currentFilter = this.state.filterActive 
+                                ? "Active products" 
+                                : "Inactive products";
+
         return(
             <div    
                 className={`filter-section ${ this.state.showDropdown ? "active" : "" }`}
@@ -415,10 +421,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 ref={ this.wrapperRef }
                 role="button"
             >   
-                <span>Show: </span>
+                <span className="show">Show: </span>
                 <div className="show-filter">
-                    { this.state.filterActive && <span>Active products</span> }
-                    { !this.state.filterActive && <span>Inactive products</span> }
+                    { currentFilter }
                 </div>
                 
                 { this.renderDropdown() }
@@ -428,15 +433,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-
                     }
 
                     .show-filter {
                         margin-left: 5px;
-                        padding: 8px;
+                        padding: 7px;
                         cursor: pointer;
 
                         border: 1px solid ${ colors.primary };
+
+                        width: 130px;
+
+                        text-align: center;
 
 
                         /** Prepare hover transition */
@@ -446,14 +454,16 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     .show-filter:hover {
-                        background-color: ${ colors.pale };
+                        background-color: rgba(69, 50, 102, 0.1);
                     }
 
                     span {
-                        font-weight: bold;
                         color: ${ colors.primary };
                     }
 
+                    .show {
+                        font-weight: bold;
+                    }
                     
                 `}</style>
             </div>
@@ -461,53 +471,99 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal render method to render filter buttons
+     * Internal render method to render the options of filtering 
      */
     private renderFilterButtons() {
         return(
             <div className="filter-buttons">
                 <button className="filter-active" onClick={ this.filterActiveProducts }>
                     <i>{ getSVG("check-square") }</i>
-                    <span>Active</span> 
+                    <span>Active products</span> 
                 </button>
                 <button className="filter-inactive" onClick={ this.filterInactiveProducts }>
                     <i>{ getSVG("square") }</i>
-                    <span>Inactive</span>
+                    <span>Inactive products</span>
                 </button>
 
                 <style jsx>{`
-                    .filter-buttons {
-                        display: flex;
-                        flex-direction: row;
 
-                        padding: 0;
-                    }
-
-                    .filter-buttons button {
-                        display: flex;
-                        flex-direction: row;
-
-                        margin-right: 5px;
-
-                        background-color: transparent;
-                        color: ${ colors.primary };
-
-                        border: none;
-
-                        cursor: pointer;
-                    }
 
                     .filter-buttons span {
                         align-self: center;
                         padding-left: 3px;
-
-                        font-size: 1.2em;
-                        font-weight: bold;
                     }
 
-                    .filter-buttons button:hover {
-                        color: ${ colors.secondary };
+                    .filter-buttons i {
+                        transform: scale(0.75);
                     }
+
+                    .filter-buttons button {
+                        /** Override defaults */
+                        background: none;
+                        -webkit-appearance: none;
+                        border: none;
+                        /** Center items within vertically */
+                        display: flex;
+                        align-items: center;
+
+                        /** Allow button to fill the whole dropdown */
+                        width: 100%;
+
+                        /**
+                         * Set up basic padding around the element (the 6px top
+                         * padding is applied to take into account that the icon
+                         * will push text further down, and we want the white-
+                         * space to visually align with the text instead of the
+                         * icon).
+                         */
+                        padding: 10px 20px;
+                        margin: 0;
+
+                        /**
+                         * Indicate that items are clickable
+                         */
+                        cursor: pointer;
+
+                        /** Prevent line-breaks within the label */
+                        white-space: nowrap;
+
+                        /** Set up text styling */
+                        font-size: 12px;
+                        color: ${ colors.black };
+                        line-height: 1em;
+                        text-decoration: none;
+
+                        /** Prepare hover transition */
+                        transition:
+                            background-color 0.1s linear,
+                            color 0.1s linear;
+
+                        & i {
+                            /** Set up icon sizing */
+                            display: inline-block;
+                            width: 22px;
+                            height: 22px;
+
+                            /** Apply margin between icon and text */
+                            margin-right: 10px;
+
+                            & > :global(.svgIcon) > :global(svg) > :global(path) {
+                                /** Apply default font color */
+                                stroke: ${ colors.black };
+                            }
+                        }
+
+                        /** Apply highlight color on hover */
+                        &:hover {
+                            background-color: rgba(69, 50, 102, 0.1);
+                            color: ${ colors.primary };
+
+                            & i > :global(.svgIcon) > :global(svg) > :global(path) {
+                                stroke: ${ colors.primary };
+                            }
+                        }
+                    }
+
                 `}</style>
             </div>
         );
@@ -657,6 +713,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private filterActiveProducts = () => {
         this.setState({ filterActive: true });
+        this.toggleDropdownState();
     }
 
     /**
@@ -664,6 +721,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private filterInactiveProducts = () => {
         this.setState({ filterActive: false });
+        this.toggleDropdownState();
     }
 
     /**

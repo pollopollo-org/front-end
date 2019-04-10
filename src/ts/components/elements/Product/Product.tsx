@@ -192,8 +192,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         position: relative;
 
                         /** Setup dimensions of product */
-                        margin: 10px;
-                        width: calc(100% - 20px); /* Might be temp */
+                        margin-bottom: 10px;
 
                         /** Setup internal dimensions */
                         padding: 10px;
@@ -1046,23 +1045,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         & .edit {
                             height: 23px;
                             width: 23px;
-                        }
-                    }
-
-                    @media (max-width: 768px) {
-                        /** Force white colors, on mobile the background will be dark */
-                        button,
-                        .link :global(> a) {
-                            color: ${ colors.whiteSmoke } !important;
-                        }
-
-                        i > :global(.svgIcon) > :global(svg) > :global(path) {
-                            stroke: ${ colors.primary } !important;
-                        }
-
-                        i {
-                            /** We slightly shrink icons as well to fit better */
-                            transform: scale(0.75);
                         }
                     }
                 `}</style>
