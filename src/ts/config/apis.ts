@@ -45,6 +45,13 @@ export const apis = {
     },
     application: {
         getRecent: `${basePath}/applications/recent`,
+        post: {
+            path: `${basePath}/applications`,
+            errors: {
+                400: "Invalid information passed, please correct your data and try again.",
+                409: "A product with the given information already exists."
+            }
+        }
     },
     products: {
         post: {
