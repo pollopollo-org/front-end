@@ -58,7 +58,8 @@
     "fix": "tslint --project '.' --fix",
     "lint": "tslint --project '.'",
     "fixWindows": "tslint 'src/**/*.ts' --fix && tslint 'src/**/*.tsx' --fix",
-    "lintWindows": "tslint 'src/**/*.ts && tslint 'src/**/*.tsx"
+    "lintWindows": "tslint 'src/**/*.ts && tslint 'src/**/*.tsx",
+    "documentation": "typedoc --out ./documentation --tsconfig tsconfig.json --hideGenerator --name PolloPollo"
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",
@@ -91,6 +92,7 @@
     "svgo": "^1.2.0",
     "svgo-loader": "^2.2.0",
     "tslint-microsoft-contrib": "^6.1.0",
+    "typedoc": "^0.14.2",
     "typescript": "^3.3.3333"
   },
   "jest": {
