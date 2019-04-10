@@ -5,11 +5,10 @@ import { colors, fonts} from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
-import { ProductModel } from "src/ts/models/ProductModel";
+import { ProductModel, fetchProductBatch } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
-import { fetchProductBatch } from "src/ts/utils/fetchProducts";
 
 export type ProductsPageProps = {
     /**

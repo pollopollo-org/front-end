@@ -14,6 +14,7 @@ To build the PolloPollo frontend you should follow the process below.
 4. You can now use either of the two following commands to interact with the project:
    * `yarn run start` to start a development server, OR
    * `yarn run build` to create an optimized build that is suitable for production.
+   * `yarn run documentation` to extract comprehensive documentation from the front-end projects
    * `yarn run lint` to lint the application and determine potential culprits that should be fixed before push.
      * `yarn run lintWindows` can be used on Windows in case `yarn run lint` fails
    * `yarn run fix` to attempt to automatically fix linting issues. *(This requires that you've completed step 1.1)*

@@ -1,5 +1,5 @@
 import React from "react";
-import { colors, routes } from "src/ts/config";
+import { colors } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
 import { RouterProps, withRouter } from "react-router";
@@ -7,13 +7,10 @@ import registerFormJson from "src/assets/data/registerForm.json";
 
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 
-import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { asyncTimeout } from "src/ts/utils";
 import { Button } from "src/ts/components/utils";
-import { alertApiError } from "src/ts/utils/alertApiError";
-import { createUser } from "src/ts/utils/createUser";
+import { postUser } from "src/ts/models/UserModel";
 
 type RegisterFormProps = {
     /**
@@ -22,35 +19,35 @@ type RegisterFormProps = {
     store: Store;
 } & RouterProps;
 
-type RegisterFormState = {
+export type RegisterFormState = {
     /**
      * The first name of the user who wants to register
      */
-    firstName?: string;
+    firstName: string;
     /**
      * The last name of the user who wants to register
      */
-    lastName?: string;
+    lastName: string;
     /**
      * The email adress of the user who wants to register
      */
-    email?: string;
+    email: string;
     /**
      * The country the user is living in
      */
-    country?: string;
+    country: string;
     /**
      * The type of profile the user wants to create, either producer or receiver
      */
-    userType?: string;
+    userType: string;
     /**
      * The password the user wants to use for their profile
      */
-    password?: string;
+    password: string;
     /**
      * The password again for validation reasons
      */
-    repeatedPassword?: string;
+    repeatedPassword: string;
 
     /**
      * Specifies whether or not we're currently attempting to create a user
@@ -65,7 +62,15 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * State of the register form, all fields initially set to null
      */
-    public readonly state: RegisterFormState = {};
+    public readonly state: RegisterFormState = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        country: "",
+        userType: "",
+        password: "",
+        repeatedPassword: "",
+    };
 
     /**
      * Render the component
@@ -485,44 +490,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             return;
         }
 
-        const endPoint = apis.user.create.path;
-
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-
-            const body = JSON.stringify({
-                firstName: this.state.firstName,
-                surname: this.state.lastName,
-                password: this.state.password,
-                email: this.state.email,
-                userRole: this.state.userType,
-                country: this.state.country
-            });
-
-            const response = await fetch(endPoint, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem("userJWT", data.token);
-
-                this.props.store.user = createUser(data.userDTO);
-
-                await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-                this.props.history.push(routes.root.path);
-            } else {
-                alertApiError(response.status, apis.user.create.errors, this.props.store);
-                this.setState({ isPending: false });
-            }
-        } catch (err) {
-            this.setState({ isPending: false });
-
-            this.props.store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
-        }
+        this.setState({ isPending: true });
+        await postUser(this.state, this.props.store, this.props.history);
+        this.setState({ isPending: false });
     }
 
     /**

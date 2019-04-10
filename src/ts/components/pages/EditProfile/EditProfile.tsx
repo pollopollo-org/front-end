@@ -2,17 +2,14 @@ import React from "react";
 import { RouterProps, withRouter } from "react-router";
 import editProfileJson from "src/assets/data/editProfile.json";
 import { getSVG } from "src/assets/svg";
-import { colors, fonts, routes } from "src/ts/config";
-import { apis } from "src/ts/config/apis";
+import { colors, fonts } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { asyncTimeout } from "src/ts/utils";
 import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { alertApiError } from "src/ts/utils/alertApiError";
-import { fetchSelf } from "src/ts/utils/fetchUser";
+import { editProfile } from "src/ts/models/UserModel";
 
 type EditProfileProps = {
     /**
@@ -21,7 +18,7 @@ type EditProfileProps = {
     store: Store;
 } & RouterProps;
 
-type EditProfileState = {
+export type EditProfileState = {
     /**
      * user ID
      */
@@ -35,10 +32,6 @@ type EditProfileState = {
      * last name
      */
     lastName: string;
-    /**
-     * email
-     */
-    email: string;
     /**
      * country
      */
@@ -66,7 +59,7 @@ type EditProfileState = {
     /**
      * profile image
      */
-    profilePicture?: File;
+    profilePicture?: Blob;
     /**
      * wallet address
      */
@@ -89,7 +82,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         userId: 0,
         firstName: "",
         lastName: "",
-        email: "",
         country: "",
         userType: "Producer",
         password: "",
@@ -111,7 +103,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 userId: store.user.id,
                 firstName: store.user.firstName,
                 lastName: store.user.surName,
-                email: store.user.email,
                 country: store.user.country,
                 userType: isProducerUser(store.user) ? "Producer" : "Receiver",
                 password: "",
@@ -164,10 +155,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             type="email"
                             className="input email"
                             required
-                            value={this.state.email}
+                            value={this.props.store.user.email}
+                            readOnly
                             aria-required={true}
                             placeholder={ editProfileJson.email }
-                            onChange={this.onEmailChanged}
                         />
                         {this.state.userType === "Producer" &&
                             <input
@@ -269,10 +260,15 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         color: ${ colors.gray };
                         opacity: 1;
                     }
+
+                    &:read-only {
+                        opacity: 0.4;
+                        cursor: not-allowed;
+                    }
                 }
 
                 /* Set border styling when clicked on */
-                input:focus {
+                input:not(:read-only):focus {
                     border: 1px solid ${ colors.secondary};
                 }
 
@@ -513,14 +509,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      * Method that'll get triggered each time the input is changed, in order to
      * properly update state
      */
-    private onEmailChanged = (evt: React.FormEvent<HTMLInputElement>) => {
-        this.setState({ email: evt.currentTarget.value });
-    }
-
-    /**
-     * Method that'll get triggered each time the input is changed, in order to
-     * properly update state
-     */
     private onWalletChanged = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ wallet: evt.currentTarget.value });
     }
@@ -612,79 +600,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             return;
         }
 
-        const endPoint = apis.user.put.path;
-
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-            const token = localStorage.getItem("userJWT");
-
-            const result = await fetch(endPoint, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    userId: this.state.userId,
-                    firstName: this.state.firstName,
-                    surName: this.state.lastName,
-                    email: this.state.email,
-                    country: this.state.country,
-                    userRole: this.state.userType,
-                    newPassword: this.state.repeatedPassword,
-                    password: this.state.oldPassword,
-                    wallet: this.state.wallet,
-                    description: this.state.description,
-                })
-            });
-
-            let imageResult: Response | undefined = undefined;
-
-            if (this.state.profilePicture) {
-                imageResult = await fetch(apis.user.image.path, {
-                    method: "PUT",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: this.imageToData(),
-                })
-            }
-
-            this.props.store.user = await fetchSelf();
-
-            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-
-            if (result.ok && (!imageResult || imageResult.ok)) {
-                this.props.history.push(routes.profile.path);
-            } else {
-                alertApiError(result.status, apis.user.put.errors, this.props.store);
-
-                if (imageResult) {
-                    alertApiError(imageResult.status, apis.user.image.errors, this.props.store);
-                }
-
-                this.setState({ isPending: false });
-            }
-        } catch (err) {
-            this.setState({ isPending: false });
-
-            this.props.store.currentErrorMessage = "Something went wrong while attempting to update your profile, please try again later.";
-        }
-    }
-
-    /**
-     * Validates the image by checking for malformed/corrupted data
-     */
-    private imageToData = (): FormData => {
-        const formData = new FormData();
-
-        if (this.state.profilePicture) {
-            formData.append("userId", String(this.state.userId));
-            formData.append("file", this.state.profilePicture);
-        }
-
-        return formData;
+        this.setState({ isPending: true });
+        await editProfile(this.state, this.props.store, this.props.history);
+        this.setState({ isPending: false });
     }
 }
 

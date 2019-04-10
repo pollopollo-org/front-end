@@ -2,6 +2,7 @@ import { observable } from "mobx";
 
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { UserModel } from "src/ts/models/UserModel";
+import { ProductModel } from "src/ts/models/ProductModel";
 
 /**
  * Specifies where the created models should fetch their data from.
@@ -44,6 +45,13 @@ export class Store {
      */
     @observable
     public user?: UserModel;
+
+    /**
+     * Contains a reference to the ProductModel, which containts fetched data
+     * about a product.
+     */
+    @observable
+    public product: ProductModel;
 
     /**
      * Specifies the application has managed to fully render itself yet.

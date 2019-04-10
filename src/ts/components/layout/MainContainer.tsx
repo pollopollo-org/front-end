@@ -16,6 +16,7 @@ import { observer } from "mobx-react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Alert } from "src/ts/components/utils/Alert";
+import { CreateApplication } from "src/ts/components/pages/CreateApplication/CreateApplication";
 
 type MainContainerProps = {
     /**
@@ -47,14 +48,15 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
                         <Route exact path={routes.editProfile.path} component={EditProfile} />
                         <Route exact path={routes.createProduct.path} component={CreateProduct} />
                         <Route exact path={routes.productsPage.path} component={ProductsPage} />
+                        <Route exact path={routes.CreateApplication.path} component={CreateApplication} />
                     </Switch>
                 </main>
 
                 <Footer />
 
-                <Alert 
-                    active={!!this.props.store.currentErrorMessage} 
-                    text={this.props.store.currentErrorMessage} 
+                <Alert
+                    active={!!this.props.store.currentErrorMessage}
+                    text={this.props.store.currentErrorMessage}
                     onClose={this.closeAlert}
                 />
 

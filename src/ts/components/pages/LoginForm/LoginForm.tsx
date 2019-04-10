@@ -7,13 +7,10 @@ import { fonts } from "src/ts/config/fonts";
 import { routes } from "src/ts/config/routes";
 
 import loginFormJson from "src/assets/data/loginForm.json";
-import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { asyncTimeout } from "src/ts/utils";
 import { Button } from "src/ts/components/utils";
-import { alertApiError } from "src/ts/utils/alertApiError";
-import { createUser } from "src/ts/utils/createUser";
+import { logIn } from "src/ts/models/UserModel";
 
 type LoginFormProps = {
     /**
@@ -22,15 +19,15 @@ type LoginFormProps = {
     store: Store;
 } & RouterProps;
 
-type LoginFormState = {
+export type LoginFormState = {
     /**
      * Inputted email
      */
-    email?: string;
+    email: string;
     /**
      * Inputted password
      */
-    password?: string;
+    password: string;
 
     /**
      * Specifies whether or not we're currently attempting to create a user
@@ -45,7 +42,10 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
     /**
      * State of the login form, all fields initially set to null
      */
-    public readonly state: LoginFormState = {};
+    public readonly state: LoginFormState = {
+        email: "",
+        password: "",
+    };
 
     /**
      * Render the component
@@ -237,39 +237,10 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
             return;
         }
 
-        const endPoint = apis.user.authenticate.path;
+        this.setState({ isPending: true });
+        await logIn(this.state, this.props.store, this.props.history);
+        this.setState({ isPending: false });
 
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-
-            const body = JSON.stringify({
-                password: this.state.password,
-                email: this.state.email
-            });
-
-            const response = await fetch(endPoint, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem("userJWT", data.token);
-                this.props.store.user = createUser(data.userDTO);
-
-                await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-                this.props.history.push(routes.root.path);
-            } else {
-                alertApiError(response.status, apis.user.authenticate.errors, this.props.store);
-                this.setState({ isPending: false });
-            }
-        } catch (err) {
-            this.setState({ isPending: false });
-
-            this.props.store.currentErrorMessage = "Something with your request when wrong, please try again later";
-        }
     }
 }
 

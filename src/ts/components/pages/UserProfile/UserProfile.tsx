@@ -5,19 +5,17 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
 import { getSVG } from "src/assets/svg";
-import { UserModel, UserTypes } from "src/ts/models/UserModel";
+import { UserModel, UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
-import { fetchUser } from "src/ts/utils/fetchUser";
 import userProfileJson from "src/assets/data/userProfile.json";
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { colors } from "src/ts/config";
-import { fetchProductByProducer } from "src/ts/utils/fetchProducts";
-import { ProductModel } from "src/ts/models/ProductModel";
+import { ProductModel, fetchProductByProducer } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { Throbber } from "src/ts/components/utils";
@@ -723,7 +721,12 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         return (this.state.applications.map((application, index) => {
-            return <Application key={index} application={application} />;
+            return <Application 
+                        key={index}
+                        isOwnApplication={true}
+                        userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                        isOnReceiversPage={true}
+                        application={application} />;
         }));
     }
 
