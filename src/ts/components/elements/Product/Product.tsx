@@ -572,6 +572,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     h3 {
                         margin: 0;
+                        text-align: left;
 
                         &:first-of-type {
                             margin-top: 10px;
@@ -579,6 +580,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     }
 
                     p {
+                        text-align: left;
                         margin: 4px 0 14px;
                     }
 

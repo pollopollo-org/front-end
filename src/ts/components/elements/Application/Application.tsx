@@ -5,13 +5,12 @@ import { ApplicationModel, ApplicationStatus } from "src/ts/models/ApplicationMo
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
-import { UserTypes } from "src/ts/models/UserModel";
+import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { getSVG } from "src/assets/svg";
 import { Dialog } from "src/ts/components/utils/Dialog";
 import { fonts, routes } from "src/ts/config";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
-import { fetchUser } from "src/ts/utils/fetchUser";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { Store } from "src/ts/store/Store";
 import { injectStore } from "src/ts/store/injectStore";

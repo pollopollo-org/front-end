@@ -80,9 +80,9 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                         display: flex;
                         flex-direction: column;
                         width: 540px;
-                        margin: auto;
-                        height: 100%;
                         justify-content: center;
+                        height: calc(100% - 40px);
+                        margin: 20px auto;
                     }
 
                     h1 {
@@ -119,7 +119,6 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                         }
                     }
                 `}</style>
-
             </div>
         );
     }
