@@ -15,7 +15,7 @@ import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { colors } from "src/ts/config";
-import { ProductModel, fetchProductByProducer } from "src/ts/models/ProductModel";
+import { ProductModel, fetchProductByProducer, ProductStatus } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { Throbber } from "src/ts/components/utils";
@@ -664,21 +664,44 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal helper that'll load all products related to a user
+     * Internal helper that'll load all active products related to a user
      */
-    private loadProducts = async() => {
+    private loadActiveProducts = async() => {
         if (!this.state.userId) {
             return;
         }
 
-        const products = await fetchProductByProducer(this.state.userId, this.props.store);
+        const products = await fetchProductByProducer(
+            this.state.userId, 
+            this.props.store, 
+            ProductStatus.ACTIVE
+        );
 
         if (!products) {
             this.setState({ activeProducts: [] });
+        } else {
+            this.setState({ activeProducts: products });
+        }
+    }
+
+    /**
+     * Internal helper that'll load all inactive products related to a user
+     */
+    private loadInactiveProducts = async() => {
+        if (!this.state.userId) {
+            return;
+        }
+
+        const products = await fetchProductByProducer(
+            this.state.userId, 
+            this.props.store, 
+            ProductStatus.INACTIVE
+        );
+
+        if (!products) {
             this.setState({ inactiveProducts: [] });
         } else {
-            this.setState({ activeProducts: products.filter(p => p.isActive) });
-            this.setState({ inactiveProducts: products.filter(p => !p.isActive) });
+            this.setState({ inactiveProducts: products });
         }
     }
 
@@ -738,7 +761,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal method that'll load the user to be rendered within the application
+     * Internal method that'll load the user to be rendered within the user profile
      */
     private loadUser = async () => {
         // tslint:disable-next-line completed-docs
@@ -769,8 +792,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         if (user && isReceiverUser(user)) {
             this.loadApplications();
         } else if (user && isProducerUser(user)) {
-            this.loadProducts();
-        }
+            this.loadActiveProducts();
+        } 
     }
 
     /**
@@ -778,6 +801,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private filterActiveProducts = () => {
         this.setState({ filterActive: true });
+        this.loadActiveProducts();
         this.toggleDropdownState();
     }
 
@@ -786,6 +810,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private filterInactiveProducts = () => {
         this.setState({ filterActive: false });
+        this.loadInactiveProducts();
         this.toggleDropdownState();
     }
 
