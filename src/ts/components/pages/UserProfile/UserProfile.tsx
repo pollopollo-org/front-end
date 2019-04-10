@@ -50,6 +50,12 @@ export type UserState = {
     isSelf: boolean;
 
     /**
+     * Specifies whether the product should be rendered to be compatible with
+     * smaller viewports
+     */
+    isSmall: boolean;
+
+    /**
      * Specifies whether itr should render active or inactive products
      */
     filterActive: boolean;
@@ -78,6 +84,8 @@ export type UserState = {
     
 }
 
+const MOBILE_BREAKPOINT = 440;
+
 /**
  * A page where the user can see their profile
  */
@@ -89,9 +97,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     public state: UserState = {
         userId: this.props.store.user ? this.props.store.user.id : 0,
         isSelf: false,
+        isSmall: false,
         renderedUser: this.props.store.user,
         filterActive: true
     }
+    
 
     /**
      * Will contain a reference to the user name wrapper, so that we can make
@@ -99,11 +109,31 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
 
+    /** 
+     * Reference to the div tag with class name fefefe
+     */
+    private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
+
     /**
      * Determine if we should render a different user than self
+     * Determine the breakpoint we're currently in as soon as the component mounts,
+     * and prepare for
      */
     public async componentDidMount(): Promise<void> {
         this.loadUser();
+
+        this.determineBreakpoint();
+
+        window.addEventListener("resize", this.determineBreakpoint);
+        window.addEventListener("orientationchange", this.determineBreakpoint);
+    }
+
+    /**
+     * Cleanup on unmount
+     */
+    public componentWillUnmount(): void {
+        window.removeEventListener("resize", this.determineBreakpoint);
+        window.removeEventListener("orientationchange", this.determineBreakpoint);
     }
 
     /**
@@ -152,7 +182,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     <div className="list">
                         {isProducerUser(user) && (
                             <>
-                                <div className="list__header">
+                                <div className="list__header" ref={this.borderRef}>
                                     <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
                                     {this.state.isSelf && (
                                         <div className="product-action-buttons">
@@ -311,6 +341,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                         .list__header {
                             margin-top: 20px;
+                            padding-bottom: 15px;
+
+                            border-bottom: 2px solid rgba(69,50,102, 0.6);
                         }
 
                         .profile__information {
@@ -410,6 +443,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * dropdown for filtering
      */
     private renderFilterDropdown() {
+        if(!this.state.isSelf) return; 
+
         const currentFilter = this.state.filterActive 
                                 ? "Active products" 
                                 : "Inactive products";
@@ -421,11 +456,23 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 ref={ this.wrapperRef }
                 role="button"
             >   
-                <span className="show">Show: </span>
-                <div className="show-filter">
-                    { currentFilter }
-                </div>
-                
+               
+
+                { !this.state.isSmall && 
+                    <>
+                        <span className="show">Show: </span>
+                        <div className="show-filter">
+                            { currentFilter }
+                        </div>
+                    </>
+                }
+
+                { this.state.isSmall &&
+                    <i>
+                        { getSVG("more-vertical") }
+                    </i>
+                }
+               
                 { this.renderDropdown() }
 
                 <style jsx>{`
@@ -435,13 +482,29 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         align-items: center;
                     }
 
+                    .filter-section i {
+                        transform: scale(1.10);
+
+                        margin-right: 10px;
+
+                        display: block;
+                        width: 24px;
+                        height: 24px;
+
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: rgba(69, 50, 102, 0.1);
+                            border-radius: 5px;
+                        }
+                    }
+
                     .show-filter {
                         margin-left: 5px;
                         padding: 7px;
                         cursor: pointer;
 
                         border: 1px solid ${ colors.primary };
-
                         width: 130px;
 
                         text-align: center;
@@ -486,7 +549,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 </button>
 
                 <style jsx>{`
-
 
                     .filter-buttons span {
                         align-self: center;
@@ -730,6 +792,24 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     protected toggleDropdownState = () => {
         this.setState({ showDropdown: !this.state.showDropdown });
+    }
+
+    /**
+     * Internal helper that determines whether the product should be rendered
+     * in a small breakpoint or not
+     */
+    private determineBreakpoint = () => {
+        const root = this.borderRef.current;
+
+        if (!root) {
+            return;
+        }
+
+        this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
+
+        if (this.state.isSmall) {
+            this.setState({ showDropdown: false });
+        }
     }
 }
 

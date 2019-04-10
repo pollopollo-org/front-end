@@ -144,7 +144,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
-     * Will contain a reference to the user name wrapper, so that we can make
+     * Will contain a reference to the see-more, so that we can make
      * the dropdown point towards it properly.
      */
     protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
