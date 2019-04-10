@@ -424,6 +424,9 @@ export async function toggleProductAvailability(product: ProductModel, store: St
         });
 
         if (result.ok) {
+            productCache.delete(`producer-${store.user.id}-active`);
+            productCache.delete(`producer-${store.user.id}-inactive`);
+
             // In case we have a callback, then broadcast the newly updated product
             // to it.
             if (callback) {

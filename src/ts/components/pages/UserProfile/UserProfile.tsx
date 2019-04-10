@@ -54,6 +54,11 @@ export type UserState = {
     isSmall: boolean;
 
     /**
+     * Specifies whether or not we're currently attempting to load products/applications
+     */
+    isPending?: boolean;
+
+    /**
      * Specifies whether itr should render active or inactive products
      */
     filterActive: boolean;
@@ -97,7 +102,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         isSelf: false,
         isSmall: false,
         renderedUser: this.props.store.user,
-        filterActive: true
+        filterActive: true,
+        isPending: true
     }
     
 
@@ -406,10 +412,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         return (
             <>
-                <Fade in={!products} key="throbber">
+                <Fade in={this.state.isPending} key="throbber">
                     {this.renderListThrobber()}
                 </Fade>
-                <Fade in={!!products} key="products">
+                <Fade in={!this.state.isPending} key="products">
                     <div>
                         { products && products.map((product, index) => {
                             const isOnProducersPage = product.producerId === this.state.userId;
@@ -671,6 +677,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             return;
         }
 
+        this.setState({ isPending: true });
         const products = await fetchProductByProducer(
             this.state.userId, 
             this.props.store, 
@@ -682,6 +689,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         } else {
             this.setState({ activeProducts: products });
         }
+
+        this.setState({ isPending: false });
     }
 
     /**
@@ -692,6 +701,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             return;
         }
 
+        this.setState({ isPending: true });
         const products = await fetchProductByProducer(
             this.state.userId, 
             this.props.store, 
@@ -703,6 +713,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         } else {
             this.setState({ inactiveProducts: products });
         }
+
+        this.setState({ isPending: false });
     }
 
     /**
@@ -716,21 +728,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         // Null check
         if (newActiveProductList && newInactiveProductList) {
 
-            // If new product is active, then remove it from inactiveProducts list,
-            // and add it to activeProducts list
+            // If new product is active, then remove it from inactiveProducts list
             if(chosenProduct.isActive) {
                 newInactiveProductList.splice(index, 1);
                 this.setState({ inactiveProducts: newInactiveProductList });
-
-                newActiveProductList.unshift(chosenProduct);
-                this.setState({ activeProducts: newActiveProductList });
             } else {
-                // ...else 
+                // ...else remove it from the activeProduct list
                 newActiveProductList.splice(index, 1);
                 this.setState({ activeProducts: newActiveProductList });
-
-                newInactiveProductList.unshift(chosenProduct);
-                this.setState({ inactiveProducts: newInactiveProductList });
             }
         }
     }
