@@ -10,13 +10,13 @@ import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts, routes } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
-import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { RouterProps, withRouter } from "react-router";
+import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 
 export type ProductProps = {
 
@@ -1088,67 +1088,14 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         }
 
         return (
-            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
-                <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct} />
-                {!this.props.isOnProducersPage && (
-                    <div>
-                        <a
-                            href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <span className="chevron">
-                                <Chevron />
-                            </span>
-                            <span className="text">Go to producer profile</span>
-                        </a>
-                    </div>
-                )}
-
-                <style jsx>{`
-                    div {
-                        /** Setup dimensions that match the userDescription */
-                        padding: 0 50px 30px;
-                        background-color: ${ colors.pale};
-                    }    
-
-                    a {
-                        /** Setup font */
-                        font-size: 14px;
-                        color: ${ colors.black};
-                        font-family: ${ fonts.text};
-                        font-weight: 300;
-                        text-decoration: none;
-
-                        /** Ensure chevron and text is vertically aligned */
-                        display: flex;
-                        align-items: center;
-
-                        &:hover {
-                            text-decoration: underline;
-                        }
-                    }
-
-                    .chevron {
-                        /** Setup dimensions in which the chevron fits */
-                        display: block;
-                        position: relative;
-                        width: 14px;
-                        height: 10px;
-
-                        /** Setup spacing between chevron and text */
-                        margin-right: 5px;
-                    }
-
-                    .userDesc {
-                        & :global(.information) {
-                            width: 100%;
-                            margin: 0;
-                        }
-
-                    }
-                `}</style>
-            </Lightbox>
+            <UserLightbox
+                showLightbox={this.state.showProducer}
+                onClose={this.closeProducerLightbox}
+                user={this.state.producer}
+                isOwn={this.props.isOwnProduct}
+                isOnProfile={this.props.isOnProducersPage}
+                userId={this.props.product.producerId}
+                userType={"producer"}/>
         );
     }
 
