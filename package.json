@@ -59,7 +59,7 @@
     "lint": "tslint --project '.'",
     "fixWindows": "tslint 'src/**/*.ts' --fix && tslint 'src/**/*.tsx' --fix",
     "lintWindows": "tslint 'src/**/*.ts && tslint 'src/**/*.tsx",
-    "documentation": "typedoc --out ./documentation --tsconfig tsconfig.json --hideGenerator --name PolloPollo"
+    "documentation": "rm -rf documentation && typedoc --out ./documentation --tsconfig tsconfig.json --hideGenerator --name PolloPollo"
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",

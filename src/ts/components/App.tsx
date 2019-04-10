@@ -1,6 +1,7 @@
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { TransitionGroup } from "react-transition-group";
+import { createBrowserHistory, History } from "history";
 
 import { createStore } from "src/ts/store/createStore";
 import { StoreProvider } from "src/ts/store/injectStore";
@@ -19,6 +20,11 @@ type AppState = {
 	 * provider as soon as it is available
 	 */
 	store?: Store;
+
+	/**
+	 * Contains a reference to the history used to navigate with the router
+	 */
+	history: History;
 }
 
 /**
@@ -29,7 +35,9 @@ export class App extends React.PureComponent<{}, AppState> {
 	/**
 	 * Setup initial state
 	 */
-	public state: AppState = {};
+	public state: AppState = {
+		history: createBrowserHistory(),
+	};
 
 	/**
 	 * really complicated async method
@@ -43,6 +51,7 @@ export class App extends React.PureComponent<{}, AppState> {
 		]);
 
 		this.onAppReady(store);
+		this.state.history.listen(this.onRouterUpdate);
 	}
 
 	/**
@@ -50,13 +59,21 @@ export class App extends React.PureComponent<{}, AppState> {
 	 */
 	public render(): JSX.Element {
 		return (
-			<Router>
+			<Router history={this.state.history}>
 				<>
 					<CSS />
 					{ this.state.store && this.renderProviders() }
 				</>
 			</Router>
 		);
+	}
+
+	/**
+	 * Method that should be executed every time the router updates in order to
+	 * ensure we scroll to the top of the page every time the router updates
+	 */
+	protected onRouterUpdate = () => {
+		window.scrollTo(0, 0)
 	}
 
 	/**

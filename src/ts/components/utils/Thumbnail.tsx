@@ -30,6 +30,12 @@ export type ThumbnailState = {
  */
 export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
     /**
+     * Contains the previous source passed to the thumbnail component, which will
+     * be used to determine if we should begin fetching an image again.
+     */
+    private prevSrc?: string;
+
+    /**
      * Setup initial state
      */
     public state: ThumbnailState = {
@@ -45,6 +51,23 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
             const preloadImg = new Image();
             preloadImg.src = this.props.src;
             preloadImg.onload = this.onImageLoad;
+            this.prevSrc = this.props.src;
+        }
+    }
+
+    /**
+     * Every time the component updates, then we need to redetermine if we have
+     * to fetch a new image or if we need to display the placeholder again.
+     */
+    public componentDidUpdate(): void {
+        if (!this.props.src) {
+            this.prevSrc = undefined;
+            this.setState({ hasLoaded: false });
+        } else if (this.props.src !== this.prevSrc) {
+            const preloadImg = new Image();
+            preloadImg.src = this.props.src;
+            preloadImg.onload = this.onImageLoad;
+            this.prevSrc = this.props.src;            
         }
     }
 

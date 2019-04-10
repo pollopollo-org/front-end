@@ -3,7 +3,7 @@ import React from "react";
 import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
-import { ProductModel } from "src/ts/models/ProductModel";
+import { ProductModel, toggleProductAvailability } from "src/ts/models/ProductModel";
 import { Chevron, Button } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
@@ -11,15 +11,11 @@ import { getSVG } from "src/assets/svg";
 import { fonts, routes } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
-import { UserTypes } from "src/ts/models/UserModel";
-import { fetchUser } from "src/ts/utils/fetchUser";
+import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { alertApiError } from "src/ts/utils/alertApiError";
-import { asyncTimeout } from "src/ts/utils";
-import { apis } from "src/ts/config/apis";
 
 export type ProductProps = {
 
@@ -1225,54 +1221,15 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * Listener that updates the product 
      */
     private updateProductActivation = async () => {
-        await this.toggleAvailability();
-        this.setState({ showDialog: false });
-    }
-
-    /**
-     * Update availability and send it to the backend
-     */
-    private toggleAvailability = async () => {
-        let { product } = this.props;
-
         if (this.state.isPending || !this.props.store.user) {
             return;
         }
-        
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-            const token = localStorage.getItem("userJWT");
 
-            const result = await fetch(apis.products.put.path.replace("{productId}", String(product.id)), {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    id: product.id,
-                    userId: this.props.store.user.id,
-                    available: !product.isActive, // Updating availability
-                }),
-            });
+        // Notify state that we've begun updating our product
+        this.setState({ isPending: true });
 
-            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-
-            if (result.ok) {
-                if (this.props.updateProduct) {
-                    const newProduct = new ProductModel({ ...this.props.product, isActive: !product.isActive });
-                    this.props.updateProduct(newProduct);
-                }
-            } else {
-                alertApiError(result.status, apis.products.post.errors, this.props.store);
-            }
-        } catch (err) {
-            // Show error message
-            this.props.store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
-        } finally {
-            this.setState({ isPending: false });
-        }
+        await toggleProductAvailability(this.props.product, this.props.store, this.props.updateProduct);
+        this.setState({ showDialog: false, isPending: false });
     }
 
     /**
