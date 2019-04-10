@@ -73,7 +73,7 @@ export class App extends React.PureComponent<{}, AppState> {
 	 * ensure we scroll to the top of the page every time the router updates
 	 */
 	protected onRouterUpdate = () => {
-		window.scrollTo(0, 0)
+		window.scrollTo(0, 0);
 	}
 
 	/**
