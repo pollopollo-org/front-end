@@ -12,7 +12,8 @@ import { RegisterFormState } from "src/ts/components/pages/RegisterForm/Register
 
 export enum UserTypes {
     PRODUCER = "Producer",
-    RECEIVER = "Receiver"
+    RECEIVER = "Receiver",
+    DONOR = "Donor"
 }
 
 /**

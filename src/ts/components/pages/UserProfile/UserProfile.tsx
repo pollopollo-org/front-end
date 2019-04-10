@@ -396,7 +396,12 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         return (this.state.applications.map((application, index) => {
-            return <Application key={index} application={application} />;
+            return <Application 
+                        key={index}
+                        isOwnApplication={true}
+                        userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                        isOnReceiversPage={true}
+                        application={application} />;
         }));
     }
 
