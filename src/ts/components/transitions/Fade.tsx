@@ -11,10 +11,11 @@ const DURATION = 175;
  * shown / hidden.
  */
 // tslint:disable-next-line variable-name completed-docs
-export const Fade: React.SFC<{in?: boolean}> = (props) => {
+export const Fade: React.SFC<{in?: boolean, unmountOnExit?: boolean; mountOnEnter?: boolean}> = (props) => {
     return (
         <CSSTransition
             { ...props }
+            appear={true}
             timeout={ DURATION }
             classNames="utils__fade"
         >
