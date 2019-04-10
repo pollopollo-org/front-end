@@ -342,7 +342,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.productTitle}>{application.productTitle}</span>
 
                 { !this.state.isSmall && (
                     this.renderMotivationTeaser()
@@ -455,7 +455,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 <div className={`description-content ${ application.status === ApplicationStatus.CLOSED ? "isClosed" : "" }`}>
                     <h3>Requested product</h3>
                     <p>
-                        {application.amount} {application.product} {application.status === ApplicationStatus.PENDING && <i>(${application.price})</i>}
+                        {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
                     </p>
                     <h3>Motivation</h3>
                     <p>
@@ -627,7 +627,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Donate $${application.price}`} width={110} height={35} fontSize={12}/>
+                <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12}/>
 
                 <style jsx>{`
                     .button-wrapper {
@@ -663,7 +663,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <div className={`price-wrapper 
                                 ${this.state.isSmall ? "isSmall" : ""}
                                 ${this.props.isOwnApplication && this.props.isOnReceiversPage && application.status === ApplicationStatus.OPEN? "isOwn" : ""}`}>
-                <span>${application.price}</span>
+                <span>${application.productPrice}</span>
 
                 <style jsx>{`
                     .price-wrapper {
@@ -972,7 +972,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * check name length and change if necissary.
      */
     private nameEstimator = () => {
-        const name = this.props.application.name;
+        const name = this.props.application.receiverName;
 
         // If name meets the length requirements, return initial name
         let newName = name;
