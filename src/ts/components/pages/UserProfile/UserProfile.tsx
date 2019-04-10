@@ -458,7 +458,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                 { !this.state.isSmall && 
                     <>
-                        <span className="show">Show: </span>
+                        <span className="show">Showing: </span>
                         <div className="show-filter">
                             { currentFilter }
                         </div>
@@ -809,10 +809,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
-
-        if (this.state.isSmall) {
-            this.setState({ showDropdown: false });
-        }
     }
 }
 
