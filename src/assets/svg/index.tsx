@@ -72,6 +72,7 @@ export function getSVG(name: string, options: IconOptions = {}): JSX.Element {
 
                 span > :global(svg) :global(path),
                 span > :global(svg) :global(circle),
+                span > :global(svg) :global(rect),
                 span > :global(svg) :global(polygon) {
                     /** Prepare color transitions */
                     transition:
@@ -83,6 +84,7 @@ export function getSVG(name: string, options: IconOptions = {}): JSX.Element {
             <style jsx>{`
                 span > :global(svg) :global(path),
                 span > :global(svg) :global(circle),
+                span > :global(svg) :global(rect),
                 span > :global(svg) :global(polygon) {
                     fill: ${ options.fillColor || null };
                     stroke: ${ options.strokeColor || null };
@@ -91,6 +93,7 @@ export function getSVG(name: string, options: IconOptions = {}): JSX.Element {
 
                 span:hover > :global(svg) :global(path),
                 span:hover > :global(svg) :global(circle),
+                span:hover > :global(svg) :global(rect),
                 span:hover > :global(svg) :global(polygon) {
                     fill: ${ options.fillHoverColor || options.fillColor || null};
                     stroke: ${ options.strokeHoverColor || options.strokeColor || null };

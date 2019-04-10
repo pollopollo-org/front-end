@@ -1,7 +1,9 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { TransitionGroup } from "react-transition-group";
 import { colors } from "src/ts/config";
 import { Fade } from "src/ts/components/utils/Dropdown/Fade";
+import { isIOS } from "src/ts/utils/isIOS";
 
 /**
  * Enumeration of different directions that the dropdowns can be pointing
@@ -109,10 +111,11 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
      * needed.
      */
     public render(): JSX.Element {
-        return (
+        return ReactDOM.createPortal(
             <TransitionGroup component={ React.Fragment }>
                 { this.props.active ? this.renderDropdown() : undefined }
-            </TransitionGroup>
+            </TransitionGroup>,
+            document.body,
         );
     }
 
@@ -155,7 +158,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                     .dropdown {
                         /** Prepare positioning of the dropdown */
                         position: absolute;
-                        z-index: 1000;
+                        z-index: 10000;
 
                         /** Apply basic styling of the dropdown */
                         background: ${ colors.white };
@@ -236,7 +239,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                         left: 0;
                         right: 0;
                         top: 0;
-                        z-index: 999;
+                        z-index: 9999;
 
                         /** Disable cursor inheriting */
                         cursor: default;
@@ -297,7 +300,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
 
         // Bail out if the reference node isn't currently mounted
         if (!this.props.pointAt.current) {
-            throw new Error("<Dropdown />.calculatePosition(): Unable to calculate position for unmounted pointAt ref!");
+            return;
         }
 
         // Bail out if the node isn't currently mounted
@@ -342,8 +345,8 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
         // axis, based on the direction which it's going to be pointing
         const dropdownTop = (
             arrowDirection === DropdownArrowDirection.UP
-                ? refPos.top - parentPos.top + refSize.height + 15
-                : refPos.top - parentPos.top - dropdownSize.height - 15
+                ? refPos.top - parentPos.top + refSize.height + 15 - (isIOS() ? 0 : document.body.scrollTop)
+                : refPos.top - parentPos.top - dropdownSize.height - 15 - (isIOS() ? 0 : document.body.scrollTop)
         );
 
         // ... And we can then calculate the DESIRED position of the dropdown on

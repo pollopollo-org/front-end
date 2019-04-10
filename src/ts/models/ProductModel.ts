@@ -1,7 +1,5 @@
-import { DataProviders } from "src/ts/store/Store";
-
-import countriesJson from "src/assets/countries.json";
 import { CountryCodes } from "src/ts/models/CountryCodes";
+import countriesJson from "src/assets/countries.json";
 
 /**
  * Defines the data required to create a producer model.
@@ -9,70 +7,81 @@ import { CountryCodes } from "src/ts/models/CountryCodes";
  * the fields have been commented in length within the actual class
  */
 // tslint:disable completed-docs
-type ProductModelData = {
+export type ProductModelData = {
+    productId: number;
     country: CountryCodes;
     description: string;
     title: string;
     price: number;
+    available: boolean;
+    userId: number;
     thumbnail: string;
-    producerId: number;
 };
+
+export type ProductModelFields = {
+    id: number;
+    location: string;
+    countryCode: CountryCodes;
+    description: string;
+    title: string;
+    price: number;
+    isActive: boolean;
+    producerId: number;
+    thumbnail?: string;
+}
 // tslint:enable completed-docs
 
 /**
- * Product model reflecting the data of a product
+ * Contains the path to the backend which is used to resolve images
+ */
+const BACKEND_URL = "https://api.pollopollo.org";
+
+/**
+ *  Product model reflecting the data of a product
  */
 export class ProductModel {
     /**
      * Helper that instantiates a model, populated with required data.
      */
-    public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ProductModel[]> {
-        if (dataProivder === DataProviders.BACKEND) {
-            const data = Array.from(<ProductModelData[]> (await import("../../assets/dummy/product.json")).default);
-            const products = [];
+    public static CREATE(data: ProductModelData): ProductModel {
+        // Parse the country from the supplied countryCode
+        const country = countriesJson.find((c) => !data.country ? false : c.Code.toLowerCase() === data.country.toLowerCase());
+        const thumbnail = data.thumbnail ? `${BACKEND_URL}/${data.thumbnail}` : undefined;
+        let location = "";
 
-            for (const product of data) {
-                products.push(new ProductModel(product));
-            }
-
-            return products;
+        if (!country) {
+            console.warn("Unable to find country from countryCode!");
+            location = "";
         } else {
-            const data = Array.from(<ProductModelData[]> (await import("../../assets/dummy/product.json")).default);
-            const products = [];
-
-            for (const product of data) {
-                products.push(new ProductModel(product));
-            }
-
-            return products;
+            location = country.Name;
         }
+
+
+        return new ProductModel({
+            ...data,
+            id: data.productId,
+            producerId: data.userId,
+            countryCode: data.country,
+            isActive: data.available,
+            location,
+            thumbnail, 
+        });
     }
 
     /**
-     * Helper that instantiates a model, populated with required data.
+     * Specifies the id of the current product
      */
-    public static async CREATE(dataProivder: DataProviders): Promise<ProductModel> {
-        if (dataProivder === DataProviders.BACKEND) {
-            const data = await import("../../assets/dummy/product.json");
-
-            // Actually fetch data from backend.. :-)
-            return new ProductModel(data[0]);
-        } else {
-            const data = await import("../../assets/dummy/product.json");
-
-            return new ProductModel(data[0]);
-        }
-    }
+    public readonly id: number;
 
     /**
-     * Defines the countryCode of the country that the producer is coming from
+     * Defines the location where the product is being sold
+     */
+    public readonly location: string;
+
+    /**
+     * Defines the countryCode of the country that applicant is coming from
      */
     public readonly countryCode: CountryCodes;
-
-    /**
-     * Defines the country that the producer is coming from.
-     */
-    public readonly country: string;
 
     /**
      * Description defines the product in detail, in order
@@ -92,6 +101,11 @@ export class ProductModel {
     public readonly price: number;
 
     /**
+     * Defines whether the isActive of the product is active.
+     */
+    public readonly isActive: boolean;
+
+    /**
      * Describes the PRODUCER who is selling the product
      */
     public readonly producerId: number;
@@ -99,24 +113,18 @@ export class ProductModel {
     /**
      * Contains a thumbnail of the producer
      */
-    public readonly thumbnail: string;
+    public readonly thumbnail?: string;
 
-    constructor(data: ProductModelData) {
-        // Parse the country from the supplied countryCode
-        const country = countriesJson.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
-
-        if (!country) {
-            console.warn("Unable to find country from countryCode!");
-            this.country = "";
-        } else {
-            this.country = country.Name;
-        }
-
-        this.countryCode = data.country;
+    constructor(data: ProductModelFields) {
+        this.id = data.id;
         this.description = data.description;
+        this.countryCode = data.countryCode;
         this.title = data.title;
         this.price = data.price;
+        this.description = data.description;
+        this.isActive = data.isActive;
         this.producerId = data.producerId;
+        this.location = data.location;
         this.thumbnail = data.thumbnail;
     }
 }

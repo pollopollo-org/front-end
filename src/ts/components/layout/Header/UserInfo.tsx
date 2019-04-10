@@ -266,6 +266,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         div {
                             /** Force all elements to fall below the header itself */
                             position: relative;
+                            width: 100%;
 
                             /** Override normal styles and display content below each other */
                             display: inline-flex;
@@ -301,6 +302,10 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                             & .underline,
                             & .chevron {
                                 display: none;
+                            }
+
+                            & .icon {
+                                margin-right: unset;
                             }
 
                             &.noUser {
@@ -365,13 +370,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
             <React.Fragment>
                 { this.renderUserData() }
 
-                <span className="link" onClick={this.props.closeHeader} role="link">
+                <span className="link" onClick={this.onItemClick} role="link">
                     <Link to={routes.profile.path}>
                         <i className="logIn">{ getSVG("log_in")}</i>
                         { userInfoJson.profile }
                     </Link>
                 </span>
-                <span className="link" onClick={this.props.closeHeader} role="link">
+                <span className="link" onClick={this.onItemClick} role="link">
                     <Link to={routes.editProfile.path}>
                         <i className="edit">{ getSVG("edit") }</i>
                         { userInfoJson.edit }
@@ -384,7 +389,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                 <style jsx>{`
                     button,
-                    .link {
+                    .link > :global(a) {
                         /** Override defaults */
                         background: none;
                         -webkit-appearance: none;
@@ -453,21 +458,19 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                     }
 
                     .link {
-                        /**
-                         * Override width on items in dropdown to ensure they take
-                         * padding into account when achieving width of 100%
-                         */
-                        width: calc(100% - 40px);
+                        width: 100%;
+                    }
 
-                        & :global(> a) {
-                            /** Align icon and text within icon properly */
-                            display: flex;
-                            align-items: center;
+                    .link :global(> a) {
+                        width: auto;
+                        
+                        /** Align icon and text within icon properly */
+                        display: flex;
+                        align-items: center;
 
-                            /** Override default colors */
-                            color: ${ colors.black };
-                            text-decoration: none;
-                        }
+                        /** Override default colors */
+                        color: ${ colors.black };
+                        text-decoration: none;
 
                         & .edit {
                             height: 23px;
@@ -566,6 +569,15 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
         localStorage.setItem("userJWT", "");
         this.setState({ showDropdown: false });
         this.props.history.push(routes.root.path);
+    }
+
+    /**
+     * Listener that should be triggerd once an item is closed in order to properly
+     * close the navigation
+     */
+    protected onItemClick = () => {
+        this.props.closeHeader();
+        this.setState({ showDropdown: false });
     }
 
     /**

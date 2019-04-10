@@ -10,10 +10,12 @@
     "no-console": false,
     "use-simple-attributes": false,
     "no-string-based-set-timeout": false,
+    "react-a11y-no-onchange": false,
     "no-suspicious-comment": false,
     "object-literal-sort-keys": false,
     "react-a11y-anchors": false,
     "import-name": false,
+    "react-a11y-no-onchange": false,
     "react-a11y-input-elements": false,
     // We're going to slightly increase the allowed function body length, as
     // we're using styled jsx a lot of places (and such render methods can

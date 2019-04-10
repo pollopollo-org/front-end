@@ -8,11 +8,12 @@ import { routes } from "src/ts/config/routes";
 
 import loginFormJson from "src/assets/data/loginForm.json";
 import { apis } from "src/ts/config/apis";
-import { fetchUser } from "src/ts/store/createStore";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { asyncTimeout } from "src/ts/utils";
-import { Throbber } from "src/ts/components/utils";
+import { Button } from "src/ts/components/utils";
+import { alertApiError } from "src/ts/utils/alertApiError";
+import { createUser } from "src/ts/utils/createUser";
 
 type LoginFormProps = {
     /**
@@ -80,12 +81,17 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                                         onChange={this.onPasswordChanged}
                                     />
                                 </div>
-                                <button type="submit" className={this.state.isPending ? "isPending" : ""}>
-                                    <span className="text">{loginFormJson.buttonText}</span>
-                                    <span className="throbber">
-                                        <Throbber size={30} relative={true} inverted={true} />
-                                    </span>
-                                </button>
+                                <div className="button">
+                                    <Button 
+                                        withThrobber={true} 
+                                        text={loginFormJson.buttonText}
+                                        width="100%"
+                                        height={46}
+                                        fontSize={16}
+                                        type={"submit"}
+                                        isPending={this.state.isPending}
+                                        throbberSize={30}/>
+                                </div>
                             </form>
                             <Link className="link registerLink" to={routes.register.path}>
                                 {loginFormJson.linkQuestion} <b>{loginFormJson.linkSignUpText}</b>
@@ -172,69 +178,14 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
                         margin-bottom: 30px;
                     }
 
-                    button {
+                    .button {
                         position: relative;
-                        padding: 0.75rem 1.25rem;
                         width: 100%;
-                        cursor: pointer;
 
-                        /* Set color styling */
-                        background-color: ${ colors.secondary};
-                        color: ${colors.white};
-
-                        /* Set border styling */
-                        border: none;
-                        border-radius: 3px;
-                        transition: background-color 0.1s linear;
-
-                        /* Set font styling */
-                        font-size: 1.25rem;
-                        font-family: ${ fonts.heading};
-
-                        & .throbber {
-                            /**
-                             * Position a throbber in the middle to be displayed
-                             * while requests are ongoing
-                             */
-                            position: absolute;
-                            left: calc(50% - 15px);
-                            top: calc(50% - 15px);
-                            opacity: 0;
-                            overflow: hidden;
-
-                            /* Make sure throbber does not overlap the register link */
-                            height: 40px;
-                            width: 190px;
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
+                        & :global(> button) {
+                            font-size: 1.25rem;
+                            padding: 0.75rem 1.25rem;
                         }
-
-                        & .text {
-                            opacity: 1;
-                            transform: scale(1);
-
-                            /**
-                             * prepare transitions
-                             */
-                            transition: opacity 0.2s linear;
-                        }
-
-                        &.isPending .throbber {
-                            opacity: 1;
-                            transform: scale(1);
-                        }
-
-                        &.isPending .text {
-                            opacity: 0;
-                            transform: scale(0.5);
-                        }
-                    }
-
-                    button:hover {
-                        background-color: ${ colors.primary};
                     }
 
                     /* Set link styling */
@@ -286,7 +237,7 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
             return;
         }
 
-        const endPoint = apis.user.authenticate;
+        const endPoint = apis.user.authenticate.path;
 
         try {
             this.setState({ isPending: true });
@@ -304,21 +255,20 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
             });
 
             if (response.ok) {
-                const token = await response.text();
-                localStorage.setItem("userJWT", token);
-
-                this.props.store.user = await fetchUser();
+                const data = await response.json();
+                localStorage.setItem("userJWT", data.token);
+                this.props.store.user = createUser(data.userDTO);
 
                 await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
                 this.props.history.push(routes.root.path);
             } else {
-                throw new Error("Either your password or email is not correct, please try again.")
+                alertApiError(response.status, apis.user.authenticate.errors, this.props.store);
+                this.setState({ isPending: false });
             }
-
-
         } catch (err) {
             this.setState({ isPending: false });
-            alert("Either your password or email is not correct, please try again.");
+
+            this.props.store.currentErrorMessage = "Something with your request when wrong, please try again later";
         }
     }
 }

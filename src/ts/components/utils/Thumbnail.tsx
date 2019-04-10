@@ -1,5 +1,5 @@
 import React from "react";
-import { easings } from "src/ts/config";
+import { easings, colors } from "src/ts/config";
 import { getSVG } from "src/assets/svg";
 
 export type ThumbnailProps = {
@@ -54,9 +54,15 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
     public render(): JSX.Element {
         return (
             <div className={`thumbnail ${this.state.hasLoaded ? "hasLoaded" : "notLoaded"}`}>
-                <img src={this.props.src} alt="" role="presentation" />                    
+                <i 
+                    className={`image ${this.props.callback ? "hasCallback" : ""}`}
+                    onClick={this.props.callback}
+                    role="button"
+                >
+                    <img src={this.props.src} alt="" role="presentation" />
+                </i>                 
                 <i className="placeholder">
-                    { getSVG("image") }
+                    { getSVG("image", { strokeColor: colors.primary }) }
                 </i>
 
                 <style jsx>{`
@@ -76,7 +82,7 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
 
                         /** Display image as soon as it has loaded */
                         &.hasLoaded {
-                            & img {
+                            & .image {
                                 opacity: 1;
                             }
 
@@ -90,7 +96,7 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
                          * While the image isn't loaded, display the placeholder 
                          */
                         &.notLoaded {
-                            & img {
+                            & .image {
                                 opacity: 0;
                                 pointer-events: none;
                             }
@@ -101,28 +107,57 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
                         }
                     }
 
-                    img {
-                        /** We display as a block to avoid weird 4px forced margin */
+                    .image {
                         display: block;
-
-                        /** 
-                         * Attempt to fit the image as best as possible within
-                         * the given dimensions 
-                         */
-                        object-fit: cover;
                         width: 100%;
                         height: 100%;
 
-                        /** Indicate that thumbnail is clickable */
-                        cursor: pointer;
-
                         /** Prepare hover transitions */
                         opacity: 0;
+                        -webkit-backface-visibility: hidden;
+                        transform: scale(1);
                         transition: transform 0.2s ${ easings.inOutQuad }, opacity 0.2s linear;
 
-                        &:hover {
-                            transform: scale(1.15);
-                            opacity: 0.9;
+                        &.hasCallback {
+                            /** Indicate that thumbnail is clickable */
+                            cursor: pointer;
+
+                            &::before {
+                                /** Position on top of image */
+                                content: "";
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                bottom: 0;
+                                z-index: 2;
+
+                                /** Prepare hover transitions */
+                                transition: background-color 0.2s linear;
+                                background: rgba(69, 50, 102, 0);
+                            }
+
+                            &:hover {
+                                transform: scale(1.1);
+
+                                &::before {
+                                    background-color: rgba(69, 50, 102, 0.5);
+                                }
+                            }
+                        }
+
+                        & img {
+                            /** We display as a block to avoid weird 4px forced margin */
+                            display: block;
+                            position: relative;
+
+                            /** 
+                            * Attempt to fit the image as best as possible within
+                            * the given dimensions 
+                            */
+                            object-fit: cover;
+                            width: 100%;
+                            height: 100%;
                         }
                     }
 
