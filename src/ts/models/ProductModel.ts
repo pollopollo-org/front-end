@@ -9,6 +9,11 @@ import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { asyncTimeout } from "src/ts/utils";
 import { routes } from "src/ts/config";
 
+export enum ProductStatus {
+    ACTIVE = "active",
+    INACTIVE = "inactive"
+}
+
 /**
  * Defines that the backend will return, and is required to create a producer 
  * model.
@@ -262,8 +267,8 @@ export async function fetchProductById(productId: number, store: Store) {
  * 
  * Users must be logged in to perform this request.
  */
-export async function fetchProductByProducer(producerId: number, store: Store) {
-    const cacheKey = `producer-${producerId}`;
+export async function fetchProductByProducer(producerId: number, store: Store, status: ProductStatus) {
+    const cacheKey = `producer-${producerId}-${status}`;
 
     if (productCache.has(cacheKey)) {
         return productCache.get(cacheKey);
@@ -278,7 +283,11 @@ export async function fetchProductByProducer(producerId: number, store: Store) {
         return;
     }
 
-    const endPoint = apis.products.getByProducer.path.replace("{producerId}", String(producerId));
+    const productStatus = status === ProductStatus.ACTIVE;
+
+    const endPoint = apis.products.getByProducer.path
+        .replace("{producerId}", String(producerId))
+        .replace("{productStatus}", String(productStatus));
 
     try {
         const response = await fetch(endPoint, {
@@ -368,7 +377,7 @@ export async function postProduct(data: ProductPostData, store: Store, history: 
             // the given producer, in order to ensure that the newly created product
             // will be properly fetched with all data needed, the next time the
             // user profile is visited
-            productCache.delete(`producer-${store.user.id}`);
+            productCache.delete(`producer-${store.user.id}-active`);
 
             // ... and finally navigate the user back to his/hers own profile
             history.push(routes.profile.path);
@@ -415,6 +424,9 @@ export async function toggleProductAvailability(product: ProductModel, store: St
         });
 
         if (result.ok) {
+            productCache.delete(`producer-${store.user.id}-active`);
+            productCache.delete(`producer-${store.user.id}-inactive`);
+
             // In case we have a callback, then broadcast the newly updated product
             // to it.
             if (callback) {

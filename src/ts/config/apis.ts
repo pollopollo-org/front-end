@@ -90,7 +90,7 @@ export const apis = {
             }
         },
         getByProducer: {
-            path: `${basePath}/products/producer/{producerId}`,
+            path: `${basePath}/products/producer/{producerId}?active={productStatus}`,
             errors: {},
         },
     }
