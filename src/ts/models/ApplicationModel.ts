@@ -3,6 +3,13 @@ import { DataProviders } from "src/ts/store/Store";
 import countriesJson from "src/assets/countries.json";
 import { CountryCodes } from "src/ts/models/CountryCodes";
 
+
+export enum ApplicationStatus {
+    OPEN = "Open",
+    PENDING = "Pending",
+    CLOSED = "Closed"
+}
+
 /**
  * Defines the data required to create an application model.
  *
@@ -17,6 +24,8 @@ type ApplicationModelData = {
     price: number;
     product: string;
     thumbnail: string;
+    status: ApplicationStatus;
+    receiverId: number;
 };
 // tslint:enable completed-docs
 
@@ -107,6 +116,15 @@ export class ApplicationModel {
      */
     public readonly thumbnail: string;
 
+    /**
+     * Contains the status of the application
+     */
+    public readonly status: ApplicationStatus;
+    /**
+     * Contains the id of the receiver
+     */
+    public readonly receiverId: number;
+
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
         const country = countriesJson.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
@@ -125,5 +143,7 @@ export class ApplicationModel {
         this.price = data.price;
         this.product = data.product;
         this.thumbnail = data.thumbnail;
+        this.status = data.status;
+        this.receiverId = data.receiverId;
     }
 }

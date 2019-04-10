@@ -1,7 +1,8 @@
 
 export enum UserTypes {
     PRODUCER = "Producer",
-    RECEIVER = "Receiver"
+    RECEIVER = "Receiver",
+    DONOR = "Donor"
 }
 
 /**
