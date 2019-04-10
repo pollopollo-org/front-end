@@ -676,7 +676,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                         /** When mobile size, position price in the middle */
                         &.isSmall {
-                            left: 100px;
+                            left: 105px;
                             top: 40px;
                             right: unset;
                         }
@@ -722,7 +722,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
                 <button onClick={ this.openConfirmationDialog } className="delete-button" title="Delete">
                     <i>{ getSVG("delete") }</i>
-                </button>}
+                </button>
 
                 <style jsx>{`
                     .button-wrapper {
