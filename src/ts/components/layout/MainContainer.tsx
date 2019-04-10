@@ -9,6 +9,7 @@ import { EditProfile } from "src/ts/components/pages/EditProfile/EditProfile";
 import { FrontPage } from "src/ts/components/pages/FrontPage/FrontPage";
 import { LoginForm } from "src/ts/components/pages/LoginForm/LoginForm";
 import { ProductsPage } from "src/ts/components/pages/ProductsPage/ProductsPage";
+import { ApplicationsPage } from "src/ts/components/pages/ApplicationsPage/ApplicationsPage";
 import { RegisterForm } from "src/ts/components/pages/RegisterForm/RegisterForm";
 import { UserProfile } from "src/ts/components/pages/UserProfile/UserProfile";
 import { Footer } from "src/ts/components/layout/Footer/Footer";
@@ -48,6 +49,7 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
                         <Route exact path={routes.editProfile.path} component={EditProfile} />
                         <Route exact path={routes.createProduct.path} component={CreateProduct} />
                         <Route exact path={routes.productsPage.path} component={ProductsPage} />
+                        <Route exact path={routes.applicationsPage.path} component={ApplicationsPage} />
                         <Route exact path={routes.CreateApplication.path} component={CreateApplication} />
                     </Switch>
                 </main>

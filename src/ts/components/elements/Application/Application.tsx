@@ -11,6 +11,12 @@ export type ApplicationProps = {
      * Contains a reference to the applicaiton model that should be rendered
      */
     application: ApplicationModel;
+
+    /**
+     * Determines if current user is owner of the application
+     */
+    isOwnApplication: boolean;
+
 }
 
 export type ApplicationState = {

@@ -9,7 +9,7 @@ import { CountryCodes } from "src/ts/models/CountryCodes";
  * the fields have been commented in length within the actual class
  */
 // tslint:disable completed-docs
-type ApplicationModelData = {
+export type ApplicationModelData = {
     amount: number;
     country: CountryCodes;
     motivation: string;
@@ -27,8 +27,8 @@ export class ApplicationModel {
     /**
      * Helper that instantiates a dummy model, populated with required data.
      */
-    public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ApplicationModel[]> {
-        if (dataProivder === DataProviders.BACKEND) {
+    public static async CREATE_COLLECTION(dataProvider: DataProviders): Promise<ApplicationModel[]> {
+        if (dataProvider === DataProviders.BACKEND) {
             const data = Array.from(<ApplicationModelData[]> (await import("../../assets/dummy/application.json")).default);
             const applications = [];
 
@@ -52,8 +52,8 @@ export class ApplicationModel {
     /**
      * Helper that instantiates a dummy model, populated with required data.
      */
-    public static async CREATE(dataProivder: DataProviders): Promise<ApplicationModel> {
-        if (dataProivder === DataProviders.BACKEND) {
+    public static async CREATE(dataProvider: DataProviders): Promise<ApplicationModel> {
+        if (dataProvider === DataProviders.BACKEND) {
             const data = await import("../../assets/dummy/application.json");
 
             // Actually fetch data from backend.. :-)
@@ -85,7 +85,6 @@ export class ApplicationModel {
      * for potential doners determine
      */
     public readonly motivation: string;
-
 
     /**
      * Defines the name of the application applying for the product
