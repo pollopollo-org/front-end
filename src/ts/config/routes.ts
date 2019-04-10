@@ -39,5 +39,8 @@ export const routes = {
     },
     createProduct: {
         path: "/products/create.html",
+    },
+    CreateApplication: {
+        path: "/applications/create.html",
     }
 }
