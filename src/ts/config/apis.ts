@@ -34,7 +34,9 @@ export const apis = {
         },
         image: {
             path: `${basePath}/users/image`,
-            errors: {},
+            errors: {
+                413: "The image that you're attempting to upload is too large. Please upload a smaller image."
+            },
         },
         authenticate: {
             path: `${basePath}/users/authenticate`,
@@ -65,6 +67,7 @@ export const apis = {
             path: `${basePath}/products/image`,
             errors: {
                 403: "You are not authorized to upload an image to this product.",
+                413: "The image that you're attempting to upload is too large. Please upload a smaller image."
             },
         },
         put: {
