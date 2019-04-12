@@ -744,25 +744,62 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal render method that'll render all applications associated to a user
      */
     private renderApplications = () => {
-        if (!this.state.applications) {
+        let applications = this.state.applications;
+        if (!applications) {
             return null;
         }
 
-        return (this.state.applications.map((application, index) => {
-            return <Application 
-                        key={index}
-                        isOwnApplication={true}
-                        userType={getUserType(this.props.store.user, UserTypes.DONOR)}
-                        isOnReceiversPage={true}
-                        application={application} />;
-        }));
+        return (
+            <>
+                <Fade in={this.state.isPending} key="throbber">
+                    {this.renderListThrobber()}
+                </Fade>
+                <Fade in={!this.state.isPending} key="applications">
+                    <div>
+                        { applications.map((application, index) => {
+                            const isOnReceiversPage = application.producerId === this.state.userId;
+                            const isOwnApplication = this.props.store.user 
+                                ? this.props.store.user.id === application.receiverId
+                                : false;
+
+                            return (
+                                <Application 
+                                    key={index}
+                                    isOwnApplication={isOwnApplication}
+                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    isOnReceiversPage={isOnReceiversPage}
+                                    application={application} 
+                                /> 
+                            );
+                        })}
+                    </div>
+                </Fade>
+            </>
+        );
     }
 
     /**
      * Internal helper that'll load all applications related to a user
      */
-    private loadApplications = () => {
-        this.setState({ applications: this.props.store.applications });
+    private loadApplications = async() => {
+        if (!this.state.userId) {
+            return;
+        }
+
+        this.setState({ isPending: true });
+        const applications = await fetchProductByProducer(
+            this.state.userId, 
+            this.props.store, 
+            ProductStatus.ACTIVE
+        );
+
+        if (!applications) {
+            this.setState({ applications: [] });
+        } else {
+            //this.setState({ applications: applications});
+        }
+
+        this.setState({ isPending: false });
     }
 
     /**
