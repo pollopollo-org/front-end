@@ -17,6 +17,7 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { RouterProps, withRouter } from "react-router";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
+import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
 
 export type ProductProps = {
 
@@ -617,61 +618,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             return;
         }
 
-        return (
-            <button
-                className="profile-link"
+        return(
+            <UserLink
                 onClick={this.openProducerLightbox}
-            >
-                <i className="user-icon">{getSVG("user2")}</i>
-                Producer profile
-
-                <style jsx>{`
-
-                    /** Button to producers profile */
-                    .profile-link {
-                        /** Positioning the icon and button text horizontally */
-                        display: flex;
-                        flex-direction: row;
-
-                        /** Colors and fonts */
-                        background-color: transparent;
-                        font-style: bold;
-                        font-family: ${ fonts.text};
-
-                        /** Size and border */
-                        border: none;
-                        border-radius: 5px;
-                        padding: 10px;
-
-                        /** Setup effects when hover */
-                        transition: background-color 0.1s linear;
-                        cursor: pointer;
-
-                        /** 
-                        * Positioning the button just outside the border of its
-                        * parent, so it does not look as malplaced when not
-                        * hovering
-                        */
-                        margin-left: -5px;
-
-                    }
-
-                    .profile-link:hover {
-                        background-color: rgba(219,208,239,0.5);
-                    }
-
-                    /** User icon placed in button */
-                    .profile-link i {
-                        height: 17px;
-                        width: 17px;
-
-                        color: ${ colors.primary};
-
-                        /** Some space between icon and button text */
-                        margin-right: 5px;
-                    }
-                `}</style>
-            </button>
+                text={"Producer profile"}/>
         );
     }
 
