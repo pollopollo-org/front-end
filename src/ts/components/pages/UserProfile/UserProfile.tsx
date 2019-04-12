@@ -11,7 +11,7 @@ import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import userProfileJson from "src/assets/data/userProfile.json";
-import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, fetchApplicationByReceiver, ApplicationStatus } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { colors } from "src/ts/config";
@@ -787,10 +787,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         this.setState({ isPending: true });
-        const applications = await fetchProductByProducer(
+        const applications = await fetchApplicationByReceiver(
             this.state.userId, 
             this.props.store, 
-            ProductStatus.ACTIVE
+            ApplicationStatus.OPEN,
         );
 
         if (!applications) {

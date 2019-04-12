@@ -53,7 +53,11 @@ export const apis = {
                 400: "Invalid information passed, please correct your data and try again.",
                 409: "A product with the given information already exists."
             }
-        }
+        },
+        getByReceiver: {
+            path: `${basePath}/applications/receiver/{receiverId}`,
+            errors: {},
+        },
     },
     products: {
         post: {

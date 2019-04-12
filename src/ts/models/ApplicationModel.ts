@@ -1,7 +1,9 @@
-import { DataProviders } from "src/ts/store/Store";
+import { DataProviders, Store } from "src/ts/store/Store";
 
 import countriesJson from "src/assets/countries.json";
 import { CountryCodes } from "src/ts/models/CountryCodes";
+import { apis } from "src/ts/config/apis";
+import { alertApiError } from "src/ts/utils/alertApiError";
 
 
 export enum ApplicationStatus {
@@ -61,7 +63,7 @@ export class ApplicationModel {
 
     /**
      * Helper that instantiates a dummy model, populated with required data.
-     */
+     
     public static async CREATE(dataProivder: DataProviders): Promise<ApplicationModel> {
         if (dataProivder === DataProviders.BACKEND) {
             const data = await import("../../assets/dummy/application.json");
@@ -73,6 +75,17 @@ export class ApplicationModel {
 
             return new ApplicationModel(data[0]);
         }
+    }*/
+
+    /**
+     * Helper that instantiates a model, populated with required data.
+     */
+    public static CREATE(data: ApplicationModelData): ApplicationModel {
+
+
+        return new ApplicationModel({
+            ...data, 
+        });
     }
 
     /**
@@ -153,5 +166,62 @@ export class ApplicationModel {
         this.producerId = data.producerId;
         this.motivation = data.motivation;
         this.status = data.status;
+    }
+}
+
+/**
+ * Method used to fetch all applications related to a specific receiver.
+ * 
+ * Users must be logged in to perform this request.
+ */
+export async function fetchApplicationByReceiver(receiverId: number, store: Store, status: ApplicationStatus) {
+    /*
+    const cacheKey = `producer-${producerId}-${status}`;
+    // If we have a cache hit, then simply return the cached product!
+    if (productCache.has(cacheKey)) {
+        return productCache.get(cacheKey);
+    }*/
+
+    
+    const token = localStorage.getItem("userJWT");
+
+    // We NEED to be authorized to perform this request. Bail out if we aren't
+    // logged in at the moment
+    if (!token) {
+        return;
+    }
+
+    //const productStatus = status === ApplicationStatus.OPEN;
+
+    const endPoint = apis.application.getByReceiver.path
+        .replace("{receiverId}", String(receiverId));
+        //.replace("{productStatus}", String(productStatus));
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const applicationsData: ApplicationModelData[] = await response.json();
+
+        // If everything goes well, then create a bunch of productModels from the
+        // data and add them to the cache before returning output.
+        if (response.ok) {
+            return applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
+            //productCache.set(cacheKey, productArray);
+
+            //return applicationArray;
+        } else {
+            // ... else alert any errors that occurred to our users!
+            alertApiError(response.status, apis.application.getByReceiver.errors, store);
+            return;
+        }
+
+    } catch (err) {
+        return;
     }
 }
