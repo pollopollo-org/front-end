@@ -42,10 +42,16 @@ type CreateProductState = {
      * Image of the product
      */
     productPicture?: File;
+    
     /**
      * Specifies whether or not we're currently attempting to create a user
      */
     isPending?: boolean;
+
+    /**
+     * The rank of the product, default is 0, which is placed below all other ranks
+     */
+    rank?: number;
 };
 
 /**
@@ -142,6 +148,17 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     aria-valuemax={1000000}
                     aria-valuenow={this.state.price}
                     onChange={this.onPriceChanged}
+                />
+                <input
+                    type="number"
+                    className="leftInput"
+                    placeholder={createProductJson.productRank}
+                    min={0}
+                    max={1000000}
+                    aria-valuemin={0}
+                    aria-valuemax={1000000}
+                    aria-valuenow={this.state.rank}
+                    onChange={this.onRankChanged}
                 />
                 <textarea
                     className="leftInput"
@@ -381,6 +398,14 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
      * Method that'll get triggered each time the input is changed, in order to
      * properly update state
      */
+    private onRankChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({rank: Number(evt.currentTarget.value)});
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
     private onDescriptionChanged = (evt: React.FormEvent<HTMLTextAreaElement>) => {
         this.setState({ description: evt.currentTarget.value });
     }
@@ -445,6 +470,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     price: this.state.price,
                     description: this.state.description,
                     country: this.props.store.user.country,
+                    rank: this.state.rank,
                 }),
             });
 

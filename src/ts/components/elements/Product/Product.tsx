@@ -125,7 +125,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         showProducer: false,
         showDialog: false,
         showAlert: false,
-        isPending: false
+        isPending: false,
     };
 
     /**
@@ -290,6 +290,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <div className={`product ${this.state.isSmall ? "isSmall" : ""}`}>
                 <div className="sections">
+                    { this.renderRank()}
                     { this.renderThumbnailSection() }
                     { this.renderContentSection() }
                 </div>
@@ -330,6 +331,39 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 `}</style>
 
             </div>
+        );
+    }
+
+    /**
+     * Internal renderer for the rank of the product. 
+     * This is only viewable for the creator of the product
+     */
+    private renderRank =() => {
+        return(
+            <div>
+                {this.props.isOwnProduct && 
+            
+                    <div>
+                        <div
+                            className="rank"
+                        >
+                            <span>
+                                {this.props.product.rank}
+                            </span>
+                        </div>
+                        <style jsx>{`
+                            .rank{
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                
+
+                            }
+                        `}</style>
+                    </div>
+                }
+            </div>
+            
         );
     }
 
@@ -395,7 +429,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     { 
                         this.props.userType === UserTypes.PRODUCER &&
-                        <span className={`price ${this.state.isSmall ? "isSmall" : ""} 
+                        <span 
+                            className={`price ${this.state.isSmall ? "isSmall" : ""} 
                                                 ${isOwnProduct ? "isOwnProduct" : ""}`}
                         >
                             ${ product.price }
@@ -473,6 +508,15 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                             &.isSmall {
                                 margin-right: 25px;
+                            }
+                        }
+                    }
+
+                    /** Displays the rank of the product */
+                    .rank{
+                        &.isOwnproduct{
+                            &.isSmall{
+
                             }
                         }
                     }
@@ -1279,7 +1323,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
             if (result.ok) {
                 if (this.props.updateProduct) {
-                    const newProduct = new ProductModel({ ...this.props.product, isActive: !product.isActive });
+                    const newProduct = new ProductModel({ ...this.props.product, isActive: !product.isActive});
                     this.props.updateProduct(newProduct);
                 }
             } else {
