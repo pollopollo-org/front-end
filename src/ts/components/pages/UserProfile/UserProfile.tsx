@@ -362,7 +362,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             width: 100%;
     						flex-direction: column;
                             justify-content: center;
-
 						}
 
                         .header {
@@ -502,10 +501,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 onClick={this.toggleDropdownState}
                 ref={this.wrapperRef}
                 role="button"
-            >
-
-
-                {!this.state.isSmall &&
+            >   
+                { !this.state.isSmall && 
                     <>
                         <span className="show">Showing: </span>
                         <div className="show-filter">

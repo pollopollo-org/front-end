@@ -350,7 +350,7 @@ export async function deleteApplication(applicationId: number, store: Store, cal
             return;
         }
 
-        const result = await fetch(apis.application.delete.path.replace("{userId}", String(store.user.id)).replace("{applicationId}", String(applicationId)), {
+        const result = await fetch(apis.applications.delete.path.replace("{userId}", String(store.user.id)).replace("{applicationId}", String(applicationId)), {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

@@ -301,6 +301,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 {this.props.userType === UserTypes.RECEIVER &&
                     this.renderApplyButton()}
 
+                {this.renderAssociatedApplicationsStatusTeaser()}
                 {this.renderDescriptionTeaser()}
 
                 {this.renderChevron()}
@@ -494,10 +495,74 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
+     * Internal renderer that renders teaser information for associated
+     * applications
+     */
+    private renderAssociatedApplicationsStatusTeaser() {
+        if (!this.props.isOwnProduct || !this.props.isOnProducersPage || !this.props.product.isActive) {
+            return;
+        } 
+
+        return(
+            <div 
+                className={`open-pending-section ${ this.state.isSmall ? "isSmall" : "" }`} 
+                style={{
+                    opacity: this.state.expanded ? 0 : 0.6,
+                    userSelect: this.state.expanded ? "none" : "text",
+                }}>
+                <span className="open"><span className="amount">3</span> open</span>
+                <span className="pending"><span className="amount">6</span> pending</span>
+
+                <style jsx>{`
+                    .open-pending-section {
+                        /** Position the teaser on the bottom of the content section */
+                        position: absolute;
+                        bottom: 3px;
+                        margin-left: 100px;
+
+                        &.isSmall {
+                            margin-left: 5px;
+                        }
+
+                        /** Setup font */
+                        font-size: 12px;
+
+                        /** Prepare transitions */
+                        transition: opacity 0.15s linear;
+
+                        display: flex;
+                        flex-direction: row;
+                    }
+
+                    .open-pending-section > span {
+                        padding: 0 5px;
+                    }
+
+                    .open-pending-section .open {
+                        border-right: 1px solid ${ colors.pale };
+                    }
+
+                    .open .amount {
+                        color: ${ colors.green };
+                    }
+
+                    .pending .amount {
+                        color: ${ colors.yellow };
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
      * Internal renderer that renders the description teaser section of the
      * product
      */
     private renderDescriptionTeaser = () => {
+        if (this.props.isOwnProduct && this.props.isOnProducersPage && this.props.product.isActive) {
+            return;
+        }
+
         const { product } = this.props;
 
         return (
@@ -565,9 +630,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     </p>
 
                     <h3>Rank: {product.rank}</h3>
+
+                    {this.renderAssociatedApplicationsStatus()}
                     
                     {this.renderProducerLink()}
-
                 </div>
 
                 <style jsx>{`
@@ -627,7 +693,77 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Render bottom link to producer profile info
+     * Internal renderer that renders teaser information for associated
+     * applications
+     */
+    private renderAssociatedApplicationsStatus() {
+        // bc Lasse iz stoopid
+        if (!this.props.isOwnProduct || !this.props.isOnProducersPage || !this.props.product.isActive) {
+            return;
+        } 
+
+        return(
+            <div>
+                <h3>Associated applications</h3>
+
+                <div className="open-pending-section">
+                    <span role="button" className="open"><span className="amount">3</span> open</span>
+                    <span role="button" className="pending"><span className="amount">6</span> pending</span>
+                </div>
+
+                <style jsx>{`
+                    .open-pending-section {
+                        display: flex;
+                        flex-direction: row;
+
+                        font-family: ${ fonts.text };
+                        font-weight: 300;
+
+                        margin-top: 5px;
+                    }
+
+                    .open-pending-section > span {
+                        padding: 0 5px;
+                        cursor: pointer;
+                        border: 1px solid transparent;
+                        transition: border-color 0.1s linear;
+                    }
+
+                    .open-pending-section .open {
+                        border-right: 1px solid ${ colors.pale };
+                        border-radius: 2px 0 0 2px;
+
+                        & .amount {
+                            color: ${ colors.green };
+                        }
+
+                        &:hover {
+                            border-color: rgba(0,139,0, 0.6);
+                        }
+                    }
+
+                    .open-pending-section .pending {
+                        border-radius: 0 2px 2px 0;
+
+                        & .amount {
+                            color: ${ colors.yellow };
+                        }
+
+                        &:hover {
+                            border-color: rgba(255,111,0, 0.6);
+                        }
+                    }
+
+                    h3 {
+                        margin: 0;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Render button link to producer profile info
      */
     private renderProducerLink() {
         if (this.props.isOnProducersPage) {
@@ -809,7 +945,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     /** Create a pale line between the icons to seperate them */
                     .edit-button-section .edit-button {
-                        border-right: 1px solid ${ colors.pale};
+                        border-right: 1px solid ${ colors.pale };
                     }
 
                     /** Position the icons */
