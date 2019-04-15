@@ -303,7 +303,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         const { application } = this.props;
 
         return (
-            <section className="section-user">
+            <section className="section-user" onClick={this.openReceiverLightbox}>
                 <div className="thumbnail">
                     <Thumbnail src={this.props.application.getThumbnail()} roundedCorners />
                 </div>
@@ -330,6 +330,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                         /** Margin between this and the next section */
                         margin-right: 20px;
+                        
+                        /** Indicate that it is clickable */
+                        cursor: pointer;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
                     }
 
                     /** Thumbnail img in the .section-user */
@@ -489,7 +496,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         {application.motivation}
                     </p>
                 </div>
-                {this.renderReceiverLink()}
                 {this.renderProducerLink()}
 
                 <style jsx>{`
@@ -536,31 +542,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         );
     }
 
-    /**
-     * Render button link to receiver profile info
-     */
-    private renderReceiverLink() {
-        if (this.props.isOnReceiversPage) {
-            return;
-        }
-
-        return (
-            <div className="link">
-                <UserLink
-                    onClick={this.openReceiverLightbox}
-                    text={"Receiver profile"} />
-                <style jsx>{`
-                    /** 
-                     * Positioning the button so it is alligned with other
-                     * content upon hovering
-                     */
-                    .link :global(.profile-link) {
-                        margin-left: 8px;
-                    }
-                `}</style>
-            </div>
-        );
-    }
 
     /**
      * Render button link to receiver profile info
