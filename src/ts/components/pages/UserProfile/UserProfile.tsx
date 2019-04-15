@@ -434,6 +434,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal render method that'll render all products associated to a user
      */
     private renderProducts = () => {
+
         let products = null;
         if (this.state.filterActiveProducts) {
             products = this.state.activeProducts;
@@ -599,6 +600,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         if (!user) {
             return;
         }
+
         return (
             <div>
                 {isProducerUser(user)
@@ -795,17 +797,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * (e.g. when toggling the product on and off)
      */
     private updateProduct = (index: number, chosenProduct: ProductModel) => {
+
         const newActiveProductList = this.state.activeProducts;
         const newInactiveProductList = this.state.inactiveProducts;
 
-        // Null check
-        if (newActiveProductList && newInactiveProductList) {
-
-            // If new product is active, then remove it from inactiveProducts list
-            if (chosenProduct.isActive) {
+        if (chosenProduct.isActive) {
+            if(newInactiveProductList) {
+                // If new product is active, then remove it from inactiveProducts list
                 newInactiveProductList.splice(index, 1);
                 this.setState({ inactiveProducts: newInactiveProductList });
-            } else {
+            }
+        } else {
+            if(newActiveProductList) {
                 // ...else remove it from the activeProduct list
                 newActiveProductList.splice(index, 1);
                 this.setState({ activeProducts: newActiveProductList });

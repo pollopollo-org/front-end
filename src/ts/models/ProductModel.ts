@@ -443,6 +443,8 @@ export async function toggleProductAvailability(product: ProductModel, store: St
             if (callback) {
                 const newProduct = new ProductModel({ ...product, isActive: !product.isActive });
                 callback(newProduct);
+
+                console.log(callback);
             }
         } else {
             alertApiError(result.status, apis.products.post.errors, store);
