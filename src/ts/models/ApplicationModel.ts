@@ -345,7 +345,6 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
     const cacheKey = `receiver-${receiverId}-${status}`;
     // If we have a cache hit, then simply return the cached product!
     if (applicationCache.has(cacheKey)) {
-        console.log(cacheKey);
         return applicationCache.get(cacheKey);
     }
 
