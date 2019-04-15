@@ -480,15 +480,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             }
                         }
                     }
-
-                    /** Displays the rank of the product */
-                    .rank{
-                        &.isOwnproduct{
-                            &.isSmall{
-
-                            }
-                        }
-                    }
                 `}</style>
             </section>
         );
@@ -629,7 +620,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         {product.description}
                     </p>
 
-                    <h3>Rank: {product.rank}</h3>
+                    {this.props.isOwnProduct && <h3>Rank: {product.rank}</h3>}
 
                     {this.renderAssociatedApplicationsStatus()}
 
