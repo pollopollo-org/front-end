@@ -8,13 +8,14 @@ import { Button, Chevron } from "src/ts/components/utils";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { getSVG } from "src/assets/svg";
 import { Dialog } from "src/ts/components/utils/Dialog";
-import { fonts, routes } from "src/ts/config";
-import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
-import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
+import { fonts} from "src/ts/config";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { Store } from "src/ts/store/Store";
 import { injectStore } from "src/ts/store/injectStore";
 import { Alert } from "src/ts/components/utils/Alert";
+import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
+import { ProducerModel } from "src/ts/models/ProducerModel";
+import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
 
 export type ApplicationProps = {
     /**
@@ -57,6 +58,11 @@ export type ApplicationState = {
      */
     showReceiver: boolean;
     /**
+     * Specifies whether or not the producer's profile should currently be 
+     * displayed in a lightbox
+     */
+    showProducer: boolean;
+    /**
      * Specifies whether or not the confirmation dialog should be displayed
      */
     showDialog: boolean;
@@ -65,6 +71,11 @@ export type ApplicationState = {
      * loaded if the user wishes to see information about the receiver
      */
     receiver?: ReceiverModel;
+    /**
+     * Specifies the loaded receiver of the application (if any). Will first be
+     * loaded if the user wishes to see information about the receiver
+     */
+    producer?: ProducerModel;
     /**
      * Specifies whether or not the alert should be displayed
      * Used for telling the user that is is not yet possible 
@@ -90,6 +101,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         showDialog: false,
         showReceiver: false,
         showAlert: false,
+        showProducer: false,
     };
 
     /**
@@ -152,11 +164,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     { this.renderMotivation() }
                 </div>
                 { this.renderReceiverLightbox() }
+                { this.renderProducerLightbox() }
                 { this.renderConfirmDialog() }
                 { this.renderAlert() }
-
+                
 				<style jsx>{`
-
                     /** Draws a border around the application */
                     .application-border {
                         /** Allow usage of position: absolute within */
@@ -342,7 +354,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.productTitle}>{application.productTitle}</span>
 
                 { !this.state.isSmall && (
                     this.renderMotivationTeaser()
@@ -455,7 +467,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 <div className={`description-content ${ application.status === ApplicationStatus.CLOSED ? "isClosed" : "" }`}>
                     <h3>Requested product</h3>
                     <p>
-                        {application.amount} {application.product} {application.status === ApplicationStatus.PENDING && <i>(${application.price})</i>}
+                        {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
                     </p>
                     <h3>Motivation</h3>
                     <p>
@@ -463,6 +475,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     </p>
                 </div>
                 { this.renderReceiverLink() }
+                { this.renderProducerLink() }
 
                 <style jsx>{`
                     /** Shown when the collapsible is expanded */
@@ -515,61 +528,48 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         if (this.props.isOnReceiversPage) {
             return;
         }
-
+        
         return(
-                <button 
-                    className="profile-link"
+            <div className="link">
+                <UserLink
                     onClick={this.openReceiverLightbox}
-                >
-                    <i className="user-icon">{getSVG("user2")}</i> 
-                    Receiver profile
-
+                    text={"Receiver profile"}/>
                 <style jsx>{`
-
-                    /** Button to producers profile */
-                    .profile-link {
-                        /** Positioning the icon and button text horizontally */
-                        display: flex;
-                        flex-direction: row;
-
-                        /** Colors and fonts */
-                        background-color: transparent;
-                        font-style: bold;
-                        font-family: ${ fonts.text };
-
-                        /** Size and border */
-                        border: none;
-                        border-radius: 5px;
-                        padding: 10px;
-
-                        /** Setup effects when hover */
-                        transition: background-color 0.1s linear;
-                        cursor: pointer;
-
-                        /** 
-                         * Positioning the button so it is alligned with other
-                         * content upon hovering
-                         */
+                    /** 
+                     * Positioning the button so it is alligned with other
+                     * content upon hovering
+                     */
+                    .link :global(.profile-link) {
                         margin-left: 8px;
-
-                    }
-
-                    .profile-link:hover {
-                        background-color: rgba(219,208,239,0.5);
-                    }
-
-                    /** User icon placed in button */
-                    .profile-link i {
-                        height: 17px;
-                        width: 17px;
-
-                        color: ${ colors.primary };
-
-                        /** Some space between icon and button text */
-                        margin-right: 5px;
                     }
                 `}</style>
-            </button>
+            </div>
+        );
+    }
+
+    /**
+     * Render button link to receiver profile info
+     */
+    private renderProducerLink() {
+        if (this.props.isOnReceiversPage) {
+            return;
+        }
+
+        return(
+            <div className="link">
+                <UserLink
+                    onClick={this.openProducerLightbox}
+                    text={"Producer profile"}/>
+                <style jsx>{`
+                    /** 
+                     * Positioning the button so it is alligned with other
+                     * content upon hovering
+                     */
+                    .link :global(.profile-link) {
+                        margin-left: 8px;
+                    }
+                `}</style>
+            </div>
         );
     }
 
@@ -627,7 +627,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Donate $${application.price}`} width={110} height={35} fontSize={12}/>
+                <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12}/>
 
                 <style jsx>{`
                     .button-wrapper {
@@ -663,7 +663,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <div className={`price-wrapper 
                                 ${this.state.isSmall ? "isSmall" : ""}
                                 ${this.props.isOwnApplication && this.props.isOnReceiversPage && application.status === ApplicationStatus.OPEN? "isOwn" : ""}`}>
-                <span>${application.price}</span>
+                <span>${application.productPrice}</span>
 
                 <style jsx>{`
                     .price-wrapper {
@@ -834,67 +834,35 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         }
 
         return (
-            <Lightbox active={this.state.showReceiver} onClose={this.closeReceiverLightbox}>
-                <UserDescription user={this.state.receiver} isSelf={this.props.isOwnApplication}/>
-                { !this.props.isOnReceiversPage && (
-                    <div>
-                        <a
-                            href={routes.viewProfile.path.replace(":userId", String(this.props.application.receiverId))}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <span className="chevron">
-                                <Chevron />
-                            </span>
-                            <span className="text">Go to producer profile</span>
-                        </a>
-                    </div>                    
-                )}
+            <UserLightbox
+                showLightbox={this.state.showReceiver}
+                onClose={this.closeReceiverLightbox}
+                user={this.state.receiver}
+                isOwn={this.props.isOwnApplication}
+                isOnProfile={this.props.isOnReceiversPage}
+                userId={this.props.application.receiverId}
+                userType={"receiver"}/>
+        );
+    }
 
-                <style jsx>{`
-                    div {
-                        /** Setup dimensions that match the userDescription */
-                        padding: 0 50px 30px;
-                        background-color: ${ colors.pale };
-                    }    
+    /**
+     * Internal renderer that will render the producer lightbox which will be 
+     * displayed when desired
+     */
+    private renderProducerLightbox = () => {
+        if (!this.state.producer) {
+            return;
+        }
 
-                    a {
-                        /** Setup font */
-                        font-size: 14px;
-                        color: ${ colors.black };
-                        font-family: ${ fonts.text };
-                        font-weight: 300;
-                        text-decoration: none;
-
-                        /** Ensure chevron and text is vertically aligned */
-                        display: flex;
-                        align-items: center;
-
-                        &:hover {
-                            text-decoration: underline;
-                        }
-                    }
-
-                    .chevron {
-                        /** Setup dimensions in which the chevron fits */
-                        display: block;
-                        position: relative;
-                        width: 14px;
-                        height: 10px;
-
-                        /** Setup spacing between chevron and text */
-                        margin-right: 5px;
-                    }
-
-                    .userDesc {
-                        & :global(.information) {
-                            width: 100%;
-                            margin: 0;
-                        }
-
-                    }
-                `}</style>
-            </Lightbox>
+        return (
+            <UserLightbox
+                showLightbox={this.state.showProducer}
+                onClose={this.closeProducerLightbox}
+                user={this.state.producer}
+                isOwn={false}
+                isOnProfile={this.props.isOnReceiversPage}
+                userId={this.props.application.producerId}
+                userType={"producer"}/>
         );
     }
 
@@ -911,7 +879,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             if (receiver) {
                 this.setState({ receiver, showReceiver: true });
             } else {
-                this.props.store.currentErrorMessage = "Failed to fetch producer related to product. Please try again later."
+                this.props.store.currentErrorMessage = "Failed to fetch receiver related to application. Please try again later."
             }
         } else {
             this.setState({ showReceiver: true });
@@ -923,6 +891,33 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private closeReceiverLightbox = () => {
         this.setState({ showReceiver: false });
+    }
+
+    /**
+     * Listener that'll open the producer lightbox once it has been executed
+     */
+    private openProducerLightbox = async () => {
+        if (!this.state.producer) {
+            const producerId = this.props.application.producerId;
+            const producer = await fetchUser(String(producerId), this.props.store);
+
+
+            // Only display producer if one exists with the given id
+            if (producer) {
+                this.setState({ producer, showProducer: true });
+            } else {
+                this.props.store.currentErrorMessage = "Failed to fetch producer related to product. Please try again later."
+            }
+        } else {
+            this.setState({ showProducer: true });
+        }
+    }
+
+    /**
+     * Mehtod that'll close the producer lightbox once it has been executed
+     */
+    private closeProducerLightbox = () => {
+        this.setState({ showProducer: false });
     }
 
     /**
@@ -972,7 +967,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * check name length and change if necissary.
      */
     private nameEstimator = () => {
-        const name = this.props.application.name;
+        const name = this.props.application.receiverName;
 
         // If name meets the length requirements, return initial name
         let newName = name;

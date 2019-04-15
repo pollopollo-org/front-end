@@ -10,7 +10,6 @@ import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts, routes } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
-import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
@@ -20,6 +19,9 @@ import { RouterProps, withRouter } from "react-router";
 import { apis } from "src/ts/config/apis";
 import { asyncTimeout } from "src/ts/utils";
 import { alertApiError } from "src/ts/utils/alertApiError";
+import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
+import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
+
 
 export type ProductProps = {
 
@@ -632,61 +634,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             return;
         }
 
-        return (
-            <button
-                className="profile-link"
+        return(
+            <UserLink
                 onClick={this.openProducerLightbox}
-            >
-                <i className="user-icon">{getSVG("user2")}</i>
-                Producer profile
-
-                <style jsx>{`
-
-                    /** Button to producers profile */
-                    .profile-link {
-                        /** Positioning the icon and button text horizontally */
-                        display: flex;
-                        flex-direction: row;
-
-                        /** Colors and fonts */
-                        background-color: transparent;
-                        font-style: bold;
-                        font-family: ${ fonts.text};
-
-                        /** Size and border */
-                        border: none;
-                        border-radius: 5px;
-                        padding: 10px;
-
-                        /** Setup effects when hover */
-                        transition: background-color 0.1s linear;
-                        cursor: pointer;
-
-                        /** 
-                        * Positioning the button just outside the border of its
-                        * parent, so it does not look as malplaced when not
-                        * hovering
-                        */
-                        margin-left: -5px;
-
-                    }
-
-                    .profile-link:hover {
-                        background-color: rgba(219,208,239,0.5);
-                    }
-
-                    /** User icon placed in button */
-                    .profile-link i {
-                        height: 17px;
-                        width: 17px;
-
-                        color: ${ colors.primary};
-
-                        /** Some space between icon and button text */
-                        margin-right: 5px;
-                    }
-                `}</style>
-            </button>
+                text={"Producer profile"}/>
         );
     }
 
@@ -1103,67 +1054,14 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         }
 
         return (
-            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
-                <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct} />
-                {!this.props.isOnProducersPage && (
-                    <div>
-                        <a
-                            href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <span className="chevron">
-                                <Chevron />
-                            </span>
-                            <span className="text">Go to producer profile</span>
-                        </a>
-                    </div>
-                )}
-
-                <style jsx>{`
-                    div {
-                        /** Setup dimensions that match the userDescription */
-                        padding: 0 50px 30px;
-                        background-color: ${ colors.pale};
-                    }    
-
-                    a {
-                        /** Setup font */
-                        font-size: 14px;
-                        color: ${ colors.black};
-                        font-family: ${ fonts.text};
-                        font-weight: 300;
-                        text-decoration: none;
-
-                        /** Ensure chevron and text is vertically aligned */
-                        display: flex;
-                        align-items: center;
-
-                        &:hover {
-                            text-decoration: underline;
-                        }
-                    }
-
-                    .chevron {
-                        /** Setup dimensions in which the chevron fits */
-                        display: block;
-                        position: relative;
-                        width: 14px;
-                        height: 10px;
-
-                        /** Setup spacing between chevron and text */
-                        margin-right: 5px;
-                    }
-
-                    .userDesc {
-                        & :global(.information) {
-                            width: 100%;
-                            margin: 0;
-                        }
-
-                    }
-                `}</style>
-            </Lightbox>
+            <UserLightbox
+                showLightbox={this.state.showProducer}
+                onClose={this.closeProducerLightbox}
+                user={this.state.producer}
+                isOwn={this.props.isOwnProduct}
+                isOnProfile={this.props.isOnProducersPage}
+                userId={this.props.product.producerId}
+                userType={"producer"}/>
         );
     }
 

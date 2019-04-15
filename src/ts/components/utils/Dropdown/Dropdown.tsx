@@ -30,6 +30,12 @@ export type DropdownProps = {
     active?: boolean;
 
     /**
+     * Specifies whether or not we should take window.pageYOffset into account
+     * when calculating the position of a dropdowns
+     */
+    withWindowOffset?: boolean;
+
+    /**
      * Callback that'll be triggered when the dropdown should be closed, letting
      * the parent properly update it's state.
      */
@@ -112,8 +118,8 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
      */
     public render(): JSX.Element {
         return ReactDOM.createPortal(
-            <TransitionGroup component={ React.Fragment }>
-                { this.props.active ? this.renderDropdown() : undefined }
+            <TransitionGroup component={React.Fragment}>
+                {this.props.active ? this.renderDropdown() : undefined}
             </TransitionGroup>,
             document.body,
         );
@@ -129,21 +135,21 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
         return (
             <Fade key="dropdown">
                 <div
-                    ref={ this.containerRef }
-                    className={`dropdown ${ arrowDirection === DropdownArrowDirection.UP ? "up" : "down" }`}
+                    ref={this.containerRef}
+                    className={`dropdown ${arrowDirection === DropdownArrowDirection.UP ? "up" : "down"}`}
                     role="presentation"
-                    onClick={ this.preventClickPropagation }
+                    onClick={this.preventClickPropagation}
                     style={{
-                        top: `${ dropdownTop }px`,
-                        left: `${ dropdownLeft }px`,
+                        top: `${dropdownTop}px`,
+                        left: `${dropdownLeft}px`,
                     }}
                 >
-                    { this.props.children }
+                    {this.props.children}
 
                     <div className="edge">
                         <div
                             className="arrow"
-                            style={{ marginLeft: `${ (arrowOffset || 0) - 8 }px` }}
+                            style={{ marginLeft: `${(arrowOffset || 0) - 8}px` }}
                         />
                     </div>
                 </div>
@@ -151,7 +157,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                 <div
                     className="backdrop"
                     role="presentation"
-                    onClick={ this.onBackdropClick }
+                    onClick={this.onBackdropClick}
                 />
 
                 <style jsx>{`
@@ -161,7 +167,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                         z-index: 10000;
 
                         /** Apply basic styling of the dropdown */
-                        background: ${ colors.white };
+                        background: ${ colors.white};
                         box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
 
                         & .edge {
@@ -177,7 +183,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                             * edge of the dropdown.
                             */
                             height: 3px;
-                            background: ${ colors.primary };
+                            background: ${ colors.primary};
 
                             & .arrow {
                                 /**
@@ -212,7 +218,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                             /** Render the arrow pointing up */
                             & .arrow {
                                 top: -8px;
-                                border-bottom: 8px solid ${ colors.primary };
+                                border-bottom: 8px solid ${ colors.primary};
                             }
                         }
 
@@ -227,7 +233,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
                             /** Render the arrow pointing down */
                             & .arrow {
                                 bottom: -8px;
-                                border-top: 8px solid ${ colors.primary };
+                                border-top: 8px solid ${ colors.primary};
                             }
                         }
                     }
@@ -345,8 +351,19 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
         // axis, based on the direction which it's going to be pointing
         const dropdownTop = (
             arrowDirection === DropdownArrowDirection.UP
-                ? refPos.top - parentPos.top + refSize.height + 15 - (isIOS() ? 0 : document.body.scrollTop)
-                : refPos.top - parentPos.top - dropdownSize.height - 15 - (isIOS() ? 0 : document.body.scrollTop)
+                ? (
+                    refPos.top -
+                    parentPos.top +
+                    refSize.height + 15 -
+                    (isIOS() ? 0 : document.body.scrollTop) +
+                    (this.props.withWindowOffset ? window.pageYOffset : 0)
+                ) : (
+                    refPos.top -
+                    parentPos.top -
+                    dropdownSize.height - 15 -
+                    (isIOS() ? 0 : document.body.scrollTop) +
+                    (this.props.withWindowOffset ? window.pageYOffset : 0)
+                )
         );
 
         // ... And we can then calculate the DESIRED position of the dropdown on
@@ -365,7 +382,7 @@ export class Dropdown extends React.PureComponent<DropdownProps, DropdownState> 
         if (uncappedDropdownLeft + parentPos.left > window.innerWidth - dropdownSize.width - 15) {
             dropdownLeft -= (
                 (uncappedDropdownLeft + parentPos.left) -
-                (window.innerWidth - dropdownSize.width -  15)
+                (window.innerWidth - dropdownSize.width - 15)
             );
         }
 
