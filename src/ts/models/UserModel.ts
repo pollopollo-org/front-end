@@ -140,7 +140,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
 
         const response = await fetch(endPoint, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 password: data.password,
                 email: data.email,
@@ -190,7 +190,7 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
 
         const response = await fetch(endPoint, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body
         });
 
@@ -218,22 +218,13 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
 export async function fetchUser(userId: string, store: Store) {
-    const token = localStorage.getItem("userJWT");
-
-    // Bail out if a token isn't available at the moment, since that is required
-    // to actually fetch a user!
-    if (!token) {
-        return;
-    }
-
     const endPoint = apis.user.get.path.replace("{userId}", userId);
 
     try {
         const response = await fetch(endPoint, {
             method: "GET",
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             }
         });
 
@@ -271,7 +262,7 @@ export async function fetchSelf(): Promise<UserModel | undefined> {
     try {
         const response = await fetch(endPoint, {
             method: "GET",
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             }
