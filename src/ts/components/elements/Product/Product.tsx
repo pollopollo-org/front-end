@@ -487,7 +487,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * applications
      */
     private renderAssociatedApplicationsStatusTeaser() {
-        if (!this.props.isOwnProduct || !this.props.isOnProducersPage || !this.props.product.isActive) {
+        if (!this.props.isOwnProduct || !this.props.isOnProducersPage) {
             return;
         }
 
@@ -547,7 +547,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * product
      */
     private renderDescriptionTeaser = () => {
-        if (this.props.isOwnProduct && this.props.isOnProducersPage && this.props.product.isActive) {
+        if (this.props.isOwnProduct && this.props.isOnProducersPage) {
             return;
         }
 
@@ -617,10 +617,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         {product.description}
                     </p>
 
-                    {this.props.isOwnProduct && <h3>Rank: {product.rank}</h3>}
+                    
 
                     {this.renderAssociatedApplicationsStatus()}
-
+                    {this.props.isOwnProduct && <h3>Rank: {product.rank}</h3>}
                     {this.renderProducerLink()}
                 </div>
 
@@ -685,22 +685,28 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * applications
      */
     private renderAssociatedApplicationsStatus() {
-        // bc Lasse iz stoopid
-        if (!this.props.isOwnProduct || !this.props.isOnProducersPage || !this.props.product.isActive) {
+
+        // If it is producers own product and is on own profile page, then show
+        // open and pending products
+        if (!this.props.isOwnProduct || !this.props.isOnProducersPage) {
             return;
         }
 
         return (
-            <div>
+            <div className="associated-applications-section">
                 <h3>Associated applications</h3>
 
-                <div className="open-pending-section">
+                <div className="open-pending-buttons">
                     <span role="button" className="open"><span className="amount">3</span> open</span>
                     <span role="button" className="pending"><span className="amount">6</span> pending</span>
                 </div>
 
                 <style jsx>{`
-                    .open-pending-section {
+                    .associated-applications-section {
+                        margin-bottom: 10px;
+                    }
+
+                    .open-pending-buttons {
                         display: flex;
                         flex-direction: row;
 
@@ -710,14 +716,14 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         margin-top: 5px;
                     }
 
-                    .open-pending-section > span {
+                    .open-pending-buttons > span {
                         padding: 0 5px;
                         cursor: pointer;
                         border: 1px solid transparent;
                         transition: border-color 0.1s linear;
                     }
 
-                    .open-pending-section .open {
+                    .open-pending-buttons .open {
                         border-right: 1px solid ${ colors.pale};
                         border-radius: 2px 0 0 2px;
 
@@ -730,7 +736,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         }
                     }
 
-                    .open-pending-section .pending {
+                    .open-pending-buttons .pending {
                         border-radius: 0 2px 2px 0;
 
                         & .amount {
