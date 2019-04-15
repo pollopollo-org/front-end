@@ -630,7 +630,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         {product.description}
                     </p>
 
-                    
+
 
                     {this.renderAssociatedApplicationsStatus()}
                     {this.props.isOwnProduct && <h3>Rank: {product.rank}</h3>}
@@ -710,8 +710,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 <h3>Associated applications</h3>
 
                 <div className="open-pending-buttons">
-                    <span role="button" className="open"><span className="amount">3</span> open</span>
-                    <span role="button" className="pending"><span className="amount">6</span> pending</span>
+                    <span role="button" className="open"><span className="amount">{this.props.product.openApplications}</span> open</span>
+                    <span role="button" className="pending"><span className="amount">{this.props.product.pendingApplications}</span> pending</span>
                 </div>
 
                 <style jsx>{`
