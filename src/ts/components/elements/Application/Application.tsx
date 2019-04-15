@@ -1,7 +1,7 @@
 import React from "react";
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -40,6 +40,11 @@ export type ApplicationProps = {
      * Contains a reference to the root store
      */
     store: Store;
+
+    /**
+     * Optional callback to execute once an application gets deleted
+     */
+    onApplicationDeleted?(): void;
 }
 
 export type ApplicationState = {
@@ -1038,7 +1043,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Delete application on backend and remove from frontend?
      */
     private deleteApplication = async () => {
-        return;
+        await deleteApplication(this.props.application.applicationId, this.props.store, this.props.onApplicationDeleted);
     }
 }
 

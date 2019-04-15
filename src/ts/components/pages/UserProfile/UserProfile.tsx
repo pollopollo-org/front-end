@@ -501,8 +501,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 onClick={this.toggleDropdownState}
                 ref={this.wrapperRef}
                 role="button"
-            >   
-                { !this.state.isSmall && 
+            >
+                {!this.state.isSmall &&
                     <>
                         <span className="show">Showing: </span>
                         <div className="show-filter">
@@ -829,7 +829,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 ? this.props.store.user.id === application.receiverId
                                 : false;
 
-                            //const updateProduct = this.updateProduct.bind(this, index);
+                            const onApplicationDeleted = this.onApplicationDeleted.bind(this, index);
 
                             return (
                                 <Application
@@ -837,7 +837,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     isOwnApplication={isOwnApplication}
                                     userType={getUserType(this.props.store.user, UserTypes.DONOR)}
                                     isOnReceiversPage={isOnReceiversPage}
-                                    application={application} />
+                                    application={application}
+                                    onApplicationDeleted={onApplicationDeleted}
+                                />
                             );
                         })}
                     </div>
@@ -881,6 +883,19 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         this.setState({ isPending: false });
+    }
+
+    /**
+     * Callback that should be executed once an application gets deleted in order
+     * to ensure that the deletion also is reflected on the UI
+     */
+    private onApplicationDeleted = (index: number) => {
+        const newApplicationList = this.state.openApplications;
+
+        if (newApplicationList) {
+            newApplicationList.splice(index, 1);
+            this.setState({ openApplications: newApplicationList });
+        }
     }
 
     /**
