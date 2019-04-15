@@ -1,7 +1,7 @@
 import React from "react";
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
