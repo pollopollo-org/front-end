@@ -8,7 +8,7 @@ import { Button, Chevron } from "src/ts/components/utils";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { getSVG } from "src/assets/svg";
 import { Dialog } from "src/ts/components/utils/Dialog";
-import { fonts} from "src/ts/config";
+import { fonts } from "src/ts/config";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { Store } from "src/ts/store/Store";
 import { injectStore } from "src/ts/store/injectStore";
@@ -16,6 +16,7 @@ import { Alert } from "src/ts/components/utils/Alert";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
+import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 
 export type ApplicationProps = {
     /**
@@ -141,34 +142,34 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     /**
      * Main render method, used to render Application
      */
-	public render(): JSX.Element {
-		return (
-			<React.Fragment>
-                <div className={`application-border ${ this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={ this.borderRef }>
+    public render(): JSX.Element {
+        return (
+            <React.Fragment>
+                <div className={`application-border ${this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={this.borderRef}>
                     <div className="application">
                         <div className="sections">
-                            { this.renderUserSection() }
-                            { this.renderContentSection() }
+                            {this.renderUserSection()}
+                            {this.renderContentSection()}
                         </div>
 
-                        {this.props.userType === UserTypes.DONOR && this.renderDonateButton() }
+                        {this.props.userType === UserTypes.DONOR && this.renderDonateButton()}
                         {(this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) && this.renderPrice()}
-                        {(this.props.isOwnApplication && this.props.isOnReceiversPage ) && this.renderInteractWithOwnSection()} 
+                        {(this.props.isOwnApplication && this.props.isOnReceiversPage) && this.renderInteractWithOwnSection()}
 
-                        { this.state.isSmall && (
+                        {this.state.isSmall && (
                             this.renderMotivationTeaser()
                         )}
 
-                        { this.renderChevron() }
+                        {this.renderChevron()}
                     </div>
-                    { this.renderMotivation() }
+                    {this.renderMotivation()}
                 </div>
-                { this.renderReceiverLightbox() }
-                { this.renderProducerLightbox() }
-                { this.renderConfirmDialog() }
-                { this.renderAlert() }
-                
-				<style jsx>{`
+                {this.renderReceiverLightbox()}
+                {this.renderProducerLightbox()}
+                {this.renderConfirmDialog()}
+                {this.renderAlert()}
+
+                <style jsx>{`
                     /** Draws a border around the application */
                     .application-border {
                         /** Allow usage of position: absolute within */
@@ -187,7 +188,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         border-radius: 2px;
 
                         /** Setup fonts within */
-                        color: ${ colors.black };
+                        color: ${ colors.black};
 
                         /** Prepare transitions */
                         transition: transform 0.1s linear, border-color 0.1s linear, box-shadow 0.1s linear;
@@ -224,7 +225,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         /** Setup hover styling */
                         &:hover {
                             box-shadow: 0 0 5px rgba(139,72,156, 0.15);
-                            border-color: ${ colors.secondary };
+                            border-color: ${ colors.secondary};
                         }
 
                         /** On hover, slightly alter bg color via before element */
@@ -278,8 +279,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         z-index: 2;
 					}
 				`}</style>
-			</React.Fragment>
-		);
+            </React.Fragment>
+        );
     }
 
     /**
@@ -290,11 +291,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <section className="section-user">
-                <img className="thumbnail" src={require("src/assets/dummy/sif.PNG")} alt="" role="presentation" />
-                <img 
-                    className="flag" 
-                    title={application.country} 
-                    src={`${process.env.PUBLIC_URL}/flags/${application.countryCode.toLowerCase()}.svg`} 
+                <div className="thumbnail">
+                    <Thumbnail src={this.props.application.getThumbnail()} />
+                </div>
+                <img
+                    className="flag"
+                    title={application.country}
+                    src={`${process.env.PUBLIC_URL}/flags/${application.countryCode.toLowerCase()}.svg`}
                     alt={application.country}
                 />
                 <div className="name">{this.nameEstimator()}</div>
@@ -321,6 +324,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         height: 60px;
                         width: 60px;
                         border-radius: 50%;
+                        overflow: hidden;
 
                         /** Margin between this and the name element */
                         margin-bottom: 4px;
@@ -349,14 +353,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     /**
      * Internal renderer that'll render the content section of the application
      */
-    private renderContentSection = () => {
+    private renderContentSection = () => {
         const { application } = this.props;
 
         return (
             <section className="section-content">
                 <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.productTitle}>{application.productTitle}</span>
 
-                { !this.state.isSmall && (
+                {!this.state.isSmall && (
                     this.renderMotivationTeaser()
                 )}
 
@@ -464,7 +468,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className={`description-content ${ application.status === ApplicationStatus.CLOSED ? "isClosed" : "" }`}>
+                <div className={`description-content ${application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`}>
                     <h3>Requested product</h3>
                     <p>
                         {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
@@ -474,8 +478,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         {application.motivation}
                     </p>
                 </div>
-                { this.renderReceiverLink() }
-                { this.renderProducerLink() }
+                {this.renderReceiverLink()}
+                {this.renderProducerLink()}
 
                 <style jsx>{`
                     /** Shown when the collapsible is expanded */
@@ -483,7 +487,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         /** Prepare expand-collapse functionality */
                         height: 0;
                         overflow: hidden;
-                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION }ms ${ easings.inOutQuart};
+                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION}ms ${easings.inOutQuart};
 
                         /** Position on top of before element */
                         position: relative;
@@ -528,12 +532,12 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         if (this.props.isOnReceiversPage) {
             return;
         }
-        
-        return(
+
+        return (
             <div className="link">
                 <UserLink
                     onClick={this.openReceiverLightbox}
-                    text={"Receiver profile"}/>
+                    text={"Receiver profile"} />
                 <style jsx>{`
                     /** 
                      * Positioning the button so it is alligned with other
@@ -555,11 +559,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             return;
         }
 
-        return(
+        return (
             <div className="link">
                 <UserLink
                     onClick={this.openProducerLightbox}
-                    text={"Producer profile"}/>
+                    text={"Producer profile"} />
                 <style jsx>{`
                     /** 
                      * Positioning the button so it is alligned with other
@@ -581,7 +585,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} role="button">
-                <Chevron size={ chevronSize } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
+                <Chevron size={chevronSize} lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
                     /** The wrapper around the chevron arrow */
@@ -611,7 +615,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         }
 
                         &:hover {
-                            color: ${ colors.secondary };
+                            color: ${ colors.secondary};
                         }
                     }
                 `}</style>
@@ -625,9 +629,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderDonateButton = () => {
         const { application } = this.props;
 
-        return(
+        return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12}/>
+                <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -659,10 +663,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             return;
         }
 
-        return(
+        return (
             <div className={`price-wrapper 
                                 ${this.state.isSmall ? "isSmall" : ""}
-                                ${this.props.isOwnApplication && this.props.isOnReceiversPage && application.status === ApplicationStatus.OPEN? "isOwn" : ""}`}>
+                                ${this.props.isOwnApplication && this.props.isOnReceiversPage && application.status === ApplicationStatus.OPEN ? "isOwn" : ""}`}>
                 <span>${application.productPrice}</span>
 
                 <style jsx>{`
@@ -698,8 +702,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderInteractWithOwnSection = () => {
         const { application } = this.props;
-
-        return(
+        return (
             <div>
                 {application.status === ApplicationStatus.PENDING && this.renderConfirmButton()}
                 {application.status === ApplicationStatus.OPEN && this.renderDeleteButton()}
@@ -713,14 +716,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderDeleteButton = () => {
         const { isOwnApplication, userType } = this.props;
 
-        if(!isOwnApplication || userType !== UserTypes.RECEIVER) {
+        if (!isOwnApplication || userType !== UserTypes.RECEIVER) {
             return;
         }
 
-        return(
+        return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <button onClick={ this.openConfirmationDialog } className="delete-button" title="Delete">
-                    <i>{ getSVG("delete") }</i>
+                <button onClick={this.openConfirmationDialog} className="delete-button" title="Delete">
+                    <i>{getSVG("delete")}</i>
                 </button>
 
                 <style jsx>{`
@@ -733,9 +736,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                         /** When mobile size, position price in the middle */
                         &.isSmall {
-                            left: 135px;
-                            top: 35px;
-                            right: unset;
+                            top: 0;
+                            right: 0;
                         }
                     }
 
@@ -743,7 +745,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         background-color: transparent;
                         border: none;
                         font-style: bold;
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                         padding: 2px 5px;
                         cursor: pointer;
                         color: rgba(57,57,57, 0.75);
@@ -756,7 +758,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                     /** Indicate it is clickable */
                     .button-wrapper button:hover {
-                        color: ${ colors.secondary };
+                        color: ${ colors.secondary};
                     }
                 `}</style>
             </div>
@@ -769,13 +771,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderConfirmButton = () => {
         const { isOwnApplication, userType } = this.props;
 
-        if(!isOwnApplication || userType !== UserTypes.RECEIVER) {
+        if (!isOwnApplication || userType !== UserTypes.RECEIVER) {
             return;
         }
 
-        return(
+        return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={ this.openAlert }/>
+                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={this.openAlert} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -801,12 +803,12 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Dialog to confirm wheter a receiver wants to delete an application
      */
     private renderConfirmDialog() {
-        return(
+        return (
             <Dialog title={`Confirm deletion`}
-                    text={`Are you sure you want to delete this application?`}
-                    active={ this.state.showDialog } 
-                    onClose={ this.closeConfirmationDialog } 
-                    confirmAction= { this.deleteApplication }
+                text={`Are you sure you want to delete this application?`}
+                active={this.state.showDialog}
+                onClose={this.closeConfirmationDialog}
+                confirmAction={this.deleteApplication}
             />
         );
     }
@@ -816,10 +818,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * receival of a product applied for
      */
     private renderAlert() {
-        return(
-            <Alert  text={`It is not yet possible to confirm retrieval of a product.`}
-                    active={ this.state.showAlert } 
-                    onClose={ this.closeAlert } 
+        return (
+            <Alert text={`It is not yet possible to confirm retrieval of a product.`}
+                active={this.state.showAlert}
+                onClose={this.closeAlert}
             />
         );
     }
@@ -841,7 +843,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 isOwn={this.props.isOwnApplication}
                 isOnProfile={this.props.isOnReceiversPage}
                 userId={this.props.application.receiverId}
-                userType={"receiver"}/>
+                userType={"receiver"} />
         );
     }
 
@@ -862,7 +864,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 isOwn={false}
                 isOnProfile={this.props.isOnReceiversPage}
                 userId={this.props.application.producerId}
-                userType={"producer"}/>
+                userType={"producer"} />
         );
     }
 
@@ -929,7 +931,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         // If our ref isn't available or if we're currently transitioning, then
         // bail out
-        if(!desc || this.isTransitioning) {
+        if (!desc || this.isTransitioning) {
             return;
         }
 
@@ -944,7 +946,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         // Force a reflow before we're going to manage the transition
         desc.offsetHeight; // tslint:disable-line no-unused-expression
 
-        if (this.state.expanded){
+        if (this.state.expanded) {
             // If we're collapsing, then run transition after back to 0px
             // height
             desc.style.height = "0px";
@@ -972,13 +974,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         // If name meets the length requirements, return initial name
         let newName = name;
 
-        if(name.length > 12) {
+        if (name.length > 12) {
             newName = "";
             const nameList = name.split(" ");
 
             // Shorten the firstname to the first letter, and put it together
             // with the surname
-            newName = `${nameList[0].charAt(0)}. ${nameList[nameList.length-1]}`
+            newName = `${nameList[0].charAt(0)}. ${nameList[nameList.length - 1]}`
         }
 
         return newName;
