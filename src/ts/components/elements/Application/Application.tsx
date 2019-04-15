@@ -212,7 +212,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                         /** Setup dimensions of application */
                         margin: 10px 0;
-                        width: calc(100% - 20px); /* Might be temp */
 
                         /** Setup internal dimensions */
                         padding: 10px;
