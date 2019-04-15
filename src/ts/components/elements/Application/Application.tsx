@@ -339,7 +339,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         const { application } = this.props;
 
         return (
-            <section className="section-user" onClick={this.openReceiverLightbox}>
+            <section    className={`section-user 
+                                    ${ this.props.isOnReceiversPage
+                                        ? ""
+                                        : "thumbnail-clickable" 
+                                    }`
+                                } 
+                        onClick={ this.openReceiverLightbox}
+            >
                 <div className="thumbnail">
                     <Thumbnail src={this.props.application.getThumbnail()} roundedCorners />
                 </div>
@@ -367,11 +374,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         /** Margin between this and the next section */
                         margin-right: 20px;
                         
-                        /** Indicate that it is clickable */
-                        cursor: pointer;
+                        &.thumbnail-clickable {
+                            cursor: pointer;
 
-                        &:hover {
-                            text-decoration: underline;
+                            /** Indicate that it is clickable */
+                            &:hover {
+                                text-decoration: underline;
+                            }
                         }
                     }
 
@@ -911,6 +920,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Listener that'll open the receiver lightbox once it has been executed
      */
     private openReceiverLightbox = async () => {
+        if(this.props.isOnReceiversPage) {
+            return;
+        }
+
         if (!this.state.receiver) {
             const receiverId = this.props.application.receiverId;
             const receiver = await fetchUser(String(receiverId), this.props.store);
