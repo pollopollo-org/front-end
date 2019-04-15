@@ -11,7 +11,7 @@ import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import userProfileJson from "src/assets/data/userProfile.json";
-import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, fetchApplicationByReceiver, ApplicationStatus } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { colors } from "src/ts/config";
@@ -59,9 +59,14 @@ export type UserState = {
     isPending?: boolean;
 
     /**
-     * Specifies whether itr should render active or inactive products
+     * Specifies whether it should render active or inactive products
      */
-    filterActive: boolean;
+    filterActiveProducts: boolean;
+
+    /**
+     * Specifies whether it should render open, pending or closed applications
+     */
+    filterApplications: ApplicationStatus;
 
     /**
      * Specifies if the filter dropdown should currently be shown when producer
@@ -80,11 +85,21 @@ export type UserState = {
     inactiveProducts?: ProductModel[];
 
     /**
-     * Contains an array of applications to be rendered if any
+     * Contains an array of open applications to be rendered if any
      */
-    applications?: ApplicationModel[];
+    openApplications?: ApplicationModel[];
 
-    
+    /**
+     * Contains an array of open applications to be rendered if any
+     */
+    pendingApplications?: ApplicationModel[];
+
+    /**
+     * Contains an array of open applications to be rendered if any
+     */
+    closedApplications?: ApplicationModel[];
+
+
 }
 
 const MOBILE_BREAKPOINT = 440;
@@ -102,10 +117,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         isSelf: false,
         isSmall: false,
         renderedUser: this.props.store.user,
-        filterActive: true,
+        filterActiveProducts: true,
+        filterApplications: ApplicationStatus.OPEN,
         isPending: true
     }
-    
+
 
     /**
      * Will contain a reference to the user name wrapper, so that we can make
@@ -146,9 +162,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     public async componentDidUpdate(): Promise<void> {
         // tslint:disable-next-line completed-docs
         const readonlyUserId = (this.props.match.params as { userId: string }).userId;
-        
+
         if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
-            this.loadUser(); 
+            this.loadUser();
         } else if (!readonlyUserId && this.props.store.user && this.props.store.user.id !== Number(this.state.userId)) {
             this.loadUser();
         }
@@ -158,7 +174,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Main render method, used to render ProfilePage
      */
     // tslint:disable-next-line max-func-body-length
-    public render() : JSX.Element{
+    public render(): JSX.Element {
         const { renderedUser: user } = this.state;
 
         if (!user) {
@@ -195,20 +211,21 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                                     {getSVG("plus-square")}
                                                 </i>
                                             </Link>
-                                            
-                                            { this.renderFilterDropdown() }
+
+                                            {this.renderFilterDropdown()}
                                         </div>
                                     )}
                                 </div>
-                                { this.renderProducts() }
+                                {this.renderProducts()}
                             </>
                         )}
                         {isReceiverUser(user) && (
                             <>
                                 <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
-                                { this.renderApplications() }
+                                <div className="application-action-buttons">{this.state.isSelf && this.renderFilterDropdown()}</div>
+                                {this.renderApplications()}
                             </>
-                            
+
                         )}
                     </div>
                 </div>
@@ -241,6 +258,15 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         align-items: center;
 
                         justify-content: space-between;
+
+                        width: 100%;
+                    }
+
+                    .application-action-buttons {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+
 
                         width: 100%;
                     }
@@ -403,7 +429,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private renderProducts = () => {
         let products = null;
-        if(this.state.filterActive) {
+        if (this.state.filterActiveProducts) {
             products = this.state.activeProducts;
         } else {
             products = this.state.inactiveProducts;
@@ -416,9 +442,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 </Fade>
                 <Fade in={!this.state.isPending} key="products">
                     <div>
-                        { products && products.map((product, index) => {
+                        {products && products.map((product, index) => {
                             const isOnProducersPage = product.producerId === this.state.userId;
-                            const isOwnProduct = this.props.store.user 
+                            const isOwnProduct = this.props.store.user
                                 ? this.props.store.user.id === product.producerId
                                 : false;
 
@@ -432,7 +458,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     isOwnProduct={isOwnProduct}
                                     updateProduct={updateProduct}
                                     userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
-                                />  
+                                />
                             );
                         })}
                     </div>
@@ -446,36 +472,52 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * dropdown for filtering
      */
     private renderFilterDropdown() {
-        if(!this.state.isSelf) return; 
+        if (!this.state.isSelf) return;
 
-        const currentFilter = this.state.filterActive 
-                                ? "Active products" 
-                                : "Inactive products";
+        const { renderedUser: user } = this.state;
 
-        return(
-            <div    
-                className={`filter-section ${ this.state.showDropdown ? "active" : "" }`}
-                onClick={ this.toggleDropdownState }
-                ref={ this.wrapperRef }
+        if (!user) {
+            return;
+        }
+        let currentFilter: string;
+
+        if (isProducerUser(user)) {
+            currentFilter = this.state.filterActiveProducts
+                ? "Active products"
+                : "Inactive products";
+        } else {
+            if (this.applicationStatusIsOpen(this.state.filterApplications)) {
+                currentFilter = "Open applications";
+            } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
+                currentFilter = "Pending applications";
+            } else {
+                currentFilter = "Closed applications";
+            }
+        }
+
+        return (
+            <div
+                className={`filter-section ${this.state.showDropdown ? "active" : ""}`}
+                onClick={this.toggleDropdownState}
+                ref={this.wrapperRef}
                 role="button"
             >   
-               
                 { !this.state.isSmall && 
                     <>
                         <span className="show">Showing: </span>
                         <div className="show-filter">
-                            { currentFilter }
+                            {currentFilter}
                         </div>
                     </>
                 }
 
-                { this.state.isSmall &&
+                {this.state.isSmall &&
                     <i>
-                        { getSVG("more-vertical") }
+                        {getSVG("more-vertical")}
                     </i>
                 }
-               
-                { this.renderDropdown() }
+
+                {this.renderDropdown()}
 
                 <style jsx>{`
                     .filter-section {
@@ -506,8 +548,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         padding: 7px;
                         cursor: pointer;
 
-                        border: 1px solid ${ colors.primary };
-                        width: 130px;
+                        border: 1px solid ${ colors.primary};
+                        width: 145px;
 
                         text-align: center;
 
@@ -523,7 +565,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     span {
-                        color: ${ colors.primary };
+                        color: ${ colors.primary};
                     }
 
                     .show {
@@ -539,16 +581,36 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal render method to render the options of filtering 
      */
     private renderFilterButtons() {
-        return(
-            <div className="filter-buttons">
-                <button className="filter-active" onClick={ this.filterActiveProducts }>
-                    <i>{ getSVG("check-square") }</i>
-                    <span>Active products</span> 
-                </button>
-                <button className="filter-inactive" onClick={ this.filterInactiveProducts }>
-                    <i>{ getSVG("square") }</i>
-                    <span>Inactive products</span>
-                </button>
+        const { renderedUser: user } = this.state;
+
+        if (!user) {
+            return;
+        }
+        return (
+            <div>
+                {isProducerUser(user)
+                    ? <div className="filter-buttons">
+                        <button className="filter-active" onClick={this.filterActiveProducts}>
+                            <i>{getSVG("check-square")}</i>
+                            <span>Active products</span>
+                        </button>
+                        <button className="filter-inactive" onClick={this.filterInactiveProducts}>
+                            <i>{getSVG("square")}</i>
+                            <span>Inactive products</span>
+                        </button>
+                    </div>
+                    : <div className="filter-buttons">
+                        <button data-applicationstatus={ApplicationStatus.OPEN} onClick={this.filterApplications}>
+                            <span>Open applications</span>
+                        </button>
+                        <button data-applicationstatus={ApplicationStatus.PENDING} onClick={this.filterApplications}>
+                            <span>Pending applications</span>
+                        </button>
+                        <button data-applicationstatus={ApplicationStatus.CLOSED} onClick={this.filterApplications}>
+                            <span>Closed applications</span>
+                        </button>
+                    </div>
+                }
 
                 <style jsx>{`
 
@@ -593,7 +655,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                         /** Set up text styling */
                         font-size: 12px;
-                        color: ${ colors.black };
+                        color: ${ colors.black};
                         line-height: 1em;
                         text-decoration: none;
 
@@ -613,17 +675,17 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                             & > :global(.svgIcon) > :global(svg) > :global(path) {
                                 /** Apply default font color */
-                                stroke: ${ colors.black };
+                                stroke: ${ colors.black};
                             }
                         }
 
                         /** Apply highlight color on hover */
                         &:hover {
                             background-color: rgba(69, 50, 102, 0.1);
-                            color: ${ colors.primary };
+                            color: ${ colors.primary};
 
                             & i > :global(.svgIcon) > :global(svg) > :global(path) {
-                                stroke: ${ colors.primary };
+                                stroke: ${ colors.primary};
                             }
                         }
                     }
@@ -640,12 +702,12 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     protected renderDropdown(): JSX.Element {
         return (
             <Dropdown
-                active={ this.state.showDropdown }
-                pointAt={ this.wrapperRef }
-                onClose={ this.toggleDropdownState }
+                active={this.state.showDropdown}
+                pointAt={this.wrapperRef}
+                onClose={this.toggleDropdownState}
             >
                 <div className="wrapper">
-                    { this.renderFilterButtons() }
+                    {this.renderFilterButtons()}
                 </div>
 
                 <style jsx>{`
@@ -670,15 +732,15 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     /**
      * Internal helper that'll load all active products related to a user
      */
-    private loadActiveProducts = async() => {
+    private loadActiveProducts = async () => {
         if (!this.state.userId) {
             return;
         }
 
         this.setState({ isPending: true });
         const products = await fetchProductByProducer(
-            this.state.userId, 
-            this.props.store, 
+            this.state.userId,
+            this.props.store,
             ProductStatus.ACTIVE
         );
 
@@ -694,15 +756,15 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     /**
      * Internal helper that'll load all inactive products related to a user
      */
-    private loadInactiveProducts = async() => {
+    private loadInactiveProducts = async () => {
         if (!this.state.userId) {
             return;
         }
 
         this.setState({ isPending: true });
         const products = await fetchProductByProducer(
-            this.state.userId, 
-            this.props.store, 
+            this.state.userId,
+            this.props.store,
             ProductStatus.INACTIVE
         );
 
@@ -727,7 +789,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         if (newActiveProductList && newInactiveProductList) {
 
             // If new product is active, then remove it from inactiveProducts list
-            if(chosenProduct.isActive) {
+            if (chosenProduct.isActive) {
                 newInactiveProductList.splice(index, 1);
                 this.setState({ inactiveProducts: newInactiveProductList });
             } else {
@@ -742,25 +804,83 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal render method that'll render all applications associated to a user
      */
     private renderApplications = () => {
-        if (!this.state.applications) {
+        let applications = null;
+        if (this.applicationStatusIsOpen(this.state.filterApplications)) {
+            applications = this.state.openApplications;
+        } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
+            applications = this.state.pendingApplications;
+        } else {
+            applications = this.state.closedApplications;
+        }
+        if (!applications) {
             return null;
         }
-    
-        return (this.state.applications.map((application, index) => {
-            return <Application 
-                        key={index}
-                        isOwnApplication={true}
-                        userType={getUserType(this.props.store.user, UserTypes.DONOR)}
-                        isOnReceiversPage={true}
-                        application={application} />;
-        }));
+
+        return (
+            <>
+                <Fade in={this.state.isPending} key="throbber">
+                    {this.renderListThrobber()}
+                </Fade>
+                <Fade in={!this.state.isPending} key="applications">
+                    <div>
+                        {applications && applications.map((application, index) => {
+                            const isOnReceiversPage = application.receiverId === this.state.userId;
+                            const isOwnApplication = this.props.store.user
+                                ? this.props.store.user.id === application.receiverId
+                                : false;
+
+                            //const updateProduct = this.updateProduct.bind(this, index);
+
+                            return (
+                                <Application
+                                    key={index}
+                                    isOwnApplication={isOwnApplication}
+                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    isOnReceiversPage={isOnReceiversPage}
+                                    application={application} />
+                            );
+                        })}
+                    </div>
+                </Fade>
+            </>
+        );
     }
 
     /**
-     * Internal helper that'll load all applications related to a user
+     * Internal helper that'll load all applications with given status
+     * related to the user
      */
-    private loadApplications = () => {
-        this.setState({ applications: this.props.store.applications });
+    private loadApplications = async (status: ApplicationStatus) => {
+        if (!this.state.userId) {
+            return;
+        }
+
+        this.setState({ isPending: true });
+        const applications = await fetchApplicationByReceiver(
+            this.state.userId,
+            this.props.store,
+            status,
+        );
+
+        if (!applications) {
+            if (this.applicationStatusIsOpen(this.state.filterApplications)) {
+                this.setState({ openApplications: [] });
+            } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
+                this.setState({ pendingApplications: [] });
+            } else {
+                this.setState({ closedApplications: [] });
+            }
+        } else {
+            if (this.applicationStatusIsOpen(this.state.filterApplications)) {
+                this.setState({ openApplications: applications });
+            } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
+                this.setState({ pendingApplications: applications });
+            } else {
+                this.setState({ closedApplications: applications });
+            }
+        }
+
+        this.setState({ isPending: false });
     }
 
     /**
@@ -790,20 +910,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         await asyncTimeout(0);
-        
+
         // Begin loading the desired additional data based on the user to display
         if (user && isReceiverUser(user)) {
-            this.loadApplications();
+            this.loadApplications(ApplicationStatus.OPEN);
         } else if (user && isProducerUser(user)) {
             this.loadActiveProducts();
-        } 
+        }
     }
 
     /**
      * Internal helper that'll filter active products
      */
     private filterActiveProducts = () => {
-        this.setState({ filterActive: true });
+        this.setState({ filterActiveProducts: true });
         this.loadActiveProducts();
         this.toggleDropdownState();
     }
@@ -812,8 +932,27 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal helper that'll filter inactive products
      */
     private filterInactiveProducts = () => {
-        this.setState({ filterActive: false });
+        this.setState({ filterActiveProducts: false });
         this.loadInactiveProducts();
+        this.toggleDropdownState();
+    }
+
+    /**
+     * Internal helper that'll filter active products
+     */
+    private filterApplications = (evt: React.MouseEvent<HTMLButtonElement>) => {
+        const dataStatus = evt.currentTarget.dataset.applicationstatus;
+        let status: ApplicationStatus;
+
+        if (dataStatus) {
+            status = dataStatus as ApplicationStatus;
+        } else {
+            return;
+        }
+
+
+        this.setState({ filterApplications: status });
+        this.loadApplications(status);
         this.toggleDropdownState();
     }
 
@@ -838,6 +977,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
     }
+
+    /**
+     * Internal helpter that returns true if the given application status is open
+     */
+    private applicationStatusIsOpen = (status: ApplicationStatus) => {
+        return status === ApplicationStatus.OPEN;
+    }
+
+    /**
+     * Internal helpter that returns true if the given application status is pending
+     */
+    private applicationStatusIsPending = (status: ApplicationStatus) => {
+        return status === ApplicationStatus.PENDING;
+    }
 }
 
-export const UserProfile = injectStore((store) => ({store}), UnwrappedUserProfile);
+export const UserProfile = injectStore((store) => ({ store }), UnwrappedUserProfile);

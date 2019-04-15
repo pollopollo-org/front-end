@@ -44,6 +44,11 @@ type CreateProductState = {
      * Specifies whether or not we're currently attempting to create a user
      */
     isPending?: boolean;
+
+    /**
+     * The rank of the product, default is 0, which is placed below all other ranks
+     */
+    rank?: number;
 };
 
 /**
@@ -144,6 +149,17 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     aria-valuemax={1000000}
                     aria-valuenow={this.state.price}
                     onChange={this.onPriceChanged}
+                />
+                <input
+                    type="number"
+                    className="leftInput"
+                    placeholder={createProductJson.productRank}
+                    min={0}
+                    max={1000000}
+                    aria-valuemin={0}
+                    aria-valuemax={1000000}
+                    aria-valuenow={this.state.rank}
+                    onChange={this.onRankChanged}
                 />
                 <textarea
                     className="leftInput"
@@ -377,6 +393,14 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
      */
     private onPriceChanged = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ price: Number(evt.currentTarget.value) });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onRankChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({rank: Number(evt.currentTarget.value)});
     }
 
     /**

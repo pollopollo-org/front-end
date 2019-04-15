@@ -3,7 +3,7 @@ import React from "react";
 import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
-import { ProductModel, toggleProductAvailability } from "src/ts/models/ProductModel";
+import { ProductModel } from "src/ts/models/ProductModel";
 import { Chevron, Button } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
@@ -16,8 +16,12 @@ import { Dialog } from "src/ts/components/utils/Dialog";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { RouterProps, withRouter } from "react-router";
+import { apis } from "src/ts/config/apis";
+import { asyncTimeout } from "src/ts/utils";
+import { alertApiError } from "src/ts/utils/alertApiError";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
+
 
 export type ProductProps = {
 
@@ -123,7 +127,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         showProducer: false,
         showDialog: false,
         showAlert: false,
-        isPending: false
+        isPending: false,
     };
 
     /**
@@ -287,8 +291,9 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <div className={`product ${this.state.isSmall ? "isSmall" : ""}`}>
                 <div className="sections">
-                    {this.renderThumbnailSection()}
-                    {this.renderContentSection()}
+                    { this.renderThumbnailSection() }
+                    { this.renderContentSection() }
+
                 </div>
 
                 {this.props.userType === UserTypes.PRODUCER &&
@@ -393,7 +398,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     {
                         this.props.userType === UserTypes.PRODUCER &&
-                        <span className={`price ${this.state.isSmall ? "isSmall" : ""} 
+                        <span 
+                            className={`price ${this.state.isSmall ? "isSmall" : ""} 
                                                 ${isOwnProduct ? "isOwnProduct" : ""}`}
                         >
                             ${product.price}
@@ -471,6 +477,15 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                             &.isSmall {
                                 margin-right: 25px;
+                            }
+                        }
+                    }
+
+                    /** Displays the rank of the product */
+                    .rank{
+                        &.isOwnproduct{
+                            &.isSmall{
+
                             }
                         }
                     }
@@ -614,7 +629,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         {product.description}
                     </p>
 
+                    <h3>Rank: {product.rank}</h3>
+
                     {this.renderAssociatedApplicationsStatus()}
+                    
                     {this.renderProducerLink()}
                 </div>
 
@@ -747,7 +765,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     /**
      * Render button link to producer profile info
      */
-
     private renderProducerLink() {
         if (this.props.isOnProducersPage) {
             return;
@@ -1267,12 +1284,41 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         if (this.state.isPending || !this.props.store.user) {
             return;
         }
+        
+        try {
+            this.setState({ isPending: true });
+            const startedAt = performance.now();
+            const token = localStorage.getItem("userJWT");
 
-        // Notify state that we've begun updating our product
-        this.setState({ isPending: true });
+            const result = await fetch(apis.products.put.path.replace("{productId}", String(this.props.product.id)), {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: this.props.product.id,
+                    userId: this.props.store.user.id,
+                    available: !this.props.product.isActive, // Updating availability
+                }),
+            });
 
-        await toggleProductAvailability(this.props.product, this.props.store, this.props.updateProduct);
-        this.setState({ showDialog: false, isPending: false });
+            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+
+            if (result.ok) {
+                if (this.props.updateProduct) {
+                    const newProduct = new ProductModel({ ...this.props.product, isActive: !this.props.product.isActive});
+                    this.props.updateProduct(newProduct);
+                }
+            } else {
+                alertApiError(result.status, apis.products.post.errors, this.props.store);
+            }
+        } catch (err) {
+            // Show error message
+            this.props.store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
+        } finally {
+            this.setState({ isPending: false });
+        }
     }
 
     /**

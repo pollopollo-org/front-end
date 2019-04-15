@@ -299,7 +299,7 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
             const startedAt = performance.now();
             const token = localStorage.getItem("userJWT");
 
-            const result = await fetch(apis.application.post.path, {
+            const result = await fetch(apis.applications.post.path, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
