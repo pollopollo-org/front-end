@@ -160,6 +160,19 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
+     * Ensure component is reset in case a new application is rendered in its
+     * place
+     */
+    public componentDidUpdate(prevProps: ProductProps): void {
+        if (this.props.product.id !== prevProps.product.id) {
+            if (this.state.expanded) {
+                this.setState({ expanded: false });
+                this.toggleCollapsible();
+            }
+        }
+    }
+
+    /**
      * Cleanup on unmount
      */
     public componentWillUnmount(): void {
@@ -498,8 +511,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
                 }}>
-                <span className="open"><span className="amount">3</span> open</span>
-                <span className="pending"><span className="amount">6</span> pending</span>
+                <span className="open"><span className="amount">{this.props.product.openApplications}</span> open</span>
+                <span className="pending"><span className="amount">{this.props.product.pendingApplications}</span> pending</span>
 
                 <style jsx>{`
                     .open-pending-section {
@@ -855,10 +868,17 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderConfirmDialog() {
         const titleAction = this.props.product.isActive ? "deactivation" : "activation";
         const action = this.props.product.isActive ? "deactivate" : "activate";
+        const openWarning = <><br /><br /><b>{this.props.product.openApplications} open application{this.props.product.openApplications === 1 ? "" : "s"}</b> will be closed due to this action.</>;
+        const pendingWarning = <><br /><br /><b>{this.props.product.pendingApplications} pending application{this.props.product.pendingApplications === 1 ? "" : "s"}</b> will remain after the product has been made inactive.</>;
+        const text = <>
+            Are you sure you want to {action} this product?
+            {this.props.product.isActive && this.props.product.pendingApplications > 0 && pendingWarning}
+            {this.props.product.isActive && this.props.product.openApplications > 0 && openWarning}
+        </>
 
         return (
             <Dialog title={`Confirm ${titleAction}`}
-                text={`Are you sure you want to ${action} this product?`}
+                text={text}
                 active={this.state.showDialog}
                 onClose={this.closeConfirmationDialog}
                 confirmAction={this.updateProductActivation}

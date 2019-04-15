@@ -12,7 +12,7 @@ type DialogProps = {
     /**
      * The text to appear in the description of the dialog
      */
-    text: string;
+    text: React.ReactNode;
 
     /**
      * Determine whether this should open or not
@@ -62,9 +62,9 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
      * Main render method, used to render Dialog
      */
     public render(): JSX.Element {
-        return(
+        return (
             <React.Fragment>
-                { this.renderDialogLightbox() }
+                {this.renderDialogLightbox()}
             </React.Fragment>
         );
     }
@@ -73,39 +73,40 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
      * Renders the dialog box itself
      */
     private renderDialogLightbox() {
-        return(
-            <Lightbox active={ this.props.active } onClose={ this.props.onClose }>
+        return (
+            <Lightbox active={this.props.active} onClose={this.props.onClose}>
                 <div className="dialog">
-                    <h3>{ this.props.title }</h3>
-                    <p>{ this.props.text }</p>
+                    <h3>{this.props.title}</h3>
+                    <p>{this.props.text}</p>
                     <div className="dialog-buttons">
-                        <Button 
-                            className="confirm" 
-                            isPending={this.state.isConfirming} 
-                            throbberSize={24} 
-                            width="50%" 
-                            withThrobber={true} 
-                            onClick={ this.onConfirmClick } 
-                            text="Confirm" 
+                        <Button
+                            className="confirm"
+                            isPending={this.state.isConfirming}
+                            throbberSize={24}
+                            width="50%"
+                            withThrobber={true}
+                            onClick={this.onConfirmClick}
+                            text="Confirm"
                         />
-                        <Button 
-                            withThrobber={false} 
-                            width="50%" 
-                            className="cancel" 
-                            onClick={this.onCancelClick} 
-                            text="Cancel" 
+                        <Button
+                            withThrobber={false}
+                            width="50%"
+                            className="cancel"
+                            onClick={this.onCancelClick}
+                            text="Cancel"
                         />
                     </div>
                 </div>
-                
+
 
                 <style jsx>{`
                     .dialog {
                         margin: 10px 20px;
                         width: max-content;
                         max-width: 500px;
+                        text-align: center;
 
-                        @media (max-width: 440px) {
+                        @media (max-width: 600px) {
                             line-height: 1.3em;
                             max-width: calc(100% - 40px);
                             text-align: center;
@@ -114,6 +115,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
                     p {
                         margin: 20px 0;
+                        line-height: 1.4;
                     }
                     
                     .dialog-buttons {
@@ -136,19 +138,19 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
                     }
 
                     .dialog :global(.confirm) {
-                        color: ${ colors.white };
-                        background-color: ${ colors.secondary };
+                        color: ${ colors.white};
+                        background-color: ${ colors.secondary};
                         margin-right: 10px;
 
                         &:hover {
-                            background-color: ${ colors.primary };
+                            background-color: ${ colors.primary};
                         }
                     }
 
                     .dialog :global(.cancel) {
                         margin-left: 10px;
-                        background-color: ${ colors.whiteSmoke };
-                        color: ${ colors.black };
+                        background-color: ${ colors.whiteSmoke};
+                        color: ${ colors.black};
                         border: 1px solid rgba(167,167,167, 0.2);
 
                         &:hover {

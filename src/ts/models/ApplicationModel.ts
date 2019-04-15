@@ -354,14 +354,6 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
         return applicationCache.get(cacheKey);
     }
 
-    const token = localStorage.getItem("userJWT");
-
-    // We NEED to be authorized to perform this request. Bail out if we aren't
-    // logged in at the moment
-    if (!token) {
-        return;
-    }
-
     //const applicationStatus = status === ApplicationStatus.OPEN;
 
     const endPoint = apis.applications.getByReceiver.path
@@ -373,7 +365,6 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             }
         });
 
