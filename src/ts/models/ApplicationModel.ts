@@ -194,7 +194,7 @@ let cachedCount: number = 0;
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
-export async function fetchApplicationBatch(start: number, end: number, store: Store) {
+export async function fetchApplicationBatch(start: number, end: number, store?: Store) {
     const cacheKey = `${start}${end}`;
 
     // If we have the current request cached, then simply return that!
@@ -228,7 +228,9 @@ export async function fetchApplicationBatch(start: number, end: number, store: S
                 applications: applicationArray
             };
         } else {
-            alertApiError(response.status, apis.applications.getBatch.errors, store);
+            if (store) {
+                alertApiError(response.status, apis.applications.getBatch.errors, store);
+            }
             return;
         }
 

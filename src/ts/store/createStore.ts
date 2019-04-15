@@ -1,5 +1,5 @@
-import { ApplicationModel } from "src/ts/models/ApplicationModel";
-import { DataProviders, Store } from "src/ts/store/Store";
+import { ApplicationModel, fetchApplicationBatch } from "src/ts/models/ApplicationModel";
+import { Store } from "src/ts/store/Store";
 
 import { fetchSelf } from "src/ts/models/UserModel";
 
@@ -19,7 +19,14 @@ export const createStore = () => {
             try {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
-                const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
+
+                const applicationRequest = await fetchApplicationBatch(0, 10);
+                let applications: ApplicationModel[] | undefined;
+
+                if (applicationRequest) {
+                    applications = applicationRequest.applications;
+                }
+
                 const user = await fetchSelf();
 
                 resolve(new Store({ applications, user }));
