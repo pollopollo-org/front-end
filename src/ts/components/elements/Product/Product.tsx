@@ -3,7 +3,7 @@ import React from "react";
 import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
-import { ProductModel } from "src/ts/models/ProductModel";
+import { ProductModel, toggleProductAvailability } from "src/ts/models/ProductModel";
 import { Chevron, Button } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
@@ -11,15 +11,15 @@ import { getSVG } from "src/assets/svg";
 import { fonts, routes } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
-import { UserTypes } from "src/ts/models/UserModel";
-import { fetchUser } from "src/ts/utils/fetchUser";
+import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { alertApiError } from "src/ts/utils/alertApiError";
-import { asyncTimeout } from "src/ts/utils";
+import { RouterProps, withRouter } from "react-router";
 import { apis } from "src/ts/config/apis";
+import { asyncTimeout } from "src/ts/utils";
+import { alertApiError } from "src/ts/utils/alertApiError";
 
 export type ProductProps = {
 
@@ -54,7 +54,7 @@ export type ProductProps = {
      * to reflect this in the ui
      */
     updateProduct?(newProduct: ProductModel): void;
-}
+} & RouterProps;
 
 export type ProductState = {
     /**
@@ -105,7 +105,7 @@ export type ProductState = {
      * Specifies the loaded producer of the product (if any). Will first be
      * loaded if the user wishes to see information about the producer
      */
-    producer?: ProducerModel;  
+    producer?: ProducerModel;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -144,7 +144,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
-     * Will contain a reference to the user name wrapper, so that we can make
+     * Will contain a reference to the see-more, so that we can make
      * the dropdown point towards it properly.
      */
     protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
@@ -171,20 +171,20 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     /**
      *   Product
      */
-	public render(): JSX.Element {
+    public render(): JSX.Element {
 
-		return (
-			<React.Fragment>
-                <div className={`product-border ${!this.props.product.isActive ? "isInactive" : ""}`} ref={ this.borderRef }>
-                    { this.renderProduct() }
-                    { this.renderDescription() }
+        return (
+            <React.Fragment>
+                <div className={`product-border ${!this.props.product.isActive ? "isInactive" : ""}`} ref={this.borderRef}>
+                    {this.renderProduct()}
+                    {this.renderDescription()}
                 </div>
 
-                { this.renderProducerLightbox() }
-                { this.renderImageLightbox() }
-                { this.renderConfirmDialog() }
+                {this.renderProducerLightbox()}
+                {this.renderImageLightbox()}
+                {this.renderConfirmDialog()}
 
-				<style jsx>{`
+                <style jsx>{`
 
                     /** Draws a border around the product */
                     .product-border {
@@ -192,8 +192,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         position: relative;
 
                         /** Setup dimensions of product */
-                        margin: 10px;
-                        width: calc(100% - 20px); /* Might be temp */
+                        margin-bottom: 10px;
 
                         /** Setup internal dimensions */
                         padding: 10px;
@@ -204,7 +203,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         border-radius: 2px;
 
                         /** Setup fonts within */
-                        color: ${ colors.black };
+                        color: ${ colors.black};
 
                         /** Prepare transitions */
                         transition: transform 0.1s linear, border-color 0.1s linear, box-shadow 0.1s linear;
@@ -241,7 +240,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         /** Setup hover styling */
                         &:hover {
                             box-shadow: 0 0 5px rgba(139,72,156, 0.15);
-                            border-color: ${ colors.secondary };
+                            border-color: ${ colors.secondary};
                         }
 
                         /** On hover, slightly alter bg color via before element */
@@ -279,8 +278,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         }
                     }
 				`}</style>
-			</React.Fragment>
-		);
+            </React.Fragment>
+        );
     }
 
     /**
@@ -293,17 +292,18 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     { this.renderRank()}
                     { this.renderThumbnailSection() }
                     { this.renderContentSection() }
+
                 </div>
 
-                { this.props.userType === UserTypes.PRODUCER && 
-                    this.renderProductEdit() }
-                { this.props.userType === UserTypes.RECEIVER && 
-                    this.renderApplyButton() }
+                {this.props.userType === UserTypes.PRODUCER &&
+                    this.renderProductEdit()}
+                {this.props.userType === UserTypes.RECEIVER &&
+                    this.renderApplyButton()}
 
-                { this.renderDescriptionTeaser() }
-                
-                { this.renderChevron() }
-                
+                {this.renderDescriptionTeaser()}
+
+                {this.renderChevron()}
+
                 <style jsx>{`
 
                     /** The product itself  */
@@ -376,7 +376,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <section className="section-thumbnail">
                 <div className="thumbnail">
-                    <Thumbnail src={this.props.product.thumbnail} callback={ this.openImageLightbox } />
+                    <Thumbnail src={this.props.product.thumbnail} callback={this.openImageLightbox} />
                 </div>
                 <img 
                     className="flag" 
@@ -412,28 +412,28 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     /**
      * Internal renderer that'll render the content section of the product
      */
-    private renderContentSection = () => {
+    private renderContentSection = () => {
         const { product, userType, isOwnProduct } = this.props;
 
         return (
             <section className="section-content">
                 <div className="product-wrapper">
 
-                    <span   
+                    <span
                         className={`product ${this.state.isSmall ? "isSmall" : ""} 
-                                            ${userType === UserTypes.RECEIVER ? "isReceiver" : ""}`} 
+                                            ${userType === UserTypes.RECEIVER ? "isReceiver" : ""}`}
                         title={product.title}
-                    > 
-                        {product.title} 
+                    >
+                        {product.title}
                     </span>
 
-                    { 
+                    {
                         this.props.userType === UserTypes.PRODUCER &&
                         <span 
                             className={`price ${this.state.isSmall ? "isSmall" : ""} 
                                                 ${isOwnProduct ? "isOwnProduct" : ""}`}
                         >
-                            ${ product.price }
+                            ${product.price}
                         </span>
                     }
                 </div>
@@ -584,19 +584,19 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className={`description-content ${ !product.isActive ? "isInactive" : "" }`}>
+                <div className={`description-content ${!product.isActive ? "isInactive" : ""}`}>
                     <h3>Product</h3>
                     <div className="description-product">
-                        <p>{ product.title }</p>
-                        <p className="price">(${ product.price })</p>
+                        <p>{product.title}</p>
+                        <p className="price">(${product.price})</p>
                     </div>
-                    
+
                     <h3>Description</h3>
                     <p>
-                        { product.description }
+                        {product.description}
                     </p>
 
-                    { this.renderProducerLink() }
+                    {this.renderProducerLink()}
 
                 </div>
 
@@ -606,7 +606,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         /** Prepare expand-collapse functionality */
                         height: 0;
                         overflow: hidden;
-                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION }ms ${ easings.inOutQuart};
+                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION}ms ${easings.inOutQuart};
 
                         /** Position on top of before element */
                         position: relative;
@@ -619,6 +619,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     h3 {
                         margin: 0;
+                        text-align: left;
 
                         &:first-of-type {
                             margin-top: 10px;
@@ -626,6 +627,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     }
 
                     p {
+                        text-align: left;
                         margin: 4px 0 14px;
                     }
 
@@ -663,13 +665,13 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             return;
         }
 
-        return(
-                <button 
-                    className="profile-link"
-                    onClick={this.openProducerLightbox}
-                >
-                    <i className="user-icon">{getSVG("user2")}</i> 
-                    Producer profile
+        return (
+            <button
+                className="profile-link"
+                onClick={this.openProducerLightbox}
+            >
+                <i className="user-icon">{getSVG("user2")}</i>
+                Producer profile
 
                 <style jsx>{`
 
@@ -682,7 +684,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         /** Colors and fonts */
                         background-color: transparent;
                         font-style: bold;
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
 
                         /** Size and border */
                         border: none;
@@ -711,7 +713,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         height: 17px;
                         width: 17px;
 
-                        color: ${ colors.primary };
+                        color: ${ colors.primary};
 
                         /** Some space between icon and button text */
                         margin-right: 5px;
@@ -727,7 +729,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderChevron = () => {
         return (
             <i className={`chevron-wrapper ${this.state.isSmall ? "isSmall" : ""}`} onClick={this.toggleCollapsible} role="button">
-                <Chevron size={ this.state.isSmall ? 15 : 20 } lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
+                <Chevron size={this.state.isSmall ? 15 : 20} lineWidthRatio={0.5} inversed={this.state.expanded} vertical={true} />
 
                 <style jsx>{`
                     /** The wrapper around the chevron arrow */
@@ -763,7 +765,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         }
 
                         &:hover {
-                            color: ${ colors.secondary };
+                            color: ${ colors.secondary};
                         }
                     }
                 `}</style>
@@ -775,9 +777,9 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * Internal renderer that renders the apply button of the product
      */
     private renderApplyButton = () => {
-        return(
+        return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={"Apply"} width={110} height={35} fontSize={12}/>
+                <Button withThrobber={false} text={"Apply"} width={110} height={35} fontSize={12} onClick={this.openCreateApplication} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -806,14 +808,22 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         const titleAction = this.props.product.isActive ? "deactivation" : "activation";
         const action = this.props.product.isActive ? "deactivate" : "activate";
 
-        return(
-            <Dialog title={`Confirm ${ titleAction }`}
-                    text={`Are you sure you want to ${ action } this product?`}
-                    active={ this.state.showDialog } 
-                    onClose={ this.closeConfirmationDialog } 
-                    confirmAction= { this.updateProductActivation }
+        return (
+            <Dialog title={`Confirm ${titleAction}`}
+                text={`Are you sure you want to ${action} this product?`}
+                active={this.state.showDialog}
+                onClose={this.closeConfirmationDialog}
+                confirmAction={this.updateProductActivation}
             />
         );
+    }
+
+    /**
+     * Updates the store and goes to createApplication page
+     */
+    private openCreateApplication = () => {
+        this.props.store.product = this.props.product;
+        this.props.history.push(routes.CreateApplication.path);
     }
 
     /**
@@ -822,30 +832,30 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderProductEdit = () => {
         const { product, isOwnProduct, userType } = this.props;
 
-        if(!isOwnProduct || userType === UserTypes.RECEIVER) {
+        if (!isOwnProduct || userType === UserTypes.RECEIVER) {
             return;
         }
 
-        return(
+        return (
             <div className={`product-more ${this.state.isSmall ? "isSmall" : ""}`}>
 
-                { !this.state.isSmall && (
+                {!this.state.isSmall && (
                     <div className="edit-button-section">
-                        <button className="edit-button" title="Edit"><i className="edit">{ getSVG("edit") }</i></button>
-                        {  
+                        <button className="edit-button" title="Edit"><i className="edit">{getSVG("edit")}</i></button>
+                        {
                             product.isActive &&
-                            <button onClick={ this.openConfirmationDialog } className="status-button" title="Deactivate">
-                                <i className="status">{ getSVG("check-square") }</i>
+                            <button onClick={this.openConfirmationDialog} className="status-button" title="Deactivate">
+                                <i className="status">{getSVG("check-square")}</i>
                             </button>
                         }
-                        {  
+                        {
                             !product.isActive &&
-                            <button onClick={ this.openConfirmationDialog } className="status-button"><i className="status" title="Activate">{ getSVG("square") }</i></button>
+                            <button onClick={this.openConfirmationDialog} className="status-button"><i className="status" title="Activate">{getSVG("square")}</i></button>
                         }
                     </div>
                 )}
 
-                { this.renderEditMenuMobile() }
+                {this.renderEditMenuMobile()}
 
                 <style jsx>{`
 
@@ -863,7 +873,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         background-color: transparent;
                         border: none;
                         font-style: bold;
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                         padding: 2px 5px;
                         cursor: pointer;
                         color: rgba(57,57,57, 0.75);
@@ -876,12 +886,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     /** Indicate it is clickable */
                     .edit-button-section button:hover {
-                        color: ${ colors.secondary };
+                        color: ${ colors.secondary};
                     }
 
                     /** Create a pale line between the icons to seperate them */
                     .edit-button-section .edit-button {
-                        border-right: 1px solid ${ colors.pale };
+                        border-right: 1px solid ${ colors.pale};
                     }
 
                     /** Position the icons */
@@ -920,16 +930,16 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         }
 
         return (
-            <div 
-                className={`show-more-icon ${ this.state.showDropdown ? "active" : "" }`}
-                ref={ this.wrapperRef }
-                onClick={ this.toggleDropdownState }
+            <div
+                className={`show-more-icon ${this.state.showDropdown ? "active" : ""}`}
+                ref={this.wrapperRef}
+                onClick={this.toggleDropdownState}
                 role="button"
             >
-                <i > 
+                <i >
                     {getSVG("more-vertical")}
                 </i>
-                { this.renderDropdown() }
+                {this.renderDropdown()}
 
                 <style jsx>{`
 
@@ -945,7 +955,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         }
 
                         &:hover {
-                            color: ${ colors.secondary };
+                            color: ${ colors.secondary};
                         }
                     }
                 `}</style>
@@ -954,7 +964,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         )
     }
 
-    
+
     /**
      * Renders the dropdown that'll become visible when the user clicks his own
      * profile name.
@@ -962,12 +972,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     protected renderDropdown(): JSX.Element {
         return (
             <Dropdown
-                active={ this.state.showDropdown }
-                pointAt={ this.wrapperRef }
-                onClose={ this.toggleDropdownState }
+                active={this.state.showDropdown}
+                pointAt={this.wrapperRef}
+                onClose={this.toggleDropdownState}
             >
                 <div className="wrapper">
-                    { this.renderInformation() }
+                    {this.renderInformation()}
                 </div>
 
                 <style jsx>{`
@@ -999,24 +1009,24 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <React.Fragment>
                 <span className="link" onClick={this.toggleDropdownState} role="link">
-                    <i className="edit">{ getSVG("edit") }</i>
+                    <i className="edit">{getSVG("edit")}</i>
                     <span>Edit</span>
                 </span>
-                <span onClick={ this.toggleDropdownState} role="button">
+                <span onClick={this.toggleDropdownState} role="button">
 
-                        {   product.isActive &&
-                            <div className="link" onClick={ this.openConfirmationDialog } role="button">
-                                <i className="status">{ getSVG("check-square") }</i>
-                                <span>Deactivate</span>
-                            </div>
-                            
-                        }
-                        {   !product.isActive && 
-                            <div className="link" onClick={ this.openConfirmationDialog } role="button">
-                                <i className="status">{ getSVG("square") }</i>
-                                <span>Activate</span>
-                            </div>
-                        }
+                    {product.isActive &&
+                        <div className="link" onClick={this.openConfirmationDialog} role="button">
+                            <i className="status">{getSVG("check-square")}</i>
+                            <span>Deactivate</span>
+                        </div>
+
+                    }
+                    {!product.isActive &&
+                        <div className="link" onClick={this.openConfirmationDialog} role="button">
+                            <i className="status">{getSVG("square")}</i>
+                            <span>Activate</span>
+                        </div>
+                    }
                 </span>
 
                 <style jsx>{`
@@ -1053,7 +1063,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                         /** Set up text styling */
                         font-size: 12px;
-                        color: ${ colors.black };
+                        color: ${ colors.black};
                         line-height: 1em;
                         text-decoration: none;
 
@@ -1073,17 +1083,17 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                             & > :global(.svgIcon) > :global(svg) > :global(path) {
                                 /** Apply default font color */
-                                stroke: ${ colors.black };
+                                stroke: ${ colors.black};
                             }
                         }
 
                         /** Apply highlight color on hover */
                         &:hover {
                             background-color: rgba(69, 50, 102, 0.1);
-                            color: ${ colors.primary };
+                            color: ${ colors.primary};
 
                             & i > :global(.svgIcon) > :global(svg) > :global(path) {
-                                stroke: ${ colors.primary };
+                                stroke: ${ colors.primary};
                             }
                         }
                     }
@@ -1101,30 +1111,13 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             align-items: center;
 
                             /** Override default colors */
-                            color: ${ colors.black };
+                            color: ${ colors.black};
                             text-decoration: none;
                         }
 
                         & .edit {
                             height: 23px;
                             width: 23px;
-                        }
-                    }
-
-                    @media (max-width: 768px) {
-                        /** Force white colors, on mobile the background will be dark */
-                        button,
-                        .link :global(> a) {
-                            color: ${ colors.whiteSmoke } !important;
-                        }
-
-                        i > :global(.svgIcon) > :global(svg) > :global(path) {
-                            stroke: ${ colors.primary } !important;
-                        }
-
-                        i {
-                            /** We slightly shrink icons as well to fit better */
-                            transform: scale(0.75);
                         }
                     }
                 `}</style>
@@ -1144,8 +1137,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
         return (
             <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
-                <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct}/>
-                { !this.props.isOnProducersPage && (
+                <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct} />
+                {!this.props.isOnProducersPage && (
                     <div>
                         <a
                             href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
@@ -1157,21 +1150,21 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             </span>
                             <span className="text">Go to producer profile</span>
                         </a>
-                    </div>                    
+                    </div>
                 )}
 
                 <style jsx>{`
                     div {
                         /** Setup dimensions that match the userDescription */
                         padding: 0 50px 30px;
-                        background-color: ${ colors.pale };
+                        background-color: ${ colors.pale};
                     }    
 
                     a {
                         /** Setup font */
                         font-size: 14px;
-                        color: ${ colors.black };
-                        font-family: ${ fonts.text };
+                        color: ${ colors.black};
+                        font-family: ${ fonts.text};
                         font-weight: 300;
                         text-decoration: none;
 
@@ -1240,7 +1233,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      */
     private renderImageLightbox = () => {
         return (
-            <Lightbox active={this.state.showImage} onClose={ this.closeImageLightbox }>
+            <Lightbox active={this.state.showImage} onClose={this.closeImageLightbox}>
                 <img src={this.props.product.thumbnail} alt="" role="presentation" />
 
                 <style jsx>{`
@@ -1287,16 +1280,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * Listener that updates the product 
      */
     private updateProductActivation = async () => {
-        await this.toggleAvailability();
-        this.setState({ showDialog: false });
-    }
-
-    /**
-     * Update availability and send it to the backend
-     */
-    private toggleAvailability = async () => {
-        let { product } = this.props;
-
         if (this.state.isPending || !this.props.store.user) {
             return;
         }
@@ -1306,16 +1289,16 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             const startedAt = performance.now();
             const token = localStorage.getItem("userJWT");
 
-            const result = await fetch(apis.products.put.path.replace("{productId}", String(product.id)), {
+            const result = await fetch(apis.products.put.path.replace("{productId}", String(this.props.product.id)), {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    id: product.id,
+                    id: this.props.product.id,
                     userId: this.props.store.user.id,
-                    available: !product.isActive, // Updating availability
+                    available: !this.props.product.isActive, // Updating availability
                 }),
             });
 
@@ -1323,7 +1306,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
             if (result.ok) {
                 if (this.props.updateProduct) {
-                    const newProduct = new ProductModel({ ...this.props.product, isActive: !product.isActive});
+                    const newProduct = new ProductModel({ ...this.props.product, isActive: !this.props.product.isActive});
                     this.props.updateProduct(newProduct);
                 }
             } else {
@@ -1346,7 +1329,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
         // If our ref isn't available or if we're currently transitioning, then
         // bail out
-        if(!desc || this.isTransitioning) {
+        if (!desc || this.isTransitioning) {
             return;
         }
 
@@ -1361,7 +1344,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         // Force a reflow before we're going to manage the transition
         desc.offsetHeight; // tslint:disable-line no-unused-expression
 
-        if (this.state.expanded){
+        if (this.state.expanded) {
             // If we're collapsing, then run transition after back to 0px
             // height
             desc.style.height = "0px";
@@ -1406,4 +1389,5 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 }
 
-export const Product = injectStore((store) => ({ store }), UnwrappedProduct);
+// @ts-ignore
+export const Product = withRouter(injectStore((store) => ({ store }), UnwrappedProduct));

@@ -34,7 +34,9 @@ export const apis = {
         },
         image: {
             path: `${basePath}/users/image`,
-            errors: {},
+            errors: {
+                413: "The image that you're attempting to upload is too large. Please upload a smaller image."
+            },
         },
         authenticate: {
             path: `${basePath}/users/authenticate`,
@@ -45,6 +47,13 @@ export const apis = {
     },
     application: {
         getRecent: `${basePath}/applications/recent`,
+        post: {
+            path: `${basePath}/applications`,
+            errors: {
+                400: "Invalid information passed, please correct your data and try again.",
+                409: "A product with the given information already exists."
+            }
+        }
     },
     products: {
         post: {
@@ -58,6 +67,7 @@ export const apis = {
             path: `${basePath}/products/image`,
             errors: {
                 403: "You are not authorized to upload an image to this product.",
+                413: "The image that you're attempting to upload is too large. Please upload a smaller image."
             },
         },
         put: {
@@ -80,7 +90,7 @@ export const apis = {
             }
         },
         getByProducer: {
-            path: `${basePath}/products/producer/{producerId}`,
+            path: `${basePath}/products/producer/{producerId}?active={productStatus}`,
             errors: {},
         },
     }

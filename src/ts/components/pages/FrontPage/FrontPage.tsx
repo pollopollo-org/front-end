@@ -7,6 +7,7 @@ import { Store } from "src/ts/store/Store";
 import { colors, fonts } from "src/ts/config";
 
 import { Application } from "src/ts/components/elements/Application/Application";
+import { UserTypes } from "src/ts/models/UserModel";
 
 export type FrontPageProps = {
     /**
@@ -28,9 +29,41 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
         return (
             <div>
                 <h1>Recent applications</h1>
+                
                 <div className="list-of-applications">
+                <Application 
+                    isOwnApplication={true}
+                    userType={UserTypes.RECEIVER}
+                    isOnReceiversPage={true}
+                    application={this.props.store.applications[0]} 
+                />
+                <Application 
+                    isOwnApplication={true}
+                    userType={UserTypes.RECEIVER}
+                    isOnReceiversPage={false}
+                    application={this.props.store.applications[1]} 
+                />
+                <Application 
+                    isOwnApplication={false}
+                    userType={UserTypes.PRODUCER}
+                    isOnReceiversPage={true}
+                    application={this.props.store.applications[1]} 
+                />
+                <Application 
+                    isOwnApplication={false}
+                    userType={UserTypes.PRODUCER}
+                    isOnReceiversPage={false}
+                    application={this.props.store.applications[1]} 
+                />
+
                     {this.props.store.applications.map((application, index) => {
-                        return <Application key={index} application={application} />;
+                        return <Application 
+                                    key={index} 
+                                    isOwnApplication={false}
+                                    userType={UserTypes.DONOR}
+                                    isOnReceiversPage={false}
+                                    application={application} 
+                                />;
                     })}
                 </div>
 

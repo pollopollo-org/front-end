@@ -35,5 +35,6 @@
     "jest",
     "src/setupTests.ts",
     "config/*",
+    "documentation"
   ]
 }
