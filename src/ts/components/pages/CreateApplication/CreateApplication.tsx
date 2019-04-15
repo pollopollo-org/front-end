@@ -9,9 +9,7 @@ import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { isNullOrUndefined } from "util";
 import { routes, colors, fonts } from "src/ts/config";
-import { apis } from "src/ts/config/apis";
-import { asyncTimeout } from "src/ts/utils";
-import { alertApiError } from "src/ts/utils/alertApiError";
+import { postApplication } from "src/ts/models/ApplicationModel";
 
 
 type CreateApplicationProps = {
@@ -21,7 +19,7 @@ type CreateApplicationProps = {
     store: Store;
 } & RouterProps;
 
-type CreateApplicationState = {
+export type CreateApplicationState = {
 
     /**
      * The product that is being applied for
@@ -294,42 +292,11 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
             return;
         }
 
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-            const token = localStorage.getItem("userJWT");
+        // Notify state that we've begun updating our product
+        this.setState({ isPending: true });
 
-            const result = await fetch(apis.applications.post.path, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    userId: this.props.store.user.id,
-                    productId: this.props.store.product.id,
-                    motivation: this.state.motivation,
-                }),
-            });
-
-            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-
-            if (result.ok) {
-                this.props.history.push(routes.productsPage.path);
-            } else {
-                console.log(JSON.stringify({
-                    userId: this.props.store.user.id,
-                    productId: this.props.store.product.id,
-                    motivation: this.state.motivation,
-                }));
-                alertApiError(result.status, apis.products.post.errors, this.props.store);
-
-                this.setState({ isPending: false });
-            }
-        } catch (error) {
-            this.setState({ isPending: false });
-            this.props.store.currentErrorMessage = "Something went wrong while attempting to create your application, please try again later.";
-        }
+        await postApplication(this.state, this.props.store, this.props.history);
+        this.setState({ isPending: false });
     }
 }
 

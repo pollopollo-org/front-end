@@ -5,6 +5,10 @@ import { CountryCodes } from "src/ts/models/CountryCodes";
 import { apis } from "src/ts/config/apis";
 import { alertApiError } from "src/ts/utils/alertApiError";
 import { convertNumberToApplicationStatus } from "src/ts/utils/convertNumberToApplicationStatus";
+import { CreateApplicationState } from "src/ts/components/pages/CreateApplication/CreateApplication";
+import { asyncTimeout } from "src/ts/utils/index";
+import { routes } from "src/ts/config/index";
+import { History } from "history";
 
 
 export enum ApplicationStatus {
@@ -192,6 +196,55 @@ const applicationCache: Map<string, ApplicationModel[]> = new Map();
 let cachedCount: number = 0;
 
 /**
+ * Method that'll post a new product to the backend
+ */
+export async function postApplication(data: CreateApplicationState, store: Store, history: History) {
+    try {
+        const startedAt = performance.now();
+        const token = localStorage.getItem("userJWT");
+
+        // If either a user haven't been logged in or if we're currently missing
+        // a token, then we cannot process this process, and hence we bail out.
+        if (!store.user || !token) {
+            return;
+        }
+
+        const result = await fetch(apis.applications.post.path, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                userId: store.user.id,
+                productId: store.product.id,
+                motivation: data.motivation,
+            }),
+        });
+
+        // Now, ensure we've waited for at least 500ms before resolving the request
+        // in order to ensure throbber actually will be displayed, and that the 
+        // UI want appear 'jumpy'
+        await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
+
+        if (result.ok) {
+            // If everything goes well, then we should invalidate the cache for
+            // the given producer, in order to ensure that the newly created product
+            // will be properly fetched with all data needed, the next time the
+            // user profile is visited
+            applicationCache.delete(`receiver-${store.user.id}-Open`);
+
+            // ... and finally navigate the user back to his/hers own profile
+            history.push(routes.profile.path);
+        } else {
+            alertApiError(result.status, apis.products.post.errors, store);
+        }
+    } catch (err) {
+        store.currentErrorMessage = "Something went wrong while attempting to create your product, please try again later.";
+    }
+}
+
+/**
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
 export async function fetchApplicationBatch(start: number, end: number, store?: Store) {
@@ -292,6 +345,7 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
     const cacheKey = `receiver-${receiverId}-${status}`;
     // If we have a cache hit, then simply return the cached product!
     if (applicationCache.has(cacheKey)) {
+        console.log(cacheKey);
         return applicationCache.get(cacheKey);
     }
 
