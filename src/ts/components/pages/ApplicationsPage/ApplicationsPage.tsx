@@ -156,7 +156,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
 
                     @media (max-width: 1200px) {
                         .page {
-                            padding: 0 10px;
+                            padding: 0;
                             margin: 0 auto;
                         }
                     }

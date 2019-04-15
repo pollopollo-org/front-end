@@ -158,7 +158,16 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         if (this.props.application.applicationId !== prevProps.application.applicationId) {
             if (this.state.expanded) {
                 this.setState({ expanded: false });
-                this.toggleCollapsible();
+
+                const desc = this.descriptionRef.current;
+
+                // If our ref isn't available or if we're currently transitioning, then
+                // bail out
+                if (!desc || this.isTransitioning) {
+                    return;
+                }
+
+                desc.style.height = "0px";
             }
         }
     }
@@ -543,7 +552,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         /** Prepare expand-collapse functionality */
                         height: 0;
                         overflow: hidden;
-                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION}ms ${easings.inOutQuart};
 
                         /** Position on top of before element */
                         position: relative;
@@ -1017,6 +1025,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         // Start by locking the height of the content wrapper to the full
         // height of the content
         desc.style.height = `${desc.scrollHeight}px`;
+        desc.style.transition = `height ${EXPAND_COLLAPSE_TRANSITION_DURATION}ms ${easings.inOutQuart}`;
 
         // Force a reflow before we're going to manage the transition
         desc.offsetHeight; // tslint:disable-line no-unused-expression
@@ -1036,6 +1045,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         // Once the transition is complety, specify that we're ready for a new transition
         setTimeout(() => {
             this.isTransitioning = false;
+            desc.style.transition = "";
         }, EXPAND_COLLAPSE_TRANSITION_DURATION);
     }
 
