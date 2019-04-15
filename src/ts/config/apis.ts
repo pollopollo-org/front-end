@@ -56,7 +56,9 @@ export const apis = {
         },
         getByReceiver: {
             path: `${basePath}/applications/receiver/{receiverId}`,
-            errors: {},
+            errors: {
+                404: "The requested applications could not be found. Please try again later.",
+            },
         },
     },
     products: {

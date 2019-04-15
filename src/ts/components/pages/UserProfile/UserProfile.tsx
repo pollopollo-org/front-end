@@ -796,7 +796,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         if (!applications) {
             this.setState({ applications: [] });
         } else {
-            //this.setState({ applications: applications});
+            this.setState({ applications: applications});
         }
 
         this.setState({ isPending: false });
