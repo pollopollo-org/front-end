@@ -7,9 +7,9 @@ import { alertApiError } from "src/ts/utils/alertApiError";
 
 
 export enum ApplicationStatus {
-    OPEN = "Open",
-    PENDING = "Pending",
-    CLOSED = "Closed"
+    OPEN,
+    PENDING,
+    CLOSED
 }
 
 /**
@@ -229,5 +229,45 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
 
     } catch (err) {
         return;
+    }
+}
+
+/**
+ * Helper for delting application
+ */
+export async function deleteApplication(applicationId: number, store: Store, callback?: () => void) {
+    try {
+        const token = localStorage.getItem("userJWT");
+
+        // The user MUST be logged in in order to be able to toggle the product
+        // availability. (furthermore the logged in user must be the owner of
+        // the product, else the backend will throw errors).
+        if (!token || !store.user) {
+            return;
+        }
+
+        const result = await fetch(apis.application.delete.path.replace("{userId}", String(store.user.id)).replace("{applicationId}", String(applicationId)), {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+        });
+
+        if (result.ok) {
+            applicationCache.delete(`receiver-${store.user.id}-0`);
+
+            // In case we have a callback, then broadcast the newly updated product
+            // to it.
+            if (callback) {
+                callback();
+            }
+        } else {
+            alertApiError(result.status, apis.products.post.errors, store);
+        }
+    } catch (err) {
+        // Show error message
+        store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
+    } finally {
     }
 }

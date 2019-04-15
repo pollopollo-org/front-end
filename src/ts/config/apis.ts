@@ -60,6 +60,12 @@ export const apis = {
                 404: "The requested applications could not be found. Please try again later.",
             },
         },
+        delete: {
+            path: `${basePath}/applications/{userId}/{applicationId}`,
+            errors: {
+                404: "The requested application could not be found. Please try again later.",
+            },
+        }
     },
     products: {
         post: {
