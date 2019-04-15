@@ -142,10 +142,12 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     /**
      * Main render method, used to render Application
      */
-    public render(): JSX.Element {
-        return (
-            <React.Fragment>
-                <div className={`application-border ${this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={this.borderRef}>
+// tslint:disable-next-line: max-func-body-length
+	public render(): JSX.Element {
+		return (
+			<React.Fragment>
+                <div className={`application-border ${ this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={ this.borderRef }>
+
                     <div className="application">
                         <div className="sections">
                             {this.renderUserSection()}
@@ -176,7 +178,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         position: relative;
 
                         /** Setup dimensions of application */
-                        margin: 10px;
+                        margin: 10px 0;
                         width: calc(100% - 20px); /* Might be temp */
 
                         /** Setup internal dimensions */
@@ -278,6 +280,12 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         position: relative;
                         z-index: 2;
 					}
+                    
+                    @media (max-width: 768px) {
+                        .application-border {
+                            margin: 10px;
+                        }
+                    }
 				`}</style>
             </React.Fragment>
         );
