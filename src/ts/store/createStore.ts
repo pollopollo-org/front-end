@@ -22,7 +22,7 @@ export const createStore = () => {
                 const applications = await ApplicationModel.CREATE_COLLECTION(DataProviders.DUMMY);
                 const user = await fetchSelf();
 
-                resolve(new Store({applications, user}));
+                resolve(new Store({ applications, user }));
             } catch (err) {
                 reject(err);
             }

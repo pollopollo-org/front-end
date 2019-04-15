@@ -4,13 +4,19 @@ import countriesJson from "src/assets/countries.json";
 import { CountryCodes } from "src/ts/models/CountryCodes";
 import { apis } from "src/ts/config/apis";
 import { alertApiError } from "src/ts/utils/alertApiError";
+import { convertNumberToApplicationStatus } from "src/ts/utils/convertNumberToApplicationStatus";
 
 
 export enum ApplicationStatus {
-    OPEN,
-    PENDING,
-    CLOSED
+    OPEN = "Open",
+    PENDING = "Pending",
+    CLOSED = "Closed"
 }
+
+/**
+ * Contains the path to the backend which is used to resolve images
+ */
+const BACKEND_URL = "https://api.pollopollo.org";
 
 /**
  * Defines the data required to create an application model.
@@ -23,12 +29,12 @@ type ApplicationModelData = {
     receiverId: number;
     receiverName: string;
     country: CountryCodes;
-    thumbnail: string;
+    thumbnail?: string;
     productTitle: string;
     productPrice: number;
     producerId: number;
     motivation: string;
-    status: ApplicationStatus;
+    status: number;
 };
 // tslint:enable completed-docs
 
@@ -41,7 +47,7 @@ export class ApplicationModel {
      */
     public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ApplicationModel[]> {
         if (dataProivder === DataProviders.BACKEND) {
-            const data = Array.from(<ApplicationModelData[]> (await import("../../assets/dummy/application.json")).default);
+            const data = Array.from(<ApplicationModelData[]>(await import("../../assets/dummy/application.json")).default);
             const applications = [];
 
             for (const application of data) {
@@ -50,7 +56,7 @@ export class ApplicationModel {
 
             return applications;
         } else {
-            const data = Array.from(<ApplicationModelData[]> (await import("../../assets/dummy/application.json")).default);
+            const data = Array.from(<ApplicationModelData[]>(await import("../../assets/dummy/application.json")).default);
             const applications = [];
 
             for (const application of data) {
@@ -81,10 +87,8 @@ export class ApplicationModel {
      * Helper that instantiates a model, populated with required data.
      */
     public static CREATE(data: ApplicationModelData): ApplicationModel {
-
-
         return new ApplicationModel({
-            ...data, 
+            ...data,
         });
     }
 
@@ -116,7 +120,7 @@ export class ApplicationModel {
     /**
      * Contains a thumbnail of the applicant
      */
-    public readonly thumbnail: string;
+    private readonly thumbnail?: string;
 
     /**
      * Describes the product the receiver is apllying for
@@ -138,12 +142,11 @@ export class ApplicationModel {
      * for potential doners determine
      */
     public readonly motivation: string;
-    
+
     /**
      * Contains the status of the application
      */
     public readonly status: ApplicationStatus;
-    
 
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
@@ -165,7 +168,19 @@ export class ApplicationModel {
         this.productPrice = data.productPrice;
         this.producerId = data.producerId;
         this.motivation = data.motivation;
-        this.status = data.status;
+        this.status = convertNumberToApplicationStatus(data.status);
+    }
+
+    /**
+     * Internal helper that returns the absolute path to be rendered for a given
+     * profile
+     */
+    public getThumbnail(): string | undefined {
+        if (this.thumbnail) {
+            return `${BACKEND_URL}/${this.thumbnail}`;
+        } else {
+            return;
+        }
     }
 }
 
@@ -182,7 +197,6 @@ const applicationCache: Map<string, ApplicationModel[]> = new Map();
  * Users must be logged in to perform this request.
  */
 export async function fetchApplicationByReceiver(receiverId: number, store: Store, status: ApplicationStatus) {
-    
     const cacheKey = `receiver-${receiverId}-${status}`;
     // If we have a cache hit, then simply return the cached product!
     if (applicationCache.has(cacheKey)) {
@@ -255,7 +269,7 @@ export async function deleteApplication(applicationId: number, store: Store, cal
         });
 
         if (result.ok) {
-            applicationCache.delete(`receiver-${store.user.id}-0`);
+            applicationCache.delete(`receiver-${store.user.id}-Open`);
 
             // In case we have a callback, then broadcast the newly updated product
             // to it.
