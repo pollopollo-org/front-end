@@ -490,7 +490,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
         return(
             <div 
-                className="open-pending-section" 
+                className={`open-pending-section ${ this.state.isSmall ? "isSmall" : "" }`} 
                 style={{
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
@@ -504,6 +504,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         position: absolute;
                         bottom: 3px;
                         margin-left: 100px;
+
+                        &.isSmall {
+                            margin-left: 5px;
+                        }
 
                         /** Setup font */
                         font-size: 12px;
