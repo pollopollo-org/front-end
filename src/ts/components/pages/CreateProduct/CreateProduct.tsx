@@ -38,13 +38,8 @@ type CreateProductState = {
     /**
      * Image of the product
      */
-<<<<<<< HEAD
-    productPicture?: File;
-    
-=======
     image?: Blob;
 
->>>>>>> 9fae38a02a000a79e94ed6a04612f73ae48979fb
     /**
      * Specifies whether or not we're currently attempting to create a user
      */
@@ -458,74 +453,6 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
         if (this.state.isPending || !this.props.store.user) {
             return;
         }
-<<<<<<< HEAD
-        
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-            const token = localStorage.getItem("userJWT");
-
-            const result = await fetch(apis.products.post.path, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    userId: this.props.store.user.id,
-                    title: this.state.title,
-                    price: this.state.price,
-                    description: this.state.description,
-                    country: this.props.store.user.country,
-                    rank: this.state.rank,
-                }),
-            });
-
-            let imageResult: Response | undefined = undefined;
-
-            if (this.state.productPicture) {
-                imageResult = await fetch(apis.products.postImage.path, {
-                    method: "PUT",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: this.imageToData((await result.json()).productId),
-                })
-            }
-
-            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-
-            if (result.ok) {
-                invalidateCacheKey(`producer-${this.props.store.user.id}`);
-                this.props.history.push(routes.profile.path);
-            } else {
-                alertApiError(result.status, apis.products.post.errors, this.props.store);
-
-                if (imageResult) {
-                    alertApiError(imageResult.status, apis.products.postImage.errors, this.props.store);
-                }
-
-                this.setState({ isPending: false });
-            }
-        } catch (err) {
-            this.setState({ isPending: false });
-            this.props.store.currentErrorMessage = "Something went wrong while attempting to create your product, please try again later.";
-        }
-    }
-
-    /**
-     * Validates the image by checking for malformed/corrupted data
-     */
-    private imageToData = (productId: number): FormData => {
-        const formData = new FormData();
-
-        if (this.state.productPicture) {
-            formData.append("userId", String(this.props.store.user!.id));
-            formData.append("productId", String(productId));
-            formData.append("file", this.state.productPicture);
-        }
-=======
->>>>>>> 9fae38a02a000a79e94ed6a04612f73ae48979fb
 
         this.setState({ isPending: true });
         await postProduct(this.state, this.props.store, this.props.history);

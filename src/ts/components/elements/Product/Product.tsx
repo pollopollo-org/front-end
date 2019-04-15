@@ -3,7 +3,7 @@ import React from "react";
 import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
-import { ProductModel, toggleProductAvailability } from "src/ts/models/ProductModel";
+import { ProductModel } from "src/ts/models/ProductModel";
 import { Chevron, Button } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
