@@ -141,6 +141,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     /**
      * Main render method, used to render Application
      */
+// tslint:disable-next-line: max-func-body-length
 	public render(): JSX.Element {
 		return (
 			<React.Fragment>
@@ -175,7 +176,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         position: relative;
 
                         /** Setup dimensions of application */
-                        margin: 10px;
+                        margin: 10px 0;
                         width: calc(100% - 20px); /* Might be temp */
 
                         /** Setup internal dimensions */
@@ -277,6 +278,12 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         position: relative;
                         z-index: 2;
 					}
+                    
+                    @media (max-width: 768px) {
+                        .application-border {
+                            margin: 10px;
+                        }
+                    }
 				`}</style>
 			</React.Fragment>
 		);
