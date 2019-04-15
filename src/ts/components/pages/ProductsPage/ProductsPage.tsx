@@ -408,6 +408,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
         await this.fetchData(this.state.currentPage + 1);
         this.setState({ currentPage: this.state.currentPage + 1, isFetchingNext: false });
+        window.scrollTo(0, 0);
     }
 
     /**
@@ -424,6 +425,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
         await this.fetchData(this.state.currentPage - 1);
         this.setState({ currentPage: this.state.currentPage - 1, isFetchingPrevious: false });
+        window.scrollTo(0, 0);
     }
 
     /**
