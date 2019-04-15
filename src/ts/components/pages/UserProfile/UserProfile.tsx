@@ -225,7 +225,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
                                     {this.state.isSelf && this.renderFilterDropdown()}
                                 </div>
-                                
+
                                 {this.renderApplications()}
                             </>
                         )}
@@ -331,6 +331,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         position: relative;
                         margin-top: 80px;
                         width: 50%;
+                        min-height: 150px;
+                        display: flex;
+                        flex-direction: column;
                     }
 
                     .list__header {
@@ -439,7 +442,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         return (
-            <>
+            <div className="list-wrapper">
                 <Fade in={this.state.isPending} key="throbber">
                     {this.renderListThrobber()}
                 </Fade>
@@ -466,7 +469,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         })}
                     </div>
                 </Fade>
-            </>
+
+                <style jsx>{`
+                    .list-wrapper {
+                        position: relative;
+                        flex-grow: 1;
+                    }
+                `}</style>
+            </div>
         );
     }
 
@@ -820,8 +830,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         return (
-            <>
-                <Fade in={this.state.isPending} key="throbber">
+            <div className="list-wrapper">
+                <Fade in={this.state.isPending} unmountOnExit key="throbber">
                     {this.renderListThrobber()}
                 </Fade>
                 <Fade in={!this.state.isPending} key="applications">
@@ -847,7 +857,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         })}
                     </div>
                 </Fade>
-            </>
+
+                <style jsx>{`
+                    .list-wrapper {
+                        position: relative;
+                        flex-grow: 1;
+                    }
+                `}</style>
+            </div>
         );
     }
 
