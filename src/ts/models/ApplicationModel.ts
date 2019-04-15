@@ -17,15 +17,16 @@ export enum ApplicationStatus {
  */
 // tslint:disable completed-docs
 type ApplicationModelData = {
-    amount: number;
-    country: CountryCodes;
-    motivation: string;
-    name: string;
-    price: number;
-    product: string;
-    thumbnail: string;
-    status: ApplicationStatus;
+    applicationId: number;
     receiverId: number;
+    receiverName: string;
+    country: CountryCodes;
+    thumbnail: string;
+    productTitle: string;
+    productPrice: number;
+    producerId: number;
+    motivation: string;
+    status: ApplicationStatus;
 };
 // tslint:enable completed-docs
 
@@ -75,9 +76,19 @@ export class ApplicationModel {
     }
 
     /**
-     * Specifies the amount of times the user wish to buy a given product
+     * Contains the id of the application
      */
-    public readonly amount: number;
+    public readonly applicationId: number;
+
+    /**
+     * Contains the id of the receiver
+     */
+    public readonly receiverId: number;
+
+    /**
+     * Defines the name of the receiver applying for the product
+     */
+    public readonly receiverName: string;
 
     /**
      * Defines the countryCode of the country that applicant is coming from
@@ -90,40 +101,36 @@ export class ApplicationModel {
     public readonly country: string;
 
     /**
-     * Motivation defines why the user has applied for the given product, in order
-     * for potential doners determine
-     */
-    public readonly motivation: string;
-
-
-    /**
-     * Defines the name of the application applying for the product
-     */
-    public readonly name: string;
-
-    /**
-     * Describes the price of the produce being sold in dollars.
-     */
-    public readonly price: number;
-
-    /**
-     * Describes the product the PRODUCER is selling
-     */
-    public readonly product: string;
-
-    /**
      * Contains a thumbnail of the applicant
      */
     public readonly thumbnail: string;
 
     /**
+     * Describes the product the receiver is apllying for
+     */
+    public readonly productTitle: string;
+
+    /**
+     * Describes the price of the produce being sold in dollars.
+     */
+    public readonly productPrice: number;
+
+    /**
+     * Contains the id of the producer selling the product
+     */
+    public readonly producerId: number;
+
+    /**
+     * Motivation defines why the user has applied for the given product, in order
+     * for potential doners determine
+     */
+    public readonly motivation: string;
+    
+    /**
      * Contains the status of the application
      */
     public readonly status: ApplicationStatus;
-    /**
-     * Contains the id of the receiver
-     */
-    public readonly receiverId: number;
+    
 
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
@@ -136,14 +143,15 @@ export class ApplicationModel {
             this.country = country.Name;
         }
 
-        this.amount = data.amount;
-        this.countryCode = data.country;
-        this.motivation = data.motivation;
-        this.name = data.name;
-        this.price = data.price;
-        this.product = data.product;
-        this.thumbnail = data.thumbnail;
-        this.status = data.status;
+        this.applicationId = data.applicationId;
         this.receiverId = data.receiverId;
+        this.receiverName = data.receiverName;
+        this.countryCode = data.country;
+        this.thumbnail = data.thumbnail;
+        this.productTitle = data.productTitle;
+        this.productPrice = data.productPrice;
+        this.producerId = data.producerId;
+        this.motivation = data.motivation;
+        this.status = data.status;
     }
 }

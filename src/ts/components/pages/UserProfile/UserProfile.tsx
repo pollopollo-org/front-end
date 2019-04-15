@@ -747,7 +747,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         if (!this.state.applications) {
             return null;
         }
-
+    
         return (this.state.applications.map((application, index) => {
             return <Application 
                         key={index}
