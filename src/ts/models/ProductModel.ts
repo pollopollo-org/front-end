@@ -31,6 +31,7 @@ export type ProductModelData = {
     available: boolean;
     userId: number;
     thumbnail: string;
+    rank?: number;
 };
 
 export type ProductModelFields = {
@@ -43,6 +44,7 @@ export type ProductModelFields = {
     isActive: boolean;
     producerId: number;
     thumbnail?: string;
+    rank?: number;
 }
 
 /**
@@ -53,6 +55,7 @@ export type ProductPostData = {
     price: number;
     description: string;
     image?: Blob;
+    rank?: number;
 }
 // tslint:enable completed-docs
 
@@ -88,7 +91,8 @@ export class ProductModel {
             countryCode: data.country,
             isActive: data.available,
             location,
-            thumbnail, 
+            thumbnail,
+            rank: data.rank, 
         });
     }
 
@@ -128,6 +132,11 @@ export class ProductModel {
      * Defines whether the isActive of the product is active.
      */
     public readonly isActive: boolean;
+    
+    /**
+     * The rank of the product, default is 0, which is placed below all other ranks
+     */
+    public readonly rank?: number;
 
     /**
      * Describes the PRODUCER who is selling the product
@@ -150,6 +159,7 @@ export class ProductModel {
         this.producerId = data.producerId;
         this.location = data.location;
         this.thumbnail = data.thumbnail;
+        this.rank = data.rank;
     }
 }
 
@@ -344,6 +354,7 @@ export async function postProduct(data: ProductPostData, store: Store, history: 
                 price: data.price,
                 description: data.description,
                 country: store.user.country,
+                rank: data.rank,
             }),
         });
 
