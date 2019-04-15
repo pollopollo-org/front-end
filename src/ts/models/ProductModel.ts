@@ -32,6 +32,9 @@ export type ProductModelData = {
     userId: number;
     thumbnail: string;
     rank?: number;
+    openApplications: number;
+    pendingApplications: number;
+    closedApplications: number;
 };
 
 export type ProductModelFields = {
@@ -45,6 +48,9 @@ export type ProductModelFields = {
     producerId: number;
     thumbnail?: string;
     rank?: number;
+    openApplications: number;
+    pendingApplications: number;
+    closedApplications: number;
 }
 
 /**
@@ -148,6 +154,21 @@ export class ProductModel {
      */
     public readonly thumbnail?: string;
 
+    /**
+     * Specifies the amount of open applications related to the product
+     */
+    public readonly openApplications: number;
+
+    /**
+     * Specifies the amount of pending applications related to the product
+     */
+    public readonly pendingApplications: number;
+
+    /**
+     * Specifies the amount of closed applications related to the product
+     */
+    public readonly closedApplications: number;
+
     constructor(data: ProductModelFields) {
         this.id = data.id;
         this.description = data.description;
@@ -160,6 +181,9 @@ export class ProductModel {
         this.location = data.location;
         this.thumbnail = data.thumbnail;
         this.rank = data.rank;
+        this.openApplications = data.openApplications;
+        this.pendingApplications = data.pendingApplications;
+        this.closedApplications = data.closedApplications;
     }
 }
 
@@ -285,15 +309,6 @@ export async function fetchProductByProducer(producerId: number, store: Store, s
         return productCache.get(cacheKey);
     }
 
-    // If we have a cache hit, then simply return the cached product!
-    const token = localStorage.getItem("userJWT");
-
-    // We NEED to be authorized to perform this request. Bail out if we aren't
-    // logged in at the moment
-    if (!token) {
-        return;
-    }
-
     const productStatus = status === ProductStatus.ACTIVE;
 
     const endPoint = apis.products.getByProducer.path
@@ -305,7 +320,6 @@ export async function fetchProductByProducer(producerId: number, store: Store, s
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             }
         });
 
@@ -435,9 +449,15 @@ export async function toggleProductAvailability(product: ProductModel, store: St
             }),
         });
 
+        const data = await result.json();
+
         if (result.ok) {
             productCache.delete(`producer-${store.user.id}-active`);
             productCache.delete(`producer-${store.user.id}-inactive`);
+
+            if (!product.isActive === false && data.pendingApplications > 0) {
+                store.currentErrorMessage = `The product has been made inactive, but ${data.pendingApplications} pending application remains.`;
+            }
 
             // In case we have a callback, then broadcast the newly updated product
             // to it.
