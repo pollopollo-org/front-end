@@ -53,7 +53,7 @@ export const apis = {
                 400: "Invalid information passed, please correct your data and try again.",
                 409: "A product with the given information already exists."
             }
-        }, 
+        },
         getBatch: {
             path: `${basePath}/applications?first={start}&last={end}`,
             errors: {
@@ -106,7 +106,7 @@ export const apis = {
             }
         },
         getBatch: {
-            path: `${basePath}/products?first={start}&last={end}`,
+            path: `${basePath}/products?offset={offset}&amount={amount}`,
             errors: {
                 404: "The requested products could not be found. Please try again later.",
             }

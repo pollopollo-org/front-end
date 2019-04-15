@@ -1,7 +1,7 @@
 import React from "react";
 import ProductsPageJson from "src/assets/data/productsPage.json";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { colors, fonts} from "src/ts/config";
+import { colors, fonts } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
@@ -85,14 +85,14 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     /**
      * Main render method for the entire component
      */
-    public render(): JSX.Element{
+    public render(): JSX.Element {
         return (
             <div className="page">
                 {this.renderIntroduction()}
 
                 {this.state.products
                     ? <div className="flex">
-                        { (this.state.isPending) && 
+                        {(this.state.isPending) &&
                             <i className="throbber-wrapper">
                                 <Throbber size={64} relative={true} />
                             </i>
@@ -105,9 +105,9 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         </div>
                     </div>
                     : <h2><i>{ProductsPageJson.noProductsAvailable}</i></h2>}
-                
-                { this.renderNavigation() }
-                
+
+                {this.renderNavigation()}
+
                 <style jsx>{`
                     h2 {
                         margin: 50px 0;
@@ -194,7 +194,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
             this.state.products.map((product, index) => {
                 if (index % 2 === evenOrUneven) {
                     return (
-                        <Product 
+                        <Product
                             key={index}
                             product={product}
                             userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
@@ -240,10 +240,10 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.filterCountry} />
                 </span>
                 {this.state.filterCountry !== undefined && (
-                    <span 
-                        className="removeFilter" 
-                        role="button" 
-                        aria-label="Remove filter" 
+                    <span
+                        className="removeFilter"
+                        role="button"
+                        aria-label="Remove filter"
                         onClick={this.removeFilter}
                     >
                         {ProductsPageJson.RemoveFilter}
@@ -319,12 +319,18 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         top: 0;
                     }
 
+                    .pageNavigation .left {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                    }
+
                     .pageNavigation .info {
                         position: absolute;
                         top: 50%;
                         left: 50%;
                         transform: translate(-50%, -50%);
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                         font-weight: 300;
                     }               
                 `}</style>
@@ -338,15 +344,15 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     private renderButton = (text: string, isLoading: boolean, onClick: () => void) => {
         return (
             <div className="button">
-                <Button 
-                    withThrobber={true} 
+                <Button
+                    withThrobber={true}
                     text={text}
                     width={170}
                     height={43}
                     fontSize={16}
                     isPending={isLoading}
                     throbberSize={30}
-                    onClick={onClick}/>
+                    onClick={onClick} />
 
                 <style jsx>{`
                     /** Style button to match the rest of the project */
@@ -432,14 +438,14 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      * Is passed down to SelectCountry and allows us to extract its value
      */
     private removeFilter = () => {
-        this.setState({filterCountry: undefined});
+        this.setState({ filterCountry: undefined });
     }
 
     /**
      * Is passed down to SelectCountry and allows us to extract its value
      */
-    private newCountrySelected = (newCountry:string) => {
-        this.setState({filterCountry: newCountry,});
+    private newCountrySelected = (newCountry: string) => {
+        this.setState({ filterCountry: newCountry, });
     }
 }
 

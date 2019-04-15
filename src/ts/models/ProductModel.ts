@@ -92,7 +92,7 @@ export class ProductModel {
             isActive: data.available,
             location,
             thumbnail,
-            rank: data.rank, 
+            rank: data.rank,
         });
     }
 
@@ -132,7 +132,7 @@ export class ProductModel {
      * Defines whether the isActive of the product is active.
      */
     public readonly isActive: boolean;
-    
+
     /**
      * The rank of the product, default is 0, which is placed below all other ranks
      */
@@ -174,8 +174,8 @@ let cachedCount: number = 0;
  * Method used to fetch a batch of active products from the backend. The fetched
  * products can be from any producers and will be returned in the order
  */
-export async function fetchProductBatch(start: number, end: number, store: Store) {
-    const cacheKey = `${start}${end}`;
+export async function fetchProductBatch(offset: number, amount: number, store: Store) {
+    const cacheKey = `${offset}${amount}`;
 
     // If we have the current request cached, then simply return that!
     if (productCache.has(cacheKey)) {
@@ -185,7 +185,7 @@ export async function fetchProductBatch(start: number, end: number, store: Store
         };
     }
 
-    const endPoint = apis.products.getBatch.path.replace("{start}", String(start)).replace("{end}", String(end));
+    const endPoint = apis.products.getBatch.path.replace("{offset}", String(offset)).replace("{amount}", String(amount));
 
     try {
         const response = await fetch(endPoint, {
@@ -202,7 +202,7 @@ export async function fetchProductBatch(start: number, end: number, store: Store
         // and store the response in our cache before returning it.
         if (response.ok) {
             const productArray = json.list.map((productData) => ProductModel.CREATE(productData));
-            productCache.set(`${start}${start + json.list.length}`, productArray);
+            productCache.set(`${offset}${amount - (amount - json.list.length)}`, productArray);
             cachedCount = json.count;
 
             return {
