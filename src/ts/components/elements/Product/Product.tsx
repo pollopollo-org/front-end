@@ -726,7 +726,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         }
 
                         &:hover {
-                            border-color: rgba(0,139,0, 0.6);
+                            background-color: rgba(219,208,239, 0.6);
                         }
                     }
 
@@ -738,7 +738,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         }
 
                         &:hover {
-                            border-color: rgba(255,111,0, 0.6);
+                            background-color: rgba(219,208,239, 0.6);
                         }
                     }
 
@@ -1210,7 +1210,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Mehtod that'll close the producer dropdown once it has been executed
+     * Method that'll close the producer dropdown once it has been executed
      */
     private closeProducerLightbox = () => {
         this.setState({ showProducer: false });
