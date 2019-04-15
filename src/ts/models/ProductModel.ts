@@ -31,7 +31,7 @@ export type ProductModelData = {
     available: boolean;
     userId: number;
     thumbnail: string;
-    rank: number;
+    rank?: number;
 };
 
 export type ProductModelFields = {
@@ -44,7 +44,7 @@ export type ProductModelFields = {
     isActive: boolean;
     producerId: number;
     thumbnail?: string;
-    rank: number;
+    rank?: number;
 }
 
 /**
@@ -55,6 +55,7 @@ export type ProductPostData = {
     price: number;
     description: string;
     image?: Blob;
+    rank?: number;
 }
 // tslint:enable completed-docs
 
@@ -135,7 +136,7 @@ export class ProductModel {
     /**
      * The rank of the product, default is 0, which is placed below all other ranks
      */
-    public readonly rank: number;
+    public readonly rank?: number;
 
     /**
      * Describes the PRODUCER who is selling the product
@@ -353,6 +354,7 @@ export async function postProduct(data: ProductPostData, store: Store, history: 
                 price: data.price,
                 description: data.description,
                 country: store.user.country,
+                rank: data.rank,
             }),
         });
 

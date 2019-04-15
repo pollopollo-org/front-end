@@ -354,8 +354,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         <style jsx>{`
                             .rank{
                                 position: absolute;
-                                top: 0;
-                                left: 0;
+                                top: -50;
+                                left: -50;
                                 
 
                             }
