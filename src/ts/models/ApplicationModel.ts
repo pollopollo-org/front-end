@@ -170,19 +170,25 @@ export class ApplicationModel {
 }
 
 /**
+ * The application cache will contain products fetched from the backend in order to
+ * avoid having to fetch them over and over again.
+ */
+const applicationCache: Map<string, ApplicationModel[]> = new Map();
+//let cachedCount: number = 0;
+
+/**
  * Method used to fetch all applications related to a specific receiver.
  * 
  * Users must be logged in to perform this request.
  */
 export async function fetchApplicationByReceiver(receiverId: number, store: Store, status: ApplicationStatus) {
-    /*
-    const cacheKey = `producer-${producerId}-${status}`;
-    // If we have a cache hit, then simply return the cached product!
-    if (productCache.has(cacheKey)) {
-        return productCache.get(cacheKey);
-    }*/
-
     
+    const cacheKey = `receiver-${receiverId}-${status}`;
+    // If we have a cache hit, then simply return the cached product!
+    if (applicationCache.has(cacheKey)) {
+        return applicationCache.get(cacheKey);
+    }
+
     const token = localStorage.getItem("userJWT");
 
     // We NEED to be authorized to perform this request. Bail out if we aren't
@@ -191,11 +197,11 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
         return;
     }
 
-    //const productStatus = status === ApplicationStatus.OPEN;
+    //const applicationStatus = status === ApplicationStatus.OPEN;
 
     const endPoint = apis.application.getByReceiver.path
-        .replace("{receiverId}", String(receiverId));
-        //.replace("{productStatus}", String(productStatus));
+        .replace("{receiverId}", String(receiverId))
+        .replace("{applicationStatus}", String(status));
 
     try {
         const response = await fetch(endPoint, {
@@ -211,10 +217,10 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
         // If everything goes well, then create a bunch of productModels from the
         // data and add them to the cache before returning output.
         if (response.ok) {
-            return applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
-            //productCache.set(cacheKey, productArray);
+            const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
+            applicationCache.set(cacheKey, applicationArray);
 
-            //return applicationArray;
+            return applicationArray;
         } else {
             // ... else alert any errors that occurred to our users!
             alertApiError(response.status, apis.application.getByReceiver.errors, store);

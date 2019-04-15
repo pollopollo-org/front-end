@@ -15,6 +15,7 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Alert } from "src/ts/components/utils/Alert";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 import { ProducerModel } from "src/ts/models/ProducerModel";
+import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
 
 export type ApplicationProps = {
     /**
@@ -527,61 +528,22 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         if (this.props.isOnReceiversPage) {
             return;
         }
-
+        
         return(
-                <button 
-                    className="profile-link"
+            <div className="link">
+                <UserLink
                     onClick={this.openReceiverLightbox}
-                >
-                    <i className="user-icon">{getSVG("user2")}</i> 
-                    Receiver profile
-
+                    text={"Receiver profile"}/>
                 <style jsx>{`
-
-                    /** Button to producers profile */
-                    .profile-link {
-                        /** Positioning the icon and button text horizontally */
-                        display: flex;
-                        flex-direction: row;
-
-                        /** Colors and fonts */
-                        background-color: transparent;
-                        font-style: bold;
-                        font-family: ${ fonts.text };
-
-                        /** Size and border */
-                        border: none;
-                        border-radius: 5px;
-                        padding: 10px;
-
-                        /** Setup effects when hover */
-                        transition: background-color 0.1s linear;
-                        cursor: pointer;
-
-                        /** 
-                         * Positioning the button so it is alligned with other
-                         * content upon hovering
-                         */
+                    /** 
+                     * Positioning the button so it is alligned with other
+                     * content upon hovering
+                     */
+                    .link :global(.profile-link) {
                         margin-left: 8px;
-
-                    }
-
-                    .profile-link:hover {
-                        background-color: rgba(219,208,239,0.5);
-                    }
-
-                    /** User icon placed in button */
-                    .profile-link i {
-                        height: 17px;
-                        width: 17px;
-
-                        color: ${ colors.primary };
-
-                        /** Some space between icon and button text */
-                        margin-right: 5px;
                     }
                 `}</style>
-            </button>
+            </div>
         );
     }
 
@@ -594,59 +556,20 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         }
 
         return(
-                <button 
-                    className="profile-link"
+            <div className="link">
+                <UserLink
                     onClick={this.openProducerLightbox}
-                >
-                    <i className="user-icon">{getSVG("user2")}</i> 
-                    Producer profile
-
+                    text={"Producer profile"}/>
                 <style jsx>{`
-
-                    /** Button to producers profile */
-                    .profile-link {
-                        /** Positioning the icon and button text horizontally */
-                        display: flex;
-                        flex-direction: row;
-
-                        /** Colors and fonts */
-                        background-color: transparent;
-                        font-style: bold;
-                        font-family: ${ fonts.text };
-
-                        /** Size and border */
-                        border: none;
-                        border-radius: 5px;
-                        padding: 10px;
-
-                        /** Setup effects when hover */
-                        transition: background-color 0.1s linear;
-                        cursor: pointer;
-
-                        /** 
-                         * Positioning the button so it is alligned with other
-                         * content upon hovering
-                         */
+                    /** 
+                     * Positioning the button so it is alligned with other
+                     * content upon hovering
+                     */
+                    .link :global(.profile-link) {
                         margin-left: 8px;
-
-                    }
-
-                    .profile-link:hover {
-                        background-color: rgba(219,208,239,0.5);
-                    }
-
-                    /** User icon placed in button */
-                    .profile-link i {
-                        height: 17px;
-                        width: 17px;
-
-                        color: ${ colors.primary };
-
-                        /** Some space between icon and button text */
-                        margin-right: 5px;
                     }
                 `}</style>
-            </button>
+            </div>
         );
     }
 
