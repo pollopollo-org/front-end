@@ -289,7 +289,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <div className={`product ${this.state.isSmall ? "isSmall" : ""}`}>
                 <div className="sections">
-                    { this.renderRank()}
                     { this.renderThumbnailSection() }
                     { this.renderContentSection() }
 
@@ -331,39 +330,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 `}</style>
 
             </div>
-        );
-    }
-
-    /**
-     * Internal renderer for the rank of the product. 
-     * This is only viewable for the creator of the product
-     */
-    private renderRank =() => {
-        return(
-            <div>
-                {this.props.isOwnProduct && 
-            
-                    <div>
-                        <div
-                            className="rank"
-                        >
-                            <span>
-                                {this.props.product.rank}
-                            </span>
-                        </div>
-                        <style jsx>{`
-                            .rank{
-                                position: absolute;
-                                top: -50;
-                                left: -50;
-                                
-
-                            }
-                        `}</style>
-                    </div>
-                }
-            </div>
-            
         );
     }
 
@@ -596,6 +562,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         {product.description}
                     </p>
 
+                    <h3>Rank: {product.rank}</h3>
+                    
                     {this.renderProducerLink()}
 
                 </div>
@@ -657,9 +625,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Render button link to producer profile info
+     * Render bottom link to producer profile info
      */
-
     private renderProducerLink() {
         if (this.props.isOnProducersPage) {
             return;
