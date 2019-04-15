@@ -34,6 +34,7 @@ type ApplicationModelData = {
     receiverName: string;
     country: CountryCodes;
     thumbnail?: string;
+    productId: number;
     productTitle: string;
     productPrice: number;
     producerId: number;
@@ -105,6 +106,11 @@ export class ApplicationModel {
      * Contains the id of the receiver
      */
     public readonly receiverId: number;
+
+    /**
+     * Specifies the id of the product related to the applications
+     */
+    public readonly productId: number;
 
     /**
      * Defines the name of the receiver applying for the product

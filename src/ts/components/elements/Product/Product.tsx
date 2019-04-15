@@ -15,7 +15,7 @@ import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { RouterProps, withRouter } from "react-router";
+import { withRouter, RouteComponentProps } from "react-router";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
 
@@ -53,7 +53,7 @@ export type ProductProps = {
      * to reflect this in the ui
      */
     updateProduct?(newProduct: ProductModel): void;
-} & RouterProps;
+} & RouteComponentProps;
 
 export type ProductState = {
     /**
@@ -1349,5 +1349,4 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 }
 
-// @ts-ignore
 export const Product = withRouter(injectStore((store) => ({ store }), UnwrappedProduct));
