@@ -47,7 +47,7 @@ export class ApplicationModel {
      */
     public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ApplicationModel[]> {
         if (dataProivder === DataProviders.BACKEND) {
-            const data = Array.from(<ApplicationModelData[]>(await import("../../assets/dummy/application.json")).default);
+            const data = Array.from(<ApplicationModelData[]><unknown>(await import("../../assets/dummy/application.json")).default);
             const applications = [];
 
             for (const application of data) {
@@ -56,7 +56,7 @@ export class ApplicationModel {
 
             return applications;
         } else {
-            const data = Array.from(<ApplicationModelData[]>(await import("../../assets/dummy/application.json")).default);
+            const data = Array.from(<ApplicationModelData[]><unknown>(await import("../../assets/dummy/application.json")).default);
             const applications = [];
 
             for (const application of data) {

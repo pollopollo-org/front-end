@@ -291,8 +291,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <div className={`product ${this.state.isSmall ? "isSmall" : ""}`}>
                 <div className="sections">
-                    { this.renderThumbnailSection() }
-                    { this.renderContentSection() }
+                    {this.renderThumbnailSection()}
+                    {this.renderContentSection()}
 
                 </div>
 
@@ -347,11 +347,11 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 <div className="thumbnail">
                     <Thumbnail src={this.props.product.thumbnail} callback={this.openImageLightbox} />
                 </div>
-                <img 
-                    className="flag" 
-                    title={ product.location } 
-                    src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`} 
-                    alt={ product.location }
+                <img
+                    className="flag"
+                    title={product.location}
+                    src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`}
+                    alt={product.location}
                 />
                 <style jsx>{`
 
@@ -398,7 +398,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     {
                         this.props.userType === UserTypes.PRODUCER &&
-                        <span 
+                        <span
                             className={`price ${this.state.isSmall ? "isSmall" : ""} 
                                                 ${isOwnProduct ? "isOwnProduct" : ""}`}
                         >
@@ -501,11 +501,11 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderAssociatedApplicationsStatusTeaser() {
         if (!this.props.isOwnProduct || !this.props.isOnProducersPage || !this.props.product.isActive) {
             return;
-        } 
+        }
 
-        return(
-            <div 
-                className={`open-pending-section ${ this.state.isSmall ? "isSmall" : "" }`} 
+        return (
+            <div
+                className={`open-pending-section ${this.state.isSmall ? "isSmall" : ""}`}
                 style={{
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
@@ -539,15 +539,15 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     }
 
                     .open-pending-section .open {
-                        border-right: 1px solid ${ colors.pale };
+                        border-right: 1px solid ${ colors.pale};
                     }
 
                     .open .amount {
-                        color: ${ colors.green };
+                        color: ${ colors.green};
                     }
 
                     .pending .amount {
-                        color: ${ colors.yellow };
+                        color: ${ colors.yellow};
                     }
                 `}</style>
             </div>
@@ -632,7 +632,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     <h3>Rank: {product.rank}</h3>
 
                     {this.renderAssociatedApplicationsStatus()}
-                    
+
                     {this.renderProducerLink()}
                 </div>
 
@@ -700,9 +700,9 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         // bc Lasse iz stoopid
         if (!this.props.isOwnProduct || !this.props.isOnProducersPage || !this.props.product.isActive) {
             return;
-        } 
+        }
 
-        return(
+        return (
             <div>
                 <h3>Associated applications</h3>
 
@@ -716,7 +716,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         display: flex;
                         flex-direction: row;
 
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                         font-weight: 300;
 
                         margin-top: 5px;
@@ -730,11 +730,11 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     }
 
                     .open-pending-section .open {
-                        border-right: 1px solid ${ colors.pale };
+                        border-right: 1px solid ${ colors.pale};
                         border-radius: 2px 0 0 2px;
 
                         & .amount {
-                            color: ${ colors.green };
+                            color: ${ colors.green};
                         }
 
                         &:hover {
@@ -746,7 +746,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         border-radius: 0 2px 2px 0;
 
                         & .amount {
-                            color: ${ colors.yellow };
+                            color: ${ colors.yellow};
                         }
 
                         &:hover {
@@ -770,10 +770,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             return;
         }
 
-        return(
+        return (
             <UserLink
                 onClick={this.openProducerLightbox}
-                text={"Producer profile"}/>
+                text={"Producer profile"} />
         );
     }
 
@@ -945,7 +945,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     /** Create a pale line between the icons to seperate them */
                     .edit-button-section .edit-button {
-                        border-right: 1px solid ${ colors.pale };
+                        border-right: 1px solid ${ colors.pale};
                     }
 
                     /** Position the icons */
@@ -1197,7 +1197,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 isOwn={this.props.isOwnProduct}
                 isOnProfile={this.props.isOnProducersPage}
                 userId={this.props.product.producerId}
-                userType={"producer"}/>
+                userType={"producer"} />
         );
     }
 
@@ -1284,7 +1284,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         if (this.state.isPending || !this.props.store.user) {
             return;
         }
-        
+
         try {
             this.setState({ isPending: true });
             const startedAt = performance.now();
@@ -1307,7 +1307,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
             if (result.ok) {
                 if (this.props.updateProduct) {
-                    const newProduct = new ProductModel({ ...this.props.product, isActive: !this.props.product.isActive});
+                    const newProduct = new ProductModel({ ...this.props.product, isActive: !this.props.product.isActive });
                     this.props.updateProduct(newProduct);
                 }
             } else {

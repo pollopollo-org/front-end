@@ -142,11 +142,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     /**
      * Main render method, used to render Application
      */
-// tslint:disable-next-line: max-func-body-length
-	public render(): JSX.Element {
-		return (
-			<React.Fragment>
-                <div className={`application-border ${ this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={ this.borderRef }>
+    // tslint:disable-next-line: max-func-body-length
+    public render(): JSX.Element {
+        return (
+            <React.Fragment>
+                <div className={`application-border ${this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={this.borderRef}>
 
                     <div className="application">
                         <div className="sections">
@@ -300,7 +300,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         return (
             <section className="section-user">
                 <div className="thumbnail">
-                    <Thumbnail src={this.props.application.getThumbnail()} />
+                    <Thumbnail src={this.props.application.getThumbnail()} roundedCorners />
                 </div>
                 <img
                     className="flag"
@@ -331,8 +331,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     .thumbnail {
                         height: 60px;
                         width: 60px;
-                        border-radius: 50%;
-                        overflow: hidden;
 
                         /** Margin between this and the name element */
                         margin-bottom: 4px;
