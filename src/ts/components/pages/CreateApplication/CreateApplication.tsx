@@ -80,9 +80,9 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                         display: flex;
                         flex-direction: column;
                         width: 540px;
-                        margin: auto;
-                        height: 100%;
                         justify-content: center;
+                        height: calc(100% - 40px);
+                        margin: 20px auto;
                     }
 
                     h1 {
@@ -119,7 +119,6 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                         }
                     }
                 `}</style>
-
             </div>
         );
     }
@@ -300,7 +299,7 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
             const startedAt = performance.now();
             const token = localStorage.getItem("userJWT");
 
-            const result = await fetch(apis.application.post.path, {
+            const result = await fetch(apis.applications.post.path, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

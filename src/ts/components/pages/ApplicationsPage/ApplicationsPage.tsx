@@ -5,11 +5,10 @@ import { colors, fonts} from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
-import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, fetchApplicationBatch } from "src/ts/models/ApplicationModel";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
-import { fetchApplicationBatch } from "src/ts/utils/fetchApplications";
 
 export type ApplicationsPageProps = {
     /**
@@ -198,8 +197,8 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         <Application 
                             key={index}
                             application={application}
-                            userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
-                            isOnProducersPage={false}
+                            userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                            isOnReceiversPage={false}
                             isOwnApplication={false}
                         />
                     );

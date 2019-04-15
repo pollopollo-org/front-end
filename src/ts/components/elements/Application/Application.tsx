@@ -1,22 +1,44 @@
 import React from "react";
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
+import { UserTypes, fetchUser } from "src/ts/models/UserModel";
+import { getSVG } from "src/assets/svg";
+import { Dialog } from "src/ts/components/utils/Dialog";
+import { fonts} from "src/ts/config";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
+import { Store } from "src/ts/store/Store";
+import { injectStore } from "src/ts/store/injectStore";
+import { Alert } from "src/ts/components/utils/Alert";
+import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
+import { ProducerModel } from "src/ts/models/ProducerModel";
+import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
 
 export type ApplicationProps = {
-    /**
-     * Contains a reference to the applicaiton model that should be rendered
-     */
-    application: ApplicationModel;
-
     /**
      * Determines if current user is owner of the application
      */
     isOwnApplication: boolean;
-
+    /**
+     * Contains a reference to the users role, is either producer, receiver or null
+     */
+    userType: UserTypes;
+    /**
+     * Specifies whether or not we are currently on the receiver who made the application's
+     * profile page.
+     */
+    isOnReceiversPage: boolean;
+    /**
+     * Contains a reference to the applicaiton model that should be rendered
+     */
+    application: ApplicationModel;
+    /**
+     * Contains a reference to the root store
+     */
+    store: Store;
 }
 
 export type ApplicationState = {
@@ -30,6 +52,36 @@ export type ApplicationState = {
      * smaller viewports
      */
     isSmall: boolean;
+    /**
+     * Specifies whether or not the receiver's profile should currently be 
+     * displayed in a lightbox
+     */
+    showReceiver: boolean;
+    /**
+     * Specifies whether or not the producer's profile should currently be 
+     * displayed in a lightbox
+     */
+    showProducer: boolean;
+    /**
+     * Specifies whether or not the confirmation dialog should be displayed
+     */
+    showDialog: boolean;
+    /**
+     * Specifies the loaded receiver of the application (if any). Will first be
+     * loaded if the user wishes to see information about the receiver
+     */
+    receiver?: ReceiverModel;
+    /**
+     * Specifies the loaded receiver of the application (if any). Will first be
+     * loaded if the user wishes to see information about the receiver
+     */
+    producer?: ProducerModel;
+    /**
+     * Specifies whether or not the alert should be displayed
+     * Used for telling the user that is is not yet possible 
+     * to confirm receival of a product
+     */
+    showAlert: boolean;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -39,13 +91,17 @@ const MOBILE_BREAKPOINT = 440;
  * Application template to contain information about the donation
  * of a single application
  */
-export class Application extends React.PureComponent<ApplicationProps, ApplicationState> {
+class UnwrappedApplication extends React.PureComponent<ApplicationProps, ApplicationState> {
     /**
      * State of the component
      */
     public state: ApplicationState = {
         expanded: false,
         isSmall: false,
+        showDialog: false,
+        showReceiver: false,
+        showAlert: false,
+        showProducer: false,
     };
 
     /**
@@ -88,14 +144,16 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 	public render(): JSX.Element {
 		return (
 			<React.Fragment>
-                <div className="application-border" ref={ this.borderRef }>
+                <div className={`application-border ${ this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={ this.borderRef }>
                     <div className="application">
                         <div className="sections">
                             { this.renderUserSection() }
                             { this.renderContentSection() }
                         </div>
 
-                        { this.renderDonateButton() }
+                        {this.props.userType === UserTypes.DONOR && this.renderDonateButton() }
+                        {(this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) && this.renderPrice()}
+                        {(this.props.isOwnApplication && this.props.isOnReceiversPage ) && this.renderInteractWithOwnSection()} 
 
                         { this.state.isSmall && (
                             this.renderMotivationTeaser()
@@ -105,9 +163,12 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     </div>
                     { this.renderMotivation() }
                 </div>
-
+                { this.renderReceiverLightbox() }
+                { this.renderProducerLightbox() }
+                { this.renderConfirmDialog() }
+                { this.renderAlert() }
+                
 				<style jsx>{`
-
                     /** Draws a border around the application */
                     .application-border {
                         /** Allow usage of position: absolute within */
@@ -184,14 +245,27 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                         &:nth-child(odd) {
                             background: rgba(139,72,156, 0.06);
                         }
-                    }
 
+                        /** Hover effect when inactive should be removed */
+                        &.isClosed {
+                            opacity: 0.5;
+                            background: rgba(167,167,167, 0.06);
+
+                            &::before {
+                                content: none;
+                            }
+                            
+                            &:hover {
+                                box-shadow: none;
+                                border: 1px solid rgba(139,72,156, 0.15);
+                            }
+                        }
+                    }
                     /** The application itself  */
                     .application {
                         position: relative;
                         overflow: hidden;
                     }
-
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
                         /** Display sections alongside each other */
@@ -280,7 +354,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.product}>{application.amount} {application.product}</span>
+                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.productTitle}>{application.productTitle}</span>
 
                 { !this.state.isSmall && (
                     this.renderMotivationTeaser()
@@ -390,14 +464,18 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className="description-content">
+                <div className={`description-content ${ application.status === ApplicationStatus.CLOSED ? "isClosed" : "" }`}>
                     <h3>Requested product</h3>
-                    <p>{application.amount} {application.product}</p>
+                    <p>
+                        {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
+                    </p>
                     <h3>Motivation</h3>
                     <p>
                         {application.motivation}
                     </p>
                 </div>
+                { this.renderReceiverLink() }
+                { this.renderProducerLink() }
 
                 <style jsx>{`
                     /** Shown when the collapsible is expanded */
@@ -432,6 +510,63 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                     .description-content {
                         margin: 10px;
                         border-top: 1px solid ${colors.secondary};
+
+                        /** When inactive, we want no definitive colors */
+                        &.isClosed {
+                            border-top: 1px solid ${colors.gray};
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Render button link to receiver profile info
+     */
+    private renderReceiverLink() {
+        if (this.props.isOnReceiversPage) {
+            return;
+        }
+        
+        return(
+            <div className="link">
+                <UserLink
+                    onClick={this.openReceiverLightbox}
+                    text={"Receiver profile"}/>
+                <style jsx>{`
+                    /** 
+                     * Positioning the button so it is alligned with other
+                     * content upon hovering
+                     */
+                    .link :global(.profile-link) {
+                        margin-left: 8px;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Render button link to receiver profile info
+     */
+    private renderProducerLink() {
+        if (this.props.isOnReceiversPage) {
+            return;
+        }
+
+        return(
+            <div className="link">
+                <UserLink
+                    onClick={this.openProducerLightbox}
+                    text={"Producer profile"}/>
+                <style jsx>{`
+                    /** 
+                     * Positioning the button so it is alligned with other
+                     * content upon hovering
+                     */
+                    .link :global(.profile-link) {
+                        margin-left: 8px;
                     }
                 `}</style>
             </div>
@@ -492,7 +627,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         return(
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Donate $${application.price}`} width={110} height={35} fontSize={12}/>
+                <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12}/>
 
                 <style jsx>{`
                     .button-wrapper {
@@ -512,6 +647,277 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Internal renderer that renders the price of the product requested
+     */
+    private renderPrice = () => {
+        const { application } = this.props;
+
+        if (application.status === ApplicationStatus.PENDING) {
+            return;
+        }
+
+        return(
+            <div className={`price-wrapper 
+                                ${this.state.isSmall ? "isSmall" : ""}
+                                ${this.props.isOwnApplication && this.props.isOnReceiversPage && application.status === ApplicationStatus.OPEN? "isOwn" : ""}`}>
+                <span>${application.productPrice}</span>
+
+                <style jsx>{`
+                    .price-wrapper {
+                        /** Position the price in the top right corner */
+                        position: absolute;
+                        right: 10px;
+                        top: 5px;
+                        z-index: 10;
+
+                        /** When mobile size, position price in the middle */
+                        &.isSmall {
+                            left: 105px;
+                            top: 40px;
+                            right: unset;
+                        }
+
+                        /** Move left if own application to make room for delete button */
+                        &.isOwn {
+                            right: 50px;
+                            &.isSmall {
+                                top: 40px;
+                            }
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the confirm button of the application
+     */
+    private renderInteractWithOwnSection = () => {
+        const { application } = this.props;
+
+        return(
+            <div>
+                {application.status === ApplicationStatus.PENDING && this.renderConfirmButton()}
+                {application.status === ApplicationStatus.OPEN && this.renderDeleteButton()}
+            </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the price of the product requested
+     */
+    private renderDeleteButton = () => {
+        const { isOwnApplication, userType } = this.props;
+
+        if(!isOwnApplication || userType !== UserTypes.RECEIVER) {
+            return;
+        }
+
+        return(
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <button onClick={ this.openConfirmationDialog } className="delete-button" title="Delete">
+                    <i>{ getSVG("delete") }</i>
+                </button>
+
+                <style jsx>{`
+                    .button-wrapper {
+                        /** Position the price in the top right corner */
+                        position: absolute;
+                        right: 5px;
+                        top: 0;
+                        z-index: 10;
+
+                        /** When mobile size, position price in the middle */
+                        &.isSmall {
+                            left: 135px;
+                            top: 35px;
+                            right: unset;
+                        }
+                    }
+
+                    .button-wrapper button {
+                        background-color: transparent;
+                        border: none;
+                        font-style: bold;
+                        font-family: ${ fonts.text };
+                        padding: 2px 5px;
+                        cursor: pointer;
+                        color: rgba(57,57,57, 0.75);
+                    }
+
+                    /** Make icon slightly smaller to fit better */
+                    .button-wrapper i {
+                        transform: scale(0.75);
+                    }
+
+                    /** Indicate it is clickable */
+                    .button-wrapper button:hover {
+                        color: ${ colors.secondary };
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the confirm button of the application
+     */
+    private renderConfirmButton = () => {
+        const { isOwnApplication, userType } = this.props;
+
+        if(!isOwnApplication || userType !== UserTypes.RECEIVER) {
+            return;
+        }
+
+        return(
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={ this.openAlert }/>
+
+                <style jsx>{`
+                    .button-wrapper {
+                        /** Position the donate button in the top right corner */
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        z-index: 10;
+
+                        /** When mobile size, position button in the middle */
+                        &.isSmall {
+                            left: 100px;
+                            top: 40px;
+                            right: unset;
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Dialog to confirm wheter a receiver wants to delete an application
+     */
+    private renderConfirmDialog() {
+        return(
+            <Dialog title={`Confirm deletion`}
+                    text={`Are you sure you want to delete this application?`}
+                    active={ this.state.showDialog } 
+                    onClose={ this.closeConfirmationDialog } 
+                    confirmAction= { this.deleteApplication }
+            />
+        );
+    }
+
+    /**
+     * Alert to tell the user that it is not yet possible to confirm the
+     * receival of a product applied for
+     */
+    private renderAlert() {
+        return(
+            <Alert  text={`It is not yet possible to confirm retrieval of a product.`}
+                    active={ this.state.showAlert } 
+                    onClose={ this.closeAlert } 
+            />
+        );
+    }
+
+    /**
+     * Internal renderer that will render the receiver lightbox which will be 
+     * displayed when desired
+     */
+    private renderReceiverLightbox = () => {
+        if (!this.state.receiver) {
+            return;
+        }
+
+        return (
+            <UserLightbox
+                showLightbox={this.state.showReceiver}
+                onClose={this.closeReceiverLightbox}
+                user={this.state.receiver}
+                isOwn={this.props.isOwnApplication}
+                isOnProfile={this.props.isOnReceiversPage}
+                userId={this.props.application.receiverId}
+                userType={"receiver"}/>
+        );
+    }
+
+    /**
+     * Internal renderer that will render the producer lightbox which will be 
+     * displayed when desired
+     */
+    private renderProducerLightbox = () => {
+        if (!this.state.producer) {
+            return;
+        }
+
+        return (
+            <UserLightbox
+                showLightbox={this.state.showProducer}
+                onClose={this.closeProducerLightbox}
+                user={this.state.producer}
+                isOwn={false}
+                isOnProfile={this.props.isOnReceiversPage}
+                userId={this.props.application.producerId}
+                userType={"producer"}/>
+        );
+    }
+
+    /**
+     * Listener that'll open the receiver lightbox once it has been executed
+     */
+    private openReceiverLightbox = async () => {
+        if (!this.state.receiver) {
+            const receiverId = this.props.application.receiverId;
+            const receiver = await fetchUser(String(receiverId), this.props.store);
+
+
+            // Only display producer if one exists with the given id
+            if (receiver) {
+                this.setState({ receiver, showReceiver: true });
+            } else {
+                this.props.store.currentErrorMessage = "Failed to fetch receiver related to application. Please try again later."
+            }
+        } else {
+            this.setState({ showReceiver: true });
+        }
+    }
+
+    /**
+     * Mehtod that'll close the receiver lightbox once it has been executed
+     */
+    private closeReceiverLightbox = () => {
+        this.setState({ showReceiver: false });
+    }
+
+    /**
+     * Listener that'll open the producer lightbox once it has been executed
+     */
+    private openProducerLightbox = async () => {
+        if (!this.state.producer) {
+            const producerId = this.props.application.producerId;
+            const producer = await fetchUser(String(producerId), this.props.store);
+
+
+            // Only display producer if one exists with the given id
+            if (producer) {
+                this.setState({ producer, showProducer: true });
+            } else {
+                this.props.store.currentErrorMessage = "Failed to fetch producer related to product. Please try again later."
+            }
+        } else {
+            this.setState({ showProducer: true });
+        }
+    }
+
+    /**
+     * Mehtod that'll close the producer lightbox once it has been executed
+     */
+    private closeProducerLightbox = () => {
+        this.setState({ showProducer: false });
     }
 
     /**
@@ -561,7 +967,7 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
      * check name length and change if necissary.
      */
     private nameEstimator = () => {
-        const name = this.props.application.name;
+        const name = this.props.application.receiverName;
 
         // If name meets the length requirements, return initial name
         let newName = name;
@@ -591,4 +997,41 @@ export class Application extends React.PureComponent<ApplicationProps, Applicati
 
         this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
     }
+
+    /**
+     * Listener that'll open the confirmation dialog once it has been executed
+     */
+    private openConfirmationDialog = () => {
+        this.setState({ showDialog: true });
+    }
+
+    /**
+     * Listener that'll close the dialog once it has been executed
+     */
+    private closeConfirmationDialog = () => {
+        this.setState({ showDialog: false });
+    }
+
+    /**
+     * Listener that'll open the alert once it has been executed
+     */
+    private openAlert = () => {
+        this.setState({ showAlert: true });
+    }
+
+    /**
+     * Listener that'll close the alertonce it has been executed
+     */
+    private closeAlert = () => {
+        this.setState({ showAlert: false });
+    }
+
+    /**
+     * Delete application on backend and remove from frontend?
+     */
+    private deleteApplication = async () => {
+        return;
+    }
 }
+
+export const Application = injectStore((store) => ({ store }), UnwrappedApplication);

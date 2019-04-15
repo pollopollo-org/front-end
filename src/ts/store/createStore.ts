@@ -1,7 +1,8 @@
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { DataProviders, Store } from "src/ts/store/Store";
 
-import { fetchSelf } from "src/ts/utils/fetchUser";
+import { fetchSelf } from "src/ts/models/UserModel";
+
 
 /**
  * Cache used to prevent re-creating a store over and over again.

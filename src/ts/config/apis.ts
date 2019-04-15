@@ -34,7 +34,9 @@ export const apis = {
         },
         image: {
             path: `${basePath}/users/image`,
-            errors: {},
+            errors: {
+                413: "The image that you're attempting to upload is too large. Please upload a smaller image."
+            },
         },
         authenticate: {
             path: `${basePath}/users/authenticate`,
@@ -43,7 +45,7 @@ export const apis = {
             }
         }
     },
-    application: {
+    applications: {
         getRecent: `${basePath}/applications/recent`,
         post: {
             path: `${basePath}/applications`,
@@ -53,8 +55,23 @@ export const apis = {
             }
         }, 
         getBatch: {
-            
-        }
+            path: `${basePath}/applications?first={start}&last={end}`,
+            errors: {
+                404: "The requested applications could not be found. Please try again later.",
+            }
+        },
+        getById: {
+            path: `${basePath}/applications/{applicationId}`,
+            errors: {
+                404: "The requested applications could not be found. Please try again later.",
+            }
+        },
+        getByReceiver: {
+            path: `${basePath}/applications/receiver/{receiverId}?status={applicationStatus}`,
+            errors: {
+                404: "The requested applications could not be found. Please try again later.",
+            },
+        },
     },
     products: {
         post: {
@@ -68,6 +85,7 @@ export const apis = {
             path: `${basePath}/products/image`,
             errors: {
                 403: "You are not authorized to upload an image to this product.",
+                413: "The image that you're attempting to upload is too large. Please upload a smaller image."
             },
         },
         put: {
@@ -90,7 +108,7 @@ export const apis = {
             }
         },
         getByProducer: {
-            path: `${basePath}/products/producer/{producerId}`,
+            path: `${basePath}/products/producer/{producerId}?active={productStatus}`,
             errors: {},
         },
     }

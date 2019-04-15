@@ -3,24 +3,21 @@ import React from "react";
 import { colors } from "src/ts/config/colors";
 
 import { easings } from "src/ts/config/easings";
-import { ProductModel } from "src/ts/models/ProductModel";
+import { ProductModel, toggleProductAvailability } from "src/ts/models/ProductModel";
 import { Chevron, Button } from "src/ts/components/utils";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts, routes } from "src/ts/config";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
-import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
-import { UserTypes } from "src/ts/models/UserModel";
-import { fetchUser } from "src/ts/utils/fetchUser";
+import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { alertApiError } from "src/ts/utils/alertApiError";
-import { asyncTimeout } from "src/ts/utils";
-import { apis } from "src/ts/config/apis";
 import { RouterProps, withRouter } from "react-router";
+import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
+import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
 
 export type ProductProps = {
 
@@ -145,7 +142,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
     /**
-     * Will contain a reference to the user name wrapper, so that we can make
+     * Will contain a reference to the see-more, so that we can make
      * the dropdown point towards it properly.
      */
     protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
@@ -193,8 +190,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         position: relative;
 
                         /** Setup dimensions of product */
-                        margin: 10px;
-                        width: calc(100% - 20px); /* Might be temp */
+                        margin-bottom: 10px;
 
                         /** Setup internal dimensions */
                         padding: 10px;
@@ -576,6 +572,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     h3 {
                         margin: 0;
+                        text-align: left;
 
                         &:first-of-type {
                             margin-top: 10px;
@@ -583,6 +580,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     }
 
                     p {
+                        text-align: left;
                         margin: 4px 0 14px;
                     }
 
@@ -620,61 +618,10 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             return;
         }
 
-        return (
-            <button
-                className="profile-link"
+        return(
+            <UserLink
                 onClick={this.openProducerLightbox}
-            >
-                <i className="user-icon">{getSVG("user2")}</i>
-                Producer profile
-
-                <style jsx>{`
-
-                    /** Button to producers profile */
-                    .profile-link {
-                        /** Positioning the icon and button text horizontally */
-                        display: flex;
-                        flex-direction: row;
-
-                        /** Colors and fonts */
-                        background-color: transparent;
-                        font-style: bold;
-                        font-family: ${ fonts.text};
-
-                        /** Size and border */
-                        border: none;
-                        border-radius: 5px;
-                        padding: 10px;
-
-                        /** Setup effects when hover */
-                        transition: background-color 0.1s linear;
-                        cursor: pointer;
-
-                        /** 
-                        * Positioning the button just outside the border of its
-                        * parent, so it does not look as malplaced when not
-                        * hovering
-                        */
-                        margin-left: -5px;
-
-                    }
-
-                    .profile-link:hover {
-                        background-color: rgba(219,208,239,0.5);
-                    }
-
-                    /** User icon placed in button */
-                    .profile-link i {
-                        height: 17px;
-                        width: 17px;
-
-                        color: ${ colors.primary};
-
-                        /** Some space between icon and button text */
-                        margin-right: 5px;
-                    }
-                `}</style>
-            </button>
+                text={"Producer profile"}/>
         );
     }
 
@@ -1075,23 +1022,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             width: 23px;
                         }
                     }
-
-                    @media (max-width: 768px) {
-                        /** Force white colors, on mobile the background will be dark */
-                        button,
-                        .link :global(> a) {
-                            color: ${ colors.whiteSmoke} !important;
-                        }
-
-                        i > :global(.svgIcon) > :global(svg) > :global(path) {
-                            stroke: ${ colors.primary} !important;
-                        }
-
-                        i {
-                            /** We slightly shrink icons as well to fit better */
-                            transform: scale(0.75);
-                        }
-                    }
                 `}</style>
             </React.Fragment>
         );
@@ -1108,67 +1038,14 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         }
 
         return (
-            <Lightbox active={this.state.showProducer} onClose={this.closeProducerLightbox}>
-                <UserDescription user={this.state.producer} isSelf={this.props.isOwnProduct} />
-                {!this.props.isOnProducersPage && (
-                    <div>
-                        <a
-                            href={routes.viewProfile.path.replace(":userId", String(this.props.product.producerId))}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <span className="chevron">
-                                <Chevron />
-                            </span>
-                            <span className="text">Go to producer profile</span>
-                        </a>
-                    </div>
-                )}
-
-                <style jsx>{`
-                    div {
-                        /** Setup dimensions that match the userDescription */
-                        padding: 0 50px 30px;
-                        background-color: ${ colors.pale};
-                    }    
-
-                    a {
-                        /** Setup font */
-                        font-size: 14px;
-                        color: ${ colors.black};
-                        font-family: ${ fonts.text};
-                        font-weight: 300;
-                        text-decoration: none;
-
-                        /** Ensure chevron and text is vertically aligned */
-                        display: flex;
-                        align-items: center;
-
-                        &:hover {
-                            text-decoration: underline;
-                        }
-                    }
-
-                    .chevron {
-                        /** Setup dimensions in which the chevron fits */
-                        display: block;
-                        position: relative;
-                        width: 14px;
-                        height: 10px;
-
-                        /** Setup spacing between chevron and text */
-                        margin-right: 5px;
-                    }
-
-                    .userDesc {
-                        & :global(.information) {
-                            width: 100%;
-                            margin: 0;
-                        }
-
-                    }
-                `}</style>
-            </Lightbox>
+            <UserLightbox
+                showLightbox={this.state.showProducer}
+                onClose={this.closeProducerLightbox}
+                user={this.state.producer}
+                isOwn={this.props.isOwnProduct}
+                isOnProfile={this.props.isOnProducersPage}
+                userId={this.props.product.producerId}
+                userType={"producer"}/>
         );
     }
 
@@ -1252,54 +1129,15 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * Listener that updates the product 
      */
     private updateProductActivation = async () => {
-        await this.toggleAvailability();
-        this.setState({ showDialog: false });
-    }
-
-    /**
-     * Update availability and send it to the backend
-     */
-    private toggleAvailability = async () => {
-        let { product } = this.props;
-
         if (this.state.isPending || !this.props.store.user) {
             return;
         }
 
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-            const token = localStorage.getItem("userJWT");
+        // Notify state that we've begun updating our product
+        this.setState({ isPending: true });
 
-            const result = await fetch(apis.products.put.path.replace("{productId}", String(product.id)), {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    id: product.id,
-                    userId: this.props.store.user.id,
-                    available: !product.isActive, // Updating availability
-                }),
-            });
-
-            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-
-            if (result.ok) {
-                if (this.props.updateProduct) {
-                    const newProduct = new ProductModel({ ...this.props.product, isActive: !product.isActive });
-                    this.props.updateProduct(newProduct);
-                }
-            } else {
-                alertApiError(result.status, apis.products.post.errors, this.props.store);
-            }
-        } catch (err) {
-            // Show error message
-            this.props.store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
-        } finally {
-            this.setState({ isPending: false });
-        }
+        await toggleProductAvailability(this.props.product, this.props.store, this.props.updateProduct);
+        this.setState({ showDialog: false, isPending: false });
     }
 
     /**
