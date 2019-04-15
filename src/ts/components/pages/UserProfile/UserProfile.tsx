@@ -225,7 +225,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
                                     {this.state.isSelf && this.renderFilterDropdown()}
                                 </div>
-                                
+
                                 {this.renderApplications()}
                             </>
                         )}
@@ -331,6 +331,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         position: relative;
                         margin-top: 80px;
                         width: 50%;
+                        min-height: 150px;
+                        display: flex;
+                        flex-direction: column;
                     }
 
                     .list__header {
@@ -431,6 +434,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal render method that'll render all products associated to a user
      */
     private renderProducts = () => {
+
         let products = null;
         if (this.state.filterActiveProducts) {
             products = this.state.activeProducts;
@@ -439,7 +443,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         return (
-            <>
+            <div className="list-wrapper">
                 <Fade in={this.state.isPending} key="throbber">
                     {this.renderListThrobber()}
                 </Fade>
@@ -466,7 +470,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         })}
                     </div>
                 </Fade>
-            </>
+
+                <style jsx>{`
+                    .list-wrapper {
+                        position: relative;
+                        flex-grow: 1;
+                    }
+                `}</style>
+            </div>
         );
     }
 
@@ -589,6 +600,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         if (!user) {
             return;
         }
+
         return (
             <div>
                 {isProducerUser(user)
@@ -785,17 +797,18 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * (e.g. when toggling the product on and off)
      */
     private updateProduct = (index: number, chosenProduct: ProductModel) => {
+
         const newActiveProductList = this.state.activeProducts;
         const newInactiveProductList = this.state.inactiveProducts;
 
-        // Null check
-        if (newActiveProductList && newInactiveProductList) {
-
-            // If new product is active, then remove it from inactiveProducts list
-            if (chosenProduct.isActive) {
+        if (chosenProduct.isActive) {
+            if(newInactiveProductList) {
+                // If new product is active, then remove it from inactiveProducts list
                 newInactiveProductList.splice(index, 1);
                 this.setState({ inactiveProducts: newInactiveProductList });
-            } else {
+            }
+        } else {
+            if(newActiveProductList) {
                 // ...else remove it from the activeProduct list
                 newActiveProductList.splice(index, 1);
                 this.setState({ activeProducts: newActiveProductList });
@@ -820,8 +833,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
 
         return (
-            <>
-                <Fade in={this.state.isPending} key="throbber">
+            <div className="list-wrapper">
+                <Fade in={this.state.isPending} unmountOnExit key="throbber">
                     {this.renderListThrobber()}
                 </Fade>
                 <Fade in={!this.state.isPending} key="applications">
@@ -847,7 +860,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         })}
                     </div>
                 </Fade>
-            </>
+
+                <style jsx>{`
+                    .list-wrapper {
+                        position: relative;
+                        flex-grow: 1;
+                    }
+                `}</style>
+            </div>
         );
     }
 

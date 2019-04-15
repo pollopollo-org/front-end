@@ -11,16 +11,16 @@ const DURATION = 175;
  * shown / hidden.
  */
 // tslint:disable-next-line variable-name completed-docs
-export const Fade: React.SFC<{in?: boolean, unmountOnExit?: boolean; mountOnEnter?: boolean}> = (props) => {
+export const Fade: React.SFC<{ in?: boolean, unmountOnExit?: boolean; mountOnEnter?: boolean }> = (props) => {
     return (
         <CSSTransition
-            { ...props }
+            {...props}
             appear={true}
-            timeout={ DURATION }
+            timeout={DURATION}
             classNames="utils__fade"
         >
             <>
-                { props.children }
+                {props.children}
 
                 <style jsx global>{`
                     .utils__fade-enter,
@@ -30,7 +30,7 @@ export const Fade: React.SFC<{in?: boolean, unmountOnExit?: boolean; mountOnEnte
 
                     .utils__fade-enter-active,
                     .utils__fade-appear-active {
-                        animation: fadeIn ${ DURATION }ms linear forwards;
+                        animation: fadeIn ${ DURATION}ms linear forwards;
                     }
 
                     @keyframes fadeIn {
@@ -51,7 +51,7 @@ export const Fade: React.SFC<{in?: boolean, unmountOnExit?: boolean; mountOnEnte
                         opacity: 0.001;
 
                         /** Apply transition */
-                        transition: opacity ${ DURATION }ms linear;
+                        transition: opacity ${ DURATION}ms linear;
                     }
 
                     .utils__fade-exit-done {

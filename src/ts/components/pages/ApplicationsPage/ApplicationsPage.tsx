@@ -1,7 +1,7 @@
 import React from "react";
 import ApplicationsPageJson from "src/assets/data/applicationsPage.json"
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { colors, fonts} from "src/ts/config";
+import { colors, fonts } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
@@ -85,14 +85,14 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
     /**
      * Main render method for the entire component
      */
-    public render(): JSX.Element{
+    public render(): JSX.Element {
         return (
             <div className="page">
                 {this.renderIntroduction()}
 
                 {this.state.applications
                     ? <div className="flex">
-                        { (this.state.isPending) && 
+                        {(this.state.isPending) &&
                             <i className="throbber-wrapper">
                                 <Throbber size={64} relative={true} />
                             </i>
@@ -105,9 +105,9 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         </div>
                     </div>
                     : <h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>}
-                
-                { this.renderNavigation() }
-                
+
+                {this.renderNavigation()}
+
                 <style jsx>{`
                     h2 {
                         margin: 50px 0;
@@ -194,7 +194,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
             this.state.applications.map((application, index) => {
                 if (index % 2 === evenOrUneven) {
                     return (
-                        <Application 
+                        <Application
                             key={index}
                             application={application}
                             userType={getUserType(this.props.store.user, UserTypes.DONOR)}
@@ -239,10 +239,10 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                     <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.filterCountry} />
                 </span>
                 {this.state.filterCountry !== undefined && (
-                    <span 
-                        className="removeFilter" 
-                        role="button" 
-                        aria-label="Remove filter" 
+                    <span
+                        className="removeFilter"
+                        role="button"
+                        aria-label="Remove filter"
                         onClick={this.removeFilter}
                     >
                         {ApplicationsPageJson.RemoveFilter}
@@ -323,7 +323,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         top: 50%;
                         left: 50%;
                         transform: translate(-50%, -50%);
-                        font-family: ${ fonts.text };
+                        font-family: ${ fonts.text};
                         font-weight: 300;
                     }               
                 `}</style>
@@ -337,15 +337,15 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
     private renderButton = (text: string, isLoading: boolean, onClick: () => void) => {
         return (
             <div className="button">
-                <Button 
-                    withThrobber={true} 
+                <Button
+                    withThrobber={true}
                     text={text}
                     width={170}
                     height={43}
                     fontSize={16}
                     isPending={isLoading}
                     throbberSize={30}
-                    onClick={onClick}/>
+                    onClick={onClick} />
 
                 <style jsx>{`
                     /** Style button to match the rest of the project */
@@ -401,6 +401,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
 
         await this.fetchData(this.state.currentPage + 1);
         this.setState({ currentPage: this.state.currentPage + 1, isFetchingNext: false });
+        window.scrollTo(0, 0);
     }
 
     /**
@@ -417,6 +418,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
 
         await this.fetchData(this.state.currentPage - 1);
         this.setState({ currentPage: this.state.currentPage - 1, isFetchingPrevious: false });
+        window.scrollTo(0, 0);
     }
 
     /**
@@ -431,14 +433,14 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
      * Is passed down to SelectCountry and allows us to extract its value
      */
     private removeFilter = () => {
-        this.setState({filterCountry: undefined});
+        this.setState({ filterCountry: undefined });
     }
 
     /**
      * Is passed down to SelectCountry and allows us to extract its value
      */
-    private newCountrySelected = (newCountry:string) => {
-        this.setState({filterCountry: newCountry,});
+    private newCountrySelected = (newCountry: string) => {
+        this.setState({ filterCountry: newCountry, });
     }
 }
 
