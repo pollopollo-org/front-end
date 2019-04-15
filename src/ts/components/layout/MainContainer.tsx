@@ -64,12 +64,12 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
 
                 <style jsx>{`
                     main {
-                        padding: 60px 0 0;
+                        padding: 60px 10px 0;
                         flex-grow: 1;
 
                         /** Setup a max-width to avoid unnecessarily large items */
                         max-width: 1160px;
-                        width: 100%;
+                        width: calc(100% - 20px);
                         margin: 0 auto;
                     }
 
