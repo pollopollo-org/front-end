@@ -167,7 +167,16 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         if (this.props.product.id !== prevProps.product.id) {
             if (this.state.expanded) {
                 this.setState({ expanded: false });
-                this.toggleCollapsible();
+
+                const desc = this.descriptionRef.current;
+
+                // If our ref isn't available or if we're currently transitioning, then
+                // bail out
+                if (!desc || this.isTransitioning) {
+                    return;
+                }
+
+                desc.style.height = "0px";
             }
         }
     }
@@ -631,8 +640,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         {product.description}
                     </p>
 
-
-
                     {this.renderAssociatedApplicationsStatus()}
                     {this.props.isOwnProduct && <h3>Rank: {product.rank}</h3>}
                     {this.renderProducerLink()}
@@ -644,7 +651,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         /** Prepare expand-collapse functionality */
                         height: 0;
                         overflow: hidden;
-                        transition: height ${ EXPAND_COLLAPSE_TRANSITION_DURATION}ms ${easings.inOutQuart};
 
                         /** Position on top of before element */
                         position: relative;
@@ -1327,6 +1333,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         // Start by locking the height of the content wrapper to the full
         // height of the content
         desc.style.height = `${desc.scrollHeight}px`;
+        desc.style.transition = `height ${EXPAND_COLLAPSE_TRANSITION_DURATION}ms ${easings.inOutQuart}`;
 
         // Force a reflow before we're going to manage the transition
         desc.offsetHeight; // tslint:disable-line no-unused-expression
@@ -1346,6 +1353,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         // Once the transition is complety, specify that we're ready for a new transition
         setTimeout(() => {
             this.isTransitioning = false;
+            desc.style.transition = "";
         }, EXPAND_COLLAPSE_TRANSITION_DURATION);
     }
 
