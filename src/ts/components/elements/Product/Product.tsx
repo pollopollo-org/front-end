@@ -209,6 +209,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         /** Setup internal dimensions */
                         padding: 10px;
                         box-sizing: border-box;
+                        max-width: 100%;
 
                         /** Render a faded border around the product */
                         border: 1px solid rgba(139,72,156, 0.15);
