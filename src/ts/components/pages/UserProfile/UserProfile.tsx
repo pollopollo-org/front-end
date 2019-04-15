@@ -221,11 +221,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         )}
                         {isReceiverUser(user) && (
                             <>
-                                <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
-                                <div className="application-action-buttons">{this.state.isSelf && this.renderFilterDropdown()}</div>
+                                <div className="list__header" ref={this.borderRef}>
+                                    <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
+                                    {this.state.isSelf && this.renderFilterDropdown()}
+                                </div>
+                                
                                 {this.renderApplications()}
                             </>
-
                         )}
                     </div>
                 </div>
@@ -266,7 +268,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-
 
                         width: 100%;
                     }
@@ -334,6 +335,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                     .list__header {
                         display: flex;
+
+                        justify-content: space-between;
                         align-items: center;
                         margin-bottom: 15px;
 
