@@ -17,6 +17,9 @@ import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightb
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
 import { Thumbnail } from "src/ts/components/utils/Thumbnail";
+import { ProductModel, fetchProductById } from "src/ts/models/ProductModel";
+import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
+import { Product } from "src/ts/components/elements/Product/Product";
 
 export type ApplicationProps = {
     /**
@@ -73,6 +76,11 @@ export type ApplicationState = {
      */
     showDialog: boolean;
     /**
+     * Specifies whether or not we should display a lightbox displaying the product
+     * related to the application
+     */
+    showProduct: boolean;
+    /**
      * Specifies the loaded receiver of the application (if any). Will first be
      * loaded if the user wishes to see information about the receiver
      */
@@ -82,6 +90,11 @@ export type ApplicationState = {
      * loaded if the user wishes to see information about the receiver
      */
     producer?: ProducerModel;
+    /**
+     * Contains the product related to the application (if any). Will first be
+     * loaded if the user wishes to see information about the product
+     */
+    product?: ProductModel;
     /**
      * Specifies whether or not the alert should be displayed
      * Used for telling the user that is is not yet possible 
@@ -108,6 +121,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         showReceiver: false,
         showAlert: false,
         showProducer: false,
+        showProduct: false,
     };
 
     /**
@@ -173,6 +187,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 </div>
                 {this.renderReceiverLightbox()}
                 {this.renderProducerLightbox()}
+                {this.renderProductLightbox()}
                 {this.renderConfirmDialog()}
                 {this.renderAlert()}
 
@@ -369,7 +384,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <section className="section-content">
-                <span className={`product ${this.state.isSmall ? "isSmall" : ""}`} title={application.productTitle}>{application.productTitle}</span>
+                <span
+                    className={`product ${this.state.isSmall ? "isSmall" : ""}`}
+                    title={application.productTitle}
+                    onClick={this.showProduct}
+                    role="button"
+                >
+                    {application.productTitle}
+                </span>
 
                 {!this.state.isSmall && (
                     this.renderMotivationTeaser()
@@ -390,6 +412,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         /** Setup font */
                         font-size: 18px;
                         line-height: 1.3em;
+                        cursor: pointer;
 
                         /**
                          * Force product to be at max two lines
@@ -399,6 +422,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         -webkit-box-orient: vertical;
                         overflow: hidden;
                         max-width: calc(100% - 150px);
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
 
                         /** When mobile size, force product text to one line */
                         &.isSmall {
@@ -907,6 +934,50 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
+     * Internal renderer that'll render the product associated with the application
+     * in a lightbox
+     */
+    private renderProductLightbox = () => {
+        if (!this.state.product) {
+            return;
+        }
+
+        const isOwnProduct = this.props.store.user ? this.props.store.user.id === this.props.application.producerId : false;
+
+        return (
+            <Lightbox
+                active={this.state.showProduct}
+                onClose={this.hideProduct}
+            >
+                <Product
+                    isOwnProduct={isOwnProduct}
+                    userType={this.props.userType}
+                    isOnProducersPage={false}
+                    product={this.state.product}
+                />
+            </Lightbox>
+        );
+    }
+
+    /**
+     * Callback that'll display the product lightbox once called
+     */
+    private showProduct = async () => {
+        if (!this.state.product) {
+            const productId = this.props.application.productId;
+            const product = await fetchProductById(productId, this.props.store);
+
+            if (product) {
+                this.setState({ product, showProduct: true });
+            } else {
+                this.props.store.currentErrorMessage = "Failed to fetch product related to application. Please try again later."
+            }
+        } else {
+            this.setState({ showProduct: true });
+        }
+    }
+
+    /**
      * Listener that'll open the producer lightbox once it has been executed
      */
     private openProducerLightbox = async () => {
@@ -919,7 +990,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             if (producer) {
                 this.setState({ producer, showProducer: true });
             } else {
-                this.props.store.currentErrorMessage = "Failed to fetch producer related to product. Please try again later."
+                this.props.store.currentErrorMessage = "Failed to fetch producer related to application. Please try again later."
             }
         } else {
             this.setState({ showProducer: true });
@@ -1037,6 +1108,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private closeAlert = () => {
         this.setState({ showAlert: false });
+    }
+
+    /**
+     * Callback that'll hide the product lightbox once called
+     */
+    private hideProduct = () => {
+        this.setState({ showProduct: false });
     }
 
     /**

@@ -230,7 +230,8 @@ export async function fetchProductById(productId: number, store: Store) {
 
     // If we have a cache hit, then simply return the cached product!
     if (productCache.has(cacheKey)) {
-        return productCache.get(cacheKey);
+        const cacheHit = productCache.get(cacheKey);
+        return cacheHit ? cacheHit[0] : undefined;
     }
 
     const token = localStorage.getItem("userJWT");
@@ -252,15 +253,15 @@ export async function fetchProductById(productId: number, store: Store) {
             }
         });
 
-        const productsData: ProductModelData[] = await response.json();
+        const productData: ProductModelData = await response.json();
 
         // If everything goes well, then create a bunch of productModels from the
         // data and add them to the cache before returning output.
         if (response.ok) {
-            const productArray = productsData.map((productData) => ProductModel.CREATE(productData));
-            productCache.set(cacheKey, productArray);
+            const product = ProductModel.CREATE(productData);
+            productCache.set(cacheKey, [product]);
 
-            return productArray;
+            return product;
         } else {
             // ... else alert any errors that occurred to our users!
             alertApiError(response.status, apis.products.getById.errors, store);
