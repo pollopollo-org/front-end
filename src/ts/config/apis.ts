@@ -45,13 +45,25 @@ export const apis = {
             }
         }
     },
-    application: {
+    applications: {
         getRecent: `${basePath}/applications/recent`,
         post: {
             path: `${basePath}/applications`,
             errors: {
                 400: "Invalid information passed, please correct your data and try again.",
                 409: "A product with the given information already exists."
+            }
+        }, 
+        getBatch: {
+            path: `${basePath}/applications?first={start}&last={end}`,
+            errors: {
+                404: "The requested applications could not be found. Please try again later.",
+            }
+        },
+        getById: {
+            path: `${basePath}/applications/{applicationId}`,
+            errors: {
+                404: "The requested applications could not be found. Please try again later.",
             }
         },
         getByReceiver: {

@@ -1,32 +1,32 @@
 import React from "react";
-import ProductsPageJson from "src/assets/data/productsPage.json";
+import ApplicationsPageJson from "src/assets/data/applicationsPage.json"
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 import { colors, fonts} from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
-import { ProductModel, fetchProductBatch } from "src/ts/models/ProductModel";
-import { Product } from "src/ts/components/elements/Product/Product";
+import { ApplicationModel, fetchApplicationBatch } from "src/ts/models/ApplicationModel";
+import { Application } from "src/ts/components/elements/Application/Application";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
 
-export type ProductsPageProps = {
+export type ApplicationsPageProps = {
     /**
      * Contains a reference to the root sotre
      */
     store: Store;
 }
 
-type ProductsPageState = {
+type ApplicationsPageState = {
     /**
-     * The country the user wants to see products from
+     * The country the user wants to see applications from
      */
     filterCountry?: string;
 
     /**
-     * The list of products to display
+     * The list of applications to display
      */
-    products?: ProductModel[];
+    applications?: ApplicationModel[];
 
     /**
      * Specifies the currently rendered page
@@ -34,10 +34,10 @@ type ProductsPageState = {
     currentPage: number;
 
     /**
-     * Specifies the total amount of products available on the page, which will
+     * Specifies the total amount of applications available on the page, which will
      * be used for pagination
      */
-    totalProducts: number;
+    totalApplications: number;
 
     /**
      * Specifies whether or not we are currently attempting to access the backend
@@ -45,33 +45,33 @@ type ProductsPageState = {
     isPending?: boolean;
 
     /**
-     * Specifies whether or not we're fetching a new page of products
+     * Specifies whether or not we're fetching a new page of applications
      */
     isFetchingNext?: boolean;
 
     /**
-     * Specifies whether or not we're fetching a previous page of products
+     * Specifies whether or not we're fetching a previous page of applications
      */
     isFetchingPrevious?: boolean;
 }
 
 /**
- * Specifies the amount of products to load on a single page
+ * Specifies the amount of applications to load on a single page
  */
 const BATCH_SIZE = 20;
 
 /**
- * A page where a user can see a list of all active products
+ * A page where a user can see a list of all active applications
  */
-class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, ProductsPageState> {
+class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProps, ApplicationsPageState> {
     /**
      * Setup initial state
      */
-    public state: ProductsPageState = {
+    public state: ApplicationsPageState = {
         currentPage: 0,
-        totalProducts: 0,
+        totalApplications: 0,
         isPending: true,
-        products: [],
+        applications: [],
     }
 
     /**
@@ -90,21 +90,21 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
             <div className="page">
                 {this.renderIntroduction()}
 
-                {this.state.products
+                {this.state.applications
                     ? <div className="flex">
                         { (this.state.isPending) && 
                             <i className="throbber-wrapper">
                                 <Throbber size={64} relative={true} />
                             </i>
                         }
-                        <div className="productsListLeft">
-                            {this.renderListOfProducts(true)}
+                        <div className="applicationsListLeft">
+                            {this.renderListOfApplications(true)}
                         </div>
-                        <div className="productsListRight">
-                            {this.renderListOfProducts(false)}
+                        <div className="applicationsListRight">
+                            {this.renderListOfApplications(false)}
                         </div>
                     </div>
-                    : <h2><i>{ProductsPageJson.noProductsAvailable}</i></h2>}
+                    : <h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>}
                 
                 { this.renderNavigation() }
                 
@@ -126,15 +126,15 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         min-height: 200px;
                     }
 
-                    .productsListLeft, 
-                    .productsListRight {
+                    .applicationsListLeft, 
+                    .applicationsListRight {
                         display: flex;
                         flex-direction: column;
                         flex-wrap: wrap;
                         width: 100%;                     
                     }
 
-                    .productsListLeft {
+                    .applicationsListLeft {
                         margin-right: 20px;
                     }
 
@@ -148,7 +148,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         height: 64px;
                     }
 
-                    .product :global(.product-border) {
+                    .application :global(.product-border) {
                         margin: 0; 
                         margin-bottom: 20px;
                         width: 100%;
@@ -183,40 +183,39 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      * Internal renderer that renders a list of either even or uneven indexed
      * products
      */
-    private renderListOfProducts(renderEvenProducts: boolean): React.ReactNode {
-        if (!this.state.products) {
+    private renderListOfApplications(renderEvenApplications: boolean): React.ReactNode {
+        if (!this.state.applications) {
             return;
         }
 
-        const evenOrUneven = renderEvenProducts ? 0 : 1;
+        const evenOrUneven = renderEvenApplications ? 0 : 1;
 
         return (
-            this.state.products.map((product, index) => {
+            this.state.applications.map((application, index) => {
                 if (index % 2 === evenOrUneven) {
                     return (
-                        <Product 
+                        <Application 
                             key={index}
-                            product={product}
-                            userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
-                            isOnProducersPage={false}
-                            isOwnProduct={false}
+                            application={application}
+                            userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                            isOnReceiversPage={false}
+                            isOwnApplication={false}
                         />
                     );
                 }
-
                 return;
             })
         );
     }
 
     /**
-     * Internal renderer that renders the introduction of the products page
+     * Internal renderer that renders the introduction of the applications page
      */
     private renderIntroduction(): React.ReactNode {
         return (
             <React.Fragment>
-                <h1>{ProductsPageJson.title}</h1>
-                <p className="introduction">{ProductsPageJson.text}</p>
+                <h1>{ApplicationsPageJson.title}</h1>
+                <p className="introduction">{ApplicationsPageJson.text}</p>
 
                 <style jsx>{`
                     .introduction {
@@ -229,13 +228,13 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
     /**
      * Internal renderer that'll render a list of filters to be used to filter
-     * available products.
+     * available applications.
      */
     // @ts-ignore
     private renderFilters(): React.ReactNode {
         return (
             <div>
-                <span><b>{ProductsPageJson.Filter}</b></span>
+                <span><b>{ApplicationsPageJson.Filter}</b></span>
                 <span className="countryFilter">
                     <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.filterCountry} />
                 </span>
@@ -246,7 +245,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         aria-label="Remove filter" 
                         onClick={this.removeFilter}
                     >
-                        {ProductsPageJson.RemoveFilter}
+                        {ApplicationsPageJson.RemoveFilter}
                     </span>
                 )}
 
@@ -280,11 +279,11 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     }
 
     /**
-     * Internal renderer that'll render a pagination navigator in the bottom
-     * of the products list that can be used to navigate products.
+     * Internal renderer that will render a pagination navigator in the bottom
+     * of the applications list that can be used to navigate applications.
      */
     private renderNavigation(): React.ReactNode {
-        // If we only have one page of navigation available to us, then don't
+        // If we only have one page of navigation available to us, then do not
         // bother render pagination navigation.
         if (this.getAmountOfPages() <= 1) {
             return;
@@ -296,11 +295,11 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         return (
             <div className="pageNavigation">
                 <span className="left">
-                    {!isFirstPage && this.renderButton(ProductsPageJson.PreviousPage, !!this.state.isFetchingPrevious, this.goToPreviousPage)}
+                    {!isFirstPage && this.renderButton(ApplicationsPageJson.PreviousPage, !!this.state.isFetchingPrevious, this.goToPreviousPage)}
                 </span>
-                <span className="info">{ProductsPageJson.Page} {this.state.currentPage + 1} {ProductsPageJson.Of} {this.getAmountOfPages()}</span>
+                <span className="info">{ApplicationsPageJson.Page} {this.state.currentPage + 1} {ApplicationsPageJson.Of} {this.getAmountOfPages()}</span>
                 <span className="right">
-                    {!isLastPage && this.renderButton(ProductsPageJson.NextPage, !!this.state.isFetchingNext, this.goToNextPage)}
+                    {!isLastPage && this.renderButton(ApplicationsPageJson.NextPage, !!this.state.isFetchingNext, this.goToNextPage)}
                 </span>
 
                 <style jsx>{`
@@ -371,20 +370,20 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     }
 
     /**
-     * Internal helper that'll fetch the products needed to render the current
+     * Internal helper that'll fetch the applications needed to render the current
      * page.
      */
     private fetchData = async (pageIndex: number) => {
-        const response = await fetchProductBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.props.store);
+        const response = await fetchApplicationBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.props.store);
 
         if (!response) {
-            this.setState({ products: undefined });
+            this.setState({ applications: undefined });
             return;
         }
 
         this.setState({
-            products: response.products,
-            totalProducts: response.count,
+            applications: response.applications,
+            totalApplications: response.count,
         });
     }
 
@@ -425,7 +424,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      * on the total count of products
      */
     private getAmountOfPages = () => {
-        return Math.ceil(this.state.totalProducts / BATCH_SIZE);
+        return Math.ceil(this.state.totalApplications / BATCH_SIZE);
     }
 
     /**
@@ -443,4 +442,4 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     }
 }
 
-export const ProductsPage = injectStore((store) => ({ store }), UnwrappedProductsPage);
+export const ApplicationsPage = injectStore((store) => ({ store }), UnwrappedApplicationsPage);
