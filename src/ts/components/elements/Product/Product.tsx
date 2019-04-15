@@ -160,6 +160,19 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
+     * Ensure component is reset in case a new application is rendered in its
+     * place
+     */
+    public componentDidUpdate(prevProps: ProductProps): void {
+        if (this.props.product.id !== prevProps.product.id) {
+            if (this.state.expanded) {
+                this.setState({ expanded: false });
+                this.toggleCollapsible();
+            }
+        }
+    }
+
+    /**
      * Cleanup on unmount
      */
     public componentWillUnmount(): void {

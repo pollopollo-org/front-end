@@ -151,6 +151,19 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
+     * Ensure component is reset in case a new application is rendered in its
+     * place
+     */
+    public componentDidUpdate(prevProps: ApplicationProps): void {
+        if (this.props.application.applicationId !== prevProps.application.applicationId) {
+            if (this.state.expanded) {
+                this.setState({ expanded: false });
+                this.toggleCollapsible();
+            }
+        }
+    }
+
+    /**
      * Cleanup on unmount
      */
     public componentWillUnmount(): void {
