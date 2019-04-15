@@ -698,7 +698,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderInteractWithOwnSection = () => {
         const { application } = this.props;
-
         return(
             <div>
                 {application.status === ApplicationStatus.PENDING && this.renderConfirmButton()}

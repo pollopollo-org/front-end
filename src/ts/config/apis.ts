@@ -58,6 +58,12 @@ export const apis = {
             path: `${basePath}/applications/receiver/{receiverId}?status={applicationStatus}`,
             errors: {},
         },
+        delete: {
+            path: `${basePath}/applications/{userId}/{applicationId}`,
+            errors: {
+                404: "The requested application could not be found. Please try again later.",
+            },
+        }
     },
     products: {
         post: {

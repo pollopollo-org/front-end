@@ -9,7 +9,7 @@
         "motivation": "I want five chickens to get the amount of eggs to regularly sustain my family. I would appreciate your help.",
         "country": "SE",
         "thumbnail": "src/assets/dummy/sif.PNG",
-        "status": "Open"
+        "status": 0
     },
     {
         "applicationId": 2,

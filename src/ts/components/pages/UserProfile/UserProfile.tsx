@@ -473,11 +473,28 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * dropdown for filtering
      */
     private renderFilterDropdown() {
-        if(!this.state.isSelf) return; 
+        if(!this.state.isSelf) return;
 
-        const currentFilter = this.state.filterActiveProducts 
-                                ? "Active products" 
-                                : "Inactive products";
+        const { renderedUser: user } = this.state;
+
+        if (!user) {
+            return;
+        }
+        let currentFilter : string;
+
+        if (isProducerUser(user)) {
+            currentFilter = this.state.filterActiveProducts 
+                                    ? "Active products" 
+                                    : "Inactive products";
+        } else {
+            if(this.applicationStatusIsOpen(this.state.filterApplications)) {
+                currentFilter = "Open applications";
+            } else if(this.applicationStatusIsPending(this.state.filterApplications)) {
+                currentFilter = "Pending applications";
+            } else {
+                currentFilter = "Closed applications";
+            }
+        }
 
         return(
             <div    
@@ -535,7 +552,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         cursor: pointer;
 
                         border: 1px solid ${ colors.primary };
-                        width: 130px;
+                        width: 145px;
 
                         text-align: center;
 
@@ -567,17 +584,36 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Internal render method to render the options of filtering 
      */
     private renderFilterButtons() {
+        const { renderedUser: user } = this.state;
+
+        if (!user) {
+            return;
+        }
         return(
-            <div className="filter-buttons">
-                
-                <button className="filter-active" onClick={ this.filterActiveProducts }>
-                    <i>{ getSVG("check-square") }</i>
-                    <span>Active products</span> 
-                </button>
-                <button className="filter-inactive" onClick={ this.filterInactiveProducts }>
-                    <i>{ getSVG("square") }</i>
-                    <span>Inactive products</span>
-                </button>
+            <div>
+                {isProducerUser(user)
+                    ? <div className="filter-buttons">
+                        <button className="filter-active" onClick={ this.filterActiveProducts }>
+                            <i>{ getSVG("check-square") }</i>
+                            <span>Active products</span> 
+                        </button>
+                        <button className="filter-inactive" onClick={ this.filterInactiveProducts }>
+                            <i>{ getSVG("square") }</i>
+                            <span>Inactive products</span>
+                        </button>
+                    </div>
+                    : <div className="filter-buttons">
+                        <button data-applicationstatus={ApplicationStatus.OPEN} onClick={ this.filterApplications }>
+                            <span>Open applications</span> 
+                        </button>
+                        <button data-applicationstatus={ApplicationStatus.PENDING} onClick={ this.filterApplications }>
+                            <span>Pending applications</span>
+                        </button>
+                        <button data-applicationstatus={ApplicationStatus.CLOSED} onClick={ this.filterApplications }>
+                            <span>Closed applications</span>
+                        </button>
+                    </div>
+                }
 
                 <style jsx>{`
 
@@ -782,15 +818,35 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         if (!applications) {
             return null;
         }
-    
-        return (applications.map((application, index) => {
-            return <Application 
-                        key={index}
-                        isOwnApplication={true}
-                        userType={getUserType(this.props.store.user, UserTypes.DONOR)}
-                        isOnReceiversPage={true}
-                        application={application} />;
-        }));
+
+        return (
+            <>
+                <Fade in={this.state.isPending} key="throbber">
+                    {this.renderListThrobber()}
+                </Fade>
+                <Fade in={!this.state.isPending} key="applications">
+                    <div>
+                        { applications && applications.map((application, index) => {
+                            const isOnReceiversPage = application.receiverId === this.state.userId;
+                            const isOwnApplication = this.props.store.user 
+                                ? this.props.store.user.id === application.receiverId
+                                : false;
+
+                            //const updateProduct = this.updateProduct.bind(this, index);
+
+                            return (
+                                <Application 
+                                    key={index}
+                                    isOwnApplication={isOwnApplication}
+                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    isOnReceiversPage={isOnReceiversPage}
+                                    application={application} />
+                            );
+                        })}
+                    </div>
+                </Fade>
+            </>
+        );
     }
 
     /**
@@ -886,12 +942,22 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
     /**
      * Internal helper that'll filter active products
-     
-    private filterApplications = (status: ApplicationStatus) => {
+     */
+    private filterApplications = (evt: React.MouseEvent<HTMLButtonElement>) => {
+        const dataStatus = Number(evt.currentTarget.dataset.applicationstatus);
+        let status: ApplicationStatus;
+
+        if (dataStatus) {
+            status = dataStatus as ApplicationStatus;
+        } else {
+            return;
+        }
+        
+
         this.setState({ filterApplications: status });
         this.loadApplications(status);
         this.toggleDropdownState();
-    }*/
+    }
 
     /**
      * Listener that's triggered when the producer somehow prompts for the
