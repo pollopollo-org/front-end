@@ -14,6 +14,7 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -413,6 +414,7 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new CompressionPlugin(),
     // Perform type checking and linting in a separate process to speed up compilation
     new ForkTsCheckerWebpackPlugin({
       async: false,
