@@ -40,6 +40,10 @@ export const routes = {
     createProduct: {
         path: "/products/create.html",
     },
+    applicationsPage: {
+        path: "/applications.html",
+        name: "Applications",
+    },
     CreateApplication: {
         path: "/applications/create.html",
     }
