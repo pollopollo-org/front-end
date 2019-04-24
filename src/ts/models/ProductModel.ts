@@ -8,10 +8,12 @@ import { Store } from "src/ts/store/Store";
 import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { asyncTimeout } from "src/ts/utils";
 import { routes } from "src/ts/config";
+import { ApplicationModel, ApplicationModelData } from "src/ts/models/ApplicationModel";
 
 export enum ProductStatus {
-    ACTIVE = "active",
-    INACTIVE = "inactive"
+    ACTIVE,
+    INACTIVE,
+    ALL,
 }
 
 /**
@@ -32,9 +34,9 @@ export type ProductModelData = {
     userId: number;
     thumbnail: string;
     rank?: number;
-    openApplications: number;
-    pendingApplications: number;
-    closedApplications: number;
+    openApplications: ApplicationModelData[];
+    pendingApplications: ApplicationModelData[];
+    closedApplications: ApplicationModelData[];
 };
 
 export type ProductModelFields = {
@@ -48,9 +50,9 @@ export type ProductModelFields = {
     producerId: number;
     thumbnail?: string;
     rank?: number;
-    openApplications: number;
-    pendingApplications: number;
-    closedApplications: number;
+    openApplications: ApplicationModel[];
+    pendingApplications: ApplicationModel[];
+    closedApplications: ApplicationModel[];
 }
 
 /**
@@ -99,6 +101,9 @@ export class ProductModel {
             location,
             thumbnail,
             rank: data.rank,
+            openApplications: data.openApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
+            pendingApplications: data.pendingApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
+            closedApplications: data.closedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData))
         });
     }
 
@@ -157,17 +162,17 @@ export class ProductModel {
     /**
      * Specifies the amount of open applications related to the product
      */
-    public readonly openApplications: number;
+    public readonly openApplications: ApplicationModel[];
 
     /**
      * Specifies the amount of pending applications related to the product
      */
-    public readonly pendingApplications: number;
+    public readonly pendingApplications: ApplicationModel[];
 
     /**
      * Specifies the amount of closed applications related to the product
      */
-    public readonly closedApplications: number;
+    public readonly closedApplications: ApplicationModel[];
 
     constructor(data: ProductModelFields) {
         this.id = data.id;
@@ -309,11 +314,9 @@ export async function fetchProductByProducer(producerId: number, store: Store, s
         return productCache.get(cacheKey);
     }
 
-    const productStatus = status === ProductStatus.ACTIVE;
-
     const endPoint = apis.products.getByProducer.path
         .replace("{producerId}", String(producerId))
-        .replace("{productStatus}", String(productStatus));
+        .replace("{productStatus}", String(status));
 
     try {
         const response = await fetch(endPoint, {

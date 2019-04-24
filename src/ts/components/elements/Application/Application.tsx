@@ -35,6 +35,14 @@ export type ApplicationProps = {
      * profile page.
      */
     isOnReceiversPage: boolean;
+
+    /**
+     * Specifies if the currently rendered application is already associated with
+     * a product (and hence a producer), which means we should only render a
+     * subset of the normal functionality
+     */
+    isAssociatedApplication?: boolean;
+
     /**
      * Contains a reference to the applicaiton model that should be rendered
      */
@@ -339,13 +347,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         const { application } = this.props;
 
         return (
-            <section    className={`section-user 
+            <section className={`section-user 
                                     ${ this.props.isOnReceiversPage
-                                        ? ""
-                                        : "thumbnail-clickable" 
-                                    }`
-                                } 
-                        onClick={ this.openReceiverLightbox}
+                    ? ""
+                    : "thumbnail-clickable"
+                }`
+            }
+                onClick={this.openReceiverLightbox}
             >
                 <div className="thumbnail">
                     <Thumbnail src={this.props.application.getThumbnail()} roundedCorners />
@@ -422,7 +430,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         return (
             <section className="section-content">
                 <span
-                    className={`product ${this.state.isSmall ? "isSmall" : ""}`}
+                    className={`product ${this.state.isSmall ? "isSmall" : ""} ${this.props.isAssociatedApplication ? "disabled" : "enabled"}`}
                     title={application.productTitle}
                     onClick={this.showProduct}
                     role="button"
@@ -449,7 +457,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         /** Setup font */
                         font-size: 18px;
                         line-height: 1.3em;
-                        cursor: pointer;
 
                         /**
                          * Force product to be at max two lines
@@ -460,7 +467,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         overflow: hidden;
                         max-width: calc(100% - 150px);
 
-                        &:hover {
+                        &.enabled {
+                            cursor: pointer;
+                        }
+
+                        &.enabled:hover {
                             text-decoration: underline;
                         }
 
@@ -603,7 +614,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Render button link to receiver profile info
      */
     private renderProducerLink() {
-        if (this.props.isOnReceiversPage) {
+        if (this.props.isOnReceiversPage || this.props.isAssociatedApplication) {
             return;
         }
 
@@ -920,7 +931,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Listener that'll open the receiver lightbox once it has been executed
      */
     private openReceiverLightbox = async () => {
-        if(this.props.isOnReceiversPage) {
+        if (this.props.isOnReceiversPage) {
             return;
         }
 
@@ -977,6 +988,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Callback that'll display the product lightbox once called
      */
     private showProduct = async () => {
+        // Bail out if the applicaiton is already associated with a product
+        if (this.props.isAssociatedApplication) {
+            return;
+        }
+
         if (!this.state.product) {
             const productId = this.props.application.productId;
             const product = await fetchProductById(productId, this.props.store);
