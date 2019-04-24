@@ -84,8 +84,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                         display: flex;
                         flex-direction: column;
                         width: 540px;
-                        margin: auto;
-                        height: 100%;
+                        margin: 30px auto;
                         justify-content: center;
                     }
 
