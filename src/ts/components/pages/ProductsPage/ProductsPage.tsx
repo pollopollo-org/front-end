@@ -10,6 +10,7 @@ import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
 import { Link } from "react-router-dom";
+import { getSVG } from "src/assets/svg";
 
 export type ProductsPageProps = {
     /**
@@ -217,17 +218,18 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         return (
             <React.Fragment>
                 <div className="allDiv">
-                    <div className="introDiv">
+                    <div className="header">
                         <h1>{ProductsPageJson.title}</h1>
-                        <p className="introduction">{ProductsPageJson.text}</p>
+                        {getUserType(this.props.store.user) === UserTypes.PRODUCER && (
+                                <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
+                                    <i>
+                                        {getSVG("plus-square")}
+                                    </i>
+                                </Link>
+                            )}
                     </div>
-                    <div className="buttonDiv">
-                        <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
-                            {this.renderButton("Create Product", false)}
-                        </Link>
-                    </div>
+                    <p className="introduction">{ProductsPageJson.text}</p>
                 </div>
-                
 
                 <style jsx>{`
                     .introduction {
@@ -238,18 +240,33 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         width: 1160px;
                         position: relative;
                     }
-                    
-                    .introDiv {
-                        width: calc(1160px - 180px);
-                        margin-right: 0;
+
+                    h1 {
+                        display: inline-block;
+                        margin: 0;
+                        margin-top: 30px;
                     }
 
-                    .buttonDiv {
-                        width: 170px;
-                        margin: 0;
-                        position: absolute;
-                        left: calc(1160px - 170px);
-                        top: 75px;
+                    i {
+                        display: block;
+                        width: 24px;
+                        height: 24px;
+                    }
+
+                    :global(.link) {
+                        color: ${colors.primary};
+                        display: inline-block;
+                        margin-left: 10px;
+                    }
+
+                    :global(.link):hover {
+                        color: ${colors.secondary};
+                    }
+
+                    @media (max-width: 1200px) {
+                        .allDiv {
+                            width: 100%;
+                        }
                     }
                          
                 `}</style>

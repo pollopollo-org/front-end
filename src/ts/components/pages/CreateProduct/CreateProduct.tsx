@@ -84,8 +84,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                         display: flex;
                         flex-direction: column;
                         width: 540px;
-                        margin: auto;
-                        height: 100%;
+                        margin: 30px auto;
                         justify-content: center;
                     }
 
@@ -422,13 +421,18 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                 || e.target.value.toLowerCase().endsWith(".jpeg")
                 || e.target.value.toLowerCase().endsWith(".jpg")
                 )
-                )
-                {
-                    this.props.store.currentErrorMessage = createProductJson.imageTypeAlert;
-                    return;
-                }
+            )
+            {
+                this.props.store.currentErrorMessage = createProductJson.imageTypeAlert;
+                return;
+            }
+            if (this.validateImageSize(e.target.files[0])) {
+                return;
+            }
+        
 
             this.setState({ image: e.target.files[0]});
+            
         }
     }
 
@@ -445,12 +449,29 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
     }
 
     /**
+     * Check if the image is too big
+     * 16777216 is equal to 16 MB which is the limit
+     */
+    private validateImageSize = (image?: Blob) => {
+        if (image != null && image.size > 16777216) {
+            this.props.store.currentErrorMessage = createProductJson.imageSizeAlert;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Send the information to the backend
      */
     private sendToBackEnd = async (evt: React.FormEvent) => {
         evt.preventDefault();
 
         if (this.state.isPending || !this.props.store.user) {
+            return;
+        }
+
+        if(this.validateImageSize(this.state.image)){
             return;
         }
 
