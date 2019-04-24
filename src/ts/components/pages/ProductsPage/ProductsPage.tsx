@@ -1,7 +1,7 @@
 import React from "react";
 import ProductsPageJson from "src/assets/data/productsPage.json";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { colors, fonts } from "src/ts/config";
+import { colors, fonts, routes } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
@@ -9,6 +9,7 @@ import { ProductModel, fetchProductBatch } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
+import { Link } from "react-router-dom";
 
 export type ProductsPageProps = {
     /**
@@ -87,7 +88,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      */
     public render(): JSX.Element {
         return (
-            <div className="page">
+            <div className="page">    
                 {this.renderIntroduction()}
 
                 {this.state.products
@@ -215,13 +216,42 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     private renderIntroduction(): React.ReactNode {
         return (
             <React.Fragment>
-                <h1>{ProductsPageJson.title}</h1>
-                <p className="introduction">{ProductsPageJson.text}</p>
+                <div className="allDiv">
+                    <div className="introDiv">
+                        <h1>{ProductsPageJson.title}</h1>
+                        <p className="introduction">{ProductsPageJson.text}</p>
+                    </div>
+                    <div className="buttonDiv">
+                        <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
+                            {this.renderButton("Create Product", false)}
+                        </Link>
+                    </div>
+                </div>
+                
 
                 <style jsx>{`
                     .introduction {
                         line-height: 1.4;
-                    }     
+                    }
+
+                    .allDiv{
+                        width: 1160px;
+                        position: relative;
+                    }
+                    
+                    .introDiv {
+                        width: calc(1160px - 180px);
+                        margin-right: 0;
+                    }
+
+                    .buttonDiv {
+                        width: 170px;
+                        margin: 0;
+                        position: absolute;
+                        left: calc(1160px - 170px);
+                        top: 75px;
+                    }
+                         
                 `}</style>
             </React.Fragment>
         );
@@ -341,7 +371,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     /**
      * Internal renderer that renders a button
      */
-    private renderButton = (text: string, isLoading: boolean, onClick: () => void) => {
+    private renderButton = (text: string, isLoading: boolean, onClick?: () => void) => {
         return (
             <div className="button">
                 <Button
