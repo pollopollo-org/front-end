@@ -802,6 +802,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     /** Make icon slightly smaller to fit better */
                     .button-wrapper i {
                         transform: scale(0.75);
+                        width: 24px;
+                        height: 24px;
                     }
 
                     /** Indicate it is clickable */

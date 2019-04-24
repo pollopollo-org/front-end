@@ -452,7 +452,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
 
                         .inputPicDescSection,
                         .pictureDescSection,
-                        .description,
                         .input {
                             width: 100%;
                         }
@@ -467,8 +466,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         }
 
                     .description {
-                        padding: 0;
-
+                        width: calc(100% - 16px);
                     }
 
                     .borderLine {

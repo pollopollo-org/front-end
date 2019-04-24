@@ -342,7 +342,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         justify-content: space-between;
                         align-items: center;
                         margin-bottom: 15px;
-
                         & h2 {
                             margin-right: 10px;
                         }
@@ -355,8 +354,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         }
                     }
 
+                    @media only screen and (max-width: 768px) {
+                        .list__header {
+                            margin-left: 10px;
+                        }
+                    }
+
                     /* For mobile phones */
-                    @media only screen and (max-width: 690px) {
+                    @media only screen and (max-width: 660px) {
                         .page {
                             width: 100%;
                             margin: auto;
@@ -376,6 +381,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                         .list__header {
                             margin-top: 20px;
+                            
                             padding-bottom: 15px;
 
                             border-bottom: 2px solid rgba(69,50,102, 0.6);
