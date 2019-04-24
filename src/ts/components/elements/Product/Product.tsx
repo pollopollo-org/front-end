@@ -626,6 +626,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderDescription = () => {
         const { product } = this.props;
 
+        const shouldRenderRank = this.props.isOwnProduct && !!product.rank;
+
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className={`description-content ${!product.isActive ? "isInactive" : ""}`}>
@@ -641,7 +643,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     </p>
 
                     {this.renderAssociatedApplicationsStatus()}
-                    {this.props.isOwnProduct && <h3>Rank: {product.rank}</h3>}
+                    {shouldRenderRank && <h3>Rank: {product.rank}</h3>}
                     {this.renderProducerLink()}
                 </div>
 
