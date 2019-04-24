@@ -161,13 +161,16 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             placeholder={ editProfileJson.email }
                         />
                         {this.state.userType === "Producer" &&
-                            <input
-                            className="input wallet"
-                            value={this.state.wallet || ""}
-                            aria-required={true}
-                            placeholder={ editProfileJson.wallet}
-                            onChange={this.onWalletChanged}
-                            />
+                            <>
+                                <input
+                                className="input wallet"
+                                value={this.state.wallet || ""}
+                                readOnly
+                                aria-required={true}
+                                placeholder={ editProfileJson.wallet}
+                                onChange={this.onWalletChanged} />
+                                <i className="plus-icon">{getSVG("plus-square")}</i>
+                            </>
                         }
                         <input
                             type="password"
@@ -185,9 +188,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     <div className="pictureDescSection">
                         <div className="currentPictureDiv">
                                 {(
-                                    isNullOrUndefined(picture) 
+                                    isNullOrUndefined(picture)
                                         ? <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>
-                                        : <img className="currentPicture" src={ picture } alt="" role="presentation"/>  
+                                        : <img className="currentPicture" src={ picture } alt="" role="presentation"/>
                                 )}
                         </div>
                         <input
@@ -217,8 +220,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     </div>
                     <div className="submitDiv">
                         <div className="button">
-                            <Button 
-                                withThrobber={true} 
+                            <Button
+                                withThrobber={true}
                                 text={editProfileJson.saveButton}
                                 width={260}
                                 height={43}
@@ -261,6 +264,16 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                         opacity: 1;
                     }
 
+                    /**
+                     * Make the placeholder text more readable,
+                     * because the wallet input field is always read-only
+                     */
+                    &.wallet {
+                        &::placeholder {
+                            color: ${colors.black};
+                        }
+                    }
+
                     &:read-only {
                         opacity: 0.4;
                         cursor: not-allowed;
@@ -285,6 +298,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     position: relative;
                 }
 
+                .plus-icon {
+                    width: 24px;
+                    height:24px;
+                    position: absolute;
+
+                    top:0;
+                }
 
                 .allSection{
                     width: 545px;
