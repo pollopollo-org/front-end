@@ -89,7 +89,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      */
     public render(): JSX.Element {
         return (
-            <div className="page">    
+            <div className="page">
                 {this.renderIntroduction()}
 
                 {this.state.products
@@ -221,12 +221,12 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     <div className="header">
                         <h1>{ProductsPageJson.title}</h1>
                         {getUserType(this.props.store.user) === UserTypes.PRODUCER && (
-                                <Link className="link newProduct" to={routes.createProduct.path} title="Create new product">
-                                    <i>
-                                        {getSVG("plus-square")}
-                                    </i>
-                                </Link>
-                            )}
+                            <Link className="productsPage__link newProduct" to={routes.createProduct.path} title="Create new product">
+                                <i>
+                                    {getSVG("plus-square")}
+                                </i>
+                            </Link>
+                        )}
                     </div>
                     <p className="introduction">{ProductsPageJson.text}</p>
                 </div>
@@ -253,7 +253,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         height: 24px;
                     }
 
-                    :global(.link) {
+                    :global(.productsPage__link) {
                         color: ${colors.primary};
                         display: inline-block;
                         margin-left: 10px;
