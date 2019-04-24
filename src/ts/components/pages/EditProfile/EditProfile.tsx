@@ -160,18 +160,16 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             aria-required={true}
                             placeholder={ editProfileJson.email }
                         />
-                        {this.state.userType === "Producer" &&
-                            <>
-                                <input
+                        <div className="wallet-wrapper">
+                            <input
                                 className="input wallet"
                                 value={this.state.wallet || ""}
                                 readOnly
                                 aria-required={true}
                                 placeholder={ editProfileJson.wallet}
                                 onChange={this.onWalletChanged} />
-                                <i className="plus-icon">{getSVG("plus-square")}</i>
-                            </>
-                        }
+                            <i className="plus-icon">{getSVG("plus-square")}</i>
+                        </div>
                         <input
                             type="password"
                             className="input password first"
@@ -303,7 +301,18 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     height:24px;
                     position: absolute;
 
-                    top:0;
+                    top: 24px; 
+                    right: 10px; 
+                    padding: 0; 
+                    color: ${colors.gray}; 
+                    cursor: pointer; 
+                    &:hover {
+                        color: ${colors.secondary};
+                    }
+                }
+
+                .wallet-wrapper {
+                    position: relative; 
                 }
 
                 .allSection{
