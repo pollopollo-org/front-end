@@ -563,13 +563,30 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 || e.target.value.toLowerCase().endsWith(".jpeg")
                 || e.target.value.toLowerCase().endsWith(".jpg")
                 )
-                )
-                {
-                    this.props.store.currentErrorMessage = editProfileJson.imageTypeAlert;
-                    return;
-                }
+            )
+            {
+                this.props.store.currentErrorMessage = editProfileJson.imageTypeAlert;
+                return;
+            }
+            
+            if (this.validateImageSize(e.target.files[0])) {
+                return;
+            }
 
             this.setState({ profilePicture: e.target.files[0]});
+        }
+    }
+
+    /**
+     * Check if the image is too big
+     * 16777216 is equal to 16 MB which is the limit
+     */
+    private validateImageSize = (image?: Blob) => {
+        if (image != null && image.size > 16777216) {
+            this.props.store.currentErrorMessage = "The size of the uploaded image is too big. It must be less than 16 MB.";
+            return true;
+        } else {
+            return false;
         }
     }
 
