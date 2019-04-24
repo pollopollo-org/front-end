@@ -135,6 +135,7 @@ export class ApplicationModel {
         this.thumbnail = data.thumbnail;
         this.productTitle = data.productTitle;
         this.productPrice = data.productPrice;
+        this.productId = data.productId;
         this.producerId = data.producerId;
         this.motivation = data.motivation;
         this.status = convertNumberToApplicationStatus(data.status);

@@ -11,9 +11,9 @@ import { routes } from "src/ts/config";
 import { ApplicationModel, ApplicationModelData } from "src/ts/models/ApplicationModel";
 
 export enum ProductStatus {
-    ACTIVE,
-    INACTIVE,
-    ALL,
+    ACTIVE = "Available",
+    INACTIVE = "Unavailable",
+    ALL = "All",
 }
 
 /**

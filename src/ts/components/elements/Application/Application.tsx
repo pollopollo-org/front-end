@@ -974,12 +974,25 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 active={this.state.showProduct}
                 onClose={this.hideProduct}
             >
-                <Product
-                    isOwnProduct={isOwnProduct}
-                    userType={this.props.userType}
-                    isOnProducersPage={false}
-                    product={this.state.product}
-                />
+                <div>
+                    <Product
+                        isOwnProduct={isOwnProduct}
+                        userType={this.props.userType}
+                        isOnProducersPage={false}
+                        product={this.state.product}
+                    />
+
+                    <style jsx>{`
+                        div {
+                            /**
+                             * Crop applications to maxmimum dimensions
+                             */
+                            width: calc(100vw - 60px);
+                            max-width: 560px;
+                            padding: 20px 20px 10px;   
+                        }
+                    `}</style>
+                </div>
             </Lightbox>
         );
     }
