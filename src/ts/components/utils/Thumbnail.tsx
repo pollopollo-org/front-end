@@ -10,6 +10,11 @@ export type ThumbnailProps = {
     src?: string;
 
     /**
+     * If set to true, then the thumbnail will have rounded corners
+     */
+    roundedCorners?: boolean;
+
+    /**
      * Optionally specifies an action to perform once the image is clicked
      */
     callback?(): void;
@@ -30,6 +35,12 @@ export type ThumbnailState = {
  */
 export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailState> {
     /**
+     * Contains the previous source passed to the thumbnail component, which will
+     * be used to determine if we should begin fetching an image again.
+     */
+    private prevSrc?: string;
+
+    /**
      * Setup initial state
      */
     public state: ThumbnailState = {
@@ -45,6 +56,23 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
             const preloadImg = new Image();
             preloadImg.src = this.props.src;
             preloadImg.onload = this.onImageLoad;
+            this.prevSrc = this.props.src;
+        }
+    }
+
+    /**
+     * Every time the component updates, then we need to redetermine if we have
+     * to fetch a new image or if we need to display the placeholder again.
+     */
+    public componentDidUpdate(): void {
+        if (!this.props.src) {
+            this.prevSrc = undefined;
+            this.setState({ hasLoaded: false });
+        } else if (this.props.src !== this.prevSrc) {
+            const preloadImg = new Image();
+            preloadImg.src = this.props.src;
+            preloadImg.onload = this.onImageLoad;
+            this.prevSrc = this.props.src;
         }
     }
 
@@ -53,16 +81,16 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
      */
     public render(): JSX.Element {
         return (
-            <div className={`thumbnail ${this.state.hasLoaded ? "hasLoaded" : "notLoaded"}`}>
-                <i 
+            <div className={`thumbnail ${this.state.hasLoaded ? "hasLoaded" : "notLoaded"} ${this.props.roundedCorners ? "rounded" : ""}`}>
+                <i
                     className={`image ${this.props.callback ? "hasCallback" : ""}`}
                     onClick={this.props.callback}
                     role="button"
                 >
                     <img src={this.props.src} alt="" role="presentation" />
-                </i>                 
+                </i>
                 <i className="placeholder">
-                    { getSVG("image", { strokeColor: colors.primary }) }
+                    {getSVG("image", { strokeColor: colors.primary })}
                 </i>
 
                 <style jsx>{`
@@ -79,6 +107,14 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
                          * container 
                          */
                         overflow: hidden;
+
+                        /** If rounded corners are enabled, then enforce them! */
+                        &.rounded {
+                            & .image {
+                                border-radius: 50%;
+                                overflow: hidden;
+                            }
+                        }
 
                         /** Display image as soon as it has loaded */
                         &.hasLoaded {
@@ -116,7 +152,7 @@ export class Thumbnail extends React.PureComponent<ThumbnailProps, ThumbnailStat
                         opacity: 0;
                         -webkit-backface-visibility: hidden;
                         transform: scale(1);
-                        transition: transform 0.2s ${ easings.inOutQuad }, opacity 0.2s linear;
+                        transition: transform 0.2s ${ easings.inOutQuad}, opacity 0.2s linear;
 
                         &.hasCallback {
                             /** Indicate that thumbnail is clickable */

@@ -12,4 +12,6 @@ export const colors = {
     white: "#fff",
     whiteSmoke: "#f7f7f7",
     gray: "#a7a7a7",
+    green: "#008B00",
+    yellow: "#FF6F00"
 };

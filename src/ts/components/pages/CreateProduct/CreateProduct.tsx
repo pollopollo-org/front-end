@@ -1,16 +1,13 @@
 import React from "react";
 import createProductJson from "src/assets/data/createProduct.json";
-import { colors, fonts, routes } from "src/ts/config";
+import { colors, fonts } from "src/ts/config";
 import { getSVG } from "src/assets/svg";
 import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
-import { apis } from "src/ts/config/apis";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { asyncTimeout } from "src/ts/utils";
 import { withRouter, RouterProps } from "react-router";
-import { alertApiError } from "src/ts/utils/alertApiError";
-import { invalidateCacheKey } from "src/ts/utils/fetchProducts";
+import { postProduct } from "src/ts/models/ProductModel";
 
 type CreateProductProps = {
     /**
@@ -26,26 +23,32 @@ type CreateProductState = {
     /** 
      * A short title describing the product 
      */
-    title?: string;
+    title: string;
     
     /**
      * The price of the product
      */
-    price?: number; 
+    price: number; 
 
     /** 
      * A description of the product 
      */
-    description?: string;
+    description: string;
 
     /**
      * Image of the product
      */
-    productPicture?: File;
+    image?: Blob;
+
     /**
      * Specifies whether or not we're currently attempting to create a user
      */
     isPending?: boolean;
+
+    /**
+     * The rank of the product, default is 0, which is placed below all other ranks
+     */
+    rank?: number;
 };
 
 /**
@@ -55,7 +58,11 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
     /**
      * State of the create product form form, all fields initially set to null
      */
-    public readonly state: CreateProductState = {};
+    public readonly state: CreateProductState = {
+        title: "",
+        price: 1,
+        description: "",
+    };
 
     /**
      * Main render method for the entire component
@@ -77,8 +84,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                         display: flex;
                         flex-direction: column;
                         width: 540px;
-                        margin: auto;
-                        height: 100%;
+                        margin: 30px auto;
                         justify-content: center;
                     }
 
@@ -142,6 +148,17 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     aria-valuemax={1000000}
                     aria-valuenow={this.state.price}
                     onChange={this.onPriceChanged}
+                />
+                <input
+                    type="number"
+                    className="leftInput"
+                    placeholder={createProductJson.productRank}
+                    min={0}
+                    max={1000000}
+                    aria-valuemin={0}
+                    aria-valuemax={1000000}
+                    aria-valuenow={this.state.rank}
+                    onChange={this.onRankChanged}
                 />
                 <textarea
                     className="leftInput"
@@ -237,7 +254,7 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
             <div className="rightColumn">
                 <div className="currentPictureDiv">
                     {(
-                        isNullOrUndefined(this.state.productPicture) 
+                        isNullOrUndefined(this.state.image) 
                             ? <i className="user">{getSVG("image", { strokeColor: colors.primary }) }</i>
                             : <img className="currentPicture" src={ this.getProductPictureURL() } alt="" role="presentation"/>  
                     )}
@@ -381,6 +398,14 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
      * Method that'll get triggered each time the input is changed, in order to
      * properly update state
      */
+    private onRankChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({rank: Number(evt.currentTarget.value)});
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
     private onDescriptionChanged = (evt: React.FormEvent<HTMLTextAreaElement>) => {
         this.setState({ description: evt.currentTarget.value });
     }
@@ -396,13 +421,18 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                 || e.target.value.toLowerCase().endsWith(".jpeg")
                 || e.target.value.toLowerCase().endsWith(".jpg")
                 )
-                )
-                {
-                    this.props.store.currentErrorMessage = createProductJson.imageTypeAlert;
-                    return;
-                }
+            )
+            {
+                this.props.store.currentErrorMessage = createProductJson.imageTypeAlert;
+                return;
+            }
+            if (this.validateImageSize(e.target.files[0])) {
+                return;
+            }
+        
 
-            this.setState({ productPicture: e.target.files[0]});
+            this.setState({ image: e.target.files[0]});
+            
         }
     }
 
@@ -411,10 +441,23 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
      * otherwise not
      */
     private getProductPictureURL = () => {
-        if(isNullOrUndefined(this.state.productPicture)){
+        if(isNullOrUndefined(this.state.image)){
             return "";
         } else{
-            return window.URL.createObjectURL(this.state.productPicture);
+            return window.URL.createObjectURL(this.state.image);
+        }
+    }
+
+    /**
+     * Check if the image is too big
+     * 16777216 is equal to 16 MB which is the limit
+     */
+    private validateImageSize = (image?: Blob) => {
+        if (image != null && image.size > 16777216) {
+            this.props.store.currentErrorMessage = createProductJson.imageSizeAlert;
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -427,72 +470,14 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
         if (this.state.isPending || !this.props.store.user) {
             return;
         }
-        
-        try {
-            this.setState({ isPending: true });
-            const startedAt = performance.now();
-            const token = localStorage.getItem("userJWT");
 
-            const result = await fetch(apis.products.post.path, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    userId: this.props.store.user.id,
-                    title: this.state.title,
-                    price: this.state.price,
-                    description: this.state.description,
-                    country: this.props.store.user.country,
-                }),
-            });
-
-            let imageResult: Response | undefined = undefined;
-
-            if (this.state.productPicture) {
-                imageResult = await fetch(apis.products.postImage.path, {
-                    method: "PUT",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: this.imageToData((await result.json()).productId),
-                })
-            }
-
-            await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-
-            if (result.ok) {
-                invalidateCacheKey(`producer-${this.props.store.user.id}`);
-                this.props.history.push(routes.profile.path);
-            } else {
-                alertApiError(result.status, apis.products.post.errors, this.props.store);
-
-                if (imageResult) {
-                    alertApiError(imageResult.status, apis.products.postImage.errors, this.props.store);
-                }
-
-                this.setState({ isPending: false });
-            }
-        } catch (err) {
-            this.setState({ isPending: false });
-            this.props.store.currentErrorMessage = "Something went wrong while attempting to create your product, please try again later.";
-        }
-    }
-
-    /**
-     * Validates the image by checking for malformed/corrupted data
-     */
-    private imageToData = (productId: number): FormData => {
-        const formData = new FormData();
-
-        if (this.state.productPicture) {
-            formData.append("userId", String(this.props.store.user!.id));
-            formData.append("productId", String(productId));
-            formData.append("file", this.state.productPicture);
+        if(this.validateImageSize(this.state.image)){
+            return;
         }
 
-        return formData;
+        this.setState({ isPending: true });
+        await postProduct(this.state, this.props.store, this.props.history);
+        this.setState({ isPending: false });
     }
 }
 

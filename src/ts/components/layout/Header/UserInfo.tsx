@@ -88,31 +88,31 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     public render(): JSX.Element | undefined {
         return (
             <div
-                className={`${ this.state.showDropdown ? "active" : "" } ${ this.props.store.user ? "hasUser" : "noUser"}`}
-                ref={ this.wrapperRef }
-                onClick={ this.onUsernameClick }
+                className={`${this.state.showDropdown ? "active" : ""} ${this.props.store.user ? "hasUser" : "noUser"}`}
+                ref={this.wrapperRef}
+                onClick={this.onUsernameClick}
                 role="button"
             >
-                <i className="icon">{ getSVG("user", { strokeColor: colors.whiteSmoke }) }</i>
-                { !this.props.store.user && (
+                <i className="icon">{getSVG("user", { strokeColor: colors.whiteSmoke })}</i>
+                {!this.props.store.user && (
                     <>
                         <span className="loginButton" onClick={this.props.closeHeader} role="link">
                             <Link to={routes.login.path}>
-                                { userInfoJson.logIn }
+                                {userInfoJson.logIn}
                             </Link>
                             <span className="underline" />
                         </span>
                         <span className="loginButton" onClick={this.props.closeHeader} role="link">
                             <Link to={routes.register.path}>
-                                { userInfoJson.register }
+                                {userInfoJson.register}
                             </Link>
                             <span className="underline" />
                         </span>
                     </>
                 )}
-                { this.props.store.user && (
+                {this.props.store.user && (
                     <>
-                        <span className="name">{ this.props.store.user.firstName } { this.props.store.user.surName }</span>
+                        <span className="name">{this.props.store.user.firstName} {this.props.store.user.surName}</span>
                         <span className="chevron">
                             <Chevron
                                 vertical
@@ -122,8 +122,8 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                             />
                         </span>
 
-                        { this.state.isMobile && this.renderInformation() }
-                        { !this.state.isMobile && this.renderDropdown() }
+                        {this.state.isMobile && this.renderInformation()}
+                        {!this.state.isMobile && this.renderDropdown()}
                         <span className="underline" />
 
                     </>
@@ -147,7 +147,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         & .loginButton :global(> a),
                         & .name {
                             /** Override defaults for link */
-                            color: ${ colors.whiteSmoke };
+                            color: ${ colors.whiteSmoke};
                             text-decoration: none;
 
                             /** Prepare transitions */
@@ -155,7 +155,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         }
 
                         & .chevron {
-                            border-color: ${ colors.whiteSmoke };
+                            border-color: ${ colors.whiteSmoke};
                         }
 
                         /** Prepare hover effect */
@@ -238,7 +238,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                             /** Render the lines */
                             height: 100%;
-                            background-color: ${ colors.whiteSmoke };
+                            background-color: ${ colors.whiteSmoke};
                         }
 
                         &::before {
@@ -248,7 +248,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                             opacity: 0;
 
                             /** Prepare transitions */
-                            transition: right 0.15s ${ easings.inOutQuart }, opacity 0.1s linear;
+                            transition: right 0.15s ${ easings.inOutQuart}, opacity 0.1s linear;
                         }
 
                         &::after {
@@ -258,7 +258,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                             opacity: 0;
 
                             /** Prepare transitions */
-                            transition: left 0.15s ${ easings.inOutQuart }, opacity 0.1s linear;
+                            transition: left 0.15s ${ easings.inOutQuart}, opacity 0.1s linear;
                         }
                     }
 
@@ -279,7 +279,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                              * Render a separator between userInfo and other
                              * navigation
                              */
-                            border-top: 1px solid ${ colors.whiteSmoke };
+                            border-top: 1px solid ${ colors.whiteSmoke};
                             padding-top: 10px;
                             margin-top: 10px;
 
@@ -335,12 +335,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     protected renderDropdown(): JSX.Element {
         return (
             <Dropdown
-                active={ this.state.showDropdown }
-                pointAt={ this.wrapperRef }
-                onClose={ this.onDropdownClose }
+                active={this.state.showDropdown}
+                pointAt={this.wrapperRef}
+                onClose={this.onDropdownClose}
+                withWindowOffset
             >
                 <div className="wrapper">
-                    { this.renderInformation() }
+                    {this.renderInformation()}
                 </div>
 
                 <style jsx>{`
@@ -368,23 +369,23 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     protected renderInformation(): JSX.Element {
         return (
             <React.Fragment>
-                { this.renderUserData() }
+                {this.renderUserData()}
 
                 <span className="link" onClick={this.onItemClick} role="link">
                     <Link to={routes.profile.path}>
-                        <i className="logIn">{ getSVG("log_in")}</i>
-                        { userInfoJson.profile }
+                        <i className="logIn">{getSVG("log_in")}</i>
+                        {userInfoJson.profile}
                     </Link>
                 </span>
                 <span className="link" onClick={this.onItemClick} role="link">
                     <Link to={routes.editProfile.path}>
-                        <i className="edit">{ getSVG("edit") }</i>
-                        { userInfoJson.edit }
+                        <i className="edit">{getSVG("edit")}</i>
+                        {userInfoJson.edit}
                     </Link>
                 </span>
-                <button onClick={ this.signOut } role="button">
-                    <i>{ getSVG("log_out") }</i>
-                    { userInfoJson.logOut }
+                <button onClick={this.signOut} role="button">
+                    <i>{getSVG("log_out")}</i>
+                    {userInfoJson.logOut}
                 </button>
 
                 <style jsx>{`
@@ -422,7 +423,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                         /** Set up text styling */
                         font-size: 12px;
-                        color: ${ colors.black };
+                        color: ${ colors.black};
                         line-height: 1em;
                         text-decoration: none;
 
@@ -442,17 +443,17 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                             & > :global(.svgIcon) > :global(svg) > :global(path) {
                                 /** Apply default font color */
-                                stroke: ${ colors.black };
+                                stroke: ${ colors.black};
                             }
                         }
 
                         /** Apply highlight color on hover */
                         &:hover {
                             background-color: rgba(69, 50, 102, 0.1);
-                            color: ${ colors.primary };
+                            color: ${ colors.primary};
 
                             & i > :global(.svgIcon) > :global(svg) > :global(path) {
-                                stroke: ${ colors.primary };
+                                stroke: ${ colors.primary};
                             }
                         }
                     }
@@ -469,7 +470,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         align-items: center;
 
                         /** Override default colors */
-                        color: ${ colors.black };
+                        color: ${ colors.black};
                         text-decoration: none;
 
                         & .edit {
@@ -482,11 +483,11 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         /** Force white colors, on mobile the background will be dark */
                         button,
                         .link :global(> a) {
-                            color: ${ colors.whiteSmoke } !important;
+                            color: ${ colors.whiteSmoke} !important;
                         }
 
                         i > :global(.svgIcon) > :global(svg) > :global(path) {
-                            stroke: ${ colors.whiteSmoke } !important;
+                            stroke: ${ colors.whiteSmoke} !important;
                         }
 
                         i {
@@ -510,8 +511,8 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
         return (
             <div className="user">
-                <b>{ this.props.store.user.firstName } { this.props.store.user.surName }</b><br />
-                { this.renderUserType() }
+                <b>{this.props.store.user.firstName} {this.props.store.user.surName}</b><br />
+                {this.renderUserType()}
 
                 <style jsx>{`
                     .user {
@@ -520,7 +521,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         margin: -0.15em 0 10px;
 
                         /** Add separator */
-                        border-bottom: 1px solid ${ colors.whiteSmoke };
+                        border-bottom: 1px solid ${ colors.whiteSmoke};
 
                         /** Adjust line-height */
                         line-height: 1.3em;
@@ -531,7 +532,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                     @media (max-width: 768px) {
                         .user {
-                            color: ${ colors.whiteSmoke };
+                            color: ${ colors.whiteSmoke};
                             font-size: 14px;
                             margin-top: 5px;
 

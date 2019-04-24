@@ -131,7 +131,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                         hyphens: auto;
                     }
 
-                    @media (max-width: 690px) {
+                    @media (max-width: 800px) {
                         /*
                          * Make the information box wide enough to fill the
                          * screen and center it.

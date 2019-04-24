@@ -2,6 +2,7 @@ import { observable } from "mobx";
 
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
 import { UserModel } from "src/ts/models/UserModel";
+import { ProductModel } from "src/ts/models/ProductModel";
 
 /**
  * Specifies where the created models should fetch their data from.
@@ -19,7 +20,7 @@ export enum DataProviders {
  */
 // tslint:disable completed-docs
 type StoreArgs = {
-    applications: ApplicationModel[];
+    applications?: ApplicationModel[];
     user?: UserModel;
 }
 // tslint:enable completed-docs
@@ -32,11 +33,11 @@ type StoreArgs = {
 // tslint:disable completed-docs
 export class Store {
     /**
-     * Contains a reference to the ApplicationModel, which contains fetched data
-     * about an application.
+     * Contains a reference to the applications that should be displayed on the
+     * frontpage.
      */
     @observable
-    public readonly applications: ApplicationModel[];
+    public readonly mainpageApplications: ApplicationModel[];
 
     /**
      * Contains a reference to the UserModel, which contains fetched data
@@ -44,6 +45,13 @@ export class Store {
      */
     @observable
     public user?: UserModel;
+
+    /**
+     * Contains a reference to the ProductModel, which containts fetched data
+     * about a product.
+     */
+    @observable
+    public product: ProductModel;
 
     /**
      * Specifies the application has managed to fully render itself yet.
@@ -61,7 +69,7 @@ export class Store {
     public currentErrorMessage: string;
 
     constructor(initial: StoreArgs) {
-        this.applications = initial.applications;
+        this.mainpageApplications = initial.applications || [];
         this.user = initial.user;
     }
 }

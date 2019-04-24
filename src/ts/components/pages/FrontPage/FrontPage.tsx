@@ -4,9 +4,11 @@ import React from "react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
-import { colors, fonts } from "src/ts/config";
+import { fonts } from "src/ts/config";
 
 import { Application } from "src/ts/components/elements/Application/Application";
+import { UserTypes } from "src/ts/models/UserModel";
+import { getUserType } from "src/ts/utils/getUserType";
 
 export type FrontPageProps = {
     /**
@@ -28,9 +30,16 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
         return (
             <div>
                 <h1>Recent applications</h1>
+
                 <div className="list-of-applications">
-                    {this.props.store.applications.map((application, index) => {
-                        return <Application key={index} application={application} />;
+                    {this.props.store.mainpageApplications.map((application, index) => {
+                        return <Application
+                            key={index}
+                            isOwnApplication={false}
+                            userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                            isOnReceiversPage={false}
+                            application={application}
+                        />;
                     })}
                 </div>
 
@@ -52,32 +61,15 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         /** Temp dimensions of list */
                         width: 50%;
                         margin-bottom: 10px;
-                        max-height: 550px;
-                        overflow-y: auto;
-                        -webkit-overflow-scrolling: touch;
 
                         /**
                          * When the viewport gets too small, force rendering
                          * of applications to fill 100%
                          */
-                        @media (max-width: 1100px) {
+                        @media (max-width: 768px) {
                             width: 100%;
-                            max-width: 650px;
                             height: 100%;
                             margin: 0 auto 30px;
-                        }
-
-                        /** Apply custom scrollbar styling */
-                        & ::-webkit-scrollbar {
-                            width: 3px;
-                        }
-
-                        & ::-webkit-scrollbar-track {
-                            background: rgba(56, 56, 56, 0.1);
-                        }
-
-                        & ::-webkit-scrollbar-thumb {
-                            background: ${ colors.black};
                         }
                     }
 

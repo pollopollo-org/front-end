@@ -9,6 +9,7 @@ import { EditProfile } from "src/ts/components/pages/EditProfile/EditProfile";
 import { FrontPage } from "src/ts/components/pages/FrontPage/FrontPage";
 import { LoginForm } from "src/ts/components/pages/LoginForm/LoginForm";
 import { ProductsPage } from "src/ts/components/pages/ProductsPage/ProductsPage";
+import { ApplicationsPage } from "src/ts/components/pages/ApplicationsPage/ApplicationsPage";
 import { RegisterForm } from "src/ts/components/pages/RegisterForm/RegisterForm";
 import { UserProfile } from "src/ts/components/pages/UserProfile/UserProfile";
 import { Footer } from "src/ts/components/layout/Footer/Footer";
@@ -16,6 +17,7 @@ import { observer } from "mobx-react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Alert } from "src/ts/components/utils/Alert";
+import { CreateApplication } from "src/ts/components/pages/CreateApplication/CreateApplication";
 
 type MainContainerProps = {
     /**
@@ -47,25 +49,27 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
                         <Route exact path={routes.editProfile.path} component={EditProfile} />
                         <Route exact path={routes.createProduct.path} component={CreateProduct} />
                         <Route exact path={routes.productsPage.path} component={ProductsPage} />
+                        <Route exact path={routes.applicationsPage.path} component={ApplicationsPage} />
+                        <Route exact path={routes.CreateApplication.path} component={CreateApplication} />
                     </Switch>
                 </main>
 
                 <Footer />
 
-                <Alert 
-                    active={!!this.props.store.currentErrorMessage} 
-                    text={this.props.store.currentErrorMessage} 
+                <Alert
+                    active={!!this.props.store.currentErrorMessage}
+                    text={this.props.store.currentErrorMessage}
                     onClose={this.closeAlert}
                 />
 
                 <style jsx>{`
                     main {
-                        padding: 60px 0 0;
+                        padding: 60px 10px 0;
                         flex-grow: 1;
 
                         /** Setup a max-width to avoid unnecessarily large items */
                         max-width: 1160px;
-                        width: 100%;
+                        width: calc(100% - 20px);
                         margin: 0 auto;
                     }
 
