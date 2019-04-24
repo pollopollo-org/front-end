@@ -18,7 +18,7 @@ import { Store } from "src/ts/store/Store";
 import { withRouter, RouteComponentProps } from "react-router";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
-
+import { AssociatedApplicationsLightbox } from "src/ts/components/elements/Product/AssociatedApplicationsLightbox";
 
 export type ProductProps = {
 
@@ -105,6 +105,18 @@ export type ProductState = {
      * loaded if the user wishes to see information about the producer
      */
     producer?: ProducerModel;
+
+    /**
+     * Specifies if we should currently be displaying the open applications
+     * associated with the product
+     */
+    showPendingApplications?: boolean;
+
+    /**
+     * Specifies if we should currently be displaying the open applications
+     * associated with the product
+     */
+    showOpenApplications?: boolean;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -521,8 +533,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
                 }}>
-                <span className="open"><span className="amount">{this.props.product.openApplications}</span> open</span>
-                <span className="pending"><span className="amount">{this.props.product.pendingApplications}</span> pending</span>
+                <span className="open"><span className="amount">{this.props.product.openApplications.length}</span> open</span>
+                <span className="pending"><span className="amount">{this.props.product.pendingApplications.length}</span> pending</span>
 
                 <style jsx>{`
                     .open-pending-section {
@@ -707,6 +719,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * applications
      */
     private renderAssociatedApplicationsStatus() {
+        const { product } = this.props;
 
         // If it is producers own product and is on own profile page, then show
         // open and pending products
@@ -719,9 +732,28 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 <h3>Associated applications</h3>
 
                 <div className="open-pending-buttons">
-                    <span role="button" className="open"><span className="amount">{this.props.product.openApplications}</span> open</span>
-                    <span role="button" className="pending"><span className="amount">{this.props.product.pendingApplications}</span> pending</span>
+                    <span
+                        role="button"
+                        className={`open ${!!product.openApplications.length ? "active" : "inactive"}`}
+                        onClick={this.showOpenApplicationsLightbox}
+                    >
+                        <span className="amount">{product.openApplications.length}</span> open
+                    </span>
+                    <span
+                        role="button"
+                        className={`pending ${!!product.pendingApplications.length ? "active" : "inactive"}`}
+                        onClick={this.showPendingApplicationsLightbox}
+                    >
+                        <span className="amount">{product.pendingApplications.length}</span> pending
+                    </span>
                 </div>
+
+                <AssociatedApplicationsLightbox
+                    displayOpenApplications={this.state.showOpenApplications}
+                    displayPendingApplications={this.state.showPendingApplications}
+                    product={product}
+                    onClose={this.closeAssociatedApplicationsLightbox}
+                />
 
                 <style jsx>{`
                     .associated-applications-section {
@@ -740,9 +772,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     .open-pending-buttons > span {
                         padding: 0 5px;
-                        cursor: pointer;
                         border: 1px solid transparent;
                         transition: border-color 0.1s linear;
+
+                        &.active {
+                            cursor: pointer;
+                        }
                     }
 
                     .open-pending-buttons .open {
@@ -753,7 +788,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             color: ${ colors.green};
                         }
 
-                        &:hover {
+                        &.active:hover {
                             background-color: rgba(219,208,239, 0.6);
                         }
                     }
@@ -765,7 +800,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             color: ${ colors.yellow};
                         }
 
-                        &:hover {
+                        &.active:hover {
                             background-color: rgba(219,208,239, 0.6);
                         }
                     }
@@ -776,6 +811,38 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Method to be triggered once a lightbox displaying all pending applicaitons
+     * should be displayed
+     */
+    private showOpenApplicationsLightbox = () => {
+        if (!this.props.product.openApplications.length) {
+            return;
+        }
+
+        this.setState({ showOpenApplications: true });
+    }
+
+    /**
+     * Method to be triggered once a lightbox displaying all pending applicaitons
+     * should be displayed
+     */
+    private showPendingApplicationsLightbox = () => {
+        if (!this.props.product.pendingApplications.length) {
+            return;
+        }
+
+        this.setState({ showPendingApplications: true });
+    }
+
+    /**
+     * Callback to be triggered once the associated applications lightbox should
+     * be closed
+     */
+    private closeAssociatedApplicationsLightbox = () => {
+        this.setState({ showOpenApplications: false, showPendingApplications: false });
     }
 
     /**
@@ -877,12 +944,28 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private renderConfirmDialog() {
         const titleAction = this.props.product.isActive ? "deactivation" : "activation";
         const action = this.props.product.isActive ? "deactivate" : "activate";
-        const openWarning = <><br /><br /><b>{this.props.product.openApplications} open application{this.props.product.openApplications === 1 ? "" : "s"}</b> will be closed due to this action.</>;
-        const pendingWarning = <><br /><br /><b>{this.props.product.pendingApplications} pending application{this.props.product.pendingApplications === 1 ? "" : "s"}</b> will remain after the product has been made inactive.</>;
+        const openWarning = (
+            <>
+                <br /><br />
+                <b>
+                    {this.props.product.openApplications.length} open application
+                    {this.props.product.openApplications.length === 1 ? "" : "s"}
+                </b> will be closed due to this action.
+            </>
+        );
+        const pendingWarning = (
+            <>
+                <br /><br />
+                <b>
+                    {this.props.product.pendingApplications.length} pending application
+                    {this.props.product.pendingApplications.length === 1 ? "" : "s"}
+                </b> will remain after the product has been made inactive.
+            </>
+        );
         const text = <>
             Are you sure you want to {action} this product?
-            {this.props.product.isActive && this.props.product.pendingApplications > 0 && pendingWarning}
-            {this.props.product.isActive && this.props.product.openApplications > 0 && openWarning}
+            {this.props.product.isActive && this.props.product.pendingApplications.length > 0 && pendingWarning}
+            {this.props.product.isActive && this.props.product.openApplications.length > 0 && openWarning}
         </>
 
         return (

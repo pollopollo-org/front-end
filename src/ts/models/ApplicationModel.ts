@@ -1,4 +1,4 @@
-import { DataProviders, Store } from "src/ts/store/Store";
+import { Store } from "src/ts/store/Store";
 
 import countriesJson from "src/assets/countries.json";
 import { CountryCodes } from "src/ts/models/CountryCodes";
@@ -28,7 +28,7 @@ const BACKEND_URL = "https://api.pollopollo.org";
  * the fields have been commented in length within the actual class
  */
 // tslint:disable completed-docs
-type ApplicationModelData = {
+export type ApplicationModelData = {
     applicationId: number;
     receiverId: number;
     receiverName: string;
@@ -47,47 +47,6 @@ type ApplicationModelData = {
  * Exmaple of a model, and how to implement one.
  */
 export class ApplicationModel {
-    /**
-     * Helper that instantiates a dummy model, populated with required data.
-     */
-    public static async CREATE_COLLECTION(dataProivder: DataProviders): Promise<ApplicationModel[]> {
-        if (dataProivder === DataProviders.BACKEND) {
-            const data = Array.from(<ApplicationModelData[]><unknown>(await import("../../assets/dummy/application.json")).default);
-            const applications = [];
-
-            for (const application of data) {
-                applications.push(new ApplicationModel(application));
-            }
-
-            return applications;
-        } else {
-            const data = Array.from(<ApplicationModelData[]><unknown>(await import("../../assets/dummy/application.json")).default);
-            const applications = [];
-
-            for (const application of data) {
-                applications.push(new ApplicationModel(application));
-            }
-
-            return applications;
-        }
-    }
-
-    /**
-     * Helper that instantiates a dummy model, populated with required data.
-     
-    public static async CREATE(dataProivder: DataProviders): Promise<ApplicationModel> {
-        if (dataProivder === DataProviders.BACKEND) {
-            const data = await import("../../assets/dummy/application.json");
-
-            // Actually fetch data from backend.. :-)
-            return new ApplicationModel(data[0]);
-        } else {
-            const data = await import("../../assets/dummy/application.json");
-
-            return new ApplicationModel(data[0]);
-        }
-    }*/
-
     /**
      * Helper that instantiates a model, populated with required data.
      */
@@ -176,6 +135,7 @@ export class ApplicationModel {
         this.thumbnail = data.thumbnail;
         this.productTitle = data.productTitle;
         this.productPrice = data.productPrice;
+        this.productId = data.productId;
         this.producerId = data.producerId;
         this.motivation = data.motivation;
         this.status = convertNumberToApplicationStatus(data.status);
