@@ -6,5 +6,6 @@
     "productDescription": "Product description", 
     "imageTypeAlert": "The file type of the uploaded image is not supported. Please upload another image. The supported file types are: .png, .jpg, .jpeg.",
     "uploadPicture": "Upload picture",
-    "buttonText": "Create"
+    "buttonText": "Create",
+    "imageSizeAlert": "The size of the uploaded image is too big. It must be less than 16 MB."
 }
