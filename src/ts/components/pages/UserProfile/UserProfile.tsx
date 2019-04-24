@@ -349,7 +349,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                     /* Make more room for applications/products when the width is less than 820px */
                     @media only screen and (max-width: 820px) {
-                        .information {
+                        .profile_information {
                             max-width: 300px;
                         }
                     }
@@ -361,7 +361,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     /* For mobile phones */
-                    @media only screen and (max-width: 660px) {
+                    @media only screen and (max-width: 800px) {
                         .page {
                             width: 100%;
                             margin: auto;
