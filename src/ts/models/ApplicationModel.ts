@@ -393,6 +393,5 @@ export async function deleteApplication(applicationId: number, store: Store, cal
  */
 export async function initiateDonation (applicationId: number) {
     //Redirect to the chatbot in wallet
-    //This is the device code for ThomasWhaler's pc
-    window.location.href = `byteball:Am0V5i+5MKsw+Tg+9vgxVknkTktkeClALttvX5+kpNUx@obyte.org/bb#${applicationId}`; 
+    window.location.href = `byteball:A+MbQ209fdfCIJjKtPbt7wkih/O7IAp5B5D0SJJxxdVN@obyte.org/bb#${applicationId}`; 
 }
