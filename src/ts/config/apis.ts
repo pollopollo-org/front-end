@@ -112,7 +112,7 @@ export const apis = {
             }
         },
         getByProducer: {
-            path: `${basePath}/products/producer/{producerId}?active={productStatus}`,
+            path: `${basePath}/products/producer/{producerId}?status={productStatus}`,
             errors: {},
         },
     }

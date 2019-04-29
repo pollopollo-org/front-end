@@ -32,7 +32,7 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                         <div className="lightbox__wrapper" onClick={this.props.onClose} role="none">
                             <div className="lightbox" onClick={this.stopPropagation} role="article">
                                 <div className="lightbox__content">
-                                    {this.props.children}                        
+                                    {this.props.children}
                                 </div>
                                 {this.renderCloseButton()}
                             </div>
@@ -58,16 +58,29 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                             }
 
                             .lightbox__content {
-                                /** Ensure scroll is enabled in case lightbox overflows */
-                                overflow: auto;
-                                -webkit-overflow-scrolling: touch;
-
                                 /** Enforce max-width of the lightbox */
                                 width: max-content;
                                 height: auto;
                                 max-width: calc(100vw - 60px);
                                 max-height: calc(100vh - ${isIOS() ? "100px" : "60px"});
-                                background: white;
+                                background: ${colors.white};
+
+                                /** Ensure scroll is enabled in case lightbox overflows */
+                                overflow: auto;
+                                -webkit-overflow-scrolling: touch;
+
+                                /** Apply custom scrollbar styling */
+                                & ::-webkit-scrollbar {
+                                    width: 3px;
+                                }
+
+                                & ::-webkit-scrollbar-track {
+                                    background: rgba(56, 56, 56, 0.1);
+                                }
+
+                                & ::-webkit-scrollbar-thumb {
+                                    background: ${ colors.black};
+                                }
                             }
                         `}</style>
                     </LightboxTransition>
@@ -98,7 +111,7 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                         border-radius: 50%;
                         width: 34px;
                         height: 34px;
-                        background-color: ${ colors.primary };
+                        background-color: ${ colors.primary};
 
                         /** Indicate that button is clickable */
                         cursor: pointer;
@@ -125,7 +138,7 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                             /** Render lines */
                             height: 2px;
                             width: 22px;
-                            background-color: ${ colors.white };
+                            background-color: ${ colors.white};
 
                             /** Prepare transitions */
                             transition: background-color 0.1s linear;
@@ -140,7 +153,7 @@ export class Lightbox extends React.PureComponent<LightboxProps> {
                         }
 
                         &:hover {
-                            background-color: ${ colors.secondary };
+                            background-color: ${ colors.secondary};
                         }
                     }    
                 `}</style>
