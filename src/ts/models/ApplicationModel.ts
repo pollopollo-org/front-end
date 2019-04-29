@@ -349,7 +349,7 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
 }
 
 /**
- * Helper for delting application
+ * Helper for deleting application
  */
 export async function deleteApplication(applicationId: number, store: Store, callback?: () => void) {
     try {
@@ -386,4 +386,13 @@ export async function deleteApplication(applicationId: number, store: Store, cal
         store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
     } finally {
     }
+}
+
+/**
+ * Helper for initiating donation
+ */
+export async function initiateDonation (applicationId: number) {
+    //Redirect to the chatbot in wallet
+    //This is the device code for ThomasWhaler's pc
+    window.location.href = `byteball:Am0V5i+5MKsw+Tg+9vgxVknkTktkeClALttvX5+kpNUx@obyte.org/bb#${applicationId}`; 
 }
