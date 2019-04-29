@@ -349,7 +349,7 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
 }
 
 /**
- * Helper for delting application
+ * Helper for deleting application
  */
 export async function deleteApplication(applicationId: number, store: Store, callback?: () => void) {
     try {
@@ -384,6 +384,31 @@ export async function deleteApplication(applicationId: number, store: Store, cal
     } catch (err) {
         // Show error message
         store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
+    } finally {
+    }
+}
+
+/**
+ * Helper for initiating donation
+ */
+export async function initiateDonation (applicationId: number, store: Store) {
+    try{
+        const result = await fetch(apis.applications.donate.path.replace("{applicationId}", String(applicationId)),{
+            method: "POST",
+            headers: {
+                "Content-Type": "applicationId/json"
+            }
+        });
+
+        if (result.ok) {
+            //Redirect to the chatbot in wallet
+            window.location.href = "byteball:Am0V5i+5MKsw+Tg+9vgxVknkTktkeClALttvX5+kpNUx@obyte.org/bb#secretCode"; //This is the device code for ThomasWhaler's pc
+        } else {
+            alertApiError(result.status,apis.applications.donate.errors, store);
+        }
+    } catch (err) {
+        //Show error message
+        store.currentErrorMessage = "Something went wrong while processing your donation information, please try again later.";
     } finally {
     }
 }

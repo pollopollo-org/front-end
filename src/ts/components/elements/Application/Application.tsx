@@ -1,7 +1,7 @@
 import React from "react";
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -80,9 +80,13 @@ export type ApplicationState = {
      */
     showProducer: boolean;
     /**
-     * Specifies whether or not the confirmation dialog should be displayed
+     * Specifies whether or not the confirmation dialog for deleting the should be displayed
      */
-    showDialog: boolean;
+    showDialogDelete: boolean;
+    /**
+     * Specifies whether or not the confirmation dialog for donating to the application should be displayed
+     */
+    showDialogDonate: boolean;
     /**
      * Specifies whether or not we should display a lightbox displaying the product
      * related to the application
@@ -125,7 +129,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     public state: ApplicationState = {
         expanded: false,
         isSmall: false,
-        showDialog: false,
+        showDialogDelete: false,
+        showDialogDonate: false,
         showReceiver: false,
         showAlert: false,
         showProducer: false,
@@ -218,7 +223,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderReceiverLightbox()}
                 {this.renderProducerLightbox()}
                 {this.renderProductLightbox()}
-                {this.renderConfirmDialog()}
+                {this.renderConfirmDialogDeleteApplication()}
+                {this.renderConfirmDialogDonateApplication()}
                 {this.renderAlert()}
 
                 <style jsx>{`
@@ -689,11 +695,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         const { application } = this.props;
 
         return (
-            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <a href="byteball:Am0V5i+5MKsw+Tg+9vgxVknkTktkeClALttvX5+kpNUx@obyte.org/bb#secretCode"> {/**This is currently Thomas the Whaler's pairingcode */}
-                    <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
-                </a>
-
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>    
+                <Button onClick={this.openConfirmationDialogDonate} withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
+                
                 <style jsx>{`
                     .button-wrapper {
                         /** Position the donate button in the top right corner */
@@ -783,7 +787,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <button onClick={this.openConfirmationDialog} className="delete-button" title="Delete">
+                <button onClick={this.openConfirmationDialogDelete} className="delete-button" title="Delete">
                     <i>{getSVG("delete")}</i>
                 </button>
 
@@ -864,16 +868,30 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Dialog to confirm wheter a receiver wants to delete an application
+     * Dialog to confirm whether a receiver wants to delete an application
      */
-    private renderConfirmDialog() {
+    private renderConfirmDialogDeleteApplication() {
         return (
             <Dialog title={`Confirm deletion`}
                 text={`Are you sure you want to delete this application?`}
-                active={this.state.showDialog}
-                onClose={this.closeConfirmationDialog}
+                active={this.state.showDialogDelete}
+                onClose={this.closeConfirmationDialogDelete}
                 confirmAction={this.deleteApplication}
             />
+        );
+    }
+
+    /**
+     * Dialog to confirm whether a donor wants to donate to an application
+     */
+    private renderConfirmDialogDonateApplication() {
+        return(
+            <Dialog title={`Confirm donation`}
+                text={`Are you sure you want to donate to this application?`}
+                active={this.state.showDialogDonate}
+                onClose={this.closeConfirmationDialogDonate}
+                confirmAction={this.initiateDonation}
+                />
         );
     }
 
@@ -1133,17 +1151,31 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Listener that'll open the confirmation dialog once it has been executed
+     * Listener that'll open the confirmation dialog for deletion once it has been executed
      */
-    private openConfirmationDialog = () => {
-        this.setState({ showDialog: true });
+    private openConfirmationDialogDelete = () => {
+        this.setState({ showDialogDelete: true });
     }
 
     /**
-     * Listener that'll close the dialog once it has been executed
+     * Listener that'll close the dialog for deletion once it has been executed
      */
-    private closeConfirmationDialog = () => {
-        this.setState({ showDialog: false });
+    private closeConfirmationDialogDelete = () => {
+        this.setState({ showDialogDelete: false });
+    }
+
+    /**
+     * Listener that'll open the confirmation dialog for donation once it has been executed
+     */
+    private openConfirmationDialogDonate = () => {
+        this.setState({ showDialogDonate: true });
+    }
+
+    /**
+     * Listener that'll close the dialog for donation once it has been executed
+     */
+    private closeConfirmationDialogDonate = () => {
+        this.setState({ showDialogDonate: false });
     }
 
     /**
@@ -1172,6 +1204,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private deleteApplication = async () => {
         await deleteApplication(this.props.application.applicationId, this.props.store, this.props.onApplicationDeleted);
+    }
+
+    /**
+     * Initiate the donation and navigates the user to the Obyte wallet to interact with the contract and our chatbot
+     */
+    private initiateDonation = async () => {
+        await initiateDonation(this.props.application.applicationId, this.props.store);
     }
 }
 
