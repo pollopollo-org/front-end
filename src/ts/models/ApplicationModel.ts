@@ -392,23 +392,7 @@ export async function deleteApplication(applicationId: number, store: Store, cal
  * Helper for initiating donation
  */
 export async function initiateDonation (applicationId: number, store: Store) {
-    try{
-        const result = await fetch(apis.applications.donate.path.replace("{applicationId}", String(applicationId)),{
-            method: "POST",
-            headers: {
-                "Content-Type": "applicationId/json"
-            }
-        });
-
-        if (result.ok) {
-            //Redirect to the chatbot in wallet
-            window.location.href = "byteball:Am0V5i+5MKsw+Tg+9vgxVknkTktkeClALttvX5+kpNUx@obyte.org/bb#secretCode"; //This is the device code for ThomasWhaler's pc
-        } else {
-            alertApiError(result.status,apis.applications.donate.errors, store);
-        }
-    } catch (err) {
-        //Show error message
-        store.currentErrorMessage = "Something went wrong while processing your donation information, please try again later.";
-    } finally {
-    }
+    //Redirect to the chatbot in wallet
+    //This is the device code for ThomasWhaler's pc
+    window.location.href = "byteball:Am0V5i+5MKsw+Tg+9vgxVknkTktkeClALttvX5+kpNUx@obyte.org/bb#secretCode"; 
 }

@@ -75,12 +75,6 @@ export const apis = {
             errors: {
                 404: "The requested application could not be found. Please try again later.",
             },
-        },
-        donate: {
-            path: `${basePath}/applications/donate/{applicationId}`,
-            errors: {
-                404: "The requested application could not be found. Please try again later.",
-            },
         }
     },
     products: {
