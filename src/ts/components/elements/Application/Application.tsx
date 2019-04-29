@@ -1211,6 +1211,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private initiateDonation = async () => {
         await initiateDonation(this.props.application.applicationId, this.props.store);
+        this.closeConfirmationDialogDonate();
     }
 }
 
