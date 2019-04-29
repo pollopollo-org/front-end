@@ -1,4 +1,5 @@
 import React from "react";
+import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
 import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation } from "src/ts/models/ApplicationModel";
@@ -887,7 +888,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderConfirmDialogDonateApplication() {
         return(
             <Dialog title={`Confirm donation`}
-                text={`Are you sure you want to donate to this application?`}
+                text={ApplicationJSON.confirmationDialogTextDonate}
                 active={this.state.showDialogDonate}
                 onClose={this.closeConfirmationDialogDonate}
                 confirmAction={this.initiateDonation}
