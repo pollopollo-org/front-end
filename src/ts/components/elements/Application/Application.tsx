@@ -690,7 +690,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
+                <a href="byteball:Am0V5i+5MKsw+Tg+9vgxVknkTktkeClALttvX5+kpNUx@obyte.org/bb#secretCode"> {/**This is currently Thomas the Whaler's pairingcode */}
+                    <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
+                </a>
 
                 <style jsx>{`
                     .button-wrapper {
