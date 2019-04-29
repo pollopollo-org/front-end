@@ -1208,9 +1208,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
     /**
      * Initiate the donation and navigates the user to the Obyte wallet to interact with the contract and our chatbot
+     * also closes the dialog
      */
     private initiateDonation = async () => {
-        await initiateDonation(this.props.application.applicationId, this.props.store);
+        await initiateDonation(this.props.application.applicationId);
         this.closeConfirmationDialogDonate();
     }
 }
