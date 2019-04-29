@@ -9,7 +9,7 @@ import { ProductModel } from "src/ts/models/ProductModel";
 // tslint:disable completed-docs
 export type ProducerModelData = {
     wallet?: string;
-    pairingCode?: string;
+    pairingLink?: string;
 } & UserModelData;
 // tslint:enable completed-docs
 
@@ -25,7 +25,7 @@ export class ProducerModel extends UserModel {
     /**
      * The pairing code of the user
      */
-    public readonly pairingCode?: string;
+    public readonly pairingLink?: string;
 
     /**
      * Contains a collection of all products available to a producer
@@ -35,6 +35,6 @@ export class ProducerModel extends UserModel {
     constructor(data: ProducerModelData) {
         super(data);
         this.wallet = data.wallet;
-        this.pairingCode = data.pairingCode;
+        this.pairingLink = data.pairingLink;
     }
 }
