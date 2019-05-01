@@ -64,6 +64,10 @@ export type EditProfileState = {
      * wallet address
      */
     wallet?:string;
+    /**
+     * wallet address
+     */
+    pairingLink?:string;
 
     /**
      * Specifies whether or not we're currently attempting to create a user
@@ -90,6 +94,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
         description: "",
         profilePicture: undefined,
         wallet: "",
+        pairingLink: "",
     };
 
     /**
@@ -111,6 +116,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 description: store.user.description,
                 profilePicture: undefined,
                 wallet: isProducerUser(store.user) ? store.user.wallet : "",
+                pairingLink: isProducerUser(store.user) ? store.user.pairingLink : "",
             });
         }
     }
@@ -168,7 +174,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                                 aria-required={true}
                                 placeholder={ editProfileJson.wallet}
                                 onChange={this.onWalletChanged} />
-                            <i className="plus-icon">{getSVG("plus-square")}</i>
+                            <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
                         </div>
                         <input
                             type="password"
