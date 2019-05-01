@@ -94,12 +94,12 @@ export class ApplicationModel {
     private readonly thumbnail?: string;
 
     /**
-     * Describes the product the receiver is apllying for
+     * Describes the product the receiver is applying for
      */
     public readonly productTitle: string;
 
     /**
-     * Describes the price of the produce being sold in dollars.
+     * Describes the price of the product being sold in dollars.
      */
     public readonly productPrice: number;
 
@@ -157,14 +157,14 @@ export class ApplicationModel {
 }
 
 /**
- * The application cache will contain products fetched from the backend in order to
+ * The application cache will contain applications fetched from the backend in order to
  * avoid having to fetch them over and over again.
  */
 const applicationCache: Map<string, ApplicationModel[]> = new Map();
 let cachedCount: number = 0;
 
 /**
- * Method that'll post a new product to the backend
+ * Method that'll post a new application to the backend
  */
 export async function postApplication(data: CreateApplicationState, store: Store, history: History) {
     try {
@@ -191,13 +191,13 @@ export async function postApplication(data: CreateApplicationState, store: Store
         });
 
         // Now, ensure we've waited for at least 500ms before resolving the request
-        // in order to ensure throbber actually will be displayed, and that the 
+        // in order to ensure throbber actually will be displayed, and that the
         // UI want appear 'jumpy'
         await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
         if (result.ok) {
             // If everything goes well, then we should invalidate the cache for
-            // the given producer, in order to ensure that the newly created product
+            // the given producer, in order to ensure that the newly created application
             // will be properly fetched with all data needed, the next time the
             // user profile is visited
             applicationCache.delete(`receiver-${store.user.id}-Open`);
@@ -205,10 +205,10 @@ export async function postApplication(data: CreateApplicationState, store: Store
             // ... and finally navigate the user back to his/hers own profile
             history.push(routes.profile.path);
         } else {
-            alertApiError(result.status, apis.products.post.errors, store);
+            alertApiError(result.status, apis.applications.post.errors, store);
         }
     } catch (err) {
-        store.currentErrorMessage = "Something went wrong while attempting to create your product, please try again later.";
+        store.currentErrorMessage = "Something went wrong while attempting to create your application, please try again later.";
     }
 }
 
@@ -243,6 +243,9 @@ export async function fetchApplicationBatch(start: number, end: number, store?: 
             const applicationArray = json.list.map((applicationData) => ApplicationModel.CREATE(applicationData));
             applicationCache.set(cacheKey, applicationArray);
             cachedCount = json.count;
+
+            console.log(applicationArray);
+
 
             return {
                 count: json.count,
@@ -306,12 +309,12 @@ export async function fetchApplicationById(applicationId: number, store: Store) 
 
 /**
  * Method used to fetch all applications related to a specific receiver.
- * 
+ *
  * Users must be logged in to perform this request.
  */
 export async function fetchApplicationByReceiver(receiverId: number, store: Store, status: ApplicationStatus) {
     const cacheKey = `receiver-${receiverId}-${status}`;
-    // If we have a cache hit, then simply return the cached product!
+    // If we have a cache hit, then simply return the cached application!
     if (applicationCache.has(cacheKey)) {
         return applicationCache.get(cacheKey);
     }
@@ -332,7 +335,7 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
 
         const applicationsData: ApplicationModelData[] = await response.json();
 
-        // If everything goes well, then create a bunch of productModels from the
+        // If everything goes well, then create a bunch of applicationModels from the
         // data and add them to the cache before returning output.
         if (response.ok) {
             const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
@@ -357,9 +360,9 @@ export async function deleteApplication(applicationId: number, store: Store, cal
     try {
         const token = localStorage.getItem("userJWT");
 
-        // The user MUST be logged in in order to be able to toggle the product
-        // availability. (furthermore the logged in user must be the owner of
-        // the product, else the backend will throw errors).
+        // The user MUST be logged in in order to be able to delete the application!
+        // (furthermore the logged in user must be the owner of
+        // the application, else the backend will throw errors).
         if (!token || !store.user) {
             return;
         }
@@ -375,17 +378,15 @@ export async function deleteApplication(applicationId: number, store: Store, cal
         if (result.ok) {
             applicationCache.delete(`receiver-${store.user.id}-Open`);
 
-            // In case we have a callback, then broadcast the newly updated product
-            // to it.
             if (callback) {
                 callback();
             }
         } else {
-            alertApiError(result.status, apis.products.post.errors, store);
+            alertApiError(result.status, apis.applications.post.errors, store);
         }
     } catch (err) {
         // Show error message
-        store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
+        store.currentErrorMessage = "Something went wrong while attempting to delete your application, please try again later.";
     } finally {
     }
 }
@@ -395,5 +396,5 @@ export async function deleteApplication(applicationId: number, store: Store, cal
  */
 export async function initiateDonation (applicationId: number) {
     //Redirect to the chatbot in wallet
-    window.location.href = `byteball:A+MbQ209fdfCIJjKtPbt7wkih/O7IAp5B5D0SJJxxdVN@obyte.org/bb#${applicationId}`; 
+    window.location.href = `byteball:A+MbQ209fdfCIJjKtPbt7wkih/O7IAp5B5D0SJJxxdVN@obyte.org/bb#${applicationId}`;
 }

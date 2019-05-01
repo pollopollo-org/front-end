@@ -48,7 +48,6 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                     })}
                 </div>
 
-
                 <style jsx>{`
 
                     h1{
