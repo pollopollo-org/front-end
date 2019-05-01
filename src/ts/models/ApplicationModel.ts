@@ -13,8 +13,8 @@ import { History } from "history";
 
 export enum ApplicationStatus {
     OPEN = "Open",
-    PENDING = "Pending",
     LOCKED = "Locked",
+    PENDING = "Pending",
     COMPLETED = "Completed",
     UNAVAILABLE = "Unavailable",
 }

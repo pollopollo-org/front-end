@@ -10,10 +10,10 @@ export function convertNumberToApplicationStatus(number: number, fallback?: Appl
             return ApplicationStatus.OPEN;
 
         case 1:
-            return ApplicationStatus.PENDING;
-        
-        case 2:
             return ApplicationStatus.LOCKED;
+
+        case 2:
+            return ApplicationStatus.PENDING;
         
         case 3:
             return ApplicationStatus.COMPLETED
