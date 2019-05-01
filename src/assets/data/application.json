@@ -1,4 +1,9 @@
 {
     "motivation": "Motivation",
-    "confirmationDialogTextDonate" : "Thank you for donating. To prevent others from donating to the same application, the application will now be locked for 60 minutes. If you fail to make the donation within 60 minutes, the application will be re-opened for others to donate to it. Once your donation has been confirmed, the application’s state will be pending, waiting for the receiver to confirm reception of the product. If the receiver fails to confirm reception within 30 days, the funds you donated will be returned to your wallet."
+    "confirmDonateTitle" : "Confirm donation",
+    "confirmationDialogTextDonate" : "Thank you for donating. To prevent others from donating to the same application, the application will now be locked for 60 minutes. If you fail to make the donation within 60 minutes, the application will be re-opened for others to donate to it. Once your donation has been confirmed, the application’s state will be pending, waiting for the receiver to confirm reception of the product. If the receiver fails to confirm reception within 30 days, the funds you donated will be returned to your wallet.",
+    "confirmDeleteTitle" : "Confirm deletion",
+    "confirmationDialogTextDelete": "Are you sure you want to delete this application?",
+    "confirmReceivalTitle" : "Confirm receival",
+    "confirmationDialogTextReceival" : "Are you sure you want to confirm the receival of this product?"
 }

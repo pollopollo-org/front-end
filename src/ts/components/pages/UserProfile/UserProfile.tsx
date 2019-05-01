@@ -97,7 +97,12 @@ export type UserState = {
     /**
      * Contains an array of open applications to be rendered if any
      */
-    closedApplications?: ApplicationModel[];
+    completedApplications?: ApplicationModel[];
+
+    /**
+     * Contains an array of open applications to be rendered if any
+     */
+    unavailableApplications?: ApplicationModel[];
 
 
 }
@@ -510,8 +515,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 currentFilter = "Open applications";
             } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
                 currentFilter = "Pending applications";
+            } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+                currentFilter = "Completed applications";
             } else {
-                currentFilter = "Closed applications";
+                currentFilter = "Unavailable applications";
             }
         }
 
@@ -569,7 +576,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         cursor: pointer;
 
                         border: 1px solid ${ colors.primary};
-                        width: 145px;
+                        width: 170px;
 
                         text-align: center;
 
@@ -627,8 +634,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         <button data-applicationstatus={ApplicationStatus.PENDING} onClick={this.filterApplications}>
                             <span>Pending applications</span>
                         </button>
-                        <button data-applicationstatus={ApplicationStatus.CLOSED} onClick={this.filterApplications}>
-                            <span>Closed applications</span>
+                        <button data-applicationstatus={ApplicationStatus.COMPLETED} onClick={this.filterApplications}>
+                            <span>Completed applications</span>
+                        </button>
+                        <button data-applicationstatus={ApplicationStatus.UNAVAILABLE} onClick={this.filterApplications}>
+                            <span>Unavailable applications</span>
                         </button>
                     </div>
                 }
@@ -831,8 +841,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             applications = this.state.openApplications;
         } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
             applications = this.state.pendingApplications;
+        } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+            applications = this.state.completedApplications;
         } else {
-            applications = this.state.closedApplications;
+            applications = this.state.unavailableApplications;
         }
         if (!applications) {
             return null;
@@ -898,16 +910,20 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 this.setState({ openApplications: [] });
             } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
                 this.setState({ pendingApplications: [] });
+            } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+                this.setState({ completedApplications: [] });
             } else {
-                this.setState({ closedApplications: [] });
+                this.setState({ unavailableApplications: [] });
             }
         } else {
             if (this.applicationStatusIsOpen(this.state.filterApplications)) {
                 this.setState({ openApplications: applications });
             } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
                 this.setState({ pendingApplications: applications });
+            } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+                this.setState({ completedApplications: applications });
             } else {
-                this.setState({ closedApplications: applications });
+                this.setState({ unavailableApplications: applications });
             }
         }
 
@@ -1034,6 +1050,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private applicationStatusIsPending = (status: ApplicationStatus) => {
         return status === ApplicationStatus.PENDING;
+    }
+
+    /**
+     * Internal helpter that returns true if the given application status is completed
+     */
+    private applicationStatusIsCompleted = (status: ApplicationStatus) => {
+        return status === ApplicationStatus.COMPLETED;
     }
 }
 
