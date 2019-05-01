@@ -70,12 +70,12 @@ export type ApplicationState = {
      */
     isSmall: boolean;
     /**
-     * Specifies whether or not the receiver's profile should currently be 
+     * Specifies whether or not the receiver's profile should currently be
      * displayed in a lightbox
      */
     showReceiver: boolean;
     /**
-     * Specifies whether or not the producer's profile should currently be 
+     * Specifies whether or not the producer's profile should currently be
      * displayed in a lightbox
      */
     showProducer: boolean;
@@ -105,7 +105,7 @@ export type ApplicationState = {
     product?: ProductModel;
     /**
      * Specifies whether or not the alert should be displayed
-     * Used for telling the user that is is not yet possible 
+     * Used for telling the user that is is not yet possible
      * to confirm receival of a product
      */
     showAlert: boolean;
@@ -137,13 +137,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private isTransitioning: boolean = false;
 
-    /** 
-     * Reference to the div tag with class name description 
+    /**
+     * Reference to the div tag with class name description
      */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** 
-     * Reference to the div tag with class name application-border 
+    /**
+     * Reference to the div tag with class name application-border
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -197,7 +197,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <React.Fragment>
                 <div className={`application-border ${this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={this.borderRef}>
 
-                    <div className="application">
+                    <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
                         <div className="sections">
                             {this.renderUserSection()}
                             {this.renderContentSection()}
@@ -306,7 +306,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             &::before {
                                 content: none;
                             }
-                            
+
                             &:hover {
                                 box-shadow: none;
                                 border: 1px solid rgba(139,72,156, 0.15);
@@ -317,6 +317,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     .application {
                         position: relative;
                         overflow: hidden;
+                        width: 100%;
+
+                        &.isSmall {
+                            padding-bottom: 20px;
+                        }
                     }
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
@@ -329,7 +334,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         position: relative;
                         z-index: 2;
 					}
-                    
+
                     @media (max-width: 768px) {
                         .application-border {
                             margin: 10px;
@@ -347,7 +352,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         const { application } = this.props;
 
         return (
-            <section className={`section-user 
+            <section className={`section-user
                                     ${ this.props.isOnReceiversPage
                     ? ""
                     : "thumbnail-clickable"
@@ -381,7 +386,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                         /** Margin between this and the next section */
                         margin-right: 20px;
-                        
+
                         &.thumbnail-clickable {
                             cursor: pointer;
 
@@ -533,12 +538,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         *   at the bottom
                         */
                         &.isSmall {
-                            position: relative;
-                            display: block;
                             max-width: calc(100% - 60px);
-
-                            margin-top: 8px;
-                            margin-left: 12px;
+                            left: 5px;
+                            margin: 0;
                         }
                     }
                 `}</style>
@@ -624,7 +626,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     onClick={this.openProducerLightbox}
                     text={"Producer profile"} />
                 <style jsx>{`
-                    /** 
+                    /**
                      * Positioning the button so it is alligned with other
                      * content upon hovering
                      */
@@ -723,7 +725,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         }
 
         return (
-            <div className={`price-wrapper 
+            <div className={`price-wrapper
                                 ${this.state.isSmall ? "isSmall" : ""}
                                 ${this.props.isOwnApplication && this.props.isOnReceiversPage && application.status === ApplicationStatus.OPEN ? "isOwn" : ""}`}>
                 <span>${application.productPrice}</span>
@@ -889,7 +891,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Internal renderer that will render the receiver lightbox which will be 
+     * Internal renderer that will render the receiver lightbox which will be
      * displayed when desired
      */
     private renderReceiverLightbox = () => {
@@ -910,7 +912,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Internal renderer that will render the producer lightbox which will be 
+     * Internal renderer that will render the producer lightbox which will be
      * displayed when desired
      */
     private renderProducerLightbox = () => {
@@ -992,7 +994,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                              */
                             width: calc(100vw - 60px);
                             max-width: 560px;
-                            padding: 20px 20px 10px;   
+                            padding: 20px 20px 10px;
                         }
                     `}</style>
                 </div>

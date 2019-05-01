@@ -263,7 +263,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     }
 
                     /**
-                     * Make the placeholder text more readable,
+                     * Make the placeholder text more readable on wallet,
                      * because the wallet input field is always read-only
                      */
                     &.wallet {
@@ -301,18 +301,18 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     height:24px;
                     position: absolute;
 
-                    top: 24px; 
-                    right: 10px; 
-                    padding: 0; 
-                    color: ${colors.gray}; 
-                    cursor: pointer; 
+                    top: 24px;
+                    right: 10px;
+                    padding: 0;
+                    color: ${colors.gray};
+                    cursor: pointer;
                     &:hover {
                         color: ${colors.secondary};
                     }
                 }
 
                 .wallet-wrapper {
-                    position: relative; 
+                    position: relative;
                 }
 
                 .allSection{
@@ -595,7 +595,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 this.props.store.currentErrorMessage = editProfileJson.imageTypeAlert;
                 return;
             }
-            
+
             if (this.validateImageSize(e.target.files[0])) {
                 return;
             }
