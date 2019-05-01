@@ -13,7 +13,6 @@ import { fonts } from "src/ts/config";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { Store } from "src/ts/store/Store";
 import { injectStore } from "src/ts/store/injectStore";
-import { Alert } from "src/ts/components/utils/Alert";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
@@ -109,11 +108,12 @@ export type ApplicationState = {
      */
     product?: ProductModel;
     /**
+
      * Specifies whether or not the alert should be displayed
      * Used for telling the user that is is not yet possible
      * to confirm receival of a product
      */
-    showAlert: boolean;
+    showDialogConfirmReceival: boolean;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -133,7 +133,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         showDialogDelete: false,
         showDialogDonate: false,
         showReceiver: false,
-        showAlert: false,
+        showDialogConfirmReceival: false,
         showProducer: false,
         showProduct: false,
     };
@@ -201,7 +201,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     public render(): JSX.Element {
         return (
             <React.Fragment>
-                <div className={`application-border ${this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={this.borderRef}>
+                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`} ref={this.borderRef}>
 
                     <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
                         <div className="sections">
@@ -226,7 +226,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderProductLightbox()}
                 {this.renderConfirmDialogDeleteApplication()}
                 {this.renderConfirmDialogDonateApplication()}
-                {this.renderAlert()}
+                {this.renderConfirmDialogReceival()}
 
                 <style jsx>{`
                     /** Draws a border around the application */
@@ -563,7 +563,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className={`description-content ${application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`}>
+                <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
                     <h3>Requested product</h3>
                     <p>
                         {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
@@ -848,7 +848,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={this.openAlert} />
+                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={this.openConfirmationDialogReceival} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -875,8 +875,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderConfirmDialogDeleteApplication() {
         return (
-            <Dialog title={`Confirm deletion`}
-                text={`Are you sure you want to delete this application?`}
+            <Dialog title={ApplicationJSON.confirmDeleteTitle}
+                text={ApplicationJSON.confirmationDialogTextDelete}
                 active={this.state.showDialogDelete}
                 onClose={this.closeConfirmationDialogDelete}
                 confirmAction={this.deleteApplication}
@@ -889,7 +889,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderConfirmDialogDonateApplication() {
         return(
-            <Dialog title={`Confirm donation`}
+            <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={ApplicationJSON.confirmationDialogTextDonate}
                 active={this.state.showDialogDonate}
                 onClose={this.closeConfirmationDialogDonate}
@@ -899,14 +899,15 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Alert to tell the user that it is not yet possible to confirm the
-     * receival of a product applied for
+     * Confirmation dialog for confirming the receival of a product
      */
-    private renderAlert() {
+    private renderConfirmDialogReceival() {
         return (
-            <Alert text={`It is not yet possible to confirm retrieval of a product.`}
-                active={this.state.showAlert}
-                onClose={this.closeAlert}
+            <Dialog title={ApplicationJSON.confirmReceivalTitle}
+                text={ApplicationJSON.confirmationDialogTextReceival}
+                active={this.state.showDialogConfirmReceival}
+                onClose={this.closeConfirmationDialogReceival}
+                confirmAction={this.confirmReceival}
             />
         );
     }
@@ -1182,17 +1183,17 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Listener that'll open the alert once it has been executed
+     * Listener that'll open the dialog once it has been executed
      */
-    private openAlert = () => {
-        this.setState({ showAlert: true });
+    private openConfirmationDialogReceival = () => {
+        this.setState({ showDialogConfirmReceival: true });
     }
 
     /**
-     * Listener that'll close the alertonce it has been executed
+     * Listener that'll close the dialog once it has been executed
      */
-    private closeAlert = () => {
-        this.setState({ showAlert: false });
+    private closeConfirmationDialogReceival = () => {
+        this.setState({ showDialogConfirmReceival: false });
     }
 
     /**
@@ -1216,6 +1217,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private initiateDonation = async () => {
         await initiateDonation(this.props.application.applicationId);
         this.closeConfirmationDialogDonate();
+    }
+
+    /**
+     * Confirms receival of product - something with the wallet?
+     */
+    private confirmReceival = async () => {
+        this.closeConfirmationDialogReceival();
     }
 }
 
