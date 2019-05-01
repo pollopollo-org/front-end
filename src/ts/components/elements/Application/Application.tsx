@@ -870,8 +870,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderConfirmDialogDeleteApplication() {
         return (
-            <Dialog title={`Confirm deletion`}
-                text={`Are you sure you want to delete this application?`}
+            <Dialog title={ApplicationJSON.confirmDeleteTitle}
+                text={ApplicationJSON.confirmationDialogTextDelete}
                 active={this.state.showDialogDelete}
                 onClose={this.closeConfirmationDialogDelete}
                 confirmAction={this.deleteApplication}
@@ -884,7 +884,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderConfirmDialogDonateApplication() {
         return(
-            <Dialog title={`Confirm donation`}
+            <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={ApplicationJSON.confirmationDialogTextDonate}
                 active={this.state.showDialogDonate}
                 onClose={this.closeConfirmationDialogDonate}
@@ -898,8 +898,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderConfirmDialogReceival() {
         return (
-            <Dialog title={"Confirm receival"}
-                text={`Are you sure you want to confirm the receival of this product?.`}
+            <Dialog title={ApplicationJSON.confirmReceivalTitle}
+                text={ApplicationJSON.confirmationDialogTextReceival}
                 active={this.state.showDialogConfirmReceival}
                 onClose={this.closeConfirmationDialogReceival}
                 confirmAction={this.confirmReceival}
