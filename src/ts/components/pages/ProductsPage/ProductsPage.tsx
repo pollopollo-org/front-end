@@ -228,7 +228,8 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                             </Link>
                         )}
                     </div>
-                    <p className="introduction">{ProductsPageJson.text}</p>
+                    <p className="introduction">{ProductsPageJson.text1}</p>
+                    <p className="introduction">{ProductsPageJson.text2}</p>
                 </div>
 
                 <style jsx>{`
