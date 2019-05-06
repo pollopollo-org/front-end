@@ -158,7 +158,6 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
                     @media (max-width: 1200px) {
                         .page {
-                            padding: 0 10px;
                             margin: 0 auto;
                         }
                     }

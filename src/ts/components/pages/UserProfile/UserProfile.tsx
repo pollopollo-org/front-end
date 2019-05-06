@@ -278,7 +278,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     h1 {
-                        margin-top: 25px;
+                        margin-top: 30px;
                         display: inline-block;
                     }
 
