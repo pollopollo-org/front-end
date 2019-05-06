@@ -9,7 +9,6 @@ import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts, routes } from "src/ts/config";
-import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
@@ -66,12 +65,6 @@ export type ProductState = {
      * lightbox in full size
      */
     showImage: boolean;
-
-    /**
-     * Specifies if the edit dropdown should currently be shown when producer
-     * views their own products.
-     */
-    showDropdown?: boolean;
 
     /**
      * Specifies whether or not the producer profile should currently be displayed
@@ -144,13 +137,13 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      */
     private isTransitioning: boolean = false;
 
-    /** 
-     * Reference to the div tag with class name description 
+    /**
+     * Reference to the div tag with class name description
      */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** 
-     * Reference to the div tag with class name product-border 
+    /**
+     * Reference to the div tag with class name product-border
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -304,7 +297,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             &::before {
                                 content: none;
                             }
-                            
+
                             &:hover {
                                 box-shadow: none;
                                 border: 1px solid rgba(139,72,156, 0.15);
@@ -345,7 +338,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         position: relative;
                         overflow: hidden;
                         width: 100%;
-                        
+
                         &.isSmall {
                             padding-bottom: 20px;
                         }
@@ -354,7 +347,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     /** Contans different sections to manage placement with flexbox */
                     .sections {
                         /** Display sections alongside each other */
-                        margin: 7px 7px 5px 7px;
+                        margin: 5px;
                         display: flex;
                         flex-direction: row;
 
@@ -421,7 +414,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 <div className="product-wrapper">
 
                     <span
-                        className={`product ${this.state.isSmall ? "isSmall" : ""} 
+                        className={`product ${this.state.isSmall ? "isSmall" : ""}
                                             ${userType === UserTypes.RECEIVER ? "isReceiver" : ""}`}
                         title={product.title}
                     >
@@ -431,7 +424,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     {
                         this.props.userType === UserTypes.PRODUCER &&
                         <span
-                            className={`price ${this.state.isSmall ? "isSmall" : ""} 
+                            className={`price ${this.state.isSmall ? "isSmall" : ""}
                                                 ${isOwnProduct ? "isOwnProduct" : ""}`}
                         >
                             ${product.price}
@@ -468,8 +461,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         &.isSmall {
                             max-width: 100%;
 
-                            /** 
-                             * If user is a receiver, there should be a button 
+                            /**
+                             * If user is a receiver, there should be a button
                              * below the product content, therefore, restrict
                              * content to be at only 1 line
                              */
@@ -500,16 +493,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         font-size: 1.3em;
                         margin-left: 10px;
 
-                        /** 
-                         * Owner of product will see edit buttons, therefore 
+                        /**
+                         * Owner of product will see edit buttons, therefore
                          * position price a bit to the right
                          */
                         &.isOwnProduct {
-                            margin-right: 75px;
-
-                            &.isSmall {
-                                margin-right: 25px;
-                            }
+                            margin-right: 37px;
                         }
                     }
                 `}</style>
@@ -893,7 +882,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         z-index: 10;
 
                         /** When mobile size, make chevron smaller */
-                        &.isSmall {                            
+                        &.isSmall {
                             height: 15px;
                             width: 21px;
 
@@ -999,23 +988,18 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <div className={`product-more ${this.state.isSmall ? "isSmall" : ""}`}>
 
-                {!this.state.isSmall && (
-                    <div className="edit-button-section">
-                        <button className="edit-button" title="Edit"><i className="edit">{getSVG("edit")}</i></button>
-                        {
-                            product.isActive &&
-                            <button onClick={this.openConfirmationDialog} className="status-button" title="Deactivate">
-                                <i className="status">{getSVG("check-square")}</i>
-                            </button>
-                        }
-                        {
-                            !product.isActive &&
-                            <button onClick={this.openConfirmationDialog} className="status-button"><i className="status" title="Activate">{getSVG("square")}</i></button>
-                        }
-                    </div>
-                )}
-
-                {this.renderEditMenuMobile()}
+                <div className="edit-button-section">
+                    {
+                        product.isActive &&
+                        <button onClick={this.openConfirmationDialog} className="status-button" title="Deactivate">
+                            <i className="status">{getSVG("check-square")}</i>
+                        </button>
+                    }
+                    {
+                        !product.isActive &&
+                        <button onClick={this.openConfirmationDialog} className="status-button"><i className="status" title="Activate">{getSVG("square")}</i></button>
+                    }
+                </div>
 
                 <style jsx>{`
 
@@ -1024,8 +1008,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         display: flex;
                         flex-direction: row;
                     }
-                    
-                    /** 
+
+                    /**
                      * Button should not be visible and act as a wrapper for
                      * the icon
                      */
@@ -1037,6 +1021,9 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         padding: 2px 5px;
                         cursor: pointer;
                         color: rgba(57,57,57, 0.75);
+
+                        /** Create a pale line between the icons to seperate them */
+                        border-left: 1px solid ${ colors.pale};
                     }
 
                     /** Make icon slightly smaller to fit better */
@@ -1049,20 +1036,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         color: ${ colors.secondary};
                     }
 
-                    /** Create a pale line between the icons to seperate them */
-                    .edit-button-section .edit-button {
-                        border-right: 1px solid ${ colors.pale};
-                    }
-
                     /** Position the icons */
                     .product-more {
                         position: absolute;
                         right: 0;
                         top: 0;
 
-                        &.isSmall {
-                            top: 3px;
-                        }
                         z-index: 12;
                     }
 
@@ -1080,211 +1059,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             </div>
         );
     }
-
-    /**
-     * Rendering a dropdown menu on mobile size
-     */
-    protected renderEditMenuMobile() {
-        if (!this.state.isSmall) {
-            return;
-        }
-
-        return (
-            <div
-                className={`show-more-icon ${this.state.showDropdown ? "active" : ""}`}
-                ref={this.wrapperRef}
-                onClick={this.toggleDropdownState}
-                role="button"
-            >
-                <i >
-                    {getSVG("more-vertical")}
-                </i>
-                {this.renderDropdown()}
-
-                <style jsx>{`
-
-                    /** Indicate the icon is clickable */
-                    .show-more-icon {
-                        color:  rgba(57,57,57, 0.75);
-                        cursor: pointer;
-
-                        & i {
-                            display: block;
-                            width: 24px;
-                            height: 24px;
-                        }
-
-                        &:hover {
-                            color: ${ colors.secondary};
-                        }
-                    }
-                `}</style>
-
-            </div>
-        )
-    }
-
-
-    /**
-     * Renders the dropdown that'll become visible when the user clicks his own
-     * profile name.
-     */
-    protected renderDropdown(): JSX.Element {
-        return (
-            <Dropdown
-                active={this.state.showDropdown}
-                pointAt={this.wrapperRef}
-                onClose={this.toggleDropdownState}
-            >
-                <div className="wrapper">
-                    {this.renderInformation()}
-                </div>
-
-                <style jsx>{`
-                    .wrapper {
-                        /** Apply internal padding */
-                        padding: 10px 0;
-
-                        /**
-                         * Enforce a minimum width on the userInfo making sure
-                         * that it always renders nicely
-                         */
-                        min-width: 175px;
-
-                        /** By default element isn't clickable */
-                        cursor: default;
-                    }
-                `}</style>
-            </Dropdown>
-        );
-    }
-
-
-    /**
-     * Internal helper that renders all information related to the user
-     */
-    protected renderInformation(): JSX.Element {
-        const { product } = this.props;
-
-        return (
-            <React.Fragment>
-                <span className="link" onClick={this.toggleDropdownState} role="link">
-                    <i className="edit">{getSVG("edit")}</i>
-                    <span>Edit</span>
-                </span>
-                <span onClick={this.toggleDropdownState} role="button">
-
-                    {product.isActive &&
-                        <div className="link" onClick={this.openConfirmationDialog} role="button">
-                            <i className="status">{getSVG("check-square")}</i>
-                            <span>Deactivate</span>
-                        </div>
-
-                    }
-                    {!product.isActive &&
-                        <div className="link" onClick={this.openConfirmationDialog} role="button">
-                            <i className="status">{getSVG("square")}</i>
-                            <span>Activate</span>
-                        </div>
-                    }
-                </span>
-
-                <style jsx>{`
-                    button,
-                    .link {
-                        /** Override defaults */
-                        background: none;
-                        -webkit-appearance: none;
-                        border: none;
-                        /** Center items within vertically */
-                        display: flex;
-                        align-items: center;
-
-                        /** Allow button to fill the whole dropdown */
-                        width: 100%;
-
-                        /**
-                         * Set up basic padding around the element (the 6px top
-                         * padding is applied to take into account that the icon
-                         * will push text further down, and we want the white-
-                         * space to visually align with the text instead of the
-                         * icon).
-                         */
-                        padding: 10px 20px;
-                        margin: 0;
-
-                        /**
-                         * Indicate that items are clickable
-                         */
-                        cursor: pointer;
-
-                        /** Prevent line-breaks within the label */
-                        white-space: nowrap;
-
-                        /** Set up text styling */
-                        font-size: 12px;
-                        color: ${ colors.black};
-                        line-height: 1em;
-                        text-decoration: none;
-
-                        /** Prepare hover transition */
-                        transition:
-                            background-color 0.1s linear,
-                            color 0.1s linear;
-
-                        & i {
-                            /** Set up icon sizing */
-                            display: inline-block;
-                            width: 22px;
-                            height: 22px;
-
-                            /** Apply margin between icon and text */
-                            margin-right: 10px;
-
-                            & > :global(.svgIcon) > :global(svg) > :global(path) {
-                                /** Apply default font color */
-                                stroke: ${ colors.black};
-                            }
-                        }
-
-                        /** Apply highlight color on hover */
-                        &:hover {
-                            background-color: rgba(69, 50, 102, 0.1);
-                            color: ${ colors.primary};
-
-                            & i > :global(.svgIcon) > :global(svg) > :global(path) {
-                                stroke: ${ colors.primary};
-                            }
-                        }
-                    }
-
-                    .link {
-                        /**
-                         * Override width on items in dropdown to ensure they take
-                         * padding into account when achieving width of 100%
-                         */
-                        width: calc(100% - 40px);
-
-                        & :global(> a) {
-                            /** Align icon and text within icon properly */
-                            display: flex;
-                            align-items: center;
-
-                            /** Override default colors */
-                            color: ${ colors.black};
-                            text-decoration: none;
-                        }
-
-                        & .edit {
-                            height: 23px;
-                            width: 23px;
-                        }
-                    }
-                `}</style>
-            </React.Fragment>
-        );
-    }
-
 
     /**
      * Internal renderer that'll render the producer lightbox which will be displayed
@@ -1349,7 +1123,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         display: block;
                         width: 100%;
                         height: 100%;
-                    }    
+                    }
                 `}</style>
             </Lightbox>
         );
@@ -1384,7 +1158,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Listener that updates the product 
+     * Listener that updates the product
      */
     private updateProductActivation = async () => {
         if (this.state.isPending || !this.props.store.user) {
@@ -1454,18 +1228,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         }
 
         this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
-
-        if (this.state.isSmall) {
-            this.setState({ showDropdown: false });
-        }
-    }
-
-    /**
-     * Listener that's triggered when the producer somehow prompts for the
-     * dropdown to appear or disappear
-     */
-    protected toggleDropdownState = () => {
-        this.setState({ showDropdown: !this.state.showDropdown });
     }
 }
 
