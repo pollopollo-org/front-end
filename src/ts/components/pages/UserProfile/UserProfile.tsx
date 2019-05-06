@@ -833,6 +833,23 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
+     * Simple callback that should be executed once an application should be updated.
+     * (e.g. when confirming receival of a product)
+     */
+    private confirmApplication = (index: number, chosenApplication: ApplicationModel) => {
+
+        const newPendingApplicationList = this.state.pendingApplications;
+
+        if (chosenApplication.status === ApplicationStatus.COMPLETED) {
+            if(newPendingApplicationList) {
+                // If new product is active, then remove it from inactiveProducts list
+                newPendingApplicationList.splice(index, 1);
+                this.setState({ pendingApplications: newPendingApplicationList });
+            }
+        }
+    }
+
+    /**
      * Internal render method that'll render all applications associated to a user
      */
     private renderApplications = () => {
@@ -864,6 +881,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 : false;
 
                             const onApplicationDeleted = this.onApplicationDeleted.bind(this, index);
+                            const confirm = this.confirmApplication.bind(this, index);
 
                             return (
                                 <Application
@@ -873,6 +891,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     isOnReceiversPage={isOnReceiversPage}
                                     application={application}
                                     onApplicationDeleted={onApplicationDeleted}
+                                    confirmApplication={confirm}
                                 />
                             );
                         })}
