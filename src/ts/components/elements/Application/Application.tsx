@@ -2,7 +2,7 @@ import React from "react";
 import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -56,6 +56,12 @@ export type ApplicationProps = {
      * Optional callback to execute once an application gets deleted
      */
     onApplicationDeleted?(): void;
+
+    /**
+     * Method that can optinally be executed once the application updates in order
+     * to reflect this in the ui
+     */
+    confirmApplication?(newApplication: ApplicationModel): void;
 }
 
 export type ApplicationState = {
@@ -79,6 +85,10 @@ export type ApplicationState = {
      * displayed in a lightbox
      */
     showProducer: boolean;
+    /**
+     * Specifies whether or not we're currently attempting to update an application
+     */
+    isPending?: boolean;
     /**
      * Specifies whether or not the confirmation dialog for deleting the should be displayed
      */
@@ -136,6 +146,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         showDialogConfirmReceival: false,
         showProducer: false,
         showProduct: false,
+        isPending: false,
     };
 
     /**
@@ -1223,7 +1234,17 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Confirms receival of product - something with the wallet?
      */
     private confirmReceival = async () => {
-        this.closeConfirmationDialogReceival();
+        if (this.state.isPending || !this.props.store.user) {
+            return;
+        }
+
+        // Notify state that we've begun updating our product
+        this.setState({ isPending: true });
+
+        await confirmReceival(this.props.application, this.props.store, this.props.confirmApplication);
+        this.setState({ showDialogConfirmReceival: false, isPending: false });
+
+        //this.closeConfirmationDialogReceival();
     }
 }
 

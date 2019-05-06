@@ -395,3 +395,47 @@ export async function initiateDonation (applicationId: number) {
     //Redirect to the chatbot in wallet
     window.location.href = `byteball:A+MbQ209fdfCIJjKtPbt7wkih/O7IAp5B5D0SJJxxdVN@obyte.org/bb#${applicationId}`;
 }
+
+/**
+ * Helper that confirms completion of application
+ */
+export async function confirmReceival(application: ApplicationModel, store: Store, callback?: (newApplication: ApplicationModel) => void) {
+    try {
+        const token = localStorage.getItem("userJWT");
+
+        // The user MUST be logged in in order to be able to toggle the product
+        // availability. (furthermore the logged in user must be the owner of
+        // the product, else the backend will throw errors).
+        if (!token || !store.user) {
+            return;
+        }
+
+        const result = await fetch(apis.applications.postConfirm.path.replace("{userId}", String(application.receiverId)).replace("{id}", String(application.applicationId)), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+        });
+
+        if (result.ok) {
+
+            // In case we have a callback, then broadcast the newly updated product
+            // to it.
+            if (callback) {
+                const newApplication = ApplicationModel.CREATE({ 
+                    ...application,
+                    country: <CountryCodes> application.country,
+                    status: 3 
+                });
+                callback(newApplication);
+            }
+        } else {
+            alertApiError(result.status, apis.products.post.errors, store);
+        }
+    } catch (err) {
+        // Show error message
+        store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
+    } finally {
+    }
+}
