@@ -7,7 +7,7 @@ import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
  */
 export function getUserType(user: UserModel | null | undefined, fallback?: UserTypes) {
     if (!user) {
-        return fallback || UserTypes.PRODUCER;
+        return fallback || UserTypes.DONOR;
     }
 
     if (isProducerUser(user)) {
@@ -15,6 +15,6 @@ export function getUserType(user: UserModel | null | undefined, fallback?: UserT
     } else if (isReceiverUser(user)) {
         return UserTypes.RECEIVER;
     } else {
-        return fallback || UserTypes.PRODUCER;
+        return fallback || UserTypes.DONOR;
     }
 }

@@ -53,52 +53,52 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
     // tslint:disable-next-line max-func-body-length
     public render(): JSX.Element {
         return (
-            <div className="loginCenterWrapper">
-                <div className="loginSpacer">
-                    <h1>{loginFormJson.title}</h1>
-                    <div className="loginFormContainer">
-                        <div className="container">
-                            <form onSubmit={this.onSubmit}>
-                                <div className="loginForm Email">
-                                    <input
-                                        type="email"
-                                        className="loginInput Email"
-                                        placeholder={ loginFormJson.EmailInputLabel }
-                                        id="user_name"
-                                        required
-                                        aria-required={true}
-                                        onChange={this.onEmailChanged}
-                                    />
-                                </div>
-                                <div className="loginForm Password">
-                                    <input
-                                        type="password"
-                                        className="loginInput Password"
-                                        placeholder={ loginFormJson.PasswordInputLabel }
-                                        id="user_password"
-                                        required
-                                        aria-required={true}
-                                        onChange={this.onPasswordChanged}
-                                    />
-                                </div>
-                                <div className="button">
-                                    <Button 
-                                        withThrobber={true} 
-                                        text={loginFormJson.buttonText}
-                                        width="100%"
-                                        height={46}
-                                        fontSize={16}
-                                        type={"submit"}
-                                        isPending={this.state.isPending}
-                                        throbberSize={30}/>
-                                </div>
-                            </form>
-                            <Link className="link registerLink" to={routes.register.path}>
-                                {loginFormJson.linkQuestion} <b>{loginFormJson.linkSignUpText}</b>
-                            </Link>
+                <div className="loginCenterWrapper">
+                    <div className="loginSpacer">
+                        <h1>{loginFormJson.title}</h1>
+                        <div className="loginFormContainer">
+                            <div className="container">
+                                <form onSubmit={this.onSubmit}>
+                                    <div className="loginForm Email">
+                                        <input
+                                            type="email"
+                                            className="loginInput Email"
+                                            placeholder={ loginFormJson.EmailInputLabel }
+                                            id="user_name"
+                                            required
+                                            aria-required={true}
+                                            onChange={this.onEmailChanged}
+                                        />
+                                    </div>
+                                    <div className="loginForm Password">
+                                        <input
+                                            type="password"
+                                            className="loginInput Password"
+                                            placeholder={ loginFormJson.PasswordInputLabel }
+                                            id="user_password"
+                                            required
+                                            aria-required={true}
+                                            onChange={this.onPasswordChanged}
+                                        />
+                                    </div>
+                                    <div className="button">
+                                        <Button
+                                            withThrobber={true}
+                                            text={loginFormJson.buttonText}
+                                            width="100%"
+                                            height={46}
+                                            fontSize={16}
+                                            type={"submit"}
+                                            isPending={this.state.isPending}
+                                            throbberSize={30}/>
+                                    </div>
+                                </form>
+                                <Link className="link registerLink" to={routes.register.path}>
+                                    {loginFormJson.linkQuestion} <b>{loginFormJson.linkSignUpText}</b>
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <style jsx>{`
 
                     /* Center form on middle of page */
