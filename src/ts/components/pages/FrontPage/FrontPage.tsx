@@ -82,12 +82,12 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                     }
 
                     a {
-                        color: ${colors.secondary};
-                        text-decoration: none;
+                        color: ${colors.primary};
+                        text-decoration: underline;
                     }
 
                     a:hover {
-                        color: ${colors.primary};
+                        color: ${colors.secondary};
                     }
 
                 `}</style>
