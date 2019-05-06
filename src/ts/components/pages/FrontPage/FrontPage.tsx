@@ -52,7 +52,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
 
                     h1{
                         /** Override defaults */
-                        margin: 15px 0 15px 0;
+                        margin: 30px 0 15px 0;
 
                         /** Setup font */
                         font-family: ${ fonts.heading};

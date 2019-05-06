@@ -220,6 +220,10 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                 <style jsx>{`
                     .introduction {
                         line-height: 1.4;
+                    }
+
+                    h1 {
+                        margin: 30px 0 15px 0;
                     }     
                 `}</style>
             </React.Fragment>
