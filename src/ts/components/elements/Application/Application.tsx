@@ -1243,8 +1243,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         await confirmReceival(this.props.application, this.props.store, this.props.confirmApplication);
         this.setState({ showDialogConfirmReceival: false, isPending: false });
-
-        //this.closeConfirmationDialogReceival();
     }
 }
 
