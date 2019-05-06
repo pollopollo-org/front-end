@@ -20,7 +20,7 @@ export const createStore = () => {
                 // For now we really don't have that much to the store, simply create
                 // it and resolve immediately :-)
 
-                const applicationRequest = await fetchApplicationBatch(1, 5);
+                const applicationRequest = await fetchApplicationBatch(0, 5);
 
                 let applications: ApplicationModel[] | undefined;
 

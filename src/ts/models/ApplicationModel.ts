@@ -215,8 +215,8 @@ export async function postApplication(data: CreateApplicationState, store: Store
 /**
  * Internal method that'll attempt to fetch a given user in read only mode.
  */
-export async function fetchApplicationBatch(start: number, end: number, store?: Store) {
-    const cacheKey = `${start}${end}`;
+export async function fetchApplicationBatch(offset: number, amount: number, store?: Store) {
+    const cacheKey = `${offset}${amount}`;
 
     // If we have the current request cached, then simply return that!
     if (applicationCache.has(cacheKey)) {
@@ -226,7 +226,7 @@ export async function fetchApplicationBatch(start: number, end: number, store?: 
         };
     }
 
-    const endPoint = apis.applications.getBatch.path.replace("{start}", String(start)).replace("{end}", String(end));
+    const endPoint = apis.applications.getBatch.path.replace("{offset}", String(offset)).replace("{amount}", String(amount));
 
     try {
         const response = await fetch(endPoint, {
@@ -243,9 +243,6 @@ export async function fetchApplicationBatch(start: number, end: number, store?: 
             const applicationArray = json.list.map((applicationData) => ApplicationModel.CREATE(applicationData));
             applicationCache.set(cacheKey, applicationArray);
             cachedCount = json.count;
-
-            console.log(applicationArray);
-
 
             return {
                 count: json.count,

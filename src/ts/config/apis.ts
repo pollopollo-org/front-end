@@ -55,7 +55,7 @@ export const apis = {
             }
         },
         getBatch: {
-            path: `${basePath}/applications?first={start}&last={end}`,
+            path: `${basePath}/applications?offset={offset}&amount={amount}`,
             errors: {
                 404: "The requested applications could not be found. Please try again later.",
             }
