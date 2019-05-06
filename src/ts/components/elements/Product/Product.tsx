@@ -9,7 +9,6 @@ import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { getSVG } from "src/assets/svg";
 import { fonts, routes } from "src/ts/config";
-import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { Dialog } from "src/ts/components/utils/Dialog";
@@ -66,12 +65,6 @@ export type ProductState = {
      * lightbox in full size
      */
     showImage: boolean;
-
-    /**
-     * Specifies if the edit dropdown should currently be shown when producer
-     * views their own products.
-     */
-    showDropdown?: boolean;
 
     /**
      * Specifies whether or not the producer profile should currently be displayed
@@ -1068,211 +1061,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Rendering a dropdown menu on mobile size
-     */
-    protected renderEditMenuMobile() {
-        if (!this.state.isSmall) {
-            return;
-        }
-
-        return (
-            <div
-                className={`show-more-icon ${this.state.showDropdown ? "active" : ""}`}
-                ref={this.wrapperRef}
-                onClick={this.toggleDropdownState}
-                role="button"
-            >
-                <i >
-                    {getSVG("more-vertical")}
-                </i>
-                {this.renderDropdown()}
-
-                <style jsx>{`
-
-                    /** Indicate the icon is clickable */
-                    .show-more-icon {
-                        color:  rgba(57,57,57, 0.75);
-                        cursor: pointer;
-
-                        & i {
-                            display: block;
-                            width: 24px;
-                            height: 24px;
-                        }
-
-                        &:hover {
-                            color: ${ colors.secondary};
-                        }
-                    }
-                `}</style>
-
-            </div>
-        )
-    }
-
-
-    /**
-     * Renders the dropdown that'll become visible when the user clicks his own
-     * profile name.
-     */
-    protected renderDropdown(): JSX.Element {
-        return (
-            <Dropdown
-                active={this.state.showDropdown}
-                pointAt={this.wrapperRef}
-                onClose={this.toggleDropdownState}
-            >
-                <div className="wrapper">
-                    {this.renderInformation()}
-                </div>
-
-                <style jsx>{`
-                    .wrapper {
-                        /** Apply internal padding */
-                        padding: 10px 0;
-
-                        /**
-                         * Enforce a minimum width on the userInfo making sure
-                         * that it always renders nicely
-                         */
-                        min-width: 175px;
-
-                        /** By default element isn't clickable */
-                        cursor: default;
-                    }
-                `}</style>
-            </Dropdown>
-        );
-    }
-
-
-    /**
-     * Internal helper that renders all information related to the user
-     */
-    protected renderInformation(): JSX.Element {
-        const { product } = this.props;
-
-        return (
-            <React.Fragment>
-                <span className="link" onClick={this.toggleDropdownState} role="link">
-                    <i className="edit">{getSVG("edit")}</i>
-                    <span>Edit</span>
-                </span>
-                <span onClick={this.toggleDropdownState} role="button">
-
-                    {product.isActive &&
-                        <div className="link" onClick={this.openConfirmationDialog} role="button">
-                            <i className="status">{getSVG("check-square")}</i>
-                            <span>Deactivate</span>
-                        </div>
-
-                    }
-                    {!product.isActive &&
-                        <div className="link" onClick={this.openConfirmationDialog} role="button">
-                            <i className="status">{getSVG("square")}</i>
-                            <span>Activate</span>
-                        </div>
-                    }
-                </span>
-
-                <style jsx>{`
-                    button,
-                    .link {
-                        /** Override defaults */
-                        background: none;
-                        -webkit-appearance: none;
-                        border: none;
-                        /** Center items within vertically */
-                        display: flex;
-                        align-items: center;
-
-                        /** Allow button to fill the whole dropdown */
-                        width: 100%;
-
-                        /**
-                         * Set up basic padding around the element (the 6px top
-                         * padding is applied to take into account that the icon
-                         * will push text further down, and we want the white-
-                         * space to visually align with the text instead of the
-                         * icon).
-                         */
-                        padding: 10px 20px;
-                        margin: 0;
-
-                        /**
-                         * Indicate that items are clickable
-                         */
-                        cursor: pointer;
-
-                        /** Prevent line-breaks within the label */
-                        white-space: nowrap;
-
-                        /** Set up text styling */
-                        font-size: 12px;
-                        color: ${ colors.black};
-                        line-height: 1em;
-                        text-decoration: none;
-
-                        /** Prepare hover transition */
-                        transition:
-                            background-color 0.1s linear,
-                            color 0.1s linear;
-
-                        & i {
-                            /** Set up icon sizing */
-                            display: inline-block;
-                            width: 22px;
-                            height: 22px;
-
-                            /** Apply margin between icon and text */
-                            margin-right: 10px;
-
-                            & > :global(.svgIcon) > :global(svg) > :global(path) {
-                                /** Apply default font color */
-                                stroke: ${ colors.black};
-                            }
-                        }
-
-                        /** Apply highlight color on hover */
-                        &:hover {
-                            background-color: rgba(69, 50, 102, 0.1);
-                            color: ${ colors.primary};
-
-                            & i > :global(.svgIcon) > :global(svg) > :global(path) {
-                                stroke: ${ colors.primary};
-                            }
-                        }
-                    }
-
-                    .link {
-                        /**
-                         * Override width on items in dropdown to ensure they take
-                         * padding into account when achieving width of 100%
-                         */
-                        width: calc(100% - 40px);
-
-                        & :global(> a) {
-                            /** Align icon and text within icon properly */
-                            display: flex;
-                            align-items: center;
-
-                            /** Override default colors */
-                            color: ${ colors.black};
-                            text-decoration: none;
-                        }
-
-                        & .edit {
-                            height: 23px;
-                            width: 23px;
-                        }
-                    }
-                `}</style>
-            </React.Fragment>
-        );
-    }
-
-
-    /**
      * Internal renderer that'll render the producer lightbox which will be displayed
      * when desired
      */
@@ -1440,18 +1228,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         }
 
         this.setState({ isSmall: root.clientWidth < MOBILE_BREAKPOINT });
-
-        if (this.state.isSmall) {
-            this.setState({ showDropdown: false });
-        }
-    }
-
-    /**
-     * Listener that's triggered when the producer somehow prompts for the
-     * dropdown to appear or disappear
-     */
-    protected toggleDropdownState = () => {
-        this.setState({ showDropdown: !this.state.showDropdown });
     }
 }
 
