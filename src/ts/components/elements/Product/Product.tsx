@@ -144,13 +144,13 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      */
     private isTransitioning: boolean = false;
 
-    /** 
-     * Reference to the div tag with class name description 
+    /**
+     * Reference to the div tag with class name description
      */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** 
-     * Reference to the div tag with class name product-border 
+    /**
+     * Reference to the div tag with class name product-border
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -304,7 +304,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                             &::before {
                                 content: none;
                             }
-                            
+
                             &:hover {
                                 box-shadow: none;
                                 border: 1px solid rgba(139,72,156, 0.15);
@@ -345,7 +345,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         position: relative;
                         overflow: hidden;
                         width: 100%;
-                        
+
                         &.isSmall {
                             padding-bottom: 20px;
                         }
@@ -354,7 +354,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     /** Contans different sections to manage placement with flexbox */
                     .sections {
                         /** Display sections alongside each other */
-                        margin: 7px 7px 5px 7px;
+                        margin: 5px;
                         display: flex;
                         flex-direction: row;
 
@@ -421,7 +421,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 <div className="product-wrapper">
 
                     <span
-                        className={`product ${this.state.isSmall ? "isSmall" : ""} 
+                        className={`product ${this.state.isSmall ? "isSmall" : ""}
                                             ${userType === UserTypes.RECEIVER ? "isReceiver" : ""}`}
                         title={product.title}
                     >
@@ -431,7 +431,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     {
                         this.props.userType === UserTypes.PRODUCER &&
                         <span
-                            className={`price ${this.state.isSmall ? "isSmall" : ""} 
+                            className={`price ${this.state.isSmall ? "isSmall" : ""}
                                                 ${isOwnProduct ? "isOwnProduct" : ""}`}
                         >
                             ${product.price}
@@ -468,8 +468,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         &.isSmall {
                             max-width: 100%;
 
-                            /** 
-                             * If user is a receiver, there should be a button 
+                            /**
+                             * If user is a receiver, there should be a button
                              * below the product content, therefore, restrict
                              * content to be at only 1 line
                              */
@@ -500,16 +500,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         font-size: 1.3em;
                         margin-left: 10px;
 
-                        /** 
-                         * Owner of product will see edit buttons, therefore 
+                        /**
+                         * Owner of product will see edit buttons, therefore
                          * position price a bit to the right
                          */
                         &.isOwnProduct {
-                            margin-right: 75px;
-
-                            &.isSmall {
-                                margin-right: 25px;
-                            }
+                            margin-right: 37px;
                         }
                     }
                 `}</style>
@@ -893,7 +889,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         z-index: 10;
 
                         /** When mobile size, make chevron smaller */
-                        &.isSmall {                            
+                        &.isSmall {
                             height: 15px;
                             width: 21px;
 
@@ -999,23 +995,18 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <div className={`product-more ${this.state.isSmall ? "isSmall" : ""}`}>
 
-                {!this.state.isSmall && (
-                    <div className="edit-button-section">
-                        <button className="edit-button" title="Edit"><i className="edit">{getSVG("edit")}</i></button>
-                        {
-                            product.isActive &&
-                            <button onClick={this.openConfirmationDialog} className="status-button" title="Deactivate">
-                                <i className="status">{getSVG("check-square")}</i>
-                            </button>
-                        }
-                        {
-                            !product.isActive &&
-                            <button onClick={this.openConfirmationDialog} className="status-button"><i className="status" title="Activate">{getSVG("square")}</i></button>
-                        }
-                    </div>
-                )}
-
-                {this.renderEditMenuMobile()}
+                <div className="edit-button-section">
+                    {
+                        product.isActive &&
+                        <button onClick={this.openConfirmationDialog} className="status-button" title="Deactivate">
+                            <i className="status">{getSVG("check-square")}</i>
+                        </button>
+                    }
+                    {
+                        !product.isActive &&
+                        <button onClick={this.openConfirmationDialog} className="status-button"><i className="status" title="Activate">{getSVG("square")}</i></button>
+                    }
+                </div>
 
                 <style jsx>{`
 
@@ -1024,8 +1015,8 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         display: flex;
                         flex-direction: row;
                     }
-                    
-                    /** 
+
+                    /**
                      * Button should not be visible and act as a wrapper for
                      * the icon
                      */
@@ -1037,6 +1028,9 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         padding: 2px 5px;
                         cursor: pointer;
                         color: rgba(57,57,57, 0.75);
+
+                        /** Create a pale line between the icons to seperate them */
+                        border-left: 1px solid ${ colors.pale};
                     }
 
                     /** Make icon slightly smaller to fit better */
@@ -1049,20 +1043,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         color: ${ colors.secondary};
                     }
 
-                    /** Create a pale line between the icons to seperate them */
-                    .edit-button-section .edit-button {
-                        border-right: 1px solid ${ colors.pale};
-                    }
-
                     /** Position the icons */
                     .product-more {
                         position: absolute;
                         right: 0;
                         top: 0;
 
-                        &.isSmall {
-                            top: 3px;
-                        }
                         z-index: 12;
                     }
 
@@ -1349,7 +1335,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         display: block;
                         width: 100%;
                         height: 100%;
-                    }    
+                    }
                 `}</style>
             </Lightbox>
         );
@@ -1384,7 +1370,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
-     * Listener that updates the product 
+     * Listener that updates the product
      */
     private updateProductActivation = async () => {
         if (this.state.isPending || !this.props.store.user) {
