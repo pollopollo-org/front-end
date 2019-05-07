@@ -9,7 +9,7 @@ import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { editProfile } from "src/ts/models/UserModel";
+import { editProfile, UserTypes } from "src/ts/models/UserModel";
 
 type EditProfileProps = {
     /**
@@ -166,16 +166,27 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                             aria-required={true}
                             placeholder={ editProfileJson.email }
                         />
-                        <div className="wallet-wrapper">
-                            <input
-                                className="input wallet"
-                                value={this.state.wallet || ""}
-                                readOnly
-                                aria-required={true}
-                                placeholder={ editProfileJson.wallet}
-                                onChange={this.onWalletChanged} />
-                            <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
-                        </div>
+                        {this.state.userType === UserTypes.PRODUCER &&
+                            <div className="wallet-wrapper">
+                                <input
+                                    className="input wallet"
+                                    value={this.state.wallet || ""}
+                                    readOnly
+                                    aria-required={true}
+                                    placeholder={editProfileJson.wallet}
+                                    onChange={this.onWalletChanged} />
+
+                                {
+                                    !this.state.wallet &&
+                                    <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
+                                }
+                                {
+                                    this.state.wallet &&
+                                    <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="edit-icon">{getSVG("edit")}</i></a>
+                                }
+                            </div>
+                        }
+
                         <input
                             type="password"
                             className="input password first"
@@ -302,11 +313,12 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     position: relative;
                 }
 
-                .plus-icon {
+                .plus-icon, .edit-icon {
                     width: 24px;
                     height:24px;
                     position: absolute;
-
+                    display: block;
+                    background-color: white;
                     top: 24px;
                     right: 10px;
                     padding: 0;
@@ -314,6 +326,18 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     cursor: pointer;
                     &:hover {
                         color: ${colors.secondary};
+                    }
+                }
+
+                .wallet:hover + a .edit-icon {
+                    display: block;
+                }
+
+                a .edit-icon {
+                    display: none;
+
+                    &:hover {
+                        display: block;
                     }
                 }
 
