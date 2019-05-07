@@ -384,16 +384,15 @@ export async function deleteApplication(applicationId: number, store: Store, cal
     } catch (err) {
         // Show error message
         store.currentErrorMessage = "Something went wrong while attempting to delete your application, please try again later.";
-    } finally {
     }
 }
 
 /**
  * Helper for initiating donation
  */
-export async function initiateDonation (applicationId: number) {
+export async function initiateDonation(applicationId: number) {
     //Redirect to the chatbot in wallet
-    window.location.href = `byteball:A+MbQ209fdfCIJjKtPbt7wkih/O7IAp5B5D0SJJxxdVN@obyte.org/bb#${applicationId}`;
+    window.location.href = `byteball:AxQdEHHgzB3uP+kXwHLII0t7TB69BVMVfTUZ8RueIMtd@obyte.org/bb#${applicationId}`;
 }
 
 /**
@@ -423,10 +422,10 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
             // In case we have a callback, then broadcast the newly updated product
             // to it.
             if (callback) {
-                const newApplication = ApplicationModel.CREATE({ 
+                const newApplication = ApplicationModel.CREATE({
                     ...application,
-                    country: <CountryCodes> application.country,
-                    status: 3 
+                    country: <CountryCodes>application.country,
+                    status: 3
                 });
                 callback(newApplication);
             }

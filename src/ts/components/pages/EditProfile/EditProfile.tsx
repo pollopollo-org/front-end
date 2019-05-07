@@ -9,7 +9,7 @@ import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { editProfile, UserTypes } from "src/ts/models/UserModel";
+import { editProfile } from "src/ts/models/UserModel";
 
 type EditProfileProps = {
     /**
@@ -51,11 +51,11 @@ export type EditProfileState = {
     /**
      * old password to make sure it is the actual user who is changing the information
      */
-    oldPassword:string;
+    oldPassword: string;
     /**
      * a brief description of the user
      */
-    description?:string;
+    description?: string;
     /**
      * profile image
      */
@@ -63,11 +63,11 @@ export type EditProfileState = {
     /**
      * wallet address
      */
-    wallet?:string;
+    wallet?: string;
     /**
      * wallet address
      */
-    pairingLink?:string;
+    pairingLink?: string;
 
     /**
      * Specifies whether or not we're currently attempting to create a user
@@ -78,7 +78,7 @@ export type EditProfileState = {
 /**
  *  Page where a logged in producer can edit their profile
  */
-class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProfileState>{
+class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditProfileState>{
     /**
      * State of the component
      */
@@ -125,48 +125,53 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      * Main render method for the entire component
      */
     // tslint:disable-next-line max-func-body-length
-    public render(): JSX.Element{
+    public render(): JSX.Element {
         if (!this.props.store.user) {
             return <h1>No user currently logged in!</h1>;
         }
 
         const picture = this.getProfilePictureURL();
 
-        return(
+        let pairingLink: string = "";
+
+        if (this.state.pairingLink) {
+            pairingLink = "byteball:AxQdEHHgzB3uP+kXwHLII0t7TB69BVMVfTUZ8RueIMtd@obyte.org/bb#" + this.state.pairingLink.split("#")[1]
+        }
+
+        return (
             <div className="allSection">
-            <h1>{ editProfileJson.title }</h1>
-            <form onSubmit={this.sendToBackEnd}>
-                <div className="inputPicDescSection">
-                    <div className="inputFieldsSection">
-                        <input
-                            className="input name first"
-                            required
-                            aria-required={true}
-                            value={this.state.firstName}
-                            placeholder={ editProfileJson.firstName }
-                            onChange={this.onFirstnameChanged}
-                        />
-                        <input
-                            className="input name last"
-                            required
-                            aria-required={true}
-                            value={this.state.lastName}
-                            placeholder={ editProfileJson.lastName }
-                            onChange={this.onLastnameChanged}
-                        />
-                        <div className="SelectCountryDiv">
-                            <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
-                        </div>
-                        <input
-                            type="email"
-                            className="input email"
-                            required
-                            value={this.props.store.user.email}
-                            readOnly
-                            aria-required={true}
-                            placeholder={ editProfileJson.email }
-                        />
-                        {this.state.userType === UserTypes.PRODUCER &&
+                <h1>{editProfileJson.title}</h1>
+                <form onSubmit={this.sendToBackEnd}>
+                    <div className="inputPicDescSection">
+                        <div className="inputFieldsSection">
+                            <input
+                                className="input name first"
+                                required
+                                aria-required={true}
+                                value={this.state.firstName}
+                                placeholder={editProfileJson.firstName}
+                                onChange={this.onFirstnameChanged}
+                            />
+                            <input
+                                className="input name last"
+                                required
+                                aria-required={true}
+                                value={this.state.lastName}
+                                placeholder={editProfileJson.lastName}
+                                onChange={this.onLastnameChanged}
+                            />
+                            <div className="SelectCountryDiv">
+                                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
+                            </div>
+                            <input
+                                type="email"
+                                className="input email"
+                                required
+                                value={this.props.store.user.email}
+                                readOnly
+                                aria-required={true}
+                                placeholder={editProfileJson.email}
+                            />
                             <div className="wallet-wrapper">
                                 <input
                                     className="input wallet"
@@ -175,81 +180,71 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                                     aria-required={true}
                                     placeholder={editProfileJson.wallet}
                                     onChange={this.onWalletChanged} />
-
-                                {
-                                    !this.state.wallet &&
-                                    <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
-                                }
-                                {
-                                    this.state.wallet &&
-                                    <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="edit-icon">{getSVG("edit")}</i></a>
-                                }
+                                <a href={pairingLink} rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
                             </div>
-                        }
-
-                        <input
-                            type="password"
-                            className="input password first"
-                            value={this.state.password}
-                            placeholder={ editProfileJson.password }
-                            onChange={this.onPasswordChanged}/>
-                        <input
-                            type="password"
-                            className="input password second"
-                            value={this.state.repeatedPassword}
-                            placeholder={ editProfileJson.confirmPassword }
-                            onChange={this.onValidationPasswordChanged}/>
-                    </div>
-                    <div className="pictureDescSection">
-                        <div className="currentPictureDiv">
+                            <input
+                                type="password"
+                                className="input password first"
+                                value={this.state.password}
+                                placeholder={editProfileJson.password}
+                                onChange={this.onPasswordChanged} />
+                            <input
+                                type="password"
+                                className="input password second"
+                                value={this.state.repeatedPassword}
+                                placeholder={editProfileJson.confirmPassword}
+                                onChange={this.onValidationPasswordChanged} />
+                        </div>
+                        <div className="pictureDescSection">
+                            <div className="currentPictureDiv">
                                 {(
                                     isNullOrUndefined(picture)
-                                        ? <i className="user">{getSVG("user2", { strokeColor: colors.primary }) }</i>
-                                        : <img className="currentPicture" src={ picture } alt="" role="presentation"/>
+                                        ? <i className="user">{getSVG("user2", { strokeColor: colors.primary })}</i>
+                                        : <img className="currentPicture" src={picture} alt="" role="presentation" />
                                 )}
-                        </div>
-                        <input
-                            type="file"
-                            id="fileInput"
-                            onChange={this.chooseImage}
-                        />
-                        <label htmlFor="fileInput">{editProfileJson.uploadPicture}</label>
-                        <textarea
-                            className="description"
-                            value={this.state.description || ""}
-                            placeholder={ editProfileJson.decription }
-                            onChange={this.onDescriptionChanged}/>
-                    </div>
-                </div>
-                <div className="borderLine"/>
-                <div className="oldPassSubmitSection">
-                    <div className="oldPasswordSection">
-                        <input
-                            type="password"
-                            className="input password old"
-                            required
-                            aria-required={true}
-                            value={this.state.oldPassword}
-                            placeholder={ editProfileJson.oldPassword }
-                            onChange={this.onOldPasswordChanged}/>
-                    </div>
-                    <div className="submitDiv">
-                        <div className="button">
-                            <Button
-                                withThrobber={true}
-                                text={editProfileJson.saveButton}
-                                width={260}
-                                height={43}
-                                fontSize={16}
-                                type={"submit"}
-                                isPending={this.state.isPending}
-                                throbberSize={30}/>
+                            </div>
+                            <input
+                                type="file"
+                                id="fileInput"
+                                onChange={this.chooseImage}
+                            />
+                            <label htmlFor="fileInput">{editProfileJson.uploadPicture}</label>
+                            <textarea
+                                className="description"
+                                value={this.state.description || ""}
+                                placeholder={editProfileJson.decription}
+                                onChange={this.onDescriptionChanged} />
                         </div>
                     </div>
-                </div>
-            </form>
+                    <div className="borderLine" />
+                    <div className="oldPassSubmitSection">
+                        <div className="oldPasswordSection">
+                            <input
+                                type="password"
+                                className="input password old"
+                                required
+                                aria-required={true}
+                                value={this.state.oldPassword}
+                                placeholder={editProfileJson.oldPassword}
+                                onChange={this.onOldPasswordChanged} />
+                        </div>
+                        <div className="submitDiv">
+                            <div className="button">
+                                <Button
+                                    withThrobber={true}
+                                    text={editProfileJson.saveButton}
+                                    width={260}
+                                    height={43}
+                                    fontSize={16}
+                                    type={"submit"}
+                                    isPending={this.state.isPending}
+                                    throbberSize={30} />
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-            <style jsx>{`
+                <style jsx>{`
                 h1 {
                     margin: 0 0 8px;
                     line-height: 30px;
@@ -261,10 +256,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     height: 39px;
                     width: 252px;
                     text-indent: 9px;
-                    border: 1px solid ${ colors.pale };
-                    color: ${ colors.black };
+                    border: 1px solid ${ colors.pale};
+                    color: ${ colors.black};
                     border-radius: 3px;
-                    font-family: ${ fonts.text };
+                    font-family: ${ fonts.text};
                     font-size: 16px;
                     font-weight: 300;
 
@@ -275,7 +270,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     background-clip: padding-box;
 
                     &::placeholder {
-                        color: ${ colors.gray };
+                        color: ${ colors.gray};
                         opacity: 1;
                     }
 
@@ -409,7 +404,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     cursor: pointer;
                     transition: background-color 0.1s linear;
                     font-size: 16px;
-                    font-family: ${ fonts.text };
+                    font-family: ${ fonts.text};
                     font-weight: 300;
                     padding: 0.5rem 20px;
                     width: 105px;
@@ -427,10 +422,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     width: 240px;
                     height: 139px;
                     padding: 10px 9px;
-                    border: 1px solid ${ colors.pale };
-                    color: ${ colors.black };
+                    border: 1px solid ${ colors.pale};
+                    color: ${ colors.black};
                     border-radius: 3px;
-                    font-family: ${ fonts.text };
+                    font-family: ${ fonts.text};
                     font-size: 16px;
                     font-weight: 300;
                     margin: 10px 0px;
@@ -441,7 +436,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                     background-clip: padding-box;
 
                     &::placeholder {
-                        color: ${ colors.gray };
+                        color: ${ colors.gray};
                         opacity: 1;
                     }
                 }
@@ -605,8 +600,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
     /**
      * Is passed down to SelectCountry and allows us to extract its value
      */
-    private newCountrySelected = (newCountry:string) => {
-        this.setState({country: newCountry,});
+    private newCountrySelected = (newCountry: string) => {
+        this.setState({ country: newCountry, });
     }
 
     /**
@@ -614,14 +609,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      * and updates the state accordingly
      */
     private chooseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.files !== null){
-            if(
-                !( e.target.value.toLowerCase().endsWith(".png")
-                || e.target.value.toLowerCase().endsWith(".jpeg")
-                || e.target.value.toLowerCase().endsWith(".jpg")
+        if (e.target.files !== null) {
+            if (
+                !(e.target.value.toLowerCase().endsWith(".png")
+                    || e.target.value.toLowerCase().endsWith(".jpeg")
+                    || e.target.value.toLowerCase().endsWith(".jpg")
                 )
-            )
-            {
+            ) {
                 this.props.store.currentErrorMessage = editProfileJson.imageTypeAlert;
                 return;
             }
@@ -630,7 +624,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
                 return;
             }
 
-            this.setState({ profilePicture: e.target.files[0]});
+            this.setState({ profilePicture: e.target.files[0] });
         }
     }
 
@@ -652,9 +646,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
      * otherwise not
      */
     private getProfilePictureURL = () => {
-        if(isNullOrUndefined(this.state.profilePicture)){
+        if (isNullOrUndefined(this.state.profilePicture)) {
             return this.props.store.user ? this.props.store.user.getThumbnail() : "";
-        } else{
+        } else {
             return window.URL.createObjectURL(this.state.profilePicture);
         }
     }
@@ -669,7 +663,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps,EditProf
             return;
         }
 
-        if(this.state.password && this.state.password !== this.state.repeatedPassword){
+        if (this.state.password && this.state.password !== this.state.repeatedPassword) {
             this.props.store.currentErrorMessage = "Your passwords must match";
             return;
         }

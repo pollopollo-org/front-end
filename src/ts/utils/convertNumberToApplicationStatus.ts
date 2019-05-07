@@ -14,7 +14,7 @@ export function convertNumberToApplicationStatus(number: number, fallback?: Appl
 
         case 2:
             return ApplicationStatus.PENDING;
-        
+
         case 3:
             return ApplicationStatus.COMPLETED
 

@@ -709,9 +709,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         const { application } = this.props;
 
         return (
-            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>    
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
                 <Button onClick={this.openConfirmationDialogDonate} withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
-                
+
                 <style jsx>{`
                     .button-wrapper {
                         /** Position the donate button in the top right corner */
@@ -899,13 +899,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Dialog to confirm whether a donor wants to donate to an application
      */
     private renderConfirmDialogDonateApplication() {
-        return(
+        return (
             <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={ApplicationJSON.confirmationDialogTextDonate}
                 active={this.state.showDialogDonate}
                 onClose={this.closeConfirmationDialogDonate}
                 confirmAction={this.initiateDonation}
-                />
+            />
         );
     }
 
