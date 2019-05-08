@@ -104,6 +104,12 @@ export type UserState = {
      */
     unavailableApplications?: ApplicationModel[];
 
+    /**
+     * The initial load of applications, used to determine if we should load
+     * pending or open applications initially.
+     */
+    initialLoad?: boolean;
+
 
 }
 
@@ -123,8 +129,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         isSmall: false,
         renderedUser: this.props.store.user,
         filterActiveProducts: true,
-        filterApplications: ApplicationStatus.OPEN,
-        isPending: true
+        filterApplications: ApplicationStatus.PENDING,
+        isPending: true,
+        initialLoad: true
     }
 
 
@@ -818,13 +825,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         const newInactiveProductList = this.state.inactiveProducts;
 
         if (chosenProduct.isActive) {
-            if(newInactiveProductList) {
+            if (newInactiveProductList) {
                 // If new product is active, then remove it from inactiveProducts list
                 newInactiveProductList.splice(index, 1);
                 this.setState({ inactiveProducts: newInactiveProductList });
             }
         } else {
-            if(newActiveProductList) {
+            if (newActiveProductList) {
                 // ...else remove it from the activeProduct list
                 newActiveProductList.splice(index, 1);
                 this.setState({ activeProducts: newActiveProductList });
@@ -841,7 +848,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         const newPendingApplicationList = this.state.pendingApplications;
 
         if (chosenApplication.status === ApplicationStatus.COMPLETED) {
-            if(newPendingApplicationList) {
+            if (newPendingApplicationList) {
                 // If new product is active, then remove it from inactiveProducts list
                 newPendingApplicationList.splice(index, 1);
                 this.setState({ pendingApplications: newPendingApplicationList });
@@ -924,29 +931,24 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             status,
         );
 
-        if (!applications) {
-            if (this.applicationStatusIsOpen(this.state.filterApplications)) {
-                this.setState({ openApplications: [] });
-            } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
-                this.setState({ pendingApplications: [] });
-            } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
-                this.setState({ completedApplications: [] });
-            } else {
-                this.setState({ unavailableApplications: [] });
-            }
-        } else {
-            if (this.applicationStatusIsOpen(this.state.filterApplications)) {
-                this.setState({ openApplications: applications });
-            } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
-                this.setState({ pendingApplications: applications });
-            } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
-                this.setState({ completedApplications: applications });
-            } else {
-                this.setState({ unavailableApplications: applications });
-            }
+        if (!applications || applications.length === 0 && this.state.initialLoad) {
+            this.setState({ initialLoad: false, filterApplications: ApplicationStatus.OPEN }, () => {
+                this.loadApplications(ApplicationStatus.OPEN);
+            });
+            return;
         }
 
-        this.setState({ isPending: false });
+        if (this.applicationStatusIsOpen(this.state.filterApplications)) {
+            this.setState({ openApplications: applications || [] });
+        } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
+            this.setState({ pendingApplications: applications || [] });
+        } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+            this.setState({ completedApplications: applications });
+        } else {
+            this.setState({ unavailableApplications: applications || [] });
+        }
+
+        this.setState({ isPending: false, initialLoad: false });
     }
 
     /**
@@ -992,7 +994,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         // Begin loading the desired additional data based on the user to display
         if (user && isReceiverUser(user)) {
-            this.loadApplications(ApplicationStatus.OPEN);
+            this.loadApplications(ApplicationStatus.PENDING);
         } else if (user && isProducerUser(user)) {
             this.loadActiveProducts();
         }

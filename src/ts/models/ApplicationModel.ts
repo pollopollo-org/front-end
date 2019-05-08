@@ -384,16 +384,15 @@ export async function deleteApplication(applicationId: number, store: Store, cal
     } catch (err) {
         // Show error message
         store.currentErrorMessage = "Something went wrong while attempting to delete your application, please try again later.";
-    } finally {
     }
 }
 
 /**
  * Helper for initiating donation
  */
-export async function initiateDonation (applicationId: number) {
+export async function initiateDonation(applicationId: number) {
     //Redirect to the chatbot in wallet
-    window.location.href = `byteball:A+MbQ209fdfCIJjKtPbt7wkih/O7IAp5B5D0SJJxxdVN@obyte.org/bb#${applicationId}`;
+    window.location.href = `byteball:A48mzUUBoYbkCm6AOSEyYdQ3Fy1ibs3KKMxJVkS31WFe@obyte.org/bb#${applicationId}`;
 }
 
 /**
@@ -403,9 +402,9 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
     try {
         const token = localStorage.getItem("userJWT");
 
-        // The user MUST be logged in in order to be able to toggle the product
-        // availability. (furthermore the logged in user must be the owner of
-        // the product, else the backend will throw errors).
+        // The user MUST be logged in in order to be able to confirm the receival
+        // (furthermore the logged in user must be the owner of the application, else 
+        // the backend will throw errors).
         if (!token || !store.user) {
             return;
         }
@@ -420,13 +419,13 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
 
         if (result.ok) {
 
-            // In case we have a callback, then broadcast the newly updated product
+            // In case we have a callback, then broadcast the newly updated application
             // to it.
             if (callback) {
-                const newApplication = ApplicationModel.CREATE({ 
+                const newApplication = ApplicationModel.CREATE({
                     ...application,
-                    country: <CountryCodes> application.country,
-                    status: 3 
+                    country: <CountryCodes>application.country,
+                    status: 3
                 });
                 callback(newApplication);
             }
@@ -435,7 +434,7 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
         }
     } catch (err) {
         // Show error message
-        store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
+        store.currentErrorMessage = "Something went wrong while attempting to update your application, please try again later.";
     } finally {
     }
 }

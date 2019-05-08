@@ -46,7 +46,9 @@ export const apis = {
         }
     },
     applications: {
-        getRecent: `${basePath}/applications/recent`,
+        confirm: {
+            path: `${basePath}/applications/{receiverId}/{applicationId}`,
+        },
         post: {
             path: `${basePath}/applications`,
             errors: {
