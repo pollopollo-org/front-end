@@ -899,9 +899,17 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Dialog to confirm whether a donor wants to donate to an application
      */
     private renderConfirmDialogDonateApplication() {
+        const text = (<>
+            {ApplicationJSON.confirmationDialogTextDonate1}
+            <br /><br />
+            {ApplicationJSON.confirmationDialogTextDonate2}
+            <br /><br />
+            {ApplicationJSON.confirmationDialogTextDonate3}
+        </>);
+
         return (
             <Dialog title={ApplicationJSON.confirmDonateTitle}
-                text={ApplicationJSON.confirmationDialogTextDonate}
+                text={text}
                 active={this.state.showDialogDonate}
                 onClose={this.closeConfirmationDialogDonate}
                 confirmAction={this.initiateDonation}
