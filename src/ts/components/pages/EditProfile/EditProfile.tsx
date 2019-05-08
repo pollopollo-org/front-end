@@ -176,11 +176,11 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                     onChange={this.onWalletChanged} />
                                     {
                                         !this.state.wallet &&
-                                        <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
+                                        <a href={this.state.pairingLink} ><i className="plus-icon">{getSVG("plus-square")}</i></a>
                                     }
                                     {
                                         this.state.wallet &&
-                                        <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="edit-icon">{getSVG("edit")}</i></a>
+                                        <a href={this.state.pairingLink} ><i className="edit-icon">{getSVG("edit")}</i></a>
                                     }
                             </div>}
                             <input
