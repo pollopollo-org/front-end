@@ -9,7 +9,7 @@ import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { editProfile } from "src/ts/models/UserModel";
+import { editProfile, UserTypes } from "src/ts/models/UserModel";
 
 type EditProfileProps = {
     /**
@@ -166,7 +166,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                 aria-required={true}
                                 placeholder={editProfileJson.email}
                             />
-                            <div className="wallet-wrapper">
+                            {this.state.userType === UserTypes.PRODUCER && <div className="wallet-wrapper">
                                 <input
                                     className="input wallet"
                                     value={this.state.wallet || ""}
@@ -182,7 +182,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                         this.state.wallet &&
                                         <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="edit-icon">{getSVG("edit")}</i></a>
                                     }
-                            </div>
+                            </div>}
                             <input
                                 type="password"
                                 className="input password first"
@@ -421,7 +421,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 .description{
                     box-shadow: none;
                     width: 240px;
-                    height: 139px;
+                    height: 121px;
                     padding: 10px 9px;
                     border: 1px solid ${ colors.pale};
                     color: ${ colors.black};
