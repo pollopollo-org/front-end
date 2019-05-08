@@ -132,12 +132,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
 
         const picture = this.getProfilePictureURL();
 
-        let pairingLink: string = "";
-
-        if (this.state.pairingLink) {
-            pairingLink = "byteball:AxQdEHHgzB3uP+kXwHLII0t7TB69BVMVfTUZ8RueIMtd@obyte.org/bb#" + this.state.pairingLink.split("#")[1]
-        }
-
         return (
             <div className="allSection">
                 <h1>{editProfileJson.title}</h1>
@@ -180,7 +174,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                     aria-required={true}
                                     placeholder={editProfileJson.wallet}
                                     onChange={this.onWalletChanged} />
-                                <a href={pairingLink} rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
+                                    {
+                                        !this.state.wallet &&
+                                        <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="plus-icon">{getSVG("plus-square")}</i></a>
+                                    }
+                                    {
+                                        this.state.wallet &&
+                                        <a href={this.state.pairingLink} target="_blank" rel="noreferrer"><i className="edit-icon">{getSVG("edit")}</i></a>
+                                    }
                             </div>
                             <input
                                 type="password"

@@ -392,7 +392,7 @@ export async function deleteApplication(applicationId: number, store: Store, cal
  */
 export async function initiateDonation(applicationId: number) {
     //Redirect to the chatbot in wallet
-    window.location.href = `byteball:AxQdEHHgzB3uP+kXwHLII0t7TB69BVMVfTUZ8RueIMtd@obyte.org/bb#${applicationId}`;
+    window.location.href = `byteball:A48mzUUBoYbkCm6AOSEyYdQ3Fy1ibs3KKMxJVkS31WFe@obyte.org/bb#${applicationId}`;
 }
 
 /**
