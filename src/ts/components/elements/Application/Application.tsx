@@ -1,7 +1,8 @@
 import React from "react";
+import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -12,7 +13,6 @@ import { fonts } from "src/ts/config";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { Store } from "src/ts/store/Store";
 import { injectStore } from "src/ts/store/injectStore";
-import { Alert } from "src/ts/components/utils/Alert";
 import { UserLightbox } from "src/ts/components/elements/UserLightbox/UserLightbox";
 import { ProducerModel } from "src/ts/models/ProducerModel";
 import { UserLink } from "src/ts/components/elements/UserLink/UserLink";
@@ -56,6 +56,12 @@ export type ApplicationProps = {
      * Optional callback to execute once an application gets deleted
      */
     onApplicationDeleted?(): void;
+
+    /**
+     * Method that can optinally be executed once the application updates in order
+     * to reflect this in the ui
+     */
+    confirmApplication?(newApplication: ApplicationModel): void;
 }
 
 export type ApplicationState = {
@@ -70,19 +76,27 @@ export type ApplicationState = {
      */
     isSmall: boolean;
     /**
-     * Specifies whether or not the receiver's profile should currently be 
+     * Specifies whether or not the receiver's profile should currently be
      * displayed in a lightbox
      */
     showReceiver: boolean;
     /**
-     * Specifies whether or not the producer's profile should currently be 
+     * Specifies whether or not the producer's profile should currently be
      * displayed in a lightbox
      */
     showProducer: boolean;
     /**
-     * Specifies whether or not the confirmation dialog should be displayed
+     * Specifies whether or not we're currently attempting to update an application
      */
-    showDialog: boolean;
+    isPending?: boolean;
+    /**
+     * Specifies whether or not the confirmation dialog for deleting the should be displayed
+     */
+    showDialogDelete: boolean;
+    /**
+     * Specifies whether or not the confirmation dialog for donating to the application should be displayed
+     */
+    showDialogDonate: boolean;
     /**
      * Specifies whether or not we should display a lightbox displaying the product
      * related to the application
@@ -104,11 +118,12 @@ export type ApplicationState = {
      */
     product?: ProductModel;
     /**
+
      * Specifies whether or not the alert should be displayed
-     * Used for telling the user that is is not yet possible 
+     * Used for telling the user that is is not yet possible
      * to confirm receival of a product
      */
-    showAlert: boolean;
+    showDialogConfirmReceival: boolean;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -125,11 +140,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     public state: ApplicationState = {
         expanded: false,
         isSmall: false,
-        showDialog: false,
+        showDialogDelete: false,
+        showDialogDonate: false,
         showReceiver: false,
-        showAlert: false,
+        showDialogConfirmReceival: false,
         showProducer: false,
         showProduct: false,
+        isPending: false,
     };
 
     /**
@@ -137,13 +154,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private isTransitioning: boolean = false;
 
-    /** 
-     * Reference to the div tag with class name description 
+    /**
+     * Reference to the div tag with class name description
      */
     private readonly descriptionRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** 
-     * Reference to the div tag with class name application-border 
+    /**
+     * Reference to the div tag with class name application-border
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
 
@@ -195,9 +212,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     public render(): JSX.Element {
         return (
             <React.Fragment>
-                <div className={`application-border ${this.props.application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`} ref={this.borderRef}>
+                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`} ref={this.borderRef}>
 
-                    <div className="application">
+                    <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
                         <div className="sections">
                             {this.renderUserSection()}
                             {this.renderContentSection()}
@@ -218,8 +235,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderReceiverLightbox()}
                 {this.renderProducerLightbox()}
                 {this.renderProductLightbox()}
-                {this.renderConfirmDialog()}
-                {this.renderAlert()}
+                {this.renderConfirmDialogDeleteApplication()}
+                {this.renderConfirmDialogDonateApplication()}
+                {this.renderConfirmDialogReceival()}
 
                 <style jsx>{`
                     /** Draws a border around the application */
@@ -306,7 +324,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             &::before {
                                 content: none;
                             }
-                            
+
                             &:hover {
                                 box-shadow: none;
                                 border: 1px solid rgba(139,72,156, 0.15);
@@ -317,6 +335,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     .application {
                         position: relative;
                         overflow: hidden;
+                        width: 100%;
+
+                        &.isSmall {
+                            padding-bottom: 20px;
+                        }
                     }
                     /** Contans different sections to manage placement with flexbox */
 					.sections {
@@ -329,7 +352,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         position: relative;
                         z-index: 2;
 					}
-                    
+
                     @media (max-width: 768px) {
                         .application-border {
                             margin: 10px;
@@ -347,7 +370,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         const { application } = this.props;
 
         return (
-            <section className={`section-user 
+            <section className={`section-user
                                     ${ this.props.isOnReceiversPage
                     ? ""
                     : "thumbnail-clickable"
@@ -381,7 +404,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                         /** Margin between this and the next section */
                         margin-right: 20px;
-                        
+
                         &.thumbnail-clickable {
                             cursor: pointer;
 
@@ -533,12 +556,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         *   at the bottom
                         */
                         &.isSmall {
-                            position: relative;
-                            display: block;
                             max-width: calc(100% - 60px);
-
-                            margin-top: 8px;
-                            margin-left: 12px;
+                            left: 5px;
+                            margin: 0;
                         }
                     }
                 `}</style>
@@ -554,7 +574,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className={`description-content ${application.status === ApplicationStatus.CLOSED ? "isClosed" : ""}`}>
+                <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
                     <h3>Requested product</h3>
                     <p>
                         {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
@@ -624,7 +644,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     onClick={this.openProducerLightbox}
                     text={"Producer profile"} />
                 <style jsx>{`
-                    /** 
+                    /**
                      * Positioning the button so it is alligned with other
                      * content upon hovering
                      */
@@ -690,7 +710,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
+                <Button onClick={this.openConfirmationDialogDonate} withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -723,7 +743,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         }
 
         return (
-            <div className={`price-wrapper 
+            <div className={`price-wrapper
                                 ${this.state.isSmall ? "isSmall" : ""}
                                 ${this.props.isOwnApplication && this.props.isOnReceiversPage && application.status === ApplicationStatus.OPEN ? "isOwn" : ""}`}>
                 <span>${application.productPrice}</span>
@@ -781,7 +801,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <button onClick={this.openConfirmationDialog} className="delete-button" title="Delete">
+                <button onClick={this.openConfirmationDialogDelete} className="delete-button" title="Delete">
                     <i>{getSVG("delete")}</i>
                 </button>
 
@@ -839,7 +859,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={this.openAlert} />
+                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={this.openConfirmationDialogReceival} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -862,34 +882,57 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Dialog to confirm wheter a receiver wants to delete an application
+     * Dialog to confirm whether a receiver wants to delete an application
      */
-    private renderConfirmDialog() {
+    private renderConfirmDialogDeleteApplication() {
         return (
-            <Dialog title={`Confirm deletion`}
-                text={`Are you sure you want to delete this application?`}
-                active={this.state.showDialog}
-                onClose={this.closeConfirmationDialog}
+            <Dialog title={ApplicationJSON.confirmDeleteTitle}
+                text={ApplicationJSON.confirmationDialogTextDelete}
+                active={this.state.showDialogDelete}
+                onClose={this.closeConfirmationDialogDelete}
                 confirmAction={this.deleteApplication}
             />
         );
     }
 
     /**
-     * Alert to tell the user that it is not yet possible to confirm the
-     * receival of a product applied for
+     * Dialog to confirm whether a donor wants to donate to an application
      */
-    private renderAlert() {
+    private renderConfirmDialogDonateApplication() {
+        const text = (<>
+            {ApplicationJSON.confirmationDialogTextDonate1}
+            <br /><br />
+            {ApplicationJSON.confirmationDialogTextDonate2}
+            <br /><br />
+            {ApplicationJSON.confirmationDialogTextDonate3}
+        </>);
+
         return (
-            <Alert text={`It is not yet possible to confirm retrieval of a product.`}
-                active={this.state.showAlert}
-                onClose={this.closeAlert}
+            <Dialog title={ApplicationJSON.confirmDonateTitle}
+                text={text}
+                active={this.state.showDialogDonate}
+                onClose={this.closeConfirmationDialogDonate}
+                confirmAction={this.initiateDonation}
             />
         );
     }
 
     /**
-     * Internal renderer that will render the receiver lightbox which will be 
+     * Confirmation dialog for confirming the receival of a product
+     */
+    private renderConfirmDialogReceival() {
+        return (
+            <Dialog title={ApplicationJSON.confirmReceivalTitle}
+                text={ApplicationJSON.confirmationDialogTextReceival}
+                active={this.state.showDialogConfirmReceival}
+                onClose={this.closeConfirmationDialogReceival}
+                confirmAction={this.confirmReceival}
+            />
+        );
+    }
+
+    /**
+     * Internal renderer that will render the receiver lightbox which will be
      * displayed when desired
      */
     private renderReceiverLightbox = () => {
@@ -910,7 +953,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Internal renderer that will render the producer lightbox which will be 
+     * Internal renderer that will render the producer lightbox which will be
      * displayed when desired
      */
     private renderProducerLightbox = () => {
@@ -992,7 +1035,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                              */
                             width: calc(100vw - 60px);
                             max-width: 560px;
-                            padding: 20px 20px 10px;   
+                            padding: 20px 20px 10px;
                         }
                     `}</style>
                 </div>
@@ -1131,31 +1174,45 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Listener that'll open the confirmation dialog once it has been executed
+     * Listener that'll open the confirmation dialog for deletion once it has been executed
      */
-    private openConfirmationDialog = () => {
-        this.setState({ showDialog: true });
+    private openConfirmationDialogDelete = () => {
+        this.setState({ showDialogDelete: true });
+    }
+
+    /**
+     * Listener that'll close the dialog for deletion once it has been executed
+     */
+    private closeConfirmationDialogDelete = () => {
+        this.setState({ showDialogDelete: false });
+    }
+
+    /**
+     * Listener that'll open the confirmation dialog for donation once it has been executed
+     */
+    private openConfirmationDialogDonate = () => {
+        this.setState({ showDialogDonate: true });
+    }
+
+    /**
+     * Listener that'll close the dialog for donation once it has been executed
+     */
+    private closeConfirmationDialogDonate = () => {
+        this.setState({ showDialogDonate: false });
+    }
+
+    /**
+     * Listener that'll open the dialog once it has been executed
+     */
+    private openConfirmationDialogReceival = () => {
+        this.setState({ showDialogConfirmReceival: true });
     }
 
     /**
      * Listener that'll close the dialog once it has been executed
      */
-    private closeConfirmationDialog = () => {
-        this.setState({ showDialog: false });
-    }
-
-    /**
-     * Listener that'll open the alert once it has been executed
-     */
-    private openAlert = () => {
-        this.setState({ showAlert: true });
-    }
-
-    /**
-     * Listener that'll close the alertonce it has been executed
-     */
-    private closeAlert = () => {
-        this.setState({ showAlert: false });
+    private closeConfirmationDialogReceival = () => {
+        this.setState({ showDialogConfirmReceival: false });
     }
 
     /**
@@ -1170,6 +1227,30 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private deleteApplication = async () => {
         await deleteApplication(this.props.application.applicationId, this.props.store, this.props.onApplicationDeleted);
+    }
+
+    /**
+     * Initiate the donation and navigates the user to the Obyte wallet to interact with the contract and our chatbot
+     * also closes the dialog
+     */
+    private initiateDonation = async () => {
+        await initiateDonation(this.props.application.applicationId);
+        this.closeConfirmationDialogDonate();
+    }
+
+    /**
+     * Confirms receival of product - something with the wallet?
+     */
+    private confirmReceival = async () => {
+        if (this.state.isPending || !this.props.store.user) {
+            return;
+        }
+
+        // Notify state that we've begun updating our product
+        this.setState({ isPending: true });
+
+        await confirmReceival(this.props.application, this.props.store, this.props.confirmApplication);
+        this.setState({ showDialogConfirmReceival: false, isPending: false });
     }
 }
 

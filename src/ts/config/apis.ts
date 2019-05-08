@@ -46,16 +46,26 @@ export const apis = {
         }
     },
     applications: {
-        getRecent: `${basePath}/applications/recent`,
+        confirm: {
+            path: `${basePath}/applications/{receiverId}/{applicationId}`,
+        },
         post: {
             path: `${basePath}/applications`,
             errors: {
                 400: "Invalid information passed, please correct your data and try again.",
-                409: "A product with the given information already exists."
+                409: "An application with the given information already exists."
+            }
+        },
+        postConfirm: {
+            path: `${basePath}/applications/{userId}/{id}`,
+            errors: {
+                404: "An application with the given id could not be found.",
+                422: "The application is not pending and can therefore not be confirmed.",
+                500: "Something went wrong."
             }
         },
         getBatch: {
-            path: `${basePath}/applications?first={start}&last={end}`,
+            path: `${basePath}/applications?offset={offset}&amount={amount}`,
             errors: {
                 404: "The requested applications could not be found. Please try again later.",
             }

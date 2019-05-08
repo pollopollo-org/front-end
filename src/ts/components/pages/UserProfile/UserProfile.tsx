@@ -97,7 +97,18 @@ export type UserState = {
     /**
      * Contains an array of open applications to be rendered if any
      */
-    closedApplications?: ApplicationModel[];
+    completedApplications?: ApplicationModel[];
+
+    /**
+     * Contains an array of open applications to be rendered if any
+     */
+    unavailableApplications?: ApplicationModel[];
+
+    /**
+     * The initial load of applications, used to determine if we should load
+     * pending or open applications initially.
+     */
+    initialLoad?: boolean;
 
 
 }
@@ -119,7 +130,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         renderedUser: this.props.store.user,
         filterActiveProducts: true,
         filterApplications: ApplicationStatus.OPEN,
-        isPending: true
+        isPending: true,
+        initialLoad: true
     }
 
 
@@ -273,7 +285,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     h1 {
-                        margin-top: 25px;
+                        margin-top: 30px;
                         display: inline-block;
                     }
 
@@ -510,8 +522,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 currentFilter = "Open applications";
             } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
                 currentFilter = "Pending applications";
+            } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+                currentFilter = "Completed applications";
             } else {
-                currentFilter = "Closed applications";
+                currentFilter = "Unavailable applications";
             }
         }
 
@@ -569,7 +583,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         cursor: pointer;
 
                         border: 1px solid ${ colors.primary};
-                        width: 145px;
+                        width: 170px;
 
                         text-align: center;
 
@@ -627,8 +641,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         <button data-applicationstatus={ApplicationStatus.PENDING} onClick={this.filterApplications}>
                             <span>Pending applications</span>
                         </button>
-                        <button data-applicationstatus={ApplicationStatus.CLOSED} onClick={this.filterApplications}>
-                            <span>Closed applications</span>
+                        <button data-applicationstatus={ApplicationStatus.COMPLETED} onClick={this.filterApplications}>
+                            <span>Completed applications</span>
+                        </button>
+                        <button data-applicationstatus={ApplicationStatus.UNAVAILABLE} onClick={this.filterApplications}>
+                            <span>Unavailable applications</span>
                         </button>
                     </div>
                 }
@@ -808,16 +825,33 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         const newInactiveProductList = this.state.inactiveProducts;
 
         if (chosenProduct.isActive) {
-            if(newInactiveProductList) {
+            if (newInactiveProductList) {
                 // If new product is active, then remove it from inactiveProducts list
                 newInactiveProductList.splice(index, 1);
                 this.setState({ inactiveProducts: newInactiveProductList });
             }
         } else {
-            if(newActiveProductList) {
+            if (newActiveProductList) {
                 // ...else remove it from the activeProduct list
                 newActiveProductList.splice(index, 1);
                 this.setState({ activeProducts: newActiveProductList });
+            }
+        }
+    }
+
+    /**
+     * Simple callback that should be executed once an application should be updated.
+     * (e.g. when confirming receival of a product)
+     */
+    private confirmApplication = (index: number, chosenApplication: ApplicationModel) => {
+
+        const newPendingApplicationList = this.state.pendingApplications;
+
+        if (chosenApplication.status === ApplicationStatus.COMPLETED) {
+            if (newPendingApplicationList) {
+                // If new product is active, then remove it from inactiveProducts list
+                newPendingApplicationList.splice(index, 1);
+                this.setState({ pendingApplications: newPendingApplicationList });
             }
         }
     }
@@ -831,8 +865,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             applications = this.state.openApplications;
         } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
             applications = this.state.pendingApplications;
+        } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+            applications = this.state.completedApplications;
         } else {
-            applications = this.state.closedApplications;
+            applications = this.state.unavailableApplications;
         }
         if (!applications) {
             return null;
@@ -852,6 +888,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 : false;
 
                             const onApplicationDeleted = this.onApplicationDeleted.bind(this, index);
+                            const confirm = this.confirmApplication.bind(this, index);
 
                             return (
                                 <Application
@@ -861,6 +898,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     isOnReceiversPage={isOnReceiversPage}
                                     application={application}
                                     onApplicationDeleted={onApplicationDeleted}
+                                    confirmApplication={confirm}
                                 />
                             );
                         })}
@@ -893,25 +931,24 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             status,
         );
 
-        if (!applications) {
-            if (this.applicationStatusIsOpen(this.state.filterApplications)) {
-                this.setState({ openApplications: [] });
-            } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
-                this.setState({ pendingApplications: [] });
-            } else {
-                this.setState({ closedApplications: [] });
-            }
-        } else {
-            if (this.applicationStatusIsOpen(this.state.filterApplications)) {
-                this.setState({ openApplications: applications });
-            } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
-                this.setState({ pendingApplications: applications });
-            } else {
-                this.setState({ closedApplications: applications });
-            }
+        if (!applications || applications.length === 0 && this.state.initialLoad) {
+            this.setState({ initialLoad: false, filterApplications: ApplicationStatus.OPEN }, () => {
+                this.loadApplications(ApplicationStatus.OPEN);
+            });
+            return;
         }
 
-        this.setState({ isPending: false });
+        if (this.applicationStatusIsOpen(this.state.filterApplications)) {
+            this.setState({ openApplications: applications || [] });
+        } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
+            this.setState({ pendingApplications: applications || [] });
+        } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+            this.setState({ completedApplications: applications });
+        } else {
+            this.setState({ unavailableApplications: applications || [] });
+        }
+
+        this.setState({ isPending: false, initialLoad: false });
     }
 
     /**
@@ -1034,6 +1071,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private applicationStatusIsPending = (status: ApplicationStatus) => {
         return status === ApplicationStatus.PENDING;
+    }
+
+    /**
+     * Internal helpter that returns true if the given application status is completed
+     */
+    private applicationStatusIsCompleted = (status: ApplicationStatus) => {
+        return status === ApplicationStatus.COMPLETED;
     }
 }
 

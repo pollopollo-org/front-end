@@ -158,7 +158,6 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
                     @media (max-width: 1200px) {
                         .page {
-                            padding: 0 10px;
                             margin: 0 auto;
                         }
                     }
@@ -228,7 +227,8 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                             </Link>
                         )}
                     </div>
-                    <p className="introduction">{ProductsPageJson.text}</p>
+                    <p className="introduction">{ProductsPageJson.text1}</p>
+                    <p className="introduction">{ProductsPageJson.text2}</p>
                 </div>
 
                 <style jsx>{`

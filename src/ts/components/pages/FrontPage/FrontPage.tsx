@@ -4,11 +4,12 @@ import React from "react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
-import { fonts } from "src/ts/config";
+import { fonts, colors } from "src/ts/config";
 
 import { Application } from "src/ts/components/elements/Application/Application";
 import { UserTypes } from "src/ts/models/UserModel";
 import { getUserType } from "src/ts/utils/getUserType";
+import FrontPageJson from "src/assets/data/frontpage.json";
 
 export type FrontPageProps = {
     /**
@@ -32,6 +33,10 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                 <h1>Recent applications</h1>
 
                 <div className="list-of-applications">
+                    <p>
+                        {FrontPageJson.text}<a href={FrontPageJson.linkURL} target="_blank" rel="noreferrer">{FrontPageJson.linkText}</a>.
+                    </p>
+
                     {this.props.store.mainpageApplications.map((application, index) => {
                         return <Application
                             key={index}
@@ -43,12 +48,11 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                     })}
                 </div>
 
-
                 <style jsx>{`
 
                     h1{
                         /** Override defaults */
-                        margin: 15px 15px 0;
+                        margin: 30px 0 15px 0;
 
                         /** Setup font */
                         font-family: ${ fonts.heading};
@@ -71,6 +75,19 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                             height: 100%;
                             margin: 0 auto 30px;
                         }
+                    }
+
+                    p {
+                        line-height: 1.4;
+                    }
+
+                    a {
+                        color: ${colors.primary};
+                        text-decoration: underline;
+                    }
+
+                    a:hover {
+                        color: ${colors.secondary};
                     }
 
                 `}</style>

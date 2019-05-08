@@ -406,7 +406,7 @@ export async function postProduct(data: ProductPostData, store: Store, history: 
             // the given producer, in order to ensure that the newly created product
             // will be properly fetched with all data needed, the next time the
             // user profile is visited
-            productCache.delete(`producer-${store.user.id}-active`);
+            productCache.delete(`producer-${store.user.id}-Available`);
 
             // ... and finally navigate the user back to his/hers own profile
             history.push(routes.profile.path);
@@ -455,8 +455,8 @@ export async function toggleProductAvailability(product: ProductModel, store: St
         const data = await result.json();
 
         if (result.ok) {
-            productCache.delete(`producer-${store.user.id}-active`);
-            productCache.delete(`producer-${store.user.id}-inactive`);
+            productCache.delete(`producer-${store.user.id}-Available`);
+            productCache.delete(`producer-${store.user.id}-Unavailable`);
 
             if (!product.isActive === false && data.pendingApplications > 0) {
                 store.currentErrorMessage = `The product has been made inactive, but ${data.pendingApplications} pending application remains.`;
