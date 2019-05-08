@@ -129,7 +129,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         isSmall: false,
         renderedUser: this.props.store.user,
         filterActiveProducts: true,
-        filterApplications: ApplicationStatus.PENDING,
+        filterApplications: ApplicationStatus.OPEN,
         isPending: true,
         initialLoad: true
     }
@@ -994,7 +994,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         // Begin loading the desired additional data based on the user to display
         if (user && isReceiverUser(user)) {
-            this.loadApplications(ApplicationStatus.PENDING);
+            this.loadApplications(ApplicationStatus.OPEN);
         } else if (user && isProducerUser(user)) {
             this.loadActiveProducts();
         }
