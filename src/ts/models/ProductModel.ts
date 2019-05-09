@@ -263,14 +263,6 @@ export async function fetchProductById(productId: number, store: Store) {
         return cacheHit ? cacheHit[0] : undefined;
     }
 
-    const token = localStorage.getItem("userJWT");
-
-    // We NEED to be authorized to perform this request. Bail out if we aren't
-    // logged in at the moment
-    if (!token) {
-        return;
-    }
-
     const endPoint = apis.products.getById.path.replace("{productId}", String(productId));
 
     try {
@@ -278,7 +270,6 @@ export async function fetchProductById(productId: number, store: Store) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             }
         });
 
