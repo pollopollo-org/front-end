@@ -155,57 +155,73 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * Internal renderer that renders the input fields
      */
+    //tslint:disable
     private renderInputFields(): React.ReactNode {
         return (
             <React.Fragment>
             {/* First and last name */}
             <div className="section">
-                <input
-                    className="leftInput"
-                    placeholder={registerFormJson.firstName}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onFirstnameChanged}
-                />
-                <input
-                    placeholder={registerFormJson.lastName}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onLastnameChanged}
-                />
+                <span className="leftInput">
+                    <div className="req">
+                        <input
+                            placeholder={registerFormJson.firstName}
+                            maxLength={255}
+                            required
+                            aria-required={true}
+                            onChange={this.onFirstnameChanged}
+                        />
+                    </div>
+                </span>
+                <div className="req">
+                    <input
+                        placeholder={registerFormJson.lastName}
+                        maxLength={255}
+                        required
+                        aria-required={true}
+                        onChange={this.onLastnameChanged}
+                    />
+                </div>
             </div>
             {/* Email and country */}
             <div className="section">
-                <input
-                    type="email"
-                    className="leftInput"
-                    placeholder={ registerFormJson.email }
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onEmailChanged}
-                />
-                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
+                <span className="leftInput">
+                    <div className="req">
+                        <input
+                            type="email"
+                            placeholder={ registerFormJson.email }
+                            maxLength={255}
+                            required
+                            aria-required={true}
+                            onChange={this.onEmailChanged}
+                        />
+                    </div>
+                </span>
+                <div className="req-select">
+                    <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
+                </div>
             </div>
             {/* Password */}
             <div className="section">
-                <input
-                    type="password"
-                    className="leftInput"
-                    placeholder={registerFormJson.password}
-                    required
-                    aria-required={true}
-                    onChange={this.onPasswordChanged}
-                />
-                <input
-                    type="password"
-                    placeholder={registerFormJson.confirmPassword}
-                    required
-                    aria-required={true}
-                    onChange={this.onValidationPasswordChanged}
-                />
+                <span className="leftInput">
+                    <div className="req">
+                        <input
+                            type="password"
+                            placeholder={registerFormJson.password}
+                            required
+                            aria-required={true}
+                            onChange={this.onPasswordChanged}
+                        />
+                    </div>
+                </span>
+                <div className="req">
+                    <input
+                        type="password"
+                        placeholder={registerFormJson.confirmPassword}
+                        required
+                        aria-required={true}
+                        onChange={this.onValidationPasswordChanged}
+                    />
+                </div>
             </div>
             <style jsx>{`
                     /**
@@ -237,6 +253,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         &::placeholder {
                             color: ${ colors.gray };
                             opacity: 1;
+                            
                         }
                     }
 
@@ -252,6 +269,27 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     */
                     .leftInput {
                         margin-right: 30px;
+                    }
+
+                    .req, .req-select {
+                        position: relative;
+                        display: inline-block;
+                        z-index: 1;
+                    }
+
+                    .req:after, .req-select:after {
+                        content: "*";
+                        position: absolute;
+                        right: 7px;
+                        top: 18px;
+                        color: red;
+                        z-index: 5;
+                        font-size: 1em;
+                        font-family: 'Cabin', helvetica, arial, sans-serif;
+                    }
+
+                    .req-select:after {
+                        top: 33px;
                     }
 
                     /**
@@ -274,6 +312,16 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                          */
                         .leftInput {
                             margin: 0;
+                        }
+
+                        .req, .req-select {
+                            display: initial;
+                            margin: auto;
+                            max-width: 400px;
+                        }
+
+                        .req:after, .req-select:after {
+                            top: 5px;
                         }
                     }
                 `}</style>
@@ -338,6 +386,14 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     label{
                         font-size: 16px;
                         margin-right: 30px;
+                    }
+
+                    h2::after {
+                        content: "*";
+                        position: absolute;
+                        color: red;
+                        font-size: 0.8em;
+                        font-family: 'Cabin', helvetica, arial, sans-serif;
                     }
 
                     /**
