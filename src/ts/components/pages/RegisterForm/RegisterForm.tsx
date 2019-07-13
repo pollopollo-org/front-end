@@ -162,7 +162,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             {/* First and last name */}
             <div className="section">
                 <span className="leftInput">
-                    <div className="req">
+                    <div className="required">
                         <input
                             placeholder={registerFormJson.firstName}
                             maxLength={255}
@@ -172,7 +172,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         />
                     </div>
                 </span>
-                <div className="req">
+                <div className="required">
                     <input
                         placeholder={registerFormJson.lastName}
                         maxLength={255}
@@ -185,7 +185,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             {/* Email and country */}
             <div className="section">
                 <span className="leftInput">
-                    <div className="req">
+                    <div className="required">
                         <input
                             type="email"
                             placeholder={ registerFormJson.email }
@@ -196,14 +196,14 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         />
                     </div>
                 </span>
-                <div className="req-select">
+                <div className="required-select">
                     <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
                 </div>
             </div>
             {/* Password */}
             <div className="section">
                 <span className="leftInput">
-                    <div className="req">
+                    <div className="required">
                         <input
                             type="password"
                             placeholder={registerFormJson.password}
@@ -213,7 +213,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         />
                     </div>
                 </span>
-                <div className="req">
+                <div className="required">
                     <input
                         type="password"
                         placeholder={registerFormJson.confirmPassword}
@@ -271,13 +271,13 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         margin-right: 30px;
                     }
 
-                    .req, .req-select {
+                    .required, .required-select {
                         position: relative;
                         display: inline-block;
                         z-index: 1;
                     }
 
-                    .req:after, .req-select:after {
+                    .required:after, .required-select:after {
                         content: "*";
                         position: absolute;
                         right: 7px;
@@ -288,7 +288,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         font-family: 'Cabin', helvetica, arial, sans-serif;
                     }
 
-                    .req-select:after {
+                    .required-select:after {
                         top: 33px;
                     }
 
@@ -314,13 +314,13 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             margin: 0;
                         }
 
-                        .req, .req-select {
+                        .required, .required-select {
                             display: initial;
                             margin: auto;
                             max-width: 400px;
                         }
 
-                        .req:after, .req-select:after {
+                        .required:after, .required-select:after {
                             top: 5px;
                         }
                     }
