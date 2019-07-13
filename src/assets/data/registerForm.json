@@ -8,5 +8,8 @@
     "userType__producer": "Producer",
     "userType__reciever": "Reciever",
     "userType__title": "What kind of user are you?",
-    "submit": "Submit"
+    "submit": "Submit",
+    "street": "Street",
+    "streetNumber": "Street number",
+    "city": "city"
 }

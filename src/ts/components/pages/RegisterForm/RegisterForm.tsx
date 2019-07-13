@@ -155,6 +155,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * Internal renderer that renders the input fields
      */
+    //tslint:disable
     private renderInputFields(): React.ReactNode {
         return (
             <React.Fragment>
