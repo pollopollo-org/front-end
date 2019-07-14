@@ -4,6 +4,7 @@
     "lastName": "Surname",
     "street": "Street",
     "streetNumber": "Street number",
+    "zipcode": "Zipcode",
     "city": "City",
     "email": "Email",
     "password": "New password",

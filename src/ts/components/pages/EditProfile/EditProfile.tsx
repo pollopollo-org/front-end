@@ -25,59 +25,63 @@ export type EditProfileState = {
     userId: number;
 
     /**
-     * first name
+     * The first name of the user
      */
     firstName: string;
     /**
-     * last name
+     * The last name of the suer
      */
     lastName: string;
     /**
-     * street name
+     * The name of the street the user lives on
      */
     street: string;
     /**
-     * street number
+     * The steet number the user lives in
      */
     streetNumber: string;
     /**
-     * city
+     * The zipcode the user lives in
+     */
+    zipcode: string;
+    /**
+     * The city the user lives in
      */
     city: string;
     /**
-     * country
+     * The country the user lives in
      */
     country: string;
     /**
-     * user type, producer or receiver
+     * User type, producer or receiver
      */
     userType: string;
     /**
-     * password
+     * New password
      */
     password: string;
     /**
-     * repeated password
+     * Repeated new password
      */
     repeatedPassword: string;
     /**
-     * old password to make sure it is the actual user who is changing the information
+     * Old password to make sure it is the actual user who is changing the information
      */
     oldPassword: string;
     /**
-     * a brief description of the user
+     * A brief description of the user
      */
     description?: string;
     /**
-     * profile image
+     * Profile image
      */
     profilePicture?: Blob;
     /**
-     * wallet address
+     * Wallet address - if produvcr user type
      */
     wallet?: string;
     /**
-     * wallet address
+     * Wallet address
      */
     pairingLink?: string;
 
@@ -100,6 +104,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
         lastName: "",
         street: "",
         streetNumber: "",
+        zipcode: "",
         city: "",
         country: "",
         userType: "Producer",
@@ -189,6 +194,12 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                     onChange={this.onStreetNumberChanged}
                                 />
                             </div>
+                            <input
+                                className="input zipcode"
+                                value={this.state.zipcode}
+                                placeholder={editProfileJson.zipcode}
+                                onChange={this.onZipcodeChanged}
+                            />
                             <div className="required">
                                 <input
                                     className="input city"
@@ -617,6 +628,14 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
      */
     private onStreetNumberChanged = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ streetNumber: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onZipcodeChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ zipcode: evt.currentTarget.value });
     }
 
     /**
