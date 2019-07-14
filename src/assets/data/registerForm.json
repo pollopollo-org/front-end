@@ -11,5 +11,6 @@
     "submit": "Submit",
     "street": "Street",
     "streetNumber": "Street number",
+    "zipcode": "Zipcode",
     "city": "City"
 }

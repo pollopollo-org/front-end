@@ -45,6 +45,10 @@ export type RegisterFormState = {
      */
     streetNumber: string;
     /**
+     * The zipcode the user lives in
+     */
+    zipcode: string;
+    /**
      * The city the user lives in
      */
     city: string;
@@ -81,6 +85,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         country: "",
         street: "",
         streetNumber: "",
+        zipcode: "",
         city: "",
         userType: "",
         password: "",
@@ -167,6 +172,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * Internal renderer that renders the input fields
      */
+    // tslint:disable-next-line max-func-body-length
     private renderInputFields(): React.ReactNode {
         return (
             <React.Fragment>
@@ -198,7 +204,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             />
             <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
             {/* Address - only if the user is producer */}
-            {this.state.userType === UserTypes.PRODUCER && <div className="section">
+            {this.state.userType === UserTypes.PRODUCER &&
                 <input
                     className="leftInput"
                     placeholder={registerFormJson.street}
@@ -207,6 +213,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     aria-required={true}
                     onChange={this.onStreetChanged}
                 />
+            }
+            {this.state.userType === UserTypes.PRODUCER &&
                 <input
                     placeholder={registerFormJson.streetNumber}
                     maxLength={255}
@@ -214,17 +222,24 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     aria-required={true}
                     onChange={this.onStreetNumberChanged}
                 />
-            </div>}
-            {this.state.userType === UserTypes.PRODUCER && <div className="required">
+            }
+            {this.state.userType === UserTypes.PRODUCER &&
                 <input
                     className="leftInput"
+                    placeholder={registerFormJson.zipcode}
+                    maxLength={255}
+                    onChange={this.onZipcodeChanged}
+                />
+            }
+            {this.state.userType === UserTypes.PRODUCER &&
+                <input
                     placeholder={registerFormJson.city}
                     maxLength={255}
                     required
                     aria-required={true}
                     onChange={this.onCityChanged}
                 />
-            </div>}
+            }
             {/* Password */}
             <input
                 type="password"
@@ -482,6 +497,15 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
      */
     protected onStreetNumberChanged = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ streetNumber: evt.currentTarget.value });
+    }
+
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onZipcodeChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ zipcode: evt.currentTarget.value });
     }
 
     /**
