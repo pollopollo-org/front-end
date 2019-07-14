@@ -108,6 +108,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                     p {
                         margin: 15px 0;
                         line-height: 1.4;
+                        white-space: pre-wrap;
                     } 
 
                     .bold {
