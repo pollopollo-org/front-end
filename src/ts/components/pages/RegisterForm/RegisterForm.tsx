@@ -10,7 +10,7 @@ import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Button } from "src/ts/components/utils";
-import { postUser } from "src/ts/models/UserModel";
+import { postUser, UserTypes } from "src/ts/models/UserModel";
 
 type RegisterFormProps = {
     /**
@@ -36,6 +36,18 @@ export type RegisterFormState = {
      * The country the user is living in
      */
     country: string;
+    /**
+     * The street the user lives on
+     */
+    street: string;
+    /**
+     * The street number the user lives in
+     */
+    streetNumber: string;
+    /**
+     * The city the user lives in
+     */
+    city: string;
     /**
      * The type of profile the user wants to create, either producer or receiver
      */
@@ -67,6 +79,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         lastName: "",
         email: "",
         country: "",
+        street: "",
+        streetNumber: "",
+        city: "",
         userType: "",
         password: "",
         repeatedPassword: "",
@@ -81,11 +96,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             <div className="allSection">
                 <h1>{ registerFormJson.title }</h1>
                 <form onSubmit={this.onSubmit}>
+                    {this.renderRadioButtons()}
                     {this.renderInputFields()}
-                    <div className="grid">
-                        {this.renderRadioButtons()}
-                        {this.renderSubmitButton()}
-                    </div>
+                    {this.renderSubmitButton()}
                 </form>
 
                 <style jsx>{`
@@ -93,7 +106,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         margin: 0 0 8px;
                         line-height: 30px;
                         text-align: center;
-
                     }
 
                     h2 {
@@ -155,71 +167,87 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * Internal renderer that renders the input fields
      */
-    //tslint:disable
+    // tslint:disable-next-line max-func-body-length
     private renderInputFields(): React.ReactNode {
         return (
             <React.Fragment>
             {/* First and last name */}
-            <div className="section">
-                <input
-                    className="leftInput"
-                    placeholder={registerFormJson.firstName}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onFirstnameChanged}
-                />
-                <input
-                    placeholder={registerFormJson.lastName}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onLastnameChanged}
-                />
-            </div>
+            <input
+                className="leftInput"
+                placeholder={registerFormJson.firstName}
+                maxLength={255}
+                required
+                aria-required={true}
+                onChange={this.onFirstnameChanged}
+            />
+            <input
+                placeholder={registerFormJson.lastName}
+                maxLength={255}
+                required
+                aria-required={true}
+                onChange={this.onLastnameChanged}
+            />
             {/* Email and country */}
-            <div className="section">
+            <input
+                type="email"
+                className="leftInput"
+                placeholder={ registerFormJson.email }
+                maxLength={255}
+                required
+                aria-required={true}
+                onChange={this.onEmailChanged}
+            />
+            <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
+            {/* Address - only if the user is producer */}
+            {this.state.userType === UserTypes.PRODUCER && <div className="section">
                 <input
-                    type="email"
                     className="leftInput"
-                    placeholder={ registerFormJson.email }
+                    placeholder={registerFormJson.street}
                     maxLength={255}
                     required
                     aria-required={true}
-                    onChange={this.onEmailChanged}
+                    onChange={this.onStreetChanged}
                 />
-                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
-            </div>
-            {/* Password */}
-            <div className="section">
                 <input
-                    type="password"
+                    placeholder={registerFormJson.streetNumber}
+                    maxLength={255}
+                    required
+                    aria-required={true}
+                    onChange={this.onStreetNumberChanged}
+                />
+            </div>}
+            {this.state.userType === UserTypes.PRODUCER && <div className="required">
+                <input
                     className="leftInput"
-                    placeholder={registerFormJson.password}
+                    placeholder={registerFormJson.city}
+                    maxLength={255}
                     required
                     aria-required={true}
-                    onChange={this.onPasswordChanged}
+                    onChange={this.onCityChanged}
                 />
-                <input
-                    type="password"
-                    placeholder={registerFormJson.confirmPassword}
-                    required
-                    aria-required={true}
-                    onChange={this.onValidationPasswordChanged}
-                />
-            </div>
+            </div>}
+            {/* Password */}
+            <input
+                type="password"
+                className="leftInput"
+                placeholder={registerFormJson.password}
+                required
+                aria-required={true}
+                onChange={this.onPasswordChanged}
+            />
+            <input
+                type="password"
+                placeholder={registerFormJson.confirmPassword}
+                required
+                aria-required={true}
+                onChange={this.onValidationPasswordChanged}
+            />
             <style jsx>{`
-                    /**
-                     * Sections surrounding the input fields
-                     */
-                    .section{
-                        margin: 20px auto;
-                    }
-
                     /**
                      * Text fields' standard styling for the project
                      */
                     input{
+                        margin: 15px auto;
                         box-shadow: none;
                         height: 39px;
                         width: 250px;
@@ -259,12 +287,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                      * Restyling to fit smaller screens and mobile
                      */
                     @media only screen and (max-width: 768px) {
-                        .section {
-                            margin: 0;
-                        }
-
                         input {
-                            margin: 15px 0;
+                            margin: 10px 0;
                             width: 100%;
                             box-sizing: border-box;
                             max-width: 400px;
@@ -274,7 +298,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                          * All input fields are now made to be in a single column rather than two
                          */
                         .leftInput {
-                            margin: 0;
+                            margin-right: 0;
                         }
                     }
                 `}</style>
@@ -319,6 +343,17 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                 </div>
 
                 <style jsx>{`
+                    h2 {
+                        text-align: center;
+                        margin: 15px 0 7px 0;
+                    }
+
+                    .radioSection {
+                        text-align: center;
+                        
+                        margin: 0 0 10px 22px;
+                    }
+
                     /**
                      * Radio buttons for usertype
                      */
@@ -345,8 +380,11 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                      * Restyling to fit smaller screens and mobile
                      */
                     @media only screen and (max-width: 768px) {
+                        h2 {
+                            margin: 5px 0;
+                        }
                         .radioSection {
-                            text-align: center;
+                            margin-left: 0;
                             font-family: ${ fonts.text };
                             font-weight: 300;
                         }
@@ -381,10 +419,10 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     isPending={this.state.isPending}
                     throbberSize={24}/>
                 <style jsx>{`
+
                     .button {
-                        float: right;
-                        margin: 30px auto auto 49px;
-                        position: relative;
+                        margin-top: 20px;
+                        text-align: center;
                     }
 
                     /**
@@ -429,6 +467,30 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
      */
     protected onEmailChanged = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ email: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onStreetChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ street: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onStreetNumberChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ streetNumber: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    protected onCityChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ city: evt.currentTarget.value });
     }
 
     /**
