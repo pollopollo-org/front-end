@@ -167,7 +167,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * Internal renderer that renders the input fields
      */
-    // tslint:disable-next-line max-func-body-length
     private renderInputFields(): React.ReactNode {
         return (
             <React.Fragment>
