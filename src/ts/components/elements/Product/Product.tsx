@@ -639,7 +639,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     </div>
 
                     <h3>Description</h3>
-                    <p>
+                    <p className="multipleLines">
                         {product.description}
                     </p>
 
@@ -676,6 +676,11 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     p {
                         text-align: left;
                         margin: 4px 0 14px;
+                    }
+
+                    /** Preserve new lines in product description */
+                    .multipleLines {
+                        white-space: pre-wrap;
                     }
 
                     /** Placement styling of description content */

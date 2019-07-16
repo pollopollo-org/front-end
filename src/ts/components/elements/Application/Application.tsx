@@ -580,7 +580,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
                     </p>
                     <h3>Motivation</h3>
-                    <p>
+                    <p className="multipleLines">
                         {application.motivation}
                     </p>
                 </div>
@@ -612,6 +612,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                     p {
                         margin: 4px 0 14px;
+                    }
+
+                    /** Preserve new lines in motivation */
+                    .multipleLines {
+                        white-space: pre-wrap;
                     }
 
                     /** Placement styling */
