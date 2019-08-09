@@ -200,6 +200,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                             userType={getUserType(this.props.store.user, UserTypes.DONOR)}
                             isOnReceiversPage={false}
                             isOwnApplication={false}
+                            pastDonation={false}
                         />
                     );
                 }

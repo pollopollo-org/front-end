@@ -239,6 +239,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 </div>
 
                                 {this.renderApplications()}
+
+                                {!this.state.isSelf && 
+                                    <>
+                                    <h2 className="pastDonations">{userProfileJson.pastDonations}</h2>
+                                    {this.renderPastDonations()}
+                                    </>
+                                }
                             </>
                         )}
                     </div>
@@ -344,8 +351,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         margin-top: 80px;
                         width: 50%;
                         min-height: 150px;
-                        display: flex;
-                        flex-direction: column;
+                        /*display: flex;
+                        flex-direction: column;*/
                     }
 
                     .list__header {
@@ -359,6 +366,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         }
                     }
 
+                    .pastDonations {
+                        margin-top: 30px;
+                        margin-bottom: 15px;
+                    }
+
                     /* Make more room for applications/products when the width is less than 820px */
                     @media only screen and (max-width: 820px) {
                         .profile_information {
@@ -367,7 +379,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     @media only screen and (max-width: 768px) {
-                        .list__header {
+                        .list__header, .pastDonations {
                             margin-left: 10px;
                         }
                     }
@@ -391,12 +403,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             text-align: center;
                         }
 
+                        .list__header, .pastDonations {
+                            padding-bottom: 15px;
+                            border-bottom: 2px solid rgba(69,50,102, 0.6);
+                        }
+
                         .list__header {
                             margin-top: 20px;
-                            
-                            padding-bottom: 15px;
-
-                            border-bottom: 2px solid rgba(69,50,102, 0.6);
                         }
 
                         .profile__information {
@@ -899,6 +912,49 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     application={application}
                                     onApplicationDeleted={onApplicationDeleted}
                                     confirmApplication={confirm}
+                                    pastDonation={false}
+                                />
+                            );
+                        })}
+                    </div>
+                </Fade>
+
+                <style jsx>{`
+                    .list-wrapper {
+                        position: relative;
+                        flex-grow: 1;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal render method that'll render a receivers past donations
+     */
+    private renderPastDonations = () => {
+        let applications = this.state.openApplications;
+
+        if (!applications) {
+            return null;
+        }
+
+        return (
+            <div className="list-wrapper">
+                <Fade in={this.state.isPending} unmountOnExit key="throbber">
+                    {this.renderListThrobber()}
+                </Fade>
+                <Fade in={!this.state.isPending} key="applications">
+                    <div>
+                        {applications && applications.map((application, index) => {
+                            return (
+                                <Application
+                                    key={index}
+                                    isOwnApplication={false}
+                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    isOnReceiversPage={true}
+                                    application={application}
+                                    pastDonation={true}
                                 />
                             );
                         })}

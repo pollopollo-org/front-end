@@ -52,6 +52,7 @@ export class AssociatedApplicationsLightbox extends React.PureComponent<Associat
                             userType={UserTypes.PRODUCER}
                             application={application}
                             isAssociatedApplication={true}
+                            pastDonation={false}
                         />
                     ))}
 
