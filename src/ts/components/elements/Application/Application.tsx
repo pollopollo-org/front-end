@@ -226,14 +226,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             {this.renderContentSection()}
                         </div>
 
-                        {/** 
-                        {this.props.userType === UserTypes.DONOR && this.renderDonateButton()}
-                        {(this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) && this.renderPrice()}
-                        {(this.props.isOwnApplication && this.props.isOnReceiversPage) && this.renderInteractWithOwnSection()}
-                        */}
-
                         {this.renderCornerInformation()}
-
+                        {(this.props.isOwnApplication && this.props.isOnReceiversPage) && this.renderInteractWithOwnSection()}
+                    
                         {this.state.isSmall && (
                             this.renderMotivationTeaser()
                         )}
@@ -727,8 +722,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             return this.renderDonateButton();
         } else if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) {
             return this.renderPrice();
-        } else if (this.props.isOwnApplication && this.props.isOnReceiversPage) {
-            return this.renderInteractWithOwnSection();
         } else {
             return;
         }
@@ -814,9 +807,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderPriceAndDate = () => {
         const { application } = this.props;
 
-        /*if (application.status !== ApplicationStatus.PENDING && application.status !== ApplicationStatus.COMPLETED) {
+        if (application.status !== ApplicationStatus.PENDING && application.status !== ApplicationStatus.COMPLETED) {
             return;
-        }*/
+        }
 
         return (
             <div className={`price-wrapper

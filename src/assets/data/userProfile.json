@@ -4,5 +4,7 @@
     "othersProducts": "Products",
     "ownApplications": "My applications",
     "othersApplications": "Applications",
-    "pastDonations": "Past donations"
+    "pastDonations": "Past donations",
+    "noApplications": "No applications to show.",
+    "noPastDonations": "This user has not received any donations."
 }
