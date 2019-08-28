@@ -128,6 +128,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 userId: store.user.id,
                 firstName: store.user.firstName,
                 lastName: store.user.surName,
+                street: isProducerUser(store.user) ? store.user.street : "",
+                streetNumber: isProducerUser(store.user) ? store.user.streetNumber : "",
+                zipcode: isProducerUser(store.user) && store.user.zipcode ? store.user.zipcode : "",
+                city: isProducerUser(store.user) ? store.user.city : "",
                 country: store.user.country,
                 userType: isProducerUser(store.user) ? "Producer" : "Receiver",
                 password: "",
@@ -178,42 +182,44 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                     onChange={this.onLastnameChanged}
                                 />
                             </div>
-                            <div className="required">
+                            {isProducerUser(this.props.store.user) &&
+                                <><div className="required">
+                                    <input
+                                        className="input street name"
+                                        required
+                                        aria-required={true}
+                                        value={this.state.street}
+                                        placeholder={editProfileJson.street}
+                                        onChange={this.onStreetChanged}
+                                    />
+                                </div>
+                                <div className="required">
+                                    <input
+                                        className="input street number"
+                                        required
+                                        aria-required={true}
+                                        value={this.state.streetNumber}
+                                        placeholder={editProfileJson.streetNumber}
+                                        onChange={this.onStreetNumberChanged}
+                                    />
+                                </div>
                                 <input
-                                    className="input street name"
-                                    required
-                                    aria-required={true}
-                                    value={this.state.street}
-                                    placeholder={editProfileJson.street}
-                                    onChange={this.onStreetChanged}
+                                    className="input zipcode"
+                                    value={this.state.zipcode}
+                                    placeholder={editProfileJson.zipcode}
+                                    onChange={this.onZipcodeChanged}
                                 />
-                            </div>
-                            <div className="required">
-                                <input
-                                    className="input street number"
-                                    required
-                                    aria-required={true}
-                                    value={this.state.streetNumber}
-                                    placeholder={editProfileJson.streetNumber}
-                                    onChange={this.onStreetNumberChanged}
-                                />
-                            </div>
-                            <input
-                                className="input zipcode"
-                                value={this.state.zipcode}
-                                placeholder={editProfileJson.zipcode}
-                                onChange={this.onZipcodeChanged}
-                            />
-                            <div className="required">
-                                <input
-                                    className="input city"
-                                    required
-                                    aria-required={true}
-                                    value={this.state.city}
-                                    placeholder={editProfileJson.city}
-                                    onChange={this.onCityChanged}
-                                />
-                            </div>
+                                <div className="required">
+                                    <input
+                                        className="input city"
+                                        required
+                                        aria-required={true}
+                                        value={this.state.city}
+                                        placeholder={editProfileJson.city}
+                                        onChange={this.onCityChanged}
+                                    />
+                                </div></>
+                            }
                             <div className="SelectCountryDiv">
                                 <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
                             </div>
