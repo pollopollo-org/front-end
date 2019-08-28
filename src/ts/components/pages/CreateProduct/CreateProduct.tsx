@@ -127,28 +127,32 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
     private renderLeftColumn = () => {
         return (
             <div className="leftColumn">
-                <input
-                    className="leftInput"
-                    placeholder={createProductJson.productTitle}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onTitleChanged}
-                />
-                <input
-                    type="number"
-                    className="leftInput"
-                    placeholder={createProductJson.productPrice}
-                    min={1}
-                    max={1000000}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    aria-valuemin={1}
-                    aria-valuemax={1000000}
-                    aria-valuenow={this.state.price}
-                    onChange={this.onPriceChanged}
-                />
+                <div className="required">
+                    <input
+                        className="leftInput"
+                        placeholder={createProductJson.productTitle}
+                        maxLength={255}
+                        required
+                        aria-required={true}
+                        onChange={this.onTitleChanged}
+                    />
+                </div>
+                <div className="required">
+                    <input
+                        type="number"
+                        className="leftInput"
+                        placeholder={createProductJson.productPrice}
+                        min={1}
+                        max={1000000}
+                        maxLength={255}
+                        required
+                        aria-required={true}
+                        aria-valuemin={1}
+                        aria-valuemax={1000000}
+                        aria-valuenow={this.state.price}
+                        onChange={this.onPriceChanged}
+                    />
+                </div>
                 <input
                     type="number"
                     className="leftInput"
@@ -160,14 +164,16 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                     aria-valuenow={this.state.rank}
                     onChange={this.onRankChanged}
                 />
-                <textarea
-                    className="leftInput"
-                    value={this.state.description || ""}
-                    placeholder={ createProductJson.productDescription }
-                    required
-                    aria-required={true}
-                    onChange={this.onDescriptionChanged}
-                />
+                <div className="required">
+                    <textarea
+                        className="leftInput"
+                        value={this.state.description || ""}
+                        placeholder={ createProductJson.productDescription }
+                        required
+                        aria-required={true}
+                        onChange={this.onDescriptionChanged}
+                    />
+                </div>
                 <style jsx>{`
                     /**
                      * Set styling of input fields and textareas to match the
@@ -175,7 +181,6 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                      */
                     input, textarea {
                         box-shadow: none;
-                        
                         border: 1px solid ${ colors.pale };
                         color: ${ colors.black};
                         border-radius: 3px;
@@ -195,12 +200,10 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                             opacity: 1;
                         }
                     }
-
                     /* Set border styling when clicked on */
                     input:focus, textarea:focus {
                         border: 1px solid ${ colors.secondary };
                     }
-
                     /**
                      * Individual styling for input fields
                      */
@@ -210,7 +213,6 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                         text-indent: 9px;
                         border-transition: border-color 0.15s linear;
                     }
-
                     /**
                      * Individual styling for textareas
                      */
@@ -219,6 +221,22 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                         height: 139px;
                         padding: 10px 9px;
                         resize: none;
+                    }
+                    .required {
+                        margin: auto;
+                        position: relative;
+                        display: inline-block;
+                        z-index: 1;
+                    }
+                    .required:after {
+                        content: "*";
+                        position: absolute;
+                        right: 7px;
+                        top: 31px; /*center*/
+                        color: red;
+                        z-index: 5;
+                        font-size: 1em;
+                        font-family: 'Cabin', helvetica, arial, sans-serif;
                     }
 
                     /* For mobile phones */
@@ -232,13 +250,12 @@ class UnwrappedCreateProduct extends React.PureComponent<CreateProductProps, Cre
                             margin: 15px 0;
                         }
 
-                        input {
+                        input, .required {
                             width: 100%;
                         }
-
+                        
                         textarea {
                             width: calc(100% - 16px);
-                            
                         }
                     }
                 `}</style>

@@ -150,12 +150,15 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
         return (
             <div className="motivation">
                 <h2>{createApplicationJson.MotivationTitle}</h2>
-                <textarea
-                    className="motivationTextArea"
-                    placeholder={createApplicationJson.MotivationPlaceholder}
-                    onChange={this.onMotivationChanged}
-                >
-                </textarea>
+                <div className="required">
+                    <textarea
+                        className="motivationTextArea"
+                        placeholder={createApplicationJson.MotivationPlaceholder}
+                        required
+                        aria-required={true}
+                        onChange={this.onMotivationChanged}
+                    ></textarea>
+                </div>
                 <style jsx> {`
 
                     .motivation {
@@ -207,6 +210,22 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                         border: 1px solid ${ colors.secondary};
                     }
 
+                    .required {
+                        margin: auto;
+                        position: relative;
+                        z-index: 1;
+                    }
+                    .required:after {
+                        content: "*";
+                        position: absolute;
+                        right: 7px;
+                        top: 31px; /* Same placement as other asteriks' */
+                        color: red;
+                        z-index: 5;
+                        font-size: 1em;
+                        font-family: 'Cabin', helvetica, arial, sans-serif;
+                    }
+
                     /* For mobile phones */
                     @media (max-width: 666px) {
                         input, textarea {
@@ -221,7 +240,7 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
                             width: 100%;
                         }
 
-                        textarea {
+                        .required {
                             width: calc(100% - 36px);
                             
                         }

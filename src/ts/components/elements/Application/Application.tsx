@@ -47,10 +47,16 @@ export type ApplicationProps = {
      * Contains a reference to the applicaiton model that should be rendered
      */
     application: ApplicationModel;
+
     /**
      * Contains a reference to the root store
      */
     store: Store;
+
+    /**
+     * Whether the application should be displayed as a past donation for the receiver
+     */
+    pastDonation: boolean;
 
     /**
      * Optional callback to execute once an application gets deleted
@@ -212,7 +218,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     public render(): JSX.Element {
         return (
             <React.Fragment>
-                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`} ref={this.borderRef}>
+                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.pastDonation ? "isClosed" : ""}`} ref={this.borderRef}>
 
                     <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
                         <div className="sections">
@@ -220,10 +226,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             {this.renderContentSection()}
                         </div>
 
-                        {this.props.userType === UserTypes.DONOR && this.renderDonateButton()}
-                        {(this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) && this.renderPrice()}
+                        {this.renderCornerInformation()}
                         {(this.props.isOwnApplication && this.props.isOnReceiversPage) && this.renderInteractWithOwnSection()}
-
+                    
                         {this.state.isSmall && (
                             this.renderMotivationTeaser()
                         )}
@@ -580,7 +585,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
                     </p>
                     <h3>Motivation</h3>
-                    <p>
+                    <p className="multipleLines">
                         {application.motivation}
                     </p>
                 </div>
@@ -612,6 +617,11 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                     p {
                         margin: 4px 0 14px;
+                    }
+
+                    /** Preserve new lines in motivation */
+                    .multipleLines {
+                        white-space: pre-wrap;
                     }
 
                     /** Placement styling */
@@ -703,6 +713,21 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
+     * Render information or button in upper right corner of application
+     */
+    private renderCornerInformation = () => {
+        if (this.props.pastDonation) {
+            return this.renderPriceAndDate();
+        } else if (this.props.userType === UserTypes.DONOR) {
+            return this.renderDonateButton();
+        } else if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) {
+            return this.renderPrice();
+        } else {
+            return;
+        }
+    }
+
+    /**
      * Internal renderer that renders the donate button of the application
      */
     private renderDonateButton = () => {
@@ -769,6 +794,41 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             &.isSmall {
                                 top: 40px;
                             }
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the price of the product requested
+     */
+    private renderPriceAndDate = () => {
+        const { application } = this.props;
+
+        if (application.status !== ApplicationStatus.PENDING && application.status !== ApplicationStatus.COMPLETED) {
+            return;
+        }
+
+        return (
+            <div className={`price-wrapper
+                                ${this.state.isSmall ? "isSmall" : ""}`}>
+                <span>Received ${application.productPrice} {application.donationDate}</span>
+
+                <style jsx>{`
+                    .price-wrapper {
+                        /** Position the price in the top right corner */
+                        position: absolute;
+                        right: 10px;
+                        top: 5px;
+                        z-index: 10;
+
+                        /** When mobile size, position price in the middle */
+                        &.isSmall {
+                            left: 105px;
+                            top: 40px;
+                            right: unset;
                         }
                     }
                 `}</style>
@@ -1072,7 +1132,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private openProducerLightbox = async () => {
         if (!this.state.producer) {
             const producerId = this.props.application.producerId;
-            const producer = await fetchUser(String(producerId), this.props.store);
+            const producer = await fetchUser(String(producerId), this.props.store) as ProducerModel;
 
 
             // Only display producer if one exists with the given id

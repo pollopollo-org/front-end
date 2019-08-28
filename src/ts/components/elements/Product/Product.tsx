@@ -639,7 +639,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     </div>
 
                     <h3>Description</h3>
-                    <p>
+                    <p className="multipleLines">
                         {product.description}
                     </p>
 
@@ -676,6 +676,11 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     p {
                         text-align: left;
                         margin: 4px 0 14px;
+                    }
+
+                    /** Preserve new lines in product description */
+                    .multipleLines {
+                        white-space: pre-wrap;
                     }
 
                     /** Placement styling of description content */
@@ -1087,8 +1092,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private openProducerLightbox = async () => {
         if (!this.state.producer) {
             const producerId = this.props.product.producerId;
-            const producer = await fetchUser(String(producerId), this.props.store);
-
+            const producer = await fetchUser(String(producerId), this.props.store) as ProducerModel;
 
             // Only display producer if one exists with the given id
             if (producer) {

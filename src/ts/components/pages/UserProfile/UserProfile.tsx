@@ -239,6 +239,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 </div>
 
                                 {this.renderApplications()}
+
+                                {!this.state.isSelf && 
+                                    <>
+                                    <h2 className="pastDonations">{userProfileJson.pastDonations}</h2>
+                                    {this.renderPastDonations()}
+                                    </>
+                                }
                             </>
                         )}
                     </div>
@@ -287,10 +294,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     h1 {
                         margin-top: 30px;
                         display: inline-block;
-                    }
-
-                    p {
-                        margin: 15px 0;
                     }
 
                     h2 {
@@ -359,6 +362,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         }
                     }
 
+                    .pastDonations {
+                        margin-top: 30px;
+                        margin-bottom: 15px;
+                    }
+
                     /* Make more room for applications/products when the width is less than 820px */
                     @media only screen and (max-width: 820px) {
                         .profile_information {
@@ -367,7 +375,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     @media only screen and (max-width: 768px) {
-                        .list__header {
+                        .list__header, .pastDonations {
                             margin-left: 10px;
                         }
                     }
@@ -391,12 +399,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             text-align: center;
                         }
 
+                        .list__header, .pastDonations {
+                            padding-bottom: 15px;
+                            border-bottom: 2px solid rgba(69,50,102, 0.6);
+                        }
+
                         .list__header {
                             margin-top: 20px;
-                            
-                            padding-bottom: 15px;
-
-                            border-bottom: 2px solid rgba(69,50,102, 0.6);
                         }
 
                         .profile__information {
@@ -867,11 +876,21 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             applications = this.state.pendingApplications;
         } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
             applications = this.state.completedApplications;
-        } else {
+        } else if (this.applicationStatusIsUnavailable(this.state.filterApplications)) {
             applications = this.state.unavailableApplications;
         }
-        if (!applications) {
-            return null;
+
+        if (!applications || applications.length === 0) {
+            return (
+                <p><i>{userProfileJson.noApplications}</i>
+                    <style jsx>{`
+                        @media only screen and (max-width: 768px) {
+                            p {
+                                margin-left: 10px;
+                            }
+                        }
+                    `}</style>
+                </p>);
         }
 
         return (
@@ -899,6 +918,61 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     application={application}
                                     onApplicationDeleted={onApplicationDeleted}
                                     confirmApplication={confirm}
+                                    pastDonation={false}
+                                />
+                            );
+                        })}
+                    </div>
+                </Fade>
+
+                <style jsx>{`
+                    .list-wrapper {
+                        position: relative;
+                        flex-grow: 1;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal render method that'll render a receivers past donations
+     */
+    private renderPastDonations = () => {
+        let p = this.state.pendingApplications;
+        let c = this.state.completedApplications;
+
+        let applications = p ? (c ? p.concat(c) : p) : c;
+
+        if (!applications || applications.length === 0) {
+            return (
+                <p><i>{userProfileJson.noPastDonations}</i>
+                    <style jsx>{`
+                        @media only screen and (max-width: 768px) {
+                            p {
+                                margin-left: 10px;
+                            }
+                        }
+                    `}</style>
+                </p>);
+        }
+
+        return (
+            <div className="list-wrapper">
+                <Fade in={this.state.isPending} unmountOnExit key="throbber">
+                    {this.renderListThrobber()}
+                </Fade>
+                <Fade in={!this.state.isPending} key="applications">
+                    <div>
+                        {applications && applications.map((application, index) => {
+                            return (
+                                <Application
+                                    key={index}
+                                    isOwnApplication={false}
+                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    isOnReceiversPage={true}
+                                    application={application}
+                                    pastDonation={true}
                                 />
                             );
                         })}
@@ -938,14 +1012,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             return;
         }
 
-        if (this.applicationStatusIsOpen(this.state.filterApplications)) {
-            this.setState({ openApplications: applications || [] });
-        } else if (this.applicationStatusIsPending(this.state.filterApplications)) {
-            this.setState({ pendingApplications: applications || [] });
-        } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
+        if (status === ApplicationStatus.OPEN) {
+            this.setState({ openApplications: applications});
+        } else if (status === ApplicationStatus.PENDING) {
+            this.setState({ pendingApplications: applications });
+        } else if (status === ApplicationStatus.COMPLETED) {
             this.setState({ completedApplications: applications });
-        } else {
-            this.setState({ unavailableApplications: applications || [] });
+        } else if (status === ApplicationStatus.UNAVAILABLE) {
+            this.setState({ unavailableApplications: applications });
         }
 
         this.setState({ isPending: false, initialLoad: false });
@@ -995,6 +1069,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         // Begin loading the desired additional data based on the user to display
         if (user && isReceiverUser(user)) {
             this.loadApplications(ApplicationStatus.OPEN);
+            if (readonlyUserId) {
+                this.loadApplications(ApplicationStatus.PENDING);
+                this.loadApplications(ApplicationStatus.COMPLETED);
+            }
         } else if (user && isProducerUser(user)) {
             this.loadActiveProducts();
         }
@@ -1078,6 +1156,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private applicationStatusIsCompleted = (status: ApplicationStatus) => {
         return status === ApplicationStatus.COMPLETED;
+    }
+
+    /**
+     * Internal helpter that returns true if the given application status is unavailable
+     */
+    private applicationStatusIsUnavailable = (status: ApplicationStatus) => {
+        return status === ApplicationStatus.UNAVAILABLE;
     }
 }
 

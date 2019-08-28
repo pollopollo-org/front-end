@@ -53,7 +53,6 @@ export type UserModelData = {
     firstName: string;
     surName: string;
     country: string;
-    city?: string;
     description?: string;
     thumbnail?: string;
     userRole: UserTypes;
@@ -90,11 +89,6 @@ export class UserModel {
     public readonly country: string;
 
     /**
-     * The city the user lives in
-     */
-    public readonly city?: string;
-
-    /**
      * The description of the user
      */
     public readonly description?: string;
@@ -110,7 +104,6 @@ export class UserModel {
         this.firstName = data.firstName;
         this.surName = data.surName;
         this.country = data.country;
-        this.city = data.city;
         this.description = data.description;
         this.thumbnail = data.thumbnail;
     }
@@ -179,14 +172,20 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
     try {
         const startedAt = performance.now();
 
+        
         const body = JSON.stringify({
             firstName: data.firstName,
             surname: data.lastName,
             password: data.password,
             email: data.email,
             userRole: data.userType,
-            country: data.country
+            country: data.country,
+            street: data.street,
+            streetNumber: data.streetNumber,
+            zipcode: data.zipcode,
+            city: data.city
         });
+        
 
         const response = await fetch(endPoint, {
             method: "POST",
@@ -317,6 +316,10 @@ export async function editProfile(data: EditProfileState, store: Store, history:
                 password: data.oldPassword,
                 wallet: data.wallet,
                 description: data.description,
+                street: data.street,
+                streetNumber: data.streetNumber,
+                zipcode: data.zipcode,
+                city: data.city
             })
         });
 

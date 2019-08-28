@@ -42,6 +42,7 @@ export type ApplicationModelData = {
     producerId: number;
     motivation: string;
     status: number;
+    donationDate?: string;
 };
 // tslint:enable completed-docs
 
@@ -119,6 +120,11 @@ export class ApplicationModel {
      */
     public readonly status: ApplicationStatus;
 
+    /**
+     * The date money was donated to the application (if money has been donated)
+     */
+    public readonly donationDate?: string;
+
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
         const country = countriesJson.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
@@ -141,6 +147,7 @@ export class ApplicationModel {
         this.producerId = data.producerId;
         this.motivation = data.motivation;
         this.status = convertNumberToApplicationStatus(data.status);
+        this.donationDate = data.donationDate;
     }
 
     /**
@@ -392,7 +399,7 @@ export async function deleteApplication(applicationId: number, store: Store, cal
  */
 export async function initiateDonation(applicationId: number) {
     //Redirect to the chatbot in wallet
-    window.location.href = `byteball:A48mzUUBoYbkCm6AOSEyYdQ3Fy1ibs3KKMxJVkS31WFe@obyte.org/bb#${applicationId}`;
+    window.location.href = `byteball:AymLnfCdnKSzNHwMFdGnTmGllPdv6Qxgz1fHfbkEcDKo@obyte.org/bb#${applicationId}`;
 }
 
 /**
