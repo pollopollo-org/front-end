@@ -1092,8 +1092,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     private openProducerLightbox = async () => {
         if (!this.state.producer) {
             const producerId = this.props.product.producerId;
-            const producer = await fetchUser(String(producerId), this.props.store);
-
+            const producer = await fetchUser(String(producerId), this.props.store) as ProducerModel;
 
             // Only display producer if one exists with the given id
             if (producer) {

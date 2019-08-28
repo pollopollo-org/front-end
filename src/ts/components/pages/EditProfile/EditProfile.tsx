@@ -25,47 +25,63 @@ export type EditProfileState = {
     userId: number;
 
     /**
-     * first name
+     * The first name of the user
      */
     firstName: string;
     /**
-     * last name
+     * The last name of the user
      */
     lastName: string;
     /**
-     * country
+     * The name of the street the user lives on
+     */
+    street: string;
+    /**
+     * The steet number the user lives in
+     */
+    streetNumber: string;
+    /**
+     * The zipcode the user lives in
+     */
+    zipcode: string;
+    /**
+     * The city the user lives in
+     */
+    city: string;
+    /**
+     * The country the user lives in
      */
     country: string;
     /**
-     * user type, producer or receiver
+     * User type, producer or receiver
      */
     userType: string;
     /**
-     * password
+     * New password
      */
     password: string;
     /**
-     * repeated password
+     * Repeated new password
      */
     repeatedPassword: string;
     /**
-     * old password to make sure it is the actual user who is changing the information
+     * Old password to make sure it is the actual user who is changing the information
      */
     oldPassword: string;
     /**
-     * a brief description of the user
+     * A brief description of the user
      */
     description?: string;
     /**
-     * profile image
+     * Profile image
      */
     profilePicture?: Blob;
     /**
-     * wallet address
+     * Wallet address - if producer user type
      */
     wallet?: string;
     /**
-     * wallet address
+     * Wallet address
      */
     pairingLink?: string;
 
@@ -86,6 +102,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
         userId: 0,
         firstName: "",
         lastName: "",
+        street: "",
+        streetNumber: "",
+        zipcode: "",
+        city: "",
         country: "",
         userType: "Producer",
         password: "",
@@ -154,6 +174,42 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                 placeholder={editProfileJson.lastName}
                                 onChange={this.onLastnameChanged}
                             />
+                            <div className="required">
+                                <input
+                                    className="input street name"
+                                    required
+                                    aria-required={true}
+                                    value={this.state.street}
+                                    placeholder={editProfileJson.street}
+                                    onChange={this.onStreetChanged}
+                                />
+                            </div>
+                            <div className="required">
+                                <input
+                                    className="input street number"
+                                    required
+                                    aria-required={true}
+                                    value={this.state.streetNumber}
+                                    placeholder={editProfileJson.streetNumber}
+                                    onChange={this.onStreetNumberChanged}
+                                />
+                            </div>
+                            <input
+                                className="input zipcode"
+                                value={this.state.zipcode}
+                                placeholder={editProfileJson.zipcode}
+                                onChange={this.onZipcodeChanged}
+                            />
+                            <div className="required">
+                                <input
+                                    className="input city"
+                                    required
+                                    aria-required={true}
+                                    value={this.state.city}
+                                    placeholder={editProfileJson.city}
+                                    onChange={this.onCityChanged}
+                                />
+                            </div>
                             <div className="SelectCountryDiv">
                                 <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
                             </div>
@@ -556,6 +612,38 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
      */
     private onLastnameChanged = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ lastName: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onStreetChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ street: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onStreetNumberChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ streetNumber: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onZipcodeChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ zipcode: evt.currentTarget.value });
+    }
+
+    /**
+     * Method that'll get triggered each time the input is changed, in order to
+     * properly update state
+     */
+    private onCityChanged = (evt: React.FormEvent<HTMLInputElement>) => {
+        this.setState({ city: evt.currentTarget.value });
     }
 
     /**
