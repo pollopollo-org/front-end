@@ -176,85 +176,108 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         return (
             <React.Fragment>
             {/* First and last name */}
-            <input
-                className="leftInput"
-                placeholder={registerFormJson.firstName}
-                maxLength={255}
-                required
-                aria-required={true}
-                onChange={this.onFirstnameChanged}
-            />
-            <input
-                placeholder={registerFormJson.lastName}
-                maxLength={255}
-                required
-                aria-required={true}
-                onChange={this.onLastnameChanged}
-            />
+            <span className="leftInput">
+                <div className="required">
+                    <input
+                        placeholder={registerFormJson.firstName}
+                        maxLength={255}
+                        required
+                        aria-required={true}
+                        onChange={this.onFirstnameChanged}
+                    />
+                </div>
+            </span>
+            <div className="required">
+                <input
+                    placeholder={registerFormJson.lastName}
+                    maxLength={255}
+                    required
+                    aria-required={true}
+                    onChange={this.onLastnameChanged}
+                />
+            </div>
             {/* Email and country */}
-            <input
-                type="email"
-                className="leftInput"
-                placeholder={ registerFormJson.email }
-                maxLength={255}
-                required
-                aria-required={true}
-                onChange={this.onEmailChanged}
-            />
-            <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
+            <span className="leftInput">
+                <div className="required">
+                    <input
+                        type="email"
+                        placeholder={ registerFormJson.email }
+                        maxLength={255}
+                        required
+                        aria-required={true}
+                        onChange={this.onEmailChanged}
+                    />
+                </div>
+            </span>
+            <div className="required-select">
+                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
+            </div>
             {/* Address - only if the user is producer */}
             {this.state.userType === UserTypes.PRODUCER &&
-                <input
-                    className="leftInput"
-                    placeholder={registerFormJson.street}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onStreetChanged}
-                />
+                <span className="leftInput">
+                    <div className="required">
+                        <input
+                            placeholder={registerFormJson.street}
+                            maxLength={255}
+                            required
+                            aria-required={true}
+                            onChange={this.onStreetChanged}
+                        />
+                    </div>
+                </span>
             }
             {this.state.userType === UserTypes.PRODUCER &&
-                <input
-                    placeholder={registerFormJson.streetNumber}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onStreetNumberChanged}
-                />
+                <div className="required">
+                    <input
+                        placeholder={registerFormJson.streetNumber}
+                        maxLength={255}
+                        required
+                        aria-required={true}
+                        onChange={this.onStreetNumberChanged}
+                    />
+                </div>
             }
             {this.state.userType === UserTypes.PRODUCER &&
-                <input
-                    className="leftInput"
-                    placeholder={registerFormJson.zipcode}
-                    maxLength={255}
-                    onChange={this.onZipcodeChanged}
-                />
+                <span className="leftInput">
+                    <input
+                        placeholder={registerFormJson.zipcode}
+                        maxLength={255}
+                        onChange={this.onZipcodeChanged}
+                    />
+                </span>
             }
             {this.state.userType === UserTypes.PRODUCER &&
-                <input
-                    placeholder={registerFormJson.city}
-                    maxLength={255}
-                    required
-                    aria-required={true}
-                    onChange={this.onCityChanged}
-                />
+                <div className="required">
+                    <input
+                        placeholder={registerFormJson.city}
+                        maxLength={255}
+                        required
+                        aria-required={true}
+                        onChange={this.onCityChanged}
+                    />
+                </div>
             }
             {/* Password */}
-            <input
-                type="password"
-                className="leftInput"
-                placeholder={registerFormJson.password}
-                required
-                aria-required={true}
-                onChange={this.onPasswordChanged}
-            />
-            <input
-                type="password"
-                placeholder={registerFormJson.confirmPassword}
-                required
-                aria-required={true}
-                onChange={this.onValidationPasswordChanged}
-            />
+            <span className="leftInput">
+                <div className="required">
+                    <input
+                        type="password"
+                        placeholder={registerFormJson.password}
+                        required
+                        aria-required={true}
+                        onChange={this.onPasswordChanged}
+                    />
+                </div>
+            </span>
+            <div className="required">
+                <input
+                    type="password"
+                    placeholder={registerFormJson.confirmPassword}
+                    required
+                    aria-required={true}
+                    onChange={this.onValidationPasswordChanged}
+                />
+            </div>
             <style jsx>{`
                     /**
                      * Text fields' standard styling for the project
@@ -279,6 +302,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         &::placeholder {
                             color: ${ colors.gray };
                             opacity: 1;
+                            
                         }
                     }
 
@@ -294,6 +318,27 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     */
                     .leftInput {
                         margin-right: 30px;
+                    }
+
+                    .required, .required-select {
+                        position: relative;
+                        display: inline-block;
+                        z-index: 1;
+                    }
+
+                    .required:after, .required-select:after {
+                        content: "*";
+                        position: absolute;
+                        right: 7px;
+                        top: 32px;
+                        color: red;
+                        z-index: 5;
+                        font-size: 1em;
+                        font-family: 'Cabin', helvetica, arial, sans-serif;
+                    }
+
+                    .required-select:after {
+                        top: 28px;
                     }
 
                     /**
@@ -313,11 +358,22 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         .leftInput {
                             margin-right: 0;
                         }
+
+                        .required, .required-select {
+                            display: initial;
+                            margin: auto;
+                            max-width: 400px;
+                        }
+
+                        .required:after, .required-select:after {
+                            top: 5px;
+                        }
                     }
                 `}</style>
             </React.Fragment>
         );
     }
+    // tslint:enable-next-line max-func-body-length
 
     /**
      * Internal renderer that renders the radio buttons for choosing user type
@@ -387,6 +443,14 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     label{
                         font-size: 16px;
                         margin-right: 30px;
+                    }
+
+                    h2::after {
+                        content: "*";
+                        position: absolute;
+                        color: red;
+                        font-size: 0.8em;
+                        font-family: 'Cabin', helvetica, arial, sans-serif;
                     }
 
                     /**

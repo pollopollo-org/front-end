@@ -158,22 +158,26 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 <form onSubmit={this.sendToBackEnd}>
                     <div className="inputPicDescSection">
                         <div className="inputFieldsSection">
-                            <input
+                            <div className="required">
+                                <input
                                 className="input name first"
                                 required
                                 aria-required={true}
                                 value={this.state.firstName}
                                 placeholder={editProfileJson.firstName}
                                 onChange={this.onFirstnameChanged}
-                            />
-                            <input
-                                className="input name last"
-                                required
-                                aria-required={true}
-                                value={this.state.lastName}
-                                placeholder={editProfileJson.lastName}
-                                onChange={this.onLastnameChanged}
-                            />
+                                />
+                            </div>
+                            <div className="required">
+                                <input
+                                    className="input name last"
+                                    required
+                                    aria-required={true}
+                                    value={this.state.lastName}
+                                    placeholder={editProfileJson.lastName}
+                                    onChange={this.onLastnameChanged}
+                                />
+                            </div>
                             <div className="required">
                                 <input
                                     className="input street name"
@@ -275,7 +279,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                     </div>
                     <div className="borderLine" />
                     <div className="oldPassSubmitSection">
-                        <div className="oldPasswordSection">
+                        <div className="required">
                             <input
                                 type="password"
                                 className="input password old"
@@ -517,6 +521,23 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                     justify-content: space-between;
                 }
 
+                .required {
+                        position: relative;
+                        display: inline-block;
+                        z-index: 1;
+                    }
+
+                .required:after {
+                    content: "*";
+                    position: absolute;
+                    right: 7px;
+                    top: 31px; /*center*/
+                    color: red;
+                    z-index: 5;
+                    font-size: 1em;
+                    font-family: 'Cabin', helvetica, arial, sans-serif;
+                }
+
                 @media only screen and (min-width: 50%) {
                     .SelectCountryDiv{
                         margin: 30px 0;
@@ -551,20 +572,30 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                         }
 
                     /* Set all content to centered with a width of 100% */
-                        .inputFieldsSection,
-                        .pictureDescSection,
-                        .oldPassSubmitSection,
-                        .SelectCountryDiv,
+
+                        .inputPicDescSection,
                         .currentPictureDiv,
-                        .borderLine  {
+                        .pictureDescSection {
                             margin: 0 auto;
                             max-width: 100%;
                         }
 
                         .inputPicDescSection,
-                        .pictureDescSection,
-                        .input {
+                        .pictureDescSection {
                             width: 100%;
+                        }
+
+                        .inputFieldsSection,
+                        .oldPassSubmitSection,
+                        .SelectCountryDiv,
+                        .borderLine  {
+                            
+                            max-width: 100%;
+                        }
+
+                        
+                        .input {
+                            width: calc(100% - 4px)
                         }
 
                     /* Change order of columns */
@@ -577,7 +608,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                         }
 
                     .description {
-                        width: calc(100% - 16px);
+                        width: calc(100% - 20px);
                     }
 
                     .borderLine {
@@ -590,6 +621,16 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
 
                     .button :global(button) {
                         width: 100%;
+                    }
+
+                    .required {
+                        display: initial;
+                        margin: auto;
+                        width: calc(100% - 4px);
+                    }
+
+                    .required:after {
+                        top: 5px;
                     }
                 }
 
