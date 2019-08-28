@@ -44,6 +44,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                             userType={getUserType(this.props.store.user, UserTypes.DONOR)}
                             isOnReceiversPage={false}
                             application={application}
+                            pastDonation={false}
                         />;
                     })}
                 </div>

@@ -50,6 +50,18 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                     <p><span className="bold">{profileJson.name}</span> {user.firstName} {user.surName}</p>
                     <p><span className="bold">{profileJson.country}</span> {this.extractCountry()}</p>
                     {user.email && <p><span className="bold">{profileJson.email}</span> {user.email}</p>}
+
+                    {isProducerUser(user) && (
+                        <div className="twoliner">
+                            <p><span className="bold">{profileJson.address}</span> </p>
+                            {isNullOrUndefined(user.street) || isNullOrUndefined(user.streetNumber) || isNullOrUndefined(user.city) 
+                                ? <p><i>There is no address to show.</i></p> 
+                                : isNullOrUndefined(user.zipcode) 
+                                    ? <p>{user.street + user.streetNumber + ", " + user.city}</p> 
+                                    : <p>{user.street + user.streetNumber + ", " + user.zipcode + user.city}</p>}
+                        </div>
+                    )}
+
                     <div className="twoliner">
                         <p><span className="bold">{profileJson.desc}</span> </p>
                         {isNullOrUndefined(user.description) ? <p><i>There is no description to show.</i></p> : <p>{user.description}</p>}
@@ -108,6 +120,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                     p {
                         margin: 15px 0;
                         line-height: 1.4;
+                        white-space: pre-wrap;
                     } 
 
                     .bold {
