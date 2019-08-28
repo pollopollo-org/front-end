@@ -29,7 +29,7 @@ export type EditProfileState = {
      */
     firstName: string;
     /**
-     * The last name of the suer
+     * The last name of the user
      */
     lastName: string;
     /**
@@ -77,7 +77,7 @@ export type EditProfileState = {
      */
     profilePicture?: Blob;
     /**
-     * Wallet address - if produvcr user type
+     * Wallet address - if producer user type
      */
     wallet?: string;
     /**

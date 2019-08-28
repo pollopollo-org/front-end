@@ -95,7 +95,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     /**
      * Render the component
      */
-    // tslint:disable-next-line max-func-body-length
     public render(): JSX.Element {
         return (
             <div className="allSection">
