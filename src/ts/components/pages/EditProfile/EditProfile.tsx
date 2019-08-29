@@ -221,7 +221,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                 </div></>
                             }
                             <div className="SelectCountryDiv">
-                                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
+                                <span className="required-select">
+                                    <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
+                                </span>
                             </div>
                             <input
                                 type="email"
@@ -527,13 +529,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                     justify-content: space-between;
                 }
 
-                .required {
+                .required, .required-select {
                         position: relative;
                         display: inline-block;
                         z-index: 1;
                     }
 
-                .required:after {
+                .required:after, .required-select:after {
                     content: "*";
                     position: absolute;
                     right: 7px;
@@ -542,6 +544,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                     z-index: 5;
                     font-size: 1em;
                     font-family: 'Cabin', helvetica, arial, sans-serif;
+                }
+
+                .required-select:after {
+                    top: 28px;
                 }
 
                 @media only screen and (min-width: 50%) {
@@ -629,13 +635,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                         width: 100%;
                     }
 
-                    .required {
+                    .required, .required-select {
                         display: initial;
                         margin: auto;
                         width: calc(100% - 4px);
                     }
 
-                    .required:after {
+                    .required:after, .required-select:after {
                         top: 5px;
                     }
                 }
