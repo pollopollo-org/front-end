@@ -128,6 +128,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 userId: store.user.id,
                 firstName: store.user.firstName,
                 lastName: store.user.surName,
+                street: isProducerUser(store.user) ? store.user.street : "",
+                streetNumber: isProducerUser(store.user) ? store.user.streetNumber : "",
+                zipcode: isProducerUser(store.user) && store.user.zipcode ? store.user.zipcode : "",
+                city: isProducerUser(store.user) ? store.user.city : "",
                 country: store.user.country,
                 userType: isProducerUser(store.user) ? "Producer" : "Receiver",
                 password: "",
@@ -178,44 +182,48 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                     onChange={this.onLastnameChanged}
                                 />
                             </div>
-                            <div className="required">
+                            {isProducerUser(this.props.store.user) &&
+                                <><div className="required">
+                                    <input
+                                        className="input street name"
+                                        required
+                                        aria-required={true}
+                                        value={this.state.street}
+                                        placeholder={editProfileJson.street}
+                                        onChange={this.onStreetChanged}
+                                    />
+                                </div>
+                                <div className="required">
+                                    <input
+                                        className="input street number"
+                                        required
+                                        aria-required={true}
+                                        value={this.state.streetNumber}
+                                        placeholder={editProfileJson.streetNumber}
+                                        onChange={this.onStreetNumberChanged}
+                                    />
+                                </div>
                                 <input
-                                    className="input street name"
-                                    required
-                                    aria-required={true}
-                                    value={this.state.street}
-                                    placeholder={editProfileJson.street}
-                                    onChange={this.onStreetChanged}
+                                    className="input zipcode"
+                                    value={this.state.zipcode}
+                                    placeholder={editProfileJson.zipcode}
+                                    onChange={this.onZipcodeChanged}
                                 />
-                            </div>
-                            <div className="required">
-                                <input
-                                    className="input street number"
-                                    required
-                                    aria-required={true}
-                                    value={this.state.streetNumber}
-                                    placeholder={editProfileJson.streetNumber}
-                                    onChange={this.onStreetNumberChanged}
-                                />
-                            </div>
-                            <input
-                                className="input zipcode"
-                                value={this.state.zipcode}
-                                placeholder={editProfileJson.zipcode}
-                                onChange={this.onZipcodeChanged}
-                            />
-                            <div className="required">
-                                <input
-                                    className="input city"
-                                    required
-                                    aria-required={true}
-                                    value={this.state.city}
-                                    placeholder={editProfileJson.city}
-                                    onChange={this.onCityChanged}
-                                />
-                            </div>
+                                <div className="required">
+                                    <input
+                                        className="input city"
+                                        required
+                                        aria-required={true}
+                                        value={this.state.city}
+                                        placeholder={editProfileJson.city}
+                                        onChange={this.onCityChanged}
+                                    />
+                                </div></>
+                            }
                             <div className="SelectCountryDiv">
-                                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
+                                <span className="required-select">
+                                    <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
+                                </span>
                             </div>
                             <input
                                 type="email"
@@ -521,13 +529,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                     justify-content: space-between;
                 }
 
-                .required {
+                .required, .required-select {
                         position: relative;
                         display: inline-block;
                         z-index: 1;
                     }
 
-                .required:after {
+                .required:after, .required-select:after {
                     content: "*";
                     position: absolute;
                     right: 7px;
@@ -536,6 +544,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                     z-index: 5;
                     font-size: 1em;
                     font-family: 'Cabin', helvetica, arial, sans-serif;
+                }
+
+                .required-select:after {
+                    top: 28px;
                 }
 
                 @media only screen and (min-width: 50%) {
@@ -623,13 +635,13 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                         width: 100%;
                     }
 
-                    .required {
+                    .required, .required-select {
                         display: initial;
                         margin: auto;
                         width: calc(100% - 4px);
                     }
 
-                    .required:after {
+                    .required:after, .required-select:after {
                         top: 5px;
                     }
                 }
