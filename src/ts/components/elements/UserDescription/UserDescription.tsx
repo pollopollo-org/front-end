@@ -58,7 +58,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
                                 ? <p><i>There is no address to show.</i></p> 
                                 : isNullOrUndefined(user.zipcode) 
                                     ? <p>{user.street + " " + user.streetNumber + ", " + user.city}</p> 
-                                    : <p>{user.street + " " + user.streetNumber + ", " + user.zipcode + user.city}</p>}
+                                    : <p>{user.street + " " + user.streetNumber + ", " + user.zipcode + " " + user.city}</p>}
                         </div>
                     )}
 
