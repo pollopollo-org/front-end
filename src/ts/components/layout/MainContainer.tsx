@@ -12,12 +12,15 @@ import { ProductsPage } from "src/ts/components/pages/ProductsPage/ProductsPage"
 import { ApplicationsPage } from "src/ts/components/pages/ApplicationsPage/ApplicationsPage";
 import { RegisterForm } from "src/ts/components/pages/RegisterForm/RegisterForm";
 import { UserProfile } from "src/ts/components/pages/UserProfile/UserProfile";
+import { CreateApplication } from "src/ts/components/pages/CreateApplication/CreateApplication";
+import { NotFoundPage } from "src/ts/components/pages/NotFoundPage/NotFoundPage";
 import { Footer } from "src/ts/components/layout/Footer/Footer";
 import { observer } from "mobx-react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Alert } from "src/ts/components/utils/Alert";
-import { CreateApplication } from "src/ts/components/pages/CreateApplication/CreateApplication";
+
+
 
 type MainContainerProps = {
     /**
@@ -51,6 +54,7 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
                         <Route exact path={routes.productsPage.path} component={ProductsPage} />
                         <Route exact path={routes.applicationsPage.path} component={ApplicationsPage} />
                         <Route exact path={routes.CreateApplication.path} component={CreateApplication} />
+                        <Route path={routes.default404.path} component={NotFoundPage} />
                     </Switch>
                 </main>
 
