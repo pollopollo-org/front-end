@@ -129,7 +129,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         isSmall: false,
         renderedUser: this.props.store.user,
         filterActiveProducts: true,
-        filterApplications: ApplicationStatus.OPEN,
+        filterApplications: ApplicationStatus.PENDING,
         isPending: true,
         initialLoad: true
     }
