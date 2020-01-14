@@ -2,7 +2,7 @@ import React from "react";
 import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -971,7 +971,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={text}
                 active={this.state.showDialogDonate}
-                onClose={this.closeConfirmationDialogDonate}
+                onClose={this.cancelConfirmationDialogDonate}
                 confirmAction={this.initiateDonation}
             />
         );
@@ -1248,9 +1248,12 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Listener that'll open the confirmation dialog for donation once it has been executed
+     * Listener that'll open the confirmation dialog for donation once it has been executed.
+     * And set the status of the application to Locked.
      */
-    private openConfirmationDialogDonate = () => {
+    private openConfirmationDialogDonate = async () => {
+        // Set status to 1 (Locked).
+        await updateStatus(this.props.application, 1, this.props.store, this.props.onApplicationDeleted);
         this.setState({ showDialogDonate: true });
     }
 
@@ -1259,6 +1262,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private closeConfirmationDialogDonate = () => {
         this.setState({ showDialogDonate: false });
+    }
+
+    /**
+     * Listener to cancel the dialog box and reset the state of the application.
+     */
+    private cancelConfirmationDialogDonate = async () => {
+        await updateStatus(this.props.application, 0, this.props.store);
+        this.closeConfirmationDialogDonate();
     }
 
     /**

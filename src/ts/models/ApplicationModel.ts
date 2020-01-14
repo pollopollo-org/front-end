@@ -432,12 +432,53 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
                 const newApplication = ApplicationModel.CREATE({
                     ...application,
                     country: <CountryCodes>application.country,
+                    // Completed application status
                     status: 3
                 });
                 callback(newApplication);
             }
         } else {
             alertApiError(result.status, apis.products.post.errors, store);
+        }
+    } catch (err) {
+        // Show error message
+        store.currentErrorMessage = "Something went wrong while attempting to update your application, please try again later.";
+    } finally {
+    }
+}
+
+/**
+ * Helper that locks the status of an application
+ */
+export async function updateStatus(application: ApplicationModel, statusNumber: number, store: Store, callback?: (newApplication: ApplicationModel) => void) {
+    try {
+        const result = await fetch(apis.applications.update.path, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                applicationId: application.applicationId,
+                // application status equal to enum number
+                status: statusNumber
+            })
+        });
+
+        if (result.ok) {
+
+            // In case we have a callback, then broadcast the newly updated application
+            // to it.
+            if (callback) {
+                const newApplication = ApplicationModel.CREATE({
+                    ...application,
+                    country: <CountryCodes>application.country,
+                    // Locked application status
+                    status: 1
+                });
+                callback(newApplication);
+            }
+        } else {
+            alertApiError(result.status, apis.applications.update.errors, store);
         }
     } catch (err) {
         // Show error message

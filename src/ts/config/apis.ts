@@ -56,6 +56,14 @@ export const apis = {
                 409: "An application with the given information already exists."
             }
         },
+        update: {
+            path: `${basePath}/applications`,
+            errors: {
+                400: "Invalid information passed, please correct your data and try again.",
+                403: "Forbidden access.",
+                404: "The application could not be found. Nothing was updated.",
+            }
+        },
         postConfirm: {
             path: `${basePath}/applications/{userId}/{id}`,
             errors: {
