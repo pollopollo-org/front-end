@@ -268,19 +268,13 @@ export async function fetchApplicationBatch(offset: number, amount: number, stor
 }
 
 /**
- * Internal method that'll attempt to fetch a given user in read only mode.
+ * Internal method that'll attempt to fetch a specifict application.
  */
-export async function fetchApplicationById(applicationId: number, store: Store) {
+export async function fetchApplicationById(applicationId: number, store: Store, useCache: boolean = true) {
     const cacheKey = String(applicationId);
 
-    if (applicationCache.has(cacheKey)) {
+    if (useCache && applicationCache.has(cacheKey)) {
         return applicationCache.get(cacheKey);
-    }
-
-    const token = localStorage.getItem("userJWT");
-
-    if (!token) {
-        return;
     }
 
     const endPoint = apis.applications.getById.path.replace("{applicationId}", String(applicationId));
@@ -290,14 +284,11 @@ export async function fetchApplicationById(applicationId: number, store: Store) 
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             }
         });
-
-        const applicationsData: ApplicationModelData[] = await response.json();
-
+        const applicationsData: ApplicationModelData = await response.json();
         if (response.ok) {
-            const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
+            const applicationArray =  [ApplicationModel.CREATE(applicationsData)];
             applicationCache.set(cacheKey, applicationArray);
 
             return applicationArray;
@@ -344,6 +335,7 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
         if (response.ok) {
             const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
             applicationCache.set(cacheKey, applicationArray);
+            console.log(applicationsData);
 
             return applicationArray;
         } else {

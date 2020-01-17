@@ -15,6 +15,11 @@ type DialogProps = {
     text: React.ReactNode;
 
     /**
+     * The text to appear on the confirm button
+     */
+    confirmButtonText?: string;
+
+    /**
      * Determine whether this should open or not
      */
     active: boolean;
@@ -86,7 +91,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
                             width="50%"
                             withThrobber={true}
                             onClick={this.onConfirmClick}
-                            text="Confirm"
+                            text={this.props.confirmButtonText || "Confirm"}
                         />
                         <Button
                             withThrobber={false}

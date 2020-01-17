@@ -10,6 +10,7 @@ import { Application } from "src/ts/components/elements/Application/Application"
 import { UserTypes } from "src/ts/models/UserModel";
 import { getUserType } from "src/ts/utils/getUserType";
 import FrontPageJson from "src/assets/data/frontpage.json";
+import { fetchApplicationBatch, ApplicationModel } from "src/ts/models/ApplicationModel";
 
 export type FrontPageProps = {
     /**
@@ -18,12 +19,39 @@ export type FrontPageProps = {
     store: Store;
 }
 
+type FrontPageState = {
+    /**
+     * The list of applications to display
+     */
+    applications?: ApplicationModel[];
+    /**
+     * Specifies whether or not we are currently attempting to access the backend
+     */
+    isPending?: boolean;
+}
+
 /**
  * Frontpage responsible for rendered the welcome page that the user should be
  * presented to when navigation to the root of the application.
  */
 @observer
-class UnwrappedFrontPage extends React.Component<FrontPageProps> {
+class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState> {
+    /**
+     * Setup initial state
+     */
+    public state: FrontPageState = {
+        isPending: true,
+        applications: [],
+    }
+    
+    /**
+     * Fetch initial set of data as soon as the component mounts
+     */
+    public async componentDidMount(): Promise<void> {
+        await this.fetchData();
+        this.setState({ isPending: false });
+    }
+
     /**
      * Main render method, used to render Frontpage
      */
@@ -37,16 +65,21 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                         {FrontPageJson.text}<a href={FrontPageJson.linkURL} target="_blank" rel="noreferrer">{FrontPageJson.linkText}</a>.
                     </p>
 
-                    {this.props.store.mainpageApplications.map((application, index) => {
-                        return <Application
-                            key={index}
-                            isOwnApplication={false}
-                            userType={getUserType(this.props.store.user, UserTypes.DONOR)}
-                            isOnReceiversPage={false}
-                            application={application}
-                            pastDonation={false}
-                        />;
-                    })}
+                    {this.state.applications ?
+                        this.state.applications.map((application, index) => {
+                            const onApplicationDonated = this.onApplicationDonated.bind(this, index);
+
+                            return <Application
+                                key={index}
+                                isOwnApplication={false}
+                                userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                isOnReceiversPage={false}
+                                application={application}
+                                // tslint:disable-next-line: react-this-binding-issue
+                                onApplicationDonation={onApplicationDonated}
+                                pastDonation={false}
+                            />;
+                        }) : {}}
                 </div>
 
                 <style jsx>{`
@@ -94,6 +127,37 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps> {
                 `}</style>
             </div>
         );
+    }
+
+     /**
+     * Internal helper that'll fetch the applications needed to render the current
+     * page.
+     */
+    private fetchData = async () => {
+        const response = await fetchApplicationBatch(0, 5);
+
+        if (!response) {
+            this.setState({ applications: undefined });
+            return;
+        }
+
+        this.setState({
+            applications: response.applications,
+        });
+    }
+    /**
+     * Callback that should be executed once an application gets donated to in order
+     * to ensure that the locked status also is reflected on the UI
+     */
+    private onApplicationDonated = (index: number) => {
+        const newApplicationList = this.state.applications;
+
+        if (newApplicationList) {
+            newApplicationList.splice(index, 1);
+            this.setState({ 
+                applications: newApplicationList,
+             });
+        }
     }
 }
 

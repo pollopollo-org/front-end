@@ -33,13 +33,6 @@ type StoreArgs = {
 // tslint:disable completed-docs
 export class Store {
     /**
-     * Contains a reference to the applications that should be displayed on the
-     * frontpage.
-     */
-    @observable
-    public readonly mainpageApplications: ApplicationModel[];
-
-    /**
      * Contains a reference to the UserModel, which contains fetched data
      * about a user - either a producer or a receiver.
      */
@@ -69,7 +62,6 @@ export class Store {
     public currentErrorMessage: string;
 
     constructor(initial: StoreArgs) {
-        this.mainpageApplications = initial.applications || [];
         this.user = initial.user;
     }
 }

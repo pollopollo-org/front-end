@@ -204,7 +204,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                             isOnReceiversPage={false}
                             isOwnApplication={false}
                             // tslint:disable-next-line: react-this-binding-issue
-                            onApplicationDeleted={onApplicationDonated}
+                            onApplicationDonation={onApplicationDonated}
                             pastDonation={false}
                         />
                     );
