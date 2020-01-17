@@ -397,9 +397,12 @@ export async function deleteApplication(applicationId: number, store: Store, cal
 /**
  * Helper for initiating donation
  */
-export async function initiateDonation(applicationId: number) {
+export async function initiateDonation(applicationId: number, callback?: () => void) {
     //Redirect to the chatbot in wallet
     window.location.href = `byteball:AymLnfCdnKSzNHwMFdGnTmGllPdv6Qxgz1fHfbkEcDKo@obyte.org/bb#${applicationId}`;
+    if (callback) {
+        callback();
+    }
 }
 
 /**
@@ -465,18 +468,6 @@ export async function updateStatus(application: ApplicationModel, statusNumber: 
         });
 
         if (result.ok) {
-
-            // In case we have a callback, then broadcast the newly updated application
-            // to it.
-            if (callback) {
-                const newApplication = ApplicationModel.CREATE({
-                    ...application,
-                    country: <CountryCodes>application.country,
-                    // Locked application status
-                    status: 1
-                });
-                callback(newApplication);
-            }
         } else {
             alertApiError(result.status, apis.applications.update.errors, store);
         }

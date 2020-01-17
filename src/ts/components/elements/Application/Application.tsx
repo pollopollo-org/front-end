@@ -1253,7 +1253,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private openConfirmationDialogDonate = async () => {
         // Set status to 1 (Locked).
-        await updateStatus(this.props.application, 1, this.props.store, this.props.onApplicationDeleted);
+        await updateStatus(this.props.application, 1, this.props.store);
         this.setState({ showDialogDonate: true });
     }
 
@@ -1305,8 +1305,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * also closes the dialog
      */
     private initiateDonation = async () => {
-        await initiateDonation(this.props.application.applicationId);
-        this.closeConfirmationDialogDonate();
+        await initiateDonation(this.props.application.applicationId, this.props.onApplicationDeleted);
     }
 
     /**

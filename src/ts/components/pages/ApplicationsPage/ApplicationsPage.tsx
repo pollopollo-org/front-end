@@ -192,7 +192,10 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
 
         return (
             this.state.applications.map((application, index) => {
+
                 if (index % 2 === evenOrUneven) {
+                    const onApplicationDonated = this.onApplicationDonated.bind(this, index);
+
                     return (
                         <Application
                             key={index}
@@ -200,6 +203,8 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                             userType={getUserType(this.props.store.user, UserTypes.DONOR)}
                             isOnReceiversPage={false}
                             isOwnApplication={false}
+                            // tslint:disable-next-line: react-this-binding-issue
+                            onApplicationDeleted={onApplicationDonated}
                             pastDonation={false}
                         />
                     );
@@ -373,7 +378,6 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
             </div>
         );
     }
-
     /**
      * Internal helper that'll fetch the applications needed to render the current
      * page.
@@ -391,7 +395,22 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
             totalApplications: response.count,
         });
     }
-
+    /**
+     * Callback that should be executed once an application gets donated to in order
+     * to ensure that the locked status also is reflected on the UI
+     */
+    private onApplicationDonated = (index: number) => {
+        const newApplicationList = this.state.applications;
+        const totalApplications = this.state.totalApplications;
+        if (newApplicationList) {
+            newApplicationList.splice(index, 1);
+            this.setState({ 
+                applications: newApplicationList,
+                totalApplications: totalApplications - 1
+             });
+        }
+    }
+    
     /**
      * Internal helper that when called will navigate the user to the next page
      */
