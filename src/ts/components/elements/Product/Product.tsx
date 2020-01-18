@@ -1,6 +1,7 @@
 import React from "react";
 
 import { colors } from "src/ts/config/colors";
+import ProductJSON from "src/assets/data/product.json"
 
 import { easings } from "src/ts/config/easings";
 import { ProductModel, toggleProductAvailability } from "src/ts/models/ProductModel";
@@ -621,6 +622,54 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
     }
 
     /**
+     * Internal renderer that renders product statistics
+     */
+    private renderStats = () => {
+        const { product } = this.props;
+        return (
+            <div className="stats">
+                <p><span className="semibold">{ProductJSON.lastTime}</span> [YYYY-MM-DD HH:MM]</p>
+                
+
+                <p><span className="semibold">{ProductJSON.completedStats}</span></p>
+                <ul>
+                    <li>{ProductJSON.pastWeek} [amount]</li>
+                    <li>{ProductJSON.pastMonth} [amount]</li>
+                    <li>{ProductJSON.allTime} [amount]</li>
+                </ul>
+ 
+                <p><span className="semibold">{ProductJSON.pendingStats}</span></p>
+                <ul>
+                    <li>{ProductJSON.pastWeek} [amount]</li>
+                    <li>{ProductJSON.pastMonth} [amount]</li>
+                    <li>{ProductJSON.allTime} {product.pendingApplications.length}</li>
+                </ul>
+
+
+                <style jsx>{`
+                    p {
+                        text-align: left;
+                        margin: 4px 0 0 0;
+                    }
+
+                    ul {
+                        font-weight: 300;
+                        margin: 0;
+                    }
+
+                    .stats {
+                        margin-bottom: 14px;
+                    }
+
+                    .semibold {
+                        font-weight: 500; 
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
      * Internal renderer that renders the description section of the product
      */
     private renderDescription = () => {
@@ -631,13 +680,16 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className={`description-content ${!product.isActive ? "isInactive" : ""}`}>
-                    <h3>Product</h3>
+                    <h3>{ProductJSON.product}</h3>
                     <div className="description-product">
                         <p>{product.title}</p>
                         <p className="price">(${product.price})</p>
                     </div>
 
-                    <h3>Description</h3>
+                    <h3>{ProductJSON.stats}</h3>
+                    {this.renderStats()}
+
+                    <h3>{ProductJSON.desc}</h3>
                     <p className="multipleLines">
                         {product.description}
                     </p>

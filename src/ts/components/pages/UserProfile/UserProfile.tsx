@@ -486,8 +486,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     .semibold {
-                        font-weight: 500;
-                        
+                        font-weight: 500; 
                     }
 
                     .statsblockleft {
