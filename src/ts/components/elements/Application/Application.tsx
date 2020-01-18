@@ -2,7 +2,7 @@ import React from "react";
 import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus, fetchApplicationById } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -64,6 +64,11 @@ export type ApplicationProps = {
     onApplicationDeleted?(): void;
 
     /**
+     * Optional callback to execute once an application is locked
+     */
+    onApplicationDonation?(): void;
+
+    /**
      * Method that can optinally be executed once the application updates in order
      * to reflect this in the ui
      */
@@ -103,6 +108,10 @@ export type ApplicationState = {
      * Specifies whether or not the confirmation dialog for donating to the application should be displayed
      */
     showDialogDonate: boolean;
+    /**
+     * Specifies whether or not the locked dialog for donating to the application should be displayed
+     */
+    showDialogLockedDonate: boolean;
     /**
      * Specifies whether or not we should display a lightbox displaying the product
      * related to the application
@@ -148,6 +157,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         isSmall: false,
         showDialogDelete: false,
         showDialogDonate: false,
+        showDialogLockedDonate: false,
         showReceiver: false,
         showDialogConfirmReceival: false,
         showProducer: false,
@@ -242,6 +252,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderProductLightbox()}
                 {this.renderConfirmDialogDeleteApplication()}
                 {this.renderConfirmDialogDonateApplication()}
+                {this.renderLockedDialogDonateApplication()}
                 {this.renderConfirmDialogReceival()}
 
                 <style jsx>{`
@@ -971,8 +982,29 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={text}
                 active={this.state.showDialogDonate}
-                onClose={this.closeConfirmationDialogDonate}
+                onClose={this.cancelConfirmationDialogDonate}
                 confirmAction={this.initiateDonation}
+            />
+        );
+    }
+
+    /**
+     * Dialog to display application is currently locked
+     */
+    private renderLockedDialogDonateApplication() {
+        const text = (<>
+            {ApplicationJSON.lockedDialogTextDonate1}
+            <br /><br />
+            {ApplicationJSON.lockedDialogTextDonate2}
+        </>);
+
+        return (
+            <Dialog title={ApplicationJSON.lockedDonateTitle}
+                text={text}
+                active={this.state.showDialogLockedDonate}
+                onClose={this.closeLockedDialogDonate}
+                confirmAction={this.closeLockedDialogDonate}
+                confirmButtonText={ApplicationJSON.lockedOkButton}
             />
         );
     }
@@ -1248,10 +1280,24 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
-     * Listener that'll open the confirmation dialog for donation once it has been executed
+     * Listener that'll open the confirmation dialog for donation once it has been executed.
+     * And set the status of the application to Locked.
      */
-    private openConfirmationDialogDonate = () => {
-        this.setState({ showDialogDonate: true });
+    private openConfirmationDialogDonate = async () => {
+        // fetch the application from server without using cache.
+        let application = await fetchApplicationById(this.props.application.applicationId, this.props.store, false);
+       
+        // Display locked dialog box if the it has been locked in the meantime.
+        if (application && application[0].status == ApplicationStatus.LOCKED) {
+            this.closeConfirmationDialogDonate();
+            this.openLockedDialogDonate();
+        }
+        else {
+            // Set status to 1 (Locked). and show the normal dialog box
+            await updateStatus(this.props.application, 1, this.props.store);
+    
+            this.setState({ showDialogDonate: true });
+        }
     }
 
     /**
@@ -1259,6 +1305,28 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private closeConfirmationDialogDonate = () => {
         this.setState({ showDialogDonate: false });
+    }
+
+    /**
+     * Listener to cancel the dialog box and reset the state of the application.
+     */
+    private cancelConfirmationDialogDonate = async () => {
+        await updateStatus(this.props.application, 0, this.props.store);
+        this.closeConfirmationDialogDonate();
+    }
+
+    /**
+     * Listener that'll open the locked dialog for a donation
+     */
+    private openLockedDialogDonate = () => {
+        this.setState({ showDialogLockedDonate: true });
+    }
+
+    /**
+     * Listener that'll close the dialog for donation once it has been executed
+     */
+    private closeLockedDialogDonate = () => {
+        this.setState({ showDialogLockedDonate: false });
     }
 
     /**
@@ -1294,8 +1362,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * also closes the dialog
      */
     private initiateDonation = async () => {
-        await initiateDonation(this.props.application.applicationId);
-        this.closeConfirmationDialogDonate();
+        await initiateDonation(this.props.application.applicationId, this.props.onApplicationDonation);
     }
 
     /**

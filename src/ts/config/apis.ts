@@ -1,4 +1,4 @@
-const basePath = "https://localhost:5001/api";
+const basePath = "https://api.pollopollo.org/api";
 
 export type Errors = {
     [key: number]: string;
@@ -54,6 +54,14 @@ export const apis = {
             errors: {
                 400: "Invalid information passed, please correct your data and try again.",
                 409: "An application with the given information already exists."
+            }
+        },
+        update: {
+            path: `${basePath}/applications`,
+            errors: {
+                400: "Invalid information passed, please correct your data and try again.",
+                403: "Forbidden access.",
+                404: "The application could not be found. Nothing was updated.",
             }
         },
         postConfirm: {

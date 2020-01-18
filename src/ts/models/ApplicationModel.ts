@@ -268,19 +268,13 @@ export async function fetchApplicationBatch(offset: number, amount: number, stor
 }
 
 /**
- * Internal method that'll attempt to fetch a given user in read only mode.
+ * Internal method that'll attempt to fetch a specifict application.
  */
-export async function fetchApplicationById(applicationId: number, store: Store) {
+export async function fetchApplicationById(applicationId: number, store: Store, useCache: boolean = true) {
     const cacheKey = String(applicationId);
 
-    if (applicationCache.has(cacheKey)) {
+    if (useCache && applicationCache.has(cacheKey)) {
         return applicationCache.get(cacheKey);
-    }
-
-    const token = localStorage.getItem("userJWT");
-
-    if (!token) {
-        return;
     }
 
     const endPoint = apis.applications.getById.path.replace("{applicationId}", String(applicationId));
@@ -290,14 +284,11 @@ export async function fetchApplicationById(applicationId: number, store: Store) 
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             }
         });
-
-        const applicationsData: ApplicationModelData[] = await response.json();
-
+        const applicationsData: ApplicationModelData = await response.json();
         if (response.ok) {
-            const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
+            const applicationArray =  [ApplicationModel.CREATE(applicationsData)];
             applicationCache.set(cacheKey, applicationArray);
 
             return applicationArray;
@@ -344,6 +335,7 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
         if (response.ok) {
             const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
             applicationCache.set(cacheKey, applicationArray);
+            console.log(applicationsData);
 
             return applicationArray;
         } else {
@@ -397,9 +389,12 @@ export async function deleteApplication(applicationId: number, store: Store, cal
 /**
  * Helper for initiating donation
  */
-export async function initiateDonation(applicationId: number) {
+export async function initiateDonation(applicationId: number, callback?: () => void) {
     //Redirect to the chatbot in wallet
     window.location.href = `byteball:AymLnfCdnKSzNHwMFdGnTmGllPdv6Qxgz1fHfbkEcDKo@obyte.org/bb#${applicationId}`;
+    if (callback) {
+        callback();
+    }
 }
 
 /**
@@ -432,12 +427,41 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
                 const newApplication = ApplicationModel.CREATE({
                     ...application,
                     country: <CountryCodes>application.country,
+                    // Completed application status
                     status: 3
                 });
                 callback(newApplication);
             }
         } else {
             alertApiError(result.status, apis.products.post.errors, store);
+        }
+    } catch (err) {
+        // Show error message
+        store.currentErrorMessage = "Something went wrong while attempting to update your application, please try again later.";
+    } finally {
+    }
+}
+
+/**
+ * Helper that locks the status of an application
+ */
+export async function updateStatus(application: ApplicationModel, statusNumber: number, store: Store, callback?: (newApplication: ApplicationModel) => void) {
+    try {
+        const result = await fetch(apis.applications.update.path, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                applicationId: application.applicationId,
+                // application status equal to enum number
+                status: statusNumber
+            })
+        });
+
+        if (result.ok) {
+        } else {
+            alertApiError(result.status, apis.applications.update.errors, store);
         }
     } catch (err) {
         // Show error message

@@ -917,6 +917,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     isOnReceiversPage={isOnReceiversPage}
                                     application={application}
                                     onApplicationDeleted={onApplicationDeleted}
+                                    onApplicationDonation={onApplicationDeleted}
                                     confirmApplication={confirm}
                                     pastDonation={false}
                                 />
