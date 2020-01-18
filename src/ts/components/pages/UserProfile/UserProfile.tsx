@@ -129,7 +129,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         isSmall: false,
         renderedUser: this.props.store.user,
         filterActiveProducts: true,
-        filterApplications: ApplicationStatus.PENDING,
+        filterApplications: ApplicationStatus.OPEN,
         isPending: true,
         initialLoad: true
     }
@@ -1062,7 +1062,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
             // ... however, if we doesn't match, then we should render our own
             // user
-            this.setState({ isSelf: true, renderedUser: user, userId: user ? user.id : 0 });
+            this.setState({ isSelf: true, renderedUser: user, userId: user ? user.id : 0, filterApplications: ApplicationStatus.PENDING });
         }
 
         await asyncTimeout(0);
