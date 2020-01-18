@@ -1069,9 +1069,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         // Begin loading the desired additional data based on the user to display
         if (user && isReceiverUser(user)) {
-            this.loadApplications(ApplicationStatus.OPEN);
+            this.loadApplications(ApplicationStatus.PENDING);
             if (readonlyUserId) {
-                this.loadApplications(ApplicationStatus.PENDING);
+                this.loadApplications(ApplicationStatus.OPEN);
                 this.loadApplications(ApplicationStatus.COMPLETED);
             }
         } else if (user && isProducerUser(user)) {
