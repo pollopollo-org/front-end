@@ -524,7 +524,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 }}>
                 <span className="open"><span className="amount">{this.props.product.openApplications.length}</span> open</span>
                 <span className="pending"><span className="amount">{this.props.product.pendingApplications.length}</span> pending</span>
-
                 <style jsx>{`
                     .open-pending-section {
                         /** Position the teaser on the bottom of the content section */

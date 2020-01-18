@@ -591,7 +591,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
-                    <h3>Requested product</h3>
+                    <h3>Requested product - Created: {application.creationDate}</h3>
                     <p>
                         {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
                     </p>
