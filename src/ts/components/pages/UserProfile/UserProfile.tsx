@@ -440,12 +440,12 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             return;
         }
         return (
-            <>
+            isProducerUser(user) && <>
                 <h2>Statistics</h2>
                 <div className="stats">
                     <p><span className="bold">{userProfileJson.completedDonationStats}</span></p>
                     <div className="statsblock">
-                        <p><span className="semibold">{userProfileJson.pastWeek}</span> x {userProfileJson.donationsWorth}y</p>
+                        <p><span className="semibold">{userProfileJson.pastWeek}</span> {user.completedDonationsAllTimeNo} {userProfileJson.donationsWorth}y</p>
                         <p><span className="semibold">{userProfileJson.pastMonth}</span> x {userProfileJson.donationsWorth}y</p>
                         <p><span className="semibold">{userProfileJson.allTime}</span> x {userProfileJson.donationsWorth}y</p>
                     </div>
