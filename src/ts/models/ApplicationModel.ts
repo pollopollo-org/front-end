@@ -335,7 +335,6 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
         if (response.ok) {
             const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
             applicationCache.set(cacheKey, applicationArray);
-            console.log(applicationsData);
 
             return applicationArray;
         } else {
