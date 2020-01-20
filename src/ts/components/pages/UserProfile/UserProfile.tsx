@@ -376,7 +376,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     @media only screen and (max-width: 768px) {
-                        .list__header, .pastDonations {
+                        .pastDonations {
                             margin-left: 10px;
                         }
                     }
@@ -445,17 +445,17 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 <div className="stats">
                     <p><span className="bold">{userProfileJson.completedDonationStats}</span></p>
                     <div className="statsblock">
-                        <p><span className="semibold">{userProfileJson.pastWeek}</span> {user.completedDonationsAllTimeNo} {userProfileJson.donationsWorth}y</p>
-                        <p><span className="semibold">{userProfileJson.pastMonth}</span> x {userProfileJson.donationsWorth}y</p>
-                        <p><span className="semibold">{userProfileJson.allTime}</span> x {userProfileJson.donationsWorth}y</p>
+                        <p><span className="semibold">{userProfileJson.pastWeek}</span> {user.completedDonationsPastWeekNo} {userProfileJson.donationsWorth}{user.completedDonationsPastWeekPrice}</p>
+                        <p><span className="semibold">{userProfileJson.pastMonth}</span> {user.completedDonationsPastMonthNo} {userProfileJson.donationsWorth}{user.completedDonationsPastMonthPrice}</p>
+                        <p><span className="semibold">{userProfileJson.allTime}</span> {user.completedDonationsAllTimeNo} {userProfileJson.donationsWorth}{user.completedDonationsAllTimePrice}</p>
                     </div>
                     
                     <div className="statsblockleft">
                         <p><span className="bold">{userProfileJson.pendingDonationsStats}</span></p>
                         <div className="statsblock">
-                            <p><span className="semibold">{userProfileJson.pastWeek}</span> x {userProfileJson.donationsWorth}y</p>
-                            <p><span className="semibold">{userProfileJson.pastMonth}</span> x {userProfileJson.donationsWorth}y</p>
-                            <p><span className="semibold">{userProfileJson.allTime}</span> x {userProfileJson.donationsWorth}y</p>
+                            <p><span className="semibold">{userProfileJson.pastWeek}</span> {user.pendingDonationsPastWeekNo} {userProfileJson.donationsWorth}{user.pendingDonationsPastWeekPrice}</p>
+                            <p><span className="semibold">{userProfileJson.pastMonth}</span> {user.pendingDonationsPastMonthNo} {userProfileJson.donationsWorth}{user.pendingDonationsPastMonthPrice}</p>
+                            <p><span className="semibold">{userProfileJson.allTime}</span> {user.pendingDonationsAllTimeNo} {userProfileJson.donationsWorth}{user.pendingDonationsAllTimePrice}</p>
                         </div>
                     </div>
                 </div>
@@ -491,6 +491,22 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                     .statsblockleft {
                         margin-top: 13px;
+                    }
+
+                    @media only screen and (max-width: 1080px) {
+                            .statsblock {
+                                display: block;
+                            }
+                        }
+                    
+                    @media only screen and (max-width: 800px) {
+                        h2 {
+                            margin-top: 15px;
+                        }
+
+                        .stats {
+                            margin-bottom: 0;
+                        }
                     }
                 `}</style>
             
