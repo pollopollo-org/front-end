@@ -43,7 +43,7 @@ export type ApplicationModelData = {
     motivation: string;
     status: number;
     creationDate: string;
-    donationDate?: string;
+    dateOfDonation?: string;
 };
 // tslint:enable completed-docs
 
@@ -129,7 +129,7 @@ export class ApplicationModel {
     /**
      * The date money was donated to the application (if money has been donated)
      */
-    public readonly donationDate?: string;
+    public readonly dateOfDonation?: string;
 
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
@@ -154,7 +154,7 @@ export class ApplicationModel {
         this.motivation = data.motivation;
         this.status = convertNumberToApplicationStatus(data.status);
         this.creationDate = data.creationDate;
-        this.donationDate = data.donationDate;
+        this.dateOfDonation = data.dateOfDonation;
     }
 
     /**

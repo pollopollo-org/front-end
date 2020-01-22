@@ -829,7 +829,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         return (
             <div className={`price-wrapper
                                 ${this.state.isSmall ? "isSmall" : ""}`}>
-                <span>Received ${application.productPrice} {application.donationDate}</span>
+                <span>Received ${application.productPrice} {application.dateOfDonation}</span>
 
                 <style jsx>{`
                     .price-wrapper {

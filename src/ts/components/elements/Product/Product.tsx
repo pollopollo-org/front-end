@@ -628,7 +628,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         const { product } = this.props;
         return (
             <div className="stats">
-                <p><span className="semibold">{ProductJSON.lastTime}</span> {product.dateLastDonation}</p>
+                <p><span className="semibold">{ProductJSON.lastTime}</span> {product.dateLastDonation ? product.dateLastDonation : "No donations yet"}</p>
                 
 
                 <p><span className="semibold">{ProductJSON.completedStats}</span></p>
