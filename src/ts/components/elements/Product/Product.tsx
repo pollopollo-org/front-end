@@ -628,21 +628,21 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         const { product } = this.props;
         return (
             <div className="stats">
-                <p><span className="semibold">{ProductJSON.lastTime}</span> [YYYY-MM-DD HH:MM]</p>
+                <p><span className="semibold">{ProductJSON.lastTime}</span> {product.dateLastDonation}</p>
                 
 
                 <p><span className="semibold">{ProductJSON.completedStats}</span></p>
                 <ul>
-                    <li>{ProductJSON.pastWeek} [amount]</li>
-                    <li>{ProductJSON.pastMonth} [amount]</li>
-                    <li>{ProductJSON.allTime} [amount]</li>
+                    <li>{ProductJSON.pastWeek} {product.completedDonationsPastWeek}</li>
+                    <li>{ProductJSON.pastMonth} {product.completedDonationsPastMonth}</li>
+                    <li>{ProductJSON.allTime} {product.completedDonationsAllTime}</li>
                 </ul>
  
                 <p><span className="semibold">{ProductJSON.pendingStats}</span></p>
                 <ul>
-                    <li>{ProductJSON.pastWeek} [amount]</li>
-                    <li>{ProductJSON.pastMonth} [amount]</li>
-                    <li>{ProductJSON.allTime} {product.pendingApplications.length}</li>
+                    <li>{ProductJSON.pastWeek} {product.pendingDonationsPastWeek}</li>
+                    <li>{ProductJSON.pastMonth} {product.pendingDonationsPastMonth}</li>
+                    <li>{ProductJSON.allTime} {product.pendingDonationsAllTime}</li>
                 </ul>
 
 
