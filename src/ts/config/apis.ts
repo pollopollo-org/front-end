@@ -1,5 +1,4 @@
-//const basePath = "https://api.pollopollo.org/api";
-const basePath = "http://localhost:5000/api";
+const basePath = "https://api.pollopollo.org/api";
 
 export type Errors = {
     [key: number]: string;

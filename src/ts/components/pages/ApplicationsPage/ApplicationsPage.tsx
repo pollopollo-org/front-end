@@ -90,7 +90,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
             <div className="page">
                 {this.renderIntroduction()}
 
-                {this.state.applications
+                {this.state.applications && this.state.applications.length != 0
                     ? <div className="flex">
                         {(this.state.isPending) &&
                             <i className="throbber-wrapper">
