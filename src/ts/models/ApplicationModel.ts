@@ -42,7 +42,8 @@ export type ApplicationModelData = {
     producerId: number;
     motivation: string;
     status: number;
-    donationDate?: string;
+    creationDate: string;
+    dateOfDonation?: string;
 };
 // tslint:enable completed-docs
 
@@ -121,9 +122,14 @@ export class ApplicationModel {
     public readonly status: ApplicationStatus;
 
     /**
+     * The date the application was created
+     */
+    public readonly creationDate: string;
+
+    /**
      * The date money was donated to the application (if money has been donated)
      */
-    public readonly donationDate?: string;
+    public readonly dateOfDonation?: string;
 
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
@@ -147,7 +153,8 @@ export class ApplicationModel {
         this.producerId = data.producerId;
         this.motivation = data.motivation;
         this.status = convertNumberToApplicationStatus(data.status);
-        this.donationDate = data.donationDate;
+        this.creationDate = data.creationDate;
+        this.dateOfDonation = data.dateOfDonation;
     }
 
     /**

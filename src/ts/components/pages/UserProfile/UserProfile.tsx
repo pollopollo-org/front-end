@@ -214,6 +214,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     <div className="list">
                         {isProducerUser(user) && (
                             <>
+                                {this.renderStats()}
                                 <div className="list__header" ref={this.borderRef}>
                                     <h2>{this.state.isSelf ? userProfileJson.ownProducts : userProfileJson.othersProducts}</h2>
                                     {this.state.isSelf && (
@@ -375,7 +376,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     @media only screen and (max-width: 768px) {
-                        .list__header, .pastDonations {
+                        .pastDonations {
                             margin-left: 10px;
                         }
                     }
@@ -427,6 +428,90 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 `}</style>
             </div>
         )
+    }
+
+    /**
+     * Internal renderer, used to render statistics for a producer
+     */
+    private renderStats = () => {
+        const { renderedUser: user } = this.state;
+
+        if (!user) {
+            return;
+        }
+        return (
+            isProducerUser(user) && <>
+                <h2>Statistics</h2>
+                <div className="stats">
+                    <p><span className="bold">{userProfileJson.completedDonationStats}</span></p>
+                    <div className="statsblock">
+                        <p><span className="semibold">{userProfileJson.pastWeek}</span> {user.completedDonationsPastWeekNo} {userProfileJson.donationsWorth}{user.completedDonationsPastWeekPrice}</p>
+                        <p><span className="semibold">{userProfileJson.pastMonth}</span> {user.completedDonationsPastMonthNo} {userProfileJson.donationsWorth}{user.completedDonationsPastMonthPrice}</p>
+                        <p><span className="semibold">{userProfileJson.allTime}</span> {user.completedDonationsAllTimeNo} {userProfileJson.donationsWorth}{user.completedDonationsAllTimePrice}</p>
+                    </div>
+                    
+                    <div className="statsblockleft">
+                        <p><span className="bold">{userProfileJson.pendingDonationsStats}</span></p>
+                        <div className="statsblock">
+                            <p><span className="semibold">{userProfileJson.pastWeek}</span> {user.pendingDonationsPastWeekNo} {userProfileJson.donationsWorth}{user.pendingDonationsPastWeekPrice}</p>
+                            <p><span className="semibold">{userProfileJson.pastMonth}</span> {user.pendingDonationsPastMonthNo} {userProfileJson.donationsWorth}{user.pendingDonationsPastMonthPrice}</p>
+                            <p><span className="semibold">{userProfileJson.allTime}</span> {user.pendingDonationsAllTimeNo} {userProfileJson.donationsWorth}{user.pendingDonationsAllTimePrice}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <style jsx>{`
+                    h2 {
+                        margin: 0 0 5px 0;
+                    }
+
+                    .stats {
+                        margin-bottom: 30px;
+                    }
+
+                    .statsblock {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: space-between
+                    }
+
+                    p {
+                        margin: 0;
+                        line-height: 2;
+                    }
+
+                    .bold {
+                        font-weight: bold;
+                        color: black;
+                    }
+
+                    .semibold {
+                        font-weight: 500; 
+                    }
+
+                    .statsblockleft {
+                        margin-top: 13px;
+                    }
+
+                    @media only screen and (max-width: 1080px) {
+                            .statsblock {
+                                display: block;
+                            }
+                        }
+                    
+                    @media only screen and (max-width: 800px) {
+                        h2 {
+                            margin-top: 15px;
+                        }
+
+                        .stats {
+                            margin-bottom: 0;
+                        }
+                    }
+                `}</style>
+            
+            </>
+        );
     }
 
     /**

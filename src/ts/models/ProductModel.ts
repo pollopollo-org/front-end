@@ -17,7 +17,7 @@ export enum ProductStatus {
 }
 
 /**
- * Defines that the backend will return, and is required to create a producer 
+ * Defines what the backend will return, and what is required to create a product 
  * model.
  *
  * The fields have been commented in length within the actual class, and therefore
@@ -37,6 +37,14 @@ export type ProductModelData = {
     openApplications: ApplicationModelData[];
     pendingApplications: ApplicationModelData[];
     closedApplications: ApplicationModelData[];
+    // product stats
+    dateLastDonation: string;
+    completedDonationsPastWeek: number;
+    completedDonationsPastMonth: number;
+    completedDonationsAllTime: number;
+    pendingDonationsPastWeek: number;
+    pendingDonationsPastMonth: number;
+    pendingDonationsAllTime: number;
 };
 
 export type ProductModelFields = {
@@ -53,6 +61,14 @@ export type ProductModelFields = {
     openApplications: ApplicationModel[];
     pendingApplications: ApplicationModel[];
     closedApplications: ApplicationModel[];
+    // product stats
+    dateLastDonation: string;
+    completedDonationsPastWeek: number;
+    completedDonationsPastMonth: number;
+    completedDonationsAllTime: number;
+    pendingDonationsPastWeek: number;
+    pendingDonationsPastMonth: number;
+    pendingDonationsAllTime: number;
 }
 
 /**
@@ -101,6 +117,13 @@ export class ProductModel {
             location,
             thumbnail,
             rank: data.rank,
+            dateLastDonation: data.dateLastDonation,
+            completedDonationsPastWeek: data.completedDonationsPastWeek,
+            completedDonationsPastMonth: data.completedDonationsPastMonth,
+            completedDonationsAllTime: data.completedDonationsAllTime,
+            pendingDonationsPastWeek: data.pendingDonationsPastWeek,
+            pendingDonationsPastMonth: data.pendingDonationsPastMonth,
+            pendingDonationsAllTime: data.pendingDonationsAllTime,
             openApplications: data.openApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
             pendingApplications: data.pendingApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
             closedApplications: data.closedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData))
@@ -160,6 +183,41 @@ export class ProductModel {
     public readonly thumbnail?: string;
 
     /**
+     * Statistics: date for last donation of product
+     */
+    public readonly dateLastDonation: string;
+
+    /**
+     * Statistics: number of completed donations past week
+     */
+    public readonly completedDonationsPastWeek: number;
+
+    /**
+     * Statistics: number of completed donations past month
+     */
+    public readonly completedDonationsPastMonth: number;
+
+    /**
+     * Statistics: number of completed donations alle time
+     */
+    public readonly completedDonationsAllTime: number;
+
+    /**
+     * Statistics: number of pending donations past week
+     */
+    public readonly pendingDonationsPastWeek: number;
+
+    /**
+     * Statistics: number of pending donations past month
+     */
+    public readonly pendingDonationsPastMonth: number;
+
+    /**
+     * Statistics: number of pending donations all time
+     */
+    public readonly pendingDonationsAllTime: number;
+
+    /**
      * Specifies the amount of open applications related to the product
      */
     public readonly openApplications: ApplicationModel[];
@@ -189,6 +247,14 @@ export class ProductModel {
         this.openApplications = data.openApplications;
         this.pendingApplications = data.pendingApplications;
         this.closedApplications = data.closedApplications;
+        // stats
+        this.dateLastDonation = data.dateLastDonation;
+        this.completedDonationsPastWeek = data.completedDonationsPastWeek;
+        this.completedDonationsPastMonth = data.completedDonationsPastMonth;
+        this.completedDonationsAllTime = data.completedDonationsAllTime;
+        this.pendingDonationsPastWeek = data.pendingDonationsPastWeek;
+        this.pendingDonationsPastMonth = data.pendingDonationsPastMonth;
+        this.pendingDonationsAllTime = data.pendingDonationsAllTime;
     }
 }
 

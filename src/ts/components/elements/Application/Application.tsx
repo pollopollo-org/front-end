@@ -595,6 +595,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     <p>
                         {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>}
                     </p>
+                    <h3>Created</h3>
+                    <p>
+                        {application.creationDate}
+                    </p>
                     <h3>Motivation</h3>
                     <p className="multipleLines">
                         {application.motivation}
@@ -825,7 +829,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         return (
             <div className={`price-wrapper
                                 ${this.state.isSmall ? "isSmall" : ""}`}>
-                <span>Received ${application.productPrice} {application.donationDate}</span>
+                <span>Received ${application.productPrice} {application.dateOfDonation}</span>
 
                 <style jsx>{`
                     .price-wrapper {
