@@ -1,5 +1,4 @@
-//const basePath = "https://api.pollopollo.org/api";
-const basePath = "http://localhost:5000/api";
+const basePath = "https://api.pollopollo.org/api";
 
 export type Errors = {
     [key: number]: string;
@@ -74,7 +73,7 @@ export const apis = {
             }
         },
         getBatchOpen: {
-            path: `${basePath}/applications/open?offset={offset}&amount={amount}`,
+            path: `${basePath}/applications/?offset={offset}&amount={amount}`,
             errors: {
                 404: "The requested applications could not be found. Please try again later.",
             }
