@@ -73,7 +73,7 @@ export const apis = {
             }
         },
         getBatchOpen: {
-            path: `${basePath}/applications/open?offset={offset}&amount={amount}`,
+            path: `${basePath}/applications?offset={offset}&amount={amount}`,
             errors: {
                 404: "The requested applications could not be found. Please try again later.",
             }
