@@ -227,10 +227,10 @@ export async function postApplication(data: CreateApplicationState, store: Store
 }
 
 /**
- * Internal method that'll attempt to fetch a given user in read only mode.
+ * Internal method that will fetch a given number of open applications, starting at a given offset.
  */
-export async function fetchApplicationBatch(offset: number, amount: number, store?: Store) {
-    const cacheKey = `${offset}${amount}`;
+export async function fetchOpenApplicationBatch(offset: number, amount: number, store?: Store) {
+    const cacheKey = `open-${offset}${amount}`;
 
     // If we have the current request cached, then simply return that!
     if (applicationCache.has(cacheKey)) {
@@ -240,7 +240,7 @@ export async function fetchApplicationBatch(offset: number, amount: number, stor
         };
     }
 
-    const endPoint = apis.applications.getBatch.path.replace("{offset}", String(offset)).replace("{amount}", String(amount));
+    const endPoint = apis.applications.getBatchOpen.path.replace("{offset}", String(offset)).replace("{amount}", String(amount));
 
     try {
         const response = await fetch(endPoint, {
@@ -264,7 +264,55 @@ export async function fetchApplicationBatch(offset: number, amount: number, stor
             };
         } else {
             if (store) {
-                alertApiError(response.status, apis.applications.getBatch.errors, store);
+                alertApiError(response.status, apis.applications.getBatchOpen.errors, store);
+            }
+            return;
+        }
+
+    } catch (err) {
+        return;
+    }
+}
+
+/**
+ * Internal method that will fetch a given number of open applications, starting at a given offset.
+ */
+export async function fetchCompletedApplicationBatch(offset: number, amount: number, store?: Store) {
+    const cacheKey = `completed-${offset}${amount}`;
+
+    // If we have the current request cached, then simply return that!
+    if (applicationCache.has(cacheKey)) {
+        return {
+            count: cachedCount,
+            applications: applicationCache.get(cacheKey),
+        };
+    }
+
+    const endPoint = apis.applications.getBatchCompleted.path.replace("{offset}", String(offset)).replace("{amount}", String(amount));
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        // tslint:disable-next-line completed-docs
+        const json: { count: number; list: ApplicationModelData[] } = await response.json();
+
+        if (response.ok) {
+            const applicationArray = json.list.map((applicationData) => ApplicationModel.CREATE(applicationData));
+            applicationCache.set(cacheKey, applicationArray);
+            cachedCount = json.count;
+
+            return {
+                count: json.count,
+                applications: applicationArray
+            };
+        } else {
+            if (store) {
+                alertApiError(response.status, apis.applications.getBatchCompleted.errors, store);
             }
             return;
         }

@@ -469,7 +469,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         return (
             <section className="section-content">
                 <span
-                    className={`product ${this.state.isSmall ? "isSmall" : ""} ${this.props.isAssociatedApplication ? "disabled" : "enabled"}`}
+                    className={`product ${this.state.isSmall ? "isSmall" : ""} ${this.props.isAssociatedApplication ? "disabled" : "enabled"} ${application.status == ApplicationStatus.COMPLETED || application.status == ApplicationStatus.PENDING ? "completed" : ""}`}
                     title={application.productTitle}
                     onClick={this.showProduct}
                     role="button"
@@ -506,12 +506,20 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         overflow: hidden;
                         max-width: calc(100% - 150px);
 
+                        
+
                         &.enabled {
                             cursor: pointer;
                         }
 
                         &.enabled:hover {
                             text-decoration: underline;
+                        }
+
+                        
+
+                        &.completed {
+                            max-width: calc(100% - 200px);
                         }
 
                         /** When mobile size, force product text to one line */
@@ -526,6 +534,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                          */
                         overflow: hidden;
                         max-height: calc(18px * 2 * 1.3 + 0.25em);
+
                     }
                 `}</style>
             </section>

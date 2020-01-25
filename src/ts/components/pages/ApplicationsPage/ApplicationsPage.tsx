@@ -5,7 +5,7 @@ import { colors, fonts } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
-import { ApplicationModel, fetchApplicationBatch } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, fetchOpenApplicationBatch } from "src/ts/models/ApplicationModel";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
@@ -383,7 +383,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
      * page.
      */
     private fetchData = async (pageIndex: number) => {
-        const response = await fetchApplicationBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.props.store);
+        const response = await fetchOpenApplicationBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.props.store);
 
         if (!response) {
             this.setState({ applications: undefined });

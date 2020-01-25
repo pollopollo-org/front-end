@@ -10,7 +10,8 @@ import { Application } from "src/ts/components/elements/Application/Application"
 import { UserTypes } from "src/ts/models/UserModel";
 import { getUserType } from "src/ts/utils/getUserType";
 import FrontPageJson from "src/assets/data/frontpage.json";
-import { fetchApplicationBatch, ApplicationModel } from "src/ts/models/ApplicationModel";
+import { Throbber} from "src/ts/components/utils";
+import { fetchOpenApplicationBatch, fetchCompletedApplicationBatch, ApplicationModel } from "src/ts/models/ApplicationModel";
 
 export type FrontPageProps = {
     /**
@@ -24,6 +25,10 @@ type FrontPageState = {
      * The list of applications to display
      */
     applications?: ApplicationModel[];
+    /**
+     * The list of recent donations to display
+     */
+    donations?: ApplicationModel[];
     /**
      * Specifies whether or not we are currently attempting to access the backend
      */
@@ -42,6 +47,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
     public state: FrontPageState = {
         isPending: true,
         applications: [],
+        donations: [],
     }
     
     /**
@@ -62,9 +68,13 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
 
                 <div className="list-of-applications">
                     <p>
-                        {FrontPageJson.text}<a href={FrontPageJson.linkURL} target="_blank" rel="noreferrer">{FrontPageJson.linkText}</a>.
+                        {FrontPageJson.applicationsText}<a href={FrontPageJson.linkURL} target="_blank" rel="noreferrer">{FrontPageJson.linkText}</a>.
                     </p>
-
+                    {(this.state.isPending) &&
+                            <i className="throbber-wrapper">
+                                <Throbber size={64} relative={true} />
+                            </i>
+                        }
                     {this.state.applications ?
                         this.state.applications.map((application, index) => {
                             const onApplicationDonated = this.onApplicationDonated.bind(this, index);
@@ -82,6 +92,30 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         }) : {}}
                 </div>
 
+                <h1>Recent donations</h1>
+
+                <div className="list-of-applications">
+                    <p>
+                        {FrontPageJson.donationsText}.
+                    </p>
+                    {(this.state.isPending) &&
+                            <i className="throbber-wrapper">
+                                <Throbber size={64} relative={true} />
+                            </i>
+                        }
+                    {this.state.donations ?
+                        this.state.donations.map((application, index) => {
+                            return <Application
+                                key={index}
+                                isOwnApplication={false}
+                                userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                isOnReceiversPage={false}
+                                application={application}
+                                pastDonation={true}
+                            />;
+                        }) : {}}
+                </div>
+
                 <style jsx>{`
 
                     h1{
@@ -92,13 +126,13 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         font-family: ${ fonts.heading};
                         font-weight: 500;
                         line-height: 1;
-                        margin-bottom: 10px;
+                        margin-bottom: 5px;
                     }
 
                     .list-of-applications {
                         /** Temp dimensions of list */
-                        width: 50%;
-                        margin-bottom: 10px;
+                        width: 45%;
+                        margin-bottom: 50px;
 
                         /**
                          * When the viewport gets too small, force rendering
@@ -113,6 +147,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
 
                     p {
                         line-height: 1.4;
+                        margin: 10px 0;
                     }
 
                     a {
@@ -134,17 +169,25 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
      * page.
      */
     private fetchData = async () => {
-        const response = await fetchApplicationBatch(0, 5);
+        const responseApplications = await fetchOpenApplicationBatch(0, 4);
+        const responseDonations = await fetchCompletedApplicationBatch(0, 4);
 
-        if (!response) {
+        if (!responseApplications) {
             this.setState({ applications: undefined });
             return;
         }
 
+        if (!responseDonations) {
+            this.setState({ donations: undefined });
+            return;
+        }
+
         this.setState({
-            applications: response.applications,
+            applications: responseApplications.applications,
+            donations: responseDonations.applications,
         });
     }
+
     /**
      * Callback that should be executed once an application gets donated to in order
      * to ensure that the locked status also is reflected on the UI
