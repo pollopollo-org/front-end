@@ -91,7 +91,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         return (
             <div className="page">
                 {this.renderIntroduction()}
-
+                {this.renderFilters()}
                 {this.state.products
                     ? <div className="flex">
                         {(this.state.isPending) &&

@@ -91,7 +91,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                 {this.renderIntroduction()}
 
                 {this.state.applications && this.state.applications.length != 0
-                    ? <div className="flex">
+                    ? <><div className="flex">
                         {(this.state.isPending) &&
                             <i className="throbber-wrapper">
                                 <Throbber size={64} relative={true} />
@@ -103,10 +103,12 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         <div className="applicationsListRight">
                             {this.renderListOfApplications(false)}
                         </div>
-                    </div>
+                        </div>
+                        {this.renderNavigation()}
+                        </>
                     : <h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>}
 
-                {this.renderNavigation()}
+                
 
                 <style jsx>{`
                     h2 {
