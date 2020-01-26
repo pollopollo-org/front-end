@@ -90,13 +90,37 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
             <div className="page">
                 {this.renderIntroduction()}
 
-                {this.state.applications && this.state.applications.length != 0
-                    ? <><div className="flex">
-                        {(this.state.isPending) &&
+                {(this.state.isPending)
+                    ? <i className="throbber-wrapper">
+                            <Throbber size={64} relative={true} />
+                    </i>
+                    : <>
+                        {this.state.applications && this.state.applications.length != 0
+                            ? <>
+                                <div className="flex">
+                                    <div className="applicationsListLeft">
+                                        {this.renderListOfApplications(true)}
+                                    </div>
+                                    <div className="applicationsListRight">
+                                        {this.renderListOfApplications(false)}
+                                    </div>
+                                </div>
+                                {this.renderNavigation()}
+                            </>
+                            :<h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>
+                        }
+                    </>
+                }
+
+                {/*
+                {(this.state.isPending) &&
                             <i className="throbber-wrapper">
                                 <Throbber size={64} relative={true} />
                             </i>
                         }
+                {!this.state.isPending && this.state.applications && this.state.applications.length != 0
+                    && <><div className="flex">
+                        
                         <div className="applicationsListLeft">
                             {this.renderListOfApplications(true)}
                         </div>
@@ -106,10 +130,10 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         </div>
                         {this.renderNavigation()}
                         </>
-                    : <h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>}
-
+                     }
+                {!this.state.isPending&& this.state.applications && this.state.applications.length == 0 && <h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>}
+                */}
                 
-
                 <style jsx>{`
                     h2 {
                         margin: 50px 0;
@@ -386,7 +410,6 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
      */
     private fetchData = async (pageIndex: number) => {
         const response = await fetchOpenApplicationBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.props.store);
-
         if (!response) {
             this.setState({ applications: undefined });
             return;
