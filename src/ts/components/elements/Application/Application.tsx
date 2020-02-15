@@ -602,7 +602,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
                     <h3>Requested product</h3>
                     <p>
-                        {application.productTitle} {application.status === ApplicationStatus.PENDING && <i>(${application.productPrice})</i>} {(application.status === ApplicationStatus.PENDING || application.status === ApplicationStatus.COMPLETED) && <i>(Bytes {application.bytes})</i>}
+                        {application.productTitle} {(application.status === ApplicationStatus.PENDING || application.status === ApplicationStatus.COMPLETED) && <i>(${application.productPrice})</i>} {(application.status === ApplicationStatus.PENDING || application.status === ApplicationStatus.COMPLETED) && <i>(Bytes {application.bytes})</i>}
                     </p>
                     <h3>Created</h3>
                     <p>
