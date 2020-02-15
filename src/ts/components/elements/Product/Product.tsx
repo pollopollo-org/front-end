@@ -101,7 +101,7 @@ export type ProductState = {
     producer?: ProducerModel;
 
     /**
-     * Specifies if we should currently be displaying the open applications
+     * Specifies if we should currently be displaying the pending applications
      * associated with the product
      */
     showPendingApplications?: boolean;
@@ -111,6 +111,12 @@ export type ProductState = {
      * associated with the product
      */
     showOpenApplications?: boolean;
+
+    /**
+     * Specifies if we should currently be displaying the closed applications
+     * associated with the product
+     */
+    showClosedApplications?: boolean;
 };
 
 const EXPAND_COLLAPSE_TRANSITION_DURATION = 375;
@@ -525,6 +531,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 }}>
                 <span className="open"><span className="amount">{this.props.product.openApplications.length}</span> open</span>
                 <span className="pending"><span className="amount">{this.props.product.pendingApplications.length}</span> pending</span>
+                <span className="closed"><span className="amount">{this.props.product.closedApplications.length}</span> completed</span>
                 <style jsx>{`
                     .open-pending-section {
                         /** Position the teaser on the bottom of the content section */
@@ -554,12 +561,20 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         border-right: 1px solid ${ colors.pale};
                     }
 
+                    .open-pending-section .pending {
+                        border-right: 1px solid ${ colors.pale};
+                    }
+
                     .open .amount {
                         color: ${ colors.green};
                     }
 
                     .pending .amount {
                         color: ${ colors.yellow};
+                    }
+
+                    .closed .amount {
+                        color: ${ colors.tulip};;
                     }
                 `}</style>
             </div>
@@ -791,6 +806,13 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     >
                         <span className="amount">{product.pendingApplications.length}</span> pending
                     </span>
+                    <span
+                        role="button"
+                        className={`closed ${!!product.closedApplications.length ? "active" : "inactive"}`}
+                        onClick={this.showClosedApplicationsLightbox}
+                    >
+                        <span className="amount">{product.closedApplications.length}</span> completed
+                    </span>
                 </div>
 
                 <AssociatedApplicationsLightbox
@@ -839,10 +861,23 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     }
 
                     .open-pending-buttons .pending {
-                        border-radius: 0 2px 2px 0;
+                        border-right: 1px solid ${ colors.pale};
+                        border-radius: 2px 0 0 2px;
 
                         & .amount {
                             color: ${ colors.yellow};
+                        }
+
+                        &.active:hover {
+                            background-color: rgba(219,208,239, 0.6);
+                        }
+                    }
+
+                    .open-pending-buttons .closed {
+                        border-radius: 0 2px 2px 0;
+
+                        & .amount {
+                            color: ${ colors.tulip};
                         }
 
                         &.active:hover {
@@ -880,6 +915,18 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
         }
 
         this.setState({ showPendingApplications: true });
+    }
+
+        /**
+     * Method to be triggered once a lightbox displaying all pending applicaitons
+     * should be displayed
+     */
+    private showClosedApplicationsLightbox = () => {
+        if (!this.props.product.closedApplications.length) {
+            return;
+        }
+
+        this.setState({ showClosedApplications: true });
     }
 
     /**

@@ -39,7 +39,7 @@ export type ApplicationModelData = {
     productId: number;
     productTitle: string;
     productPrice: number;
-    applicationBytes: number;
+    bytes: number;
     producerId: number;
     motivation: string;
     status: number;
@@ -109,7 +109,7 @@ export class ApplicationModel {
     /**
      * Describes the OBytes locked on the application contract.
      */
-    public readonly applicationBytes: number;
+    public readonly bytes: number;
 
     /**
      * Contains the id of the producer selling the product
@@ -155,7 +155,7 @@ export class ApplicationModel {
         this.thumbnail = data.thumbnail;
         this.productTitle = data.productTitle;
         this.productPrice = data.productPrice;
-        this.applicationBytes = data.applicationBytes;
+        this.bytes = data.bytes;
         this.productId = data.productId;
         this.producerId = data.producerId;
         this.motivation = data.motivation;
