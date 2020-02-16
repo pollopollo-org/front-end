@@ -80,7 +80,7 @@ export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, w
                     /** Size */
                     width: ${buttonWidth};
                     height: ${buttonHeight};
-                    padding: 10px 5px;
+                    /*padding: 10px 5px;*/
 
                     /** Colors */
                     background-color: ${ colors.secondary };

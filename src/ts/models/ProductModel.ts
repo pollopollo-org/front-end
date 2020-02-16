@@ -265,6 +265,9 @@ export class ProductModel {
 const productCache: Map<string, ProductModel[]> = new Map();
 let cachedCount: number = 0;
 
+const filteredProductCache: Map<string, ProductModel[]> = new Map();
+let filteredCachedCount: number = 0;
+
 /**
  * Method used to fetch a batch of active products from the backend. The fetched
  * products can be from any producers and will be returned in the order
@@ -299,6 +302,65 @@ export async function fetchProductBatch(offset: number, amount: number, store: S
             const productArray = json.list.map((productData) => ProductModel.CREATE(productData));
             productCache.set(`${offset}${amount - (amount - json.list.length)}`, productArray);
             cachedCount = json.count;
+
+            return {
+                count: json.count,
+                products: productArray
+            };
+        } else {
+            // ... else alert any errors that occurred to our users!
+            alertApiError(response.status, apis.products.getBatch.errors, store);
+            return;
+        }
+
+    } catch (err) {
+        return;
+    }
+}
+
+/**
+ * Method used to fetch a batch of active products from the backend. The fetched
+ * products can be from any producers and will be returned in the order
+ * FILTERED by country and city
+ */
+export async function fetchFilteredProductBatch(store: Store, offset: number, amount: number, country?: string, city?: string) {
+    const cacheKey = !country ? `${offset}${amount}` 
+                              : (!city ? `${offset}${amount}${country}` 
+                                       : `${offset}${amount}${country}${city}`);
+    
+    // If we have the current request cached, then simply return that!
+    if (filteredProductCache.has(cacheKey)) {
+        return {
+            count: filteredCachedCount,
+            products: filteredProductCache.get(cacheKey),
+        };
+    }
+
+    let endPoint = apis.products.getFilteredBatch.path.replace("{offset}", String(offset)).replace("{amount}", String(amount));
+    endPoint = country ? endPoint.replace("{country}", String(country)) : endPoint.replace("&country={country}", "")
+    endPoint = city ? endPoint.replace("{city}", String(city)) : endPoint.replace("&city={city}", "")
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        // tslint:disable-next-line completed-docs
+        const json: { count: number; list: ProductModelData[] } = await response.json();
+
+        // In case everything wen't well, then convert our data to product models
+        // and store the response in our cache before returning it.
+        if (response.ok) {
+            const productArray = json.list.map((productData) => ProductModel.CREATE(productData));
+
+            const key = !country ? `${offset}${amount}` 
+                                 : (!city ? `${offset}${amount}${country}` 
+                                          : `${offset}${amount}${country}${city}`);
+            
+            filteredProductCache.set(key, productArray);
+            filteredCachedCount = json.count;
 
             return {
                 count: json.count,
@@ -532,5 +594,90 @@ export async function toggleProductAvailability(product: ProductModel, store: St
         // Show error message
         store.currentErrorMessage = "Something went wrong while attempting to update your product, please try again later.";
     } finally {
+    }
+}
+
+/**
+ * Method used to fetch countries in which available products exist
+ */
+export async function fetchProductCountries(store: Store) {
+    //const cacheKey = String(productId);
+
+    // If we have a cache hit, then simply return the cached product!
+    /*if (productCache.has(cacheKey)) {
+        const cacheHit = productCache.get(cacheKey);
+        return cacheHit ? cacheHit[0] : undefined;
+    }*/
+
+    const endPoint = apis.products.getCountries.path;
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const list: string[] = await response.json();
+        
+
+        // If everything goes well, then create a bunch of productModels from the
+        // data and add them to the cache before returning output.
+        if (response.ok) {
+            // tslint:disable-next-line: no-unnecessary-local-variable
+            //const countryArray = list.map(data => CountriesAndCitiesModel.CREATE(data));
+            //productCache.set(cacheKey, [product]);
+
+            //return countryArray;
+            return list;
+        } else {
+            // ... else alert any errors that occurred to our users!
+            alertApiError(response.status, apis.products.getCountries.errors, store);
+            return;
+        }
+
+    } catch (err) {
+        return;
+    }
+}
+
+/**
+ * Method used to fetch cities in which available products exist in a given country
+ */
+export async function fetchProductCities(country: string, store: Store) {
+    //const cacheKey = String(productId);
+
+    // If we have a cache hit, then simply return the cached product!
+    /*if (productCache.has(cacheKey)) {
+        const cacheHit = productCache.get(cacheKey);
+        return cacheHit ? cacheHit[0] : undefined;
+    }*/
+
+    const endPoint = apis.products.getCities.path.replace("{country}", country);
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const list: string[] = await response.json();
+        
+
+        // If everything goes well, then create a bunch of productModels from the
+        // data and add them to the cache before returning output.
+        if (response.ok) {
+            return list;
+        } else {
+            // ... else alert any errors that occurred to our users!
+            alertApiError(response.status, apis.products.getCountries.errors, store);
+            return;
+        }
+
+    } catch (err) {
+        return;
     }
 }

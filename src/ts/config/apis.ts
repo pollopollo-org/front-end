@@ -1,5 +1,5 @@
-const basePath = "https://api.pollopollo.org/api";
-//const basePath = "http://localhost:5000/api";
+//const basePath = "https://api.pollopollo.org/api";
+const basePath = "http://localhost:5000/api";
 
 export type Errors = {
     [key: number]: string;
@@ -136,9 +136,23 @@ export const apis = {
                 404: "The requested products could not be found. Please try again later.",
             }
         },
+        getFilteredBatch: {
+            path: `${basePath}/products/filtered?offset={offset}&amount={amount}&country={country}&city={city}`,
+            errors: {
+                404: "The requested products could not be found. Please try again later.",
+            }
+        },
         getByProducer: {
             path: `${basePath}/products/producer/{producerId}?status={productStatus}`,
             errors: {},
+        },
+        getCountries: {
+            path: `${basePath}/products/countries`,
+            errors: {}
+        },
+        getCities: {
+            path: `${basePath}/products/cities?country={country}`,
+            errors: {}
         },
     }
 }
