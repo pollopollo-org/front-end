@@ -330,16 +330,18 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     height={35}
                     fontSize={16}
                     isPending={false}
-                    onClick={this.toggleFilters} />
+                    onClick={this.toggleFilters} 
+                    showChevron={true}
+                    showChevronInversed={this.state.showFilters}/>
                 
 
                 {this.state.showFilters && <div className="filters">
                     <span className="countryFilter">
-                        <Selecter elements={this.state.filterCountries} defaultText="Select country" allText="All countries" onChange={this.newCountrySelected} current={this.state.filterCountry} />
+                        <Selecter elements={this.state.filterCountries} defaultText="Select country" allText="All countries" onChange={this.newCountrySelected} current={this.state.filterCountry} isDisabled={false} />
                     </span>
-                    {this.state.filterCountry != undefined && <span className="cityFilter">
-                        <Selecter elements={this.state.filterCities} defaultText="Select city" allText="All cities" onChange={this.newCitySelected} current={this.state.filterCity} />
-                    </span>}
+                    <span className="cityFilter">
+                        <Selecter elements={this.state.filterCities} defaultText="Select city" allText="All cities" onChange={this.newCitySelected} current={this.state.filterCity} isDisabled={this.state.filterCountry === undefined} />
+                    </span>
                 </div>}
 
                 <style jsx>{`
@@ -564,7 +566,6 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         this.setState({ 
             filterCountry: undefined,
             filterCity: undefined,
-            showFilters: false,
         }, () => this.fetchProducts(this.state.currentPage));
     }
 

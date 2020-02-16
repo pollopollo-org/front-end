@@ -24,6 +24,11 @@ type SelecterProps = {
     current?: string;
 
     /**
+     * Specifies whether the select is disabled
+     */
+    isDisabled: boolean;
+
+    /**
      * Allows us to extract the value out to the parent components
      * @param selected
      */
@@ -44,6 +49,7 @@ export class Selecter extends React.PureComponent<SelecterProps>{
                 onChange={this.onSelect}
                 className={`${!this.props.current ? "inactive" : "active"}`}
                 value={this.props.current || ""}
+                disabled={this.props.isDisabled}
             >
                 <option disabled value="" aria-selected={this.props.current === ""}>{this.props.defaultText}</option>
                 <option value="ALL" aria-selected={this.props.current === "ALL"}>{this.props.allText}</option>
@@ -74,6 +80,7 @@ export class Selecter extends React.PureComponent<SelecterProps>{
                         font-weight: 300;
                         font-family: ${ fonts.text };
                         margin-top: 20px;
+                        cursor: pointer;
                     }
 
                     select.inactive {
@@ -82,6 +89,20 @@ export class Selecter extends React.PureComponent<SelecterProps>{
 
                     select.active {
                         color: ${ colors.black };
+                    }
+
+                    select:hover {
+                        border-color: ${colors.secondary};
+                    }
+
+                    select:hover:disabled {
+                        border-color: #cacaca;
+                    }
+
+                    select:disabled{
+                        border-color: #cacaca;
+                        background: #f2f2f2;
+                        cursor: default;
                     }
 
                     /**
