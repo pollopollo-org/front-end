@@ -1,37 +1,18 @@
 import React from "react";
 import { colors } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
+import countriesJson from "src/assets/countries.json";
 
 type SelecterProps = {
     /**
      * List of elements to select from
      */
-    elements?: string[];
-
-    /**
-     * The text to display as default
-     */
-    defaultText: string;
-
-    /**
-     * The text to display for all option
-     */
-    allText?: string;
+    countries?: string[];
 
     /**
      * Specifies the currently selected element
      */
     current?: string;
-
-    /**
-     * Optional start of option string
-     */
-    preText?: string;
-
-    /**
-     * Specifies whether the select is disabled
-     */
-    isDisabled: boolean;
 
     /**
      * Allows us to extract the value out to the parent components
@@ -43,7 +24,7 @@ type SelecterProps = {
 /**
  * A select field for selecting an item from a specified list
  */
-export class Selecter extends React.PureComponent<SelecterProps>{
+export class CountryFilter extends React.PureComponent<SelecterProps>{
     /**
      * Main rendering method used for rendering the component
      */
@@ -54,19 +35,19 @@ export class Selecter extends React.PureComponent<SelecterProps>{
                 onChange={this.onSelect}
                 className={`${!this.props.current ? "inactive" : "active"}`}
                 value={this.props.current || ""}
-                disabled={this.props.isDisabled}
             >
-                <option disabled value="" aria-selected={this.props.current === ""}>{this.props.defaultText}</option>
-                {this.props.allText && <option value="ALL" aria-selected={this.props.current === "ALL"}>{this.props.allText}</option>}
-                {this.props.elements && <optgroup>
-                    {this.props.elements.map((element) => {
+                <option disabled value="" aria-selected={this.props.current === ""}>Select country</option>
+                <option value="ALL" aria-selected={this.props.current === "ALL"}>All countries</option>
+                {this.props.countries && <optgroup>
+                    {this.props.countries.map((code) => {
+                        let country = countriesJson.find(c => c.Code === code)
                         return (
                             <option 
-                                key={element} 
-                                value={element}
-                                aria-selected={this.props.current === element}
+                                key={code} 
+                                value={code}
+                                aria-selected={this.props.current === code}
                             >
-                                {this.props.preText} {element}
+                                {country ? country.Name : code}
                             </option>
                         );
                     }) }
@@ -74,7 +55,7 @@ export class Selecter extends React.PureComponent<SelecterProps>{
 
                 <style jsx>{`
                     select{
-                        /*-webkit-appearance: none;*/
+                        -webkit-appearance: none;
                         background: transparent;
                         height: 43px;
                         width: 254px;
@@ -84,6 +65,7 @@ export class Selecter extends React.PureComponent<SelecterProps>{
                         font-size: 16px;
                         font-weight: 300;
                         font-family: ${ fonts.text };
+                        margin-top: 20px;
                         cursor: pointer;
                     }
 

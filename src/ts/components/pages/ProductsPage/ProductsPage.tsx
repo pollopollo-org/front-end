@@ -1,12 +1,12 @@
 import React from "react";
 import ProductsPageJson from "src/assets/data/productsPage.json";
 import { Selecter } from "src/ts/components/utils/Selecter";
+import { CountryFilter } from "src/ts/components/utils/CountryFilter";
 import { colors, fonts, routes } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
-import { Throbber, Button } from "src/ts/components/utils";
+import { Throbber, Button} from "src/ts/components/utils";
 import { ProductModel, fetchFilteredProductBatch, fetchProductCountries, fetchProductCities } from "src/ts/models/ProductModel";
-//import { fetchProductCountries, fetchProductCities } from "src/ts/models/CountriesAndCitiesModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
@@ -65,7 +65,7 @@ type ProductsPageState = {
     /**
      * Specifies whether or not the filterbutton should be shown
      */
-    showFilterButton?: boolean;
+    //showFilterButton?: boolean;
 
     /**
      * Specifies whether or not we're fetching a new page of products
@@ -100,7 +100,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         totalProducts: 0,
         isPending: true,
         showFilters: false,
-        showFilterButton: false,
+        //showFilterButton: false,
     }
 
     /**
@@ -119,6 +119,32 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
         return (
             <div className="page">
                 {this.renderIntroduction()}
+                {this.state.products && this.state.products.length !== 0 && this.renderFilterSection()}
+                {(this.state.isPending)
+                    ? <div className="flex"><i className="throbber-wrapper">
+                            <Throbber size={64} relative={true} />
+                    </i></div>
+                    : <>
+                        {this.state.products && this.state.products.length != 0
+                            ? <>
+                                <div className={`flex ${this.state.isPending ? "pending" : ""}`}>
+                                    <div className="productsListLeft">
+                                        {this.renderListOfProducts(true)}
+                                    </div>
+                                    <div className="productsListRight">
+                                        {this.renderListOfProducts(false)}
+                                    </div>
+                                </div>
+                                {this.renderNavigation()}
+                            </>
+                            :<h2><i>{ProductsPageJson.noProductsAvailable}</i></h2>
+                        }
+                    </>
+                }
+
+
+                {/*
+                {this.renderIntroduction()}
                 {this.state.products && this.state.showFilterButton && this.renderFilterSection()}
 
                 {this.state.products && this.state.products.length !== 0
@@ -133,7 +159,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     </div>
                     : (this.state.isPending ? <div className="flex"><i className="throbber-wrapper"><Throbber size={64} relative={true} /></i></div> : <h2><i>{ProductsPageJson.noProductsAvailable}</i>{this.setState({showFilterButton: false})}</h2>)}
 
-                {this.renderNavigation()}
+                {this.renderNavigation()}*/}
 
                 <style jsx>{`
                     .page {
@@ -157,6 +183,10 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                          */
                         position: relative;
                         min-height: 100px;
+
+                        &.isPending {
+                            display: none;
+                        }
                     }
 
                     .productsListLeft, 
@@ -189,7 +219,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
 
                     @media (max-width: 1200px) {
                         .page {
-                            margin: 0 auto;
+                            margin: 0 auto 20px auto;
                         }
                     }
 
@@ -198,10 +228,6 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                      * appear in one column
                      */
                     @media (max-width: 950px) {
-                        .page {
-                            margin: 0 auto;
-                        }
-
                         .flex {
                             flex-direction: column;
                         }
@@ -331,13 +357,14 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     fontSize={16}
                     isPending={false}
                     onClick={this.toggleFilters} 
-                    showChevron={true}
-                    showChevronInversed={this.state.showFilters}/>
+                    //showChevron={true}
+                    //showChevronInversed={this.state.showFilters}
+                    />
                 
 
                 {this.state.showFilters && <div className="filters">
                     <span className="countryFilter">
-                        <Selecter elements={this.state.filterCountries} defaultText="Select country" allText="All countries" onChange={this.newCountrySelected} current={this.state.filterCountry} isDisabled={false} />
+                        <CountryFilter countries={this.state.filterCountries} onChange={this.newCountrySelected} current={this.state.filterCountry} />
                     </span>
                     <span className="cityFilter">
                         <Selecter elements={this.state.filterCities} defaultText="Select city" allText="All cities" onChange={this.newCitySelected} current={this.state.filterCity} isDisabled={this.state.filterCountry === undefined} />
@@ -480,7 +507,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      */
     private fetchProducts = async (pageIndex: number) => {
         this.setState({isPending: true});
-        this.setState({products: []});
+        //this.setState({products: []});
         let response = null;
         if (this.state.filterCountry && this.state.filterCity) {
             response = await fetchFilteredProductBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.state.filterCountry, this.state.filterCity);
@@ -503,8 +530,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     }
 
     /**
-     * Internal helper that'll fetch the products needed to render the current
-     * page.
+     * Internal helper that'll fetch the countries in which products are available
      */
     private fetchCountries = async () => {
         const responseCountries = await fetchProductCountries(this.props.store);
@@ -560,7 +586,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
     }
 
     /**
-     * Is passed down to SelectCountry and allows us to extract its value
+     * Removes filters and displays all products
      */
     private removeFilter = () => {
         this.setState({ 
