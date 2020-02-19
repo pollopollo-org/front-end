@@ -232,6 +232,13 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                             flex-direction: column;
                         }
                     }
+
+                    @media (max-width: 550px) {
+                        .page {
+                            margin-left: 10px;
+                            margin-right: 10px;
+                        }
+                    }
                 `}</style>
             </div>
         );
@@ -353,22 +360,22 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                     withThrobber={false}
                     text={"Filter"}
                     width={110}
-                    height={35}
+                    height={43}
                     fontSize={16}
                     isPending={false}
                     onClick={this.toggleFilters} 
-                    //showChevron={true}
-                    //showChevronInversed={this.state.showFilters}
+                    withChevron={true}
+                    showChevronInversed={this.state.showFilters}
                     />
                 
 
                 {this.state.showFilters && <div className="filters">
-                    <span className="countryFilter">
+                    <div className="countryFilter">
                         <CountryFilter countries={this.state.filterCountries} onChange={this.newCountrySelected} current={this.state.filterCountry} />
-                    </span>
-                    <span className="cityFilter">
+                    </div>
+                    <div className="cityFilter">
                         <Selecter elements={this.state.filterCities} defaultText="Select city" allText="All cities" onChange={this.newCitySelected} current={this.state.filterCity} isDisabled={this.state.filterCountry === undefined} />
-                    </span>
+                    </div>
                 </div>}
 
                 <style jsx>{`
@@ -388,15 +395,37 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         cursor: pointer;                        
                     }  
 
-                    .cityFilter {
-                        margin-left: 10px;
+                    .filters {
+                        display: flex;
+                        justify-content: flex-end;
                     }
 
-                    @media (max-width: 666px) {
+                    .cityFilter {
+                        margin-left: 15px;
+                        margin-top: 20px;
+                    }
+
+                    @media (max-width: 800px) {
                         .countryFilter, .cityFilter {
                             & :global(select) {
-                                width: 200px;
+                                width: 250px;
                             }
+                        }
+                    }
+
+                    @media (max-width: 540px) {
+                        .filters {
+                            flex-direction: column;
+                        }
+                        .countryFilter, .cityFilter {
+                            & :global(select) {
+                                width: 100%;
+                                max-width: 100%;
+                            }
+                        }
+
+                        .cityFilter {
+                            margin: 10px 0 0 0;
                         }
                     }                  
                 `}</style>

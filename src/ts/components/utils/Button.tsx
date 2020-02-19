@@ -3,6 +3,7 @@ import React from "react";
 import { fonts } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
 import { Throbber } from "src/ts/components/utils/Throbber";
+import { Chevron } from "src/ts/components/utils";
 
 type ButtonProps = {
     /**
@@ -51,6 +52,16 @@ type ButtonProps = {
     throbberSize?: number;
 
     /**
+     * Whether or not to show chevorn
+     */
+    withChevron?: boolean;
+
+    /**
+     * Whether or not to show chevron inversed
+     */
+    showChevronInversed?: boolean;
+
+    /**
      * Optional function for onClick
      */
     onClick?(): void;
@@ -60,7 +71,7 @@ type ButtonProps = {
 /**
  * Styled button to be used instead of html button tag
  */
-export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, width, height, fontSize = 16, type, isPending, throbberSize, onClick }) => {
+export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, width, height, fontSize = 16, type, isPending, throbberSize, onClick, withChevron, showChevronInversed }) => {
     const buttonWidth = typeof width === "number" ? `${width}px` : width;
     const buttonHeight = height ? `${height}px` : undefined;
 
@@ -73,7 +84,19 @@ export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, w
                     <Throbber size={throbberSize} relative={true} inverted={true} />
                     </span>
                 </button>
-                : <button type={type} className={className} onClick={onClick}>{text}</button>}
+                : withChevron?
+                    <button type={type} className={className} onClick={onClick}>
+                        {text}
+                        <span className="chevron">
+                            <Chevron
+                                vertical
+                                size={10}
+                                inverseDuration={200}
+                                inversed={showChevronInversed}
+                            />
+                        </span>
+                    </button>
+                    :<button type={type} className={className} onClick={onClick}>{text}</button>}
 
 		    <style jsx>{`
                 button {
@@ -134,6 +157,12 @@ export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, w
                 }
                 button:hover {
                     background-color: ${ colors.primary };
+                }
+
+                .chevron {
+                    position: absolute;
+                    top: 50%;
+                    right: 20%;
                 }
 			`}</style>
 		</React.Fragment>

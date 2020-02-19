@@ -30,43 +30,48 @@ export class CountryFilter extends React.PureComponent<SelecterProps>{
      */
     public render(): JSX.Element {
         return (
-            <select
-                required
-                onChange={this.onSelect}
-                className={`${!this.props.current ? "inactive" : "active"}`}
-                value={this.props.current || ""}
-            >
-                <option disabled value="" aria-selected={this.props.current === ""}>Select country</option>
-                <option value="ALL" aria-selected={this.props.current === "ALL"}>All countries</option>
-                {this.props.countries && <optgroup>
-                    {this.props.countries.map((code) => {
-                        let country = countriesJson.find(c => c.Code === code)
-                        return (
-                            <option 
-                                key={code} 
-                                value={code}
-                                aria-selected={this.props.current === code}
-                            >
-                                {country ? country.Name : code}
-                            </option>
-                        );
-                    }) }
-                </optgroup>}
-
+            <div>
+                <select
+                    required
+                    onChange={this.onSelect}
+                    className={`${!this.props.current ? "inactive" : "active"}`}
+                    value={this.props.current || ""}
+                >
+                    <option disabled value="" aria-selected={this.props.current === ""}>Select country</option>
+                    <option value="ALL" aria-selected={this.props.current === "ALL"}>All countries</option>
+                    {this.props.countries && <optgroup>
+                        {this.props.countries.map((code) => {
+                            let country = countriesJson.find(c => c.Code === code)
+                            return (
+                                <option 
+                                    key={code} 
+                                    value={code}
+                                    aria-selected={this.props.current === code}
+                                >
+                                    {country ? country.Name : code}
+                                </option>
+                            );
+                        }) }
+                    </optgroup>}
+                </select>
+                <div className="dblarrow"><b></b><i></i></div>
                 <style jsx>{`
                     select{
                         -webkit-appearance: none;
+                        background-color: white;
                         background: transparent;
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
                         border: 1px solid ${ colors.pale };
-                        border-radius: 3px;
+                        border-radius: 5px;
                         font-size: 16px;
                         font-weight: 300;
                         font-family: ${ fonts.text };
                         margin-top: 20px;
                         cursor: pointer;
+                        /*padding-right: 20px; Important*/
+                        display: inline-block;
                     }
 
                     select.inactive {
@@ -98,6 +103,30 @@ export class CountryFilter extends React.PureComponent<SelecterProps>{
                         display: none;
                     }
 
+                    .dblarrow {
+                    margin-left: -14px;
+                    display: inline-block;
+                    }
+
+                    .dblarrow b {
+                        width: 0; 
+                        height: 0; 
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        border-bottom: 6px solid #a7a7a7;
+                        display: block;
+                        margin-bottom: 3px;
+                    }
+
+                    .dblarrow i {
+                        width: 0; 
+                        height: 0; 
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        border-top: 6px solid #a7a7a7;
+                        display: block;
+                    }               
+
                     /**
                      * Restyling to fit smaller screens and mobile
                      */
@@ -109,7 +138,8 @@ export class CountryFilter extends React.PureComponent<SelecterProps>{
                         }
                     }
                 `}</style>
-            </select>
+            
+            </div>
         );
     }
 

@@ -49,38 +49,40 @@ export class Selecter extends React.PureComponent<SelecterProps>{
      */
     public render(): JSX.Element {
         return (
-            <select
-                required
-                onChange={this.onSelect}
-                className={`${!this.props.current ? "inactive" : "active"}`}
-                value={this.props.current || ""}
-                disabled={this.props.isDisabled}
-            >
-                <option disabled value="" aria-selected={this.props.current === ""}>{this.props.defaultText}</option>
-                {this.props.allText && <option value="ALL" aria-selected={this.props.current === "ALL"}>{this.props.allText}</option>}
-                {this.props.elements && <optgroup>
-                    {this.props.elements.map((element) => {
-                        return (
-                            <option 
-                                key={element} 
-                                value={element}
-                                aria-selected={this.props.current === element}
-                            >
-                                {this.props.preText} {element}
-                            </option>
-                        );
-                    }) }
-                </optgroup>}
-
+            <div>
+                <select
+                    required
+                    onChange={this.onSelect}
+                    className={`${!this.props.current ? "inactive" : "active"}`}
+                    value={this.props.current || ""}
+                    disabled={this.props.isDisabled}
+                >
+                    <option disabled value="" aria-selected={this.props.current === ""}>{this.props.defaultText}</option>
+                    {this.props.allText && <option value="ALL" aria-selected={this.props.current === "ALL"}>{this.props.allText}</option>}
+                    {this.props.elements && <optgroup>
+                        {this.props.elements.map((element) => {
+                            return (
+                                <option 
+                                    key={element} 
+                                    value={element}
+                                    aria-selected={this.props.current === element}
+                                >
+                                    {this.props.preText} {element}
+                                </option>
+                            );
+                        }) }
+                    </optgroup>}
+                </select>
+                <div className="dblarrow"><b></b><i></i></div>
                 <style jsx>{`
                     select{
-                        /*-webkit-appearance: none;*/
+                        -webkit-appearance: none;
                         background: transparent;
                         height: 43px;
                         width: 254px;
                         text-indent: 9px;
                         border: 1px solid ${ colors.pale };
-                        border-radius: 3px;
+                        border-radius: 5px;
                         font-size: 16px;
                         font-weight: 300;
                         font-family: ${ fonts.text };
@@ -116,6 +118,30 @@ export class Selecter extends React.PureComponent<SelecterProps>{
                         display: none;
                     }
 
+                    .dblarrow {
+                    margin-left: -14px;
+                    display: inline-block;
+                    }
+
+                    .dblarrow b {
+                        width: 0; 
+                        height: 0; 
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        border-bottom: 6px solid #a7a7a7;
+                        display: block;
+                        margin-bottom: 3px;
+                    }
+
+                    .dblarrow i {
+                        width: 0; 
+                        height: 0; 
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        border-top: 6px solid #a7a7a7;
+                        display: block;
+                    }   
+
                     /**
                      * Restyling to fit smaller screens and mobile
                      */
@@ -127,7 +153,7 @@ export class Selecter extends React.PureComponent<SelecterProps>{
                         }
                     }
                 `}</style>
-            </select>
+            </div>
         );
     }
 

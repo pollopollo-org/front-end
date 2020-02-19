@@ -287,6 +287,13 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                     h1 {
                         margin: 30px 0 15px 0;
                     }     
+
+                    @media (max-width: 550px) {
+                        .introduction, h1 {
+                            margin-left: 10px;
+                            margin-right: 10px;
+                        }
+                    }
                 `}</style>
             </React.Fragment>
         );
@@ -302,6 +309,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                 <div className="sort">
                     <Selecter elements={["Price low", "Price high","Newest", "Oldest"]} defaultText="Sort by" onChange={this.newSortingSelected} current={this.state.sortBy} isDisabled={false} preText={"Sort by:"} />
                 </div>
+                <div className="right">
                 {this.state.filterCountry !== undefined && (
                     <span
                         className="removeFilter"
@@ -311,28 +319,27 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                     >
                         {ApplicationsPageJson.RemoveFilter}
                     </span>)}
-                <div className="right">
                 <Button
                     className = "filter_button"
                     withThrobber={false}
                     text={"Filter"}
                     width={110}
-                    height={35}
+                    height={43}
                     fontSize={16}
                     isPending={false}
                     onClick={this.toggleFilters} 
-                    //showChevron={true}
-                    //showChevronInversed={this.state.showFilters}
+                    withChevron={true}
+                    showChevronInversed={this.state.showFilters}
                     />
                 
 
                 {this.state.showFilters && <div className="filters">
-                    <span className="countryFilter">
+                    <div className="countryFilter">
                         <CountryFilter countries={this.state.filterCountries} onChange={this.newCountrySelected} current={this.state.filterCountry} />
-                    </span>
-                    <span className="cityFilter">
+                    </div>
+                    <div className="cityFilter">
                         <Selecter elements={this.state.filterCities} defaultText="Select city" allText="All cities" onChange={this.newCitySelected} current={this.state.filterCity} isDisabled={this.state.filterCountry === undefined} />
-                    </span>
+                    </div>
                 </div>}
                 </div>
                 <style jsx>{`
@@ -363,17 +370,57 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         cursor: pointer;                        
                     }  
 
-                    .cityFilter {
-                        margin-left: 10px;
+                    .filters {
+                        display: flex;
                     }
 
-                    @media (max-width: 666px) {
-                        .countryFilter, .cityFilter {
+                    .cityFilter {
+                        margin-left: 15px;
+                        margin-top: 20px;
+                    }
+
+                    @media (max-width: 800px) {
+                        .countryFilter, .cityFilter, .sort {
                             & :global(select) {
-                                width: 200px;
+                                width: 250px;
                             }
                         }
-                    }                  
+                        .filters {
+                            flex-direction: column;
+                        }
+
+                        .cityFilter {
+                            margin-top: 10px;
+                        }
+                    }
+
+                    @media (max-width: 550px) {
+                        .filter_section {
+                            flex-direction: column;
+                            margin: 0 10px;
+                        }
+
+                        .countryFilter, .cityFilter, .sort {
+                            width: 100%;
+                            padding: 0;
+                            & :global(select) {
+                                width: 100%;
+                                max-width: 100%;
+                            }
+                        }
+
+                        .sort {
+                            margin: 0 0 20px 0;
+                        }
+
+                        .countryFilter {
+                            margin-bottom: 10px;
+                        }
+
+                        .cityFilter {
+                            margin: 0;
+                        }
+                    }                     
                 `}</style>
             </div>
         );
