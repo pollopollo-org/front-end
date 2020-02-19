@@ -649,6 +649,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
      */
     private newCountrySelected = (newCountry:string) => {
         this.setState({country: newCountry,});
+        console.log(this.state.country);
     }
 }
 

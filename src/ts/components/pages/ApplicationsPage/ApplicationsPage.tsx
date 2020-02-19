@@ -1,11 +1,12 @@
 import React from "react";
 import ApplicationsPageJson from "src/assets/data/applicationsPage.json"
-import { SelectCountry } from "src/ts/components/utils/SelectCountry";
+import { Selecter } from "src/ts/components/utils/Selecter";
+import { CountryFilter } from "src/ts/components/utils/CountryFilter";
 import { colors, fonts } from "src/ts/config";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Throbber, Button } from "src/ts/components/utils";
-import { ApplicationModel, fetchOpenApplicationBatch } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, fetchFilteredApplicationBatch, fetchApplicationCountries, fetchApplicationCities } from "src/ts/models/ApplicationModel";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
@@ -19,9 +20,29 @@ export type ApplicationsPageProps = {
 
 type ApplicationsPageState = {
     /**
+     * List of cities in which applications are open
+     */
+    filterCountries?: string[];
+
+    /**
      * The country the user wants to see applications from
      */
     filterCountry?: string;
+
+    /**
+     * List of cities within given country in which applications are open
+     */
+    filterCities?: string[];
+
+    /**
+     * The city the user wants to see applications from
+     */
+    filterCity?: string;
+
+    /**
+     * The sorting the user wants
+     */
+    sortBy: string;
 
     /**
      * The list of applications to display
@@ -53,6 +74,11 @@ type ApplicationsPageState = {
      * Specifies whether or not we're fetching a previous page of applications
      */
     isFetchingPrevious?: boolean;
+
+    /**
+     * Specifies whether filters should be showing
+     */
+    showFilters: boolean;
 }
 
 /**
@@ -72,13 +98,16 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
         totalApplications: 0,
         isPending: true,
         applications: [],
+        showFilters: false,
+        sortBy: "Newest",
     }
 
     /**
      * Fetch initial set of data as soon as the component mounts
      */
     public async componentDidMount(): Promise<void> {
-        await this.fetchData(this.state.currentPage);
+        await this.fetchApplications(this.state.currentPage);
+        await this.fetchCountries();
         this.setState({ isPending: false });
     }
 
@@ -89,30 +118,57 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
         return (
             <div className="page">
                 {this.renderIntroduction()}
+                {this.state.applications && this.state.applications.length !== 0 && this.renderFilterSection()}
+                {(this.state.isPending)
+                    ? <i className="throbber-wrapper">
+                            <Throbber size={64} relative={true} />
+                    </i>
+                    : <>
+                        {this.state.applications && this.state.applications.length != 0
+                            ? <>
+                                <div className={`flex ${this.state.isPending ? "pending" : ""}`}>
+                                    <div className="applicationsListLeft">
+                                        {this.renderListOfApplications(true)}
+                                    </div>
+                                    <div className="applicationsListRight">
+                                        {this.renderListOfApplications(false)}
+                                    </div>
+                                </div>
+                                {this.renderNavigation()}
+                            </>
+                            :<h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>
+                        }
+                    </>
+                }
 
-                {this.state.applications && this.state.applications.length != 0
-                    ? <>
-                        <div className="flex">
-                            {(this.state.isPending) &&
-                                <i className="throbber-wrapper">
-                                    <Throbber size={64} relative={true} />
-                                </i>
-                            }
-                            <div className="applicationsListLeft">
-                                {this.renderListOfApplications(true)}
-                            </div>
-                            <div className="applicationsListRight">
-                                {this.renderListOfApplications(false)}
-                            </div>
+
+                {/*
+                {(this.state.isPending) &&
+                            <i className="throbber-wrapper">
+                                <Throbber size={64} relative={true} />
+                            </i>
+                        }
+                {!this.state.isPending && this.state.applications && this.state.applications.length != 0
+                    && <><div className="flex">
+                        
+                        <div className="applicationsListLeft">
+                            {this.renderListOfApplications(true)}
+                        </div>
+                        <div className="applicationsListRight">
+                            {this.renderListOfApplications(false)}
+                        </div>
                         </div>
                         {this.renderNavigation()}
-                    </>
-                    : <h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>}
-
+                        </>
+                     }
+                {!this.state.isPending&& this.state.applications && this.state.applications.length == 0 && <h2><i>{ApplicationsPageJson.noApplicationsAvailable}</i></h2>}
+                */}
+                
                 <style jsx>{`
                     h2 {
                         margin: 50px 0;
                         text-align: center;
+                        margin-bottom: 20px;
                     }
 
                     .flex {
@@ -125,6 +181,10 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                          */
                         position: relative;
                         min-height: 200px;
+
+                        &.isPending {
+                            display: none;
+                        }
                     }
 
                     .applicationsListLeft, 
@@ -158,7 +218,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                     @media (max-width: 1200px) {
                         .page {
                             padding: 0;
-                            margin: 0 auto;
+                            margin: 0 auto 20px auto;
                         }
                     }
 
@@ -167,10 +227,6 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                      * appear in one column
                      */
                     @media (max-width: 950px) {
-                        .page {
-                            margin: 0 auto;
-                        }
-
                         .flex {
                             flex-direction: column;
                         }
@@ -232,6 +288,13 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                     h1 {
                         margin: 30px 0 15px 0;
                     }     
+
+                    @media (max-width: 550px) {
+                        .introduction, h1 {
+                            margin-left: 10px;
+                            margin-right: 10px;
+                        }
+                    }
                 `}</style>
             </React.Fragment>
         );
@@ -239,16 +302,15 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
 
     /**
      * Internal renderer that'll render a list of filters to be used to filter
-     * available applications.
+     * applications.
      */
-    // @ts-ignore
-    private renderFilters(): React.ReactNode {
+    private renderFilterSection(): React.ReactNode {
         return (
-            <div>
-                <span><b>{ApplicationsPageJson.Filter}</b></span>
-                <span className="countryFilter">
-                    <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.filterCountry} />
-                </span>
+            <div className="filter_section">
+                <div className="sort">
+                    <Selecter elements={["Price low", "Price high","Newest", "Oldest"]} defaultText="Sort by" onChange={this.newSortingSelected} current={this.state.sortBy} isDisabled={false} preText={"Sort by:"} />
+                </div>
+                <div className="right">
                 {this.state.filterCountry !== undefined && (
                     <span
                         className="removeFilter"
@@ -257,17 +319,49 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         onClick={this.removeFilter}
                     >
                         {ApplicationsPageJson.RemoveFilter}
-                    </span>
-                )}
+                    </span>)}
+                <Button
+                    className = "filter_button"
+                    withThrobber={false}
+                    text={"Filter"}
+                    width={110}
+                    height={43}
+                    fontSize={16}
+                    isPending={false}
+                    onClick={this.toggleFilters} 
+                    withChevron={true}
+                    showChevronInversed={this.state.showFilters}
+                    />
+                
 
+                {this.state.showFilters && <div className="filters">
+                    <div className="countryFilter">
+                        <CountryFilter countries={this.state.filterCountries} onChange={this.newCountrySelected} current={this.state.filterCountry} />
+                    </div>
+                    <div className="cityFilter">
+                        <Selecter elements={this.state.filterCities} defaultText="Select city" allText="All cities" onChange={this.newCitySelected} current={this.state.filterCity} isDisabled={this.state.filterCountry === undefined} />
+                    </div>
+                </div>}
+                </div>
                 <style jsx>{`
-                    /** Filter function */
-                    .countryFilter {
-                        margin-left: 10px;
+                    .filter_section {
+                        margin-bottom: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                        /*text-align: right;*/
+                    }
+
+                    .right {
+                        text-align: right;
+                    }
+
+                    .sort {
+                        text-align: left;
+                        margin: 0;
                     }
 
                     .removeFilter {
-                        margin-left: 10px;
+                        margin-right: 10px;
                         font-weight: 300;
                         color: ${colors.secondary}; 
                     }
@@ -277,13 +371,57 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         cursor: pointer;                        
                     }  
 
-                    @media (max-width: 666px) {
-                        .countryFilter {
+                    .filters {
+                        display: flex;
+                    }
+
+                    .cityFilter {
+                        margin-left: 15px;
+                        margin-top: 20px;
+                    }
+
+                    @media (max-width: 800px) {
+                        .countryFilter, .cityFilter, .sort {
                             & :global(select) {
-                                width: 200px;
+                                width: 250px;
                             }
                         }
-                    }                  
+                        .filters {
+                            flex-direction: column;
+                        }
+
+                        .cityFilter {
+                            margin-top: 10px;
+                        }
+                    }
+
+                    @media (max-width: 550px) {
+                        .filter_section {
+                            flex-direction: column;
+                            margin: 0 10px;
+                        }
+
+                        .countryFilter, .cityFilter, .sort {
+                            width: 100%;
+                            padding: 0;
+                            & :global(select) {
+                                width: 100%;
+                                max-width: 100%;
+                            }
+                        }
+
+                        .sort {
+                            margin: 0 0 20px 0;
+                        }
+
+                        .countryFilter {
+                            margin-bottom: 10px;
+                        }
+
+                        .cityFilter {
+                            margin: 0;
+                        }
+                    }                     
                 `}</style>
             </div>
         );
@@ -319,7 +457,6 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                      */
                     .pageNavigation {
                         position: relative;
-                        margin-bottom: 20px;
                         height: 63px;
                     }
 
@@ -383,9 +520,19 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
      * Internal helper that'll fetch the applications needed to render the current
      * page.
      */
-    private fetchData = async (pageIndex: number) => {
-        const response = await fetchOpenApplicationBatch(pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.props.store);
+    private fetchApplications = async (pageIndex: number) => {
+        this.setState({isPending: true});
 
+        let response = null;
+
+        if (this.state.filterCountry && this.state.filterCity) {
+            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.state.filterCountry, this.state.filterCity);
+        } else if (this.state.filterCountry) {
+            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.state.filterCountry);
+        } else {
+            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE);
+        }
+        
         if (!response) {
             this.setState({ applications: undefined });
             return;
@@ -395,7 +542,23 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
             applications: response.applications,
             totalApplications: response.count,
         });
+        this.setState({isPending: false});
     }
+
+    /**
+     * Internal helper that'll fetch the countries in which applications are open
+     */
+    private fetchCountries = async () => {
+        const responseCountries = await fetchApplicationCountries(this.props.store);
+        if (!responseCountries) {
+            this.setState({ filterCountries: undefined });
+            return;
+        }
+        this.setState({
+            filterCountries: responseCountries,
+        });
+    }
+
     /**
      * Callback that should be executed once an application gets donated to in order
      * to ensure that the locked status also is reflected on the UI
@@ -424,7 +587,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
 
         this.setState({ isFetchingNext: true });
 
-        await this.fetchData(this.state.currentPage + 1);
+        await this.fetchApplications(this.state.currentPage + 1);
         this.setState({ currentPage: this.state.currentPage + 1, isFetchingNext: false });
         window.scrollTo(0, 0);
     }
@@ -441,7 +604,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
 
         this.setState({ isFetchingPrevious: true });
 
-        await this.fetchData(this.state.currentPage - 1);
+        await this.fetchApplications(this.state.currentPage - 1);
         this.setState({ currentPage: this.state.currentPage - 1, isFetchingPrevious: false });
         window.scrollTo(0, 0);
     }
@@ -455,17 +618,152 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
     }
 
     /**
-     * Is passed down to SelectCountry and allows us to extract its value
+     * Removes filters and shows all applications
      */
     private removeFilter = () => {
-        this.setState({ filterCountry: undefined });
+        this.setState({ 
+            filterCountry: undefined,
+            filterCity: undefined,
+        }, () => this.fetchApplications(this.state.currentPage));
     }
 
     /**
-     * Is passed down to SelectCountry and allows us to extract its value
+     * Toggle whether filters are showed or not
+     */
+    private toggleFilters = () => {
+        this.setState({showFilters: !this.state.showFilters});
+    }
+
+    /**
+     * Is passed down to CountryFilter and allows us to extract its value
      */
     private newCountrySelected = (newCountry: string) => {
-        this.setState({ filterCountry: newCountry, });
+        if (newCountry === "ALL") {
+            this.setState({
+                filterCountry: undefined,
+                filterCity: undefined
+            }, () => this.fetchApplications(this.state.currentPage));
+        } else {
+            this.setState({
+                filterCountry: newCountry,
+                filterCity: undefined
+            }, () => this.fetchApplications(this.state.currentPage));
+            this.fetchCities(newCountry);
+        }
+    }
+
+    /**
+     * Is passed down to CountryFilter and allows us to extract its value
+     */
+    private newSortingSelected = (sorting: string) => {
+        this.setState({
+            sortBy: sorting,
+        }, () => this.sortApplications(sorting));
+    }
+
+    /**
+     * Sort applications by something
+     */
+    private sortApplications = (sorting: string) => {
+        if (sorting === "Price low") {
+            this.sortApplicationsPriceLow();
+        } else if (sorting === "Price high") {
+            this.sortApplicationsPriceHigh();
+        } else if (sorting === "Newest") {
+            this.sortApplicationsDateNew();
+        } else if (sorting === "Oldest") {
+            this.sortApplicationsDateOld();
+        }
+    }
+
+    /**
+     * Sort applications by price, low to high
+     */
+    private sortApplicationsPriceLow = () => {
+        if (!this.state.applications) {
+            return;
+        }
+        let sorted = this.state.applications.sort((a,b) => {
+            if (a.productPrice < b.productPrice) { return -1; }
+            if (a.productPrice > b.productPrice) { return 1; }
+            return 0;
+        });
+
+        this.setState({applications: sorted});
+        this.forceUpdate();
+    }
+
+    /**
+     * Sort applications by price, high to low
+     */
+    private sortApplicationsPriceHigh = () => {
+        if (!this.state.applications) {
+            return;
+        }
+        let sorted = this.state.applications.sort((a,b) => {
+            if (a.productPrice > b.productPrice) { return -1; }
+            if (a.productPrice < b.productPrice) { return 1; }
+            return 0;
+        });
+        this.setState({applications: sorted});
+        this.forceUpdate();
+    }
+
+    /**
+     * Sort applications by date, new to old
+     */
+    private sortApplicationsDateNew = () => {
+        if (!this.state.applications) {
+            return;
+        }
+        let sorted = this.state.applications.sort((a,b) => {
+            if (a.creationDate > b.creationDate) { return -1; }
+            if (a.creationDate < b.creationDate) { return 1; }
+            return 0;
+        });
+        this.setState({applications: sorted});
+        this.forceUpdate();
+    }
+
+    /**
+     * Sort applications by date, old to new
+     */
+    private sortApplicationsDateOld = () => {
+        if (!this.state.applications) {
+            return;
+        }
+        let sorted = this.state.applications.sort((a,b) => {
+            if (a.creationDate < b.creationDate) { return -1; }
+            if (a.creationDate > b.creationDate) { return 1; }
+            return 0;
+        });
+        this.setState({applications: sorted});
+        this.forceUpdate();
+    }
+
+    /**
+     * Internal helper that'll fetch the cities
+     */
+    private fetchCities = async (country: string) => {
+        const response = await fetchApplicationCities(country, this.props.store);
+        if (!response) {
+            this.setState({ filterCities: undefined });
+            return;
+        }
+        this.setState({
+            filterCities: response,
+        });
+    }
+
+    /**
+     * Is passed down to Selecter and allows us to extract its value
+     */
+    private newCitySelected = (newCity: string) => {
+        if (newCity === "ALL") {
+            this.setState({filterCity: undefined}, () => this.fetchApplications(this.state.currentPage));
+        } else {
+            this.setState({ filterCity: newCity}, () => this.fetchApplications(this.state.currentPage));
+        }
     }
 }
 
