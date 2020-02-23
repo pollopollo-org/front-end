@@ -518,10 +518,14 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
      * applications
      */
     private renderAssociatedApplicationsStatusTeaser() {
+        const { product } = this.props;
+
+        // If it is producers own product and is on own profile page, then show
+        // open and pending products
         if (!this.props.isOwnProduct || !this.props.isOnProducersPage) {
             return;
         }
-
+        
         return (
             <div
                 className={`open-pending-section ${this.state.isSmall ? "isSmall" : ""}`}
@@ -529,9 +533,37 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     opacity: this.state.expanded ? 0 : 0.6,
                     userSelect: this.state.expanded ? "none" : "text",
                 }}>
-                <span className="open"><span className="amount">{this.props.product.openApplications.length}</span> open</span>
-                <span className="pending"><span className="amount">{this.props.product.pendingApplications.length}</span> pending</span>
-                <span className="completed"><span className="amount">{this.props.product.completedApplications.length}</span> completed</span>
+                    
+                <span
+                    role="button"
+                    className={`open ${!!product.openApplications.length ? "active" : "inactive"}`}
+                    onClick={this.showOpenApplicationsLightbox}
+                >
+                    <span className="amount">{product.openApplications.length}</span> open
+                </span>
+                <span
+                    role="button"
+                    className={`pending ${!!product.pendingApplications.length ? "active" : "inactive"}`}
+                    onClick={this.showPendingApplicationsLightbox}
+                >
+                    <span className="amount">{product.pendingApplications.length}</span> pending
+                </span>
+                <span
+                    role="button"
+                    className={`completed ${!!product.completedApplications.length ? "active" : "inactive"}`}
+                    onClick={this.showCompletedApplicationsLightbox}
+                >
+                    <span className="amount">{product.completedApplications.length}</span> completed
+                </span>
+
+                <AssociatedApplicationsLightbox
+                    displayOpenApplications={this.state.showOpenApplications}
+                    displayPendingApplications={this.state.showPendingApplications}
+                    displayCompletedApplications={this.state.showCompletedApplications}
+                    product={product}
+                    onClose={this.closeAssociatedApplicationsLightbox}
+                />
+
                 <style jsx>{`
                     .open-pending-section {
                         /** Position the teaser on the bottom of the content section */
@@ -555,6 +587,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                     .open-pending-section > span {
                         padding: 0 5px;
+                        border: 1px solid transparent;
+                        transition: border-color 0.1s linear;
+
+                        &.active {
+                            cursor: pointer;
+                        }
                     }
 
                     .open-pending-section .open {
@@ -565,16 +603,42 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         border-right: 1px solid ${ colors.pale};
                     }
 
-                    .open .amount {
-                        color: ${ colors.green};
+                    .open-pending-section .open {
+                        border-right: 1px solid ${ colors.pale};
+                        border-radius: 2px 0 0 2px;
+
+                        & .amount {
+                            color: ${ colors.green};
+                        }
+
+                        &.active:hover {
+                            background-color: rgba(219,208,239, 0.6);
+                        }
                     }
 
-                    .pending .amount {
-                        color: ${ colors.yellow};
+                    .open-pending-section .pending {
+                        border-right: 1px solid ${ colors.pale};
+                        border-radius: 2px 0 0 2px;
+
+                        & .amount {
+                            color: ${ colors.yellow};
+                        }
+
+                        &.active:hover {
+                            background-color: rgba(219,208,239, 0.6);
+                        }
                     }
 
-                    .completed .amount {
-                        color: ${ colors.tulip};;
+                    .open-pending-section .completed {
+                        border-radius: 0 2px 2px 0;
+
+                        & .amount {
+                            color: ${ colors.tulip};
+                        }
+
+                        &.active:hover {
+                            background-color: rgba(219,208,239, 0.6);
+                        }
                     }
                 `}</style>
             </div>
