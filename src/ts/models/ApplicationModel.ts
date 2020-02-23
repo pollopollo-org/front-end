@@ -184,6 +184,9 @@ export class ApplicationModel {
 const applicationCache: Map<string, ApplicationModel[]> = new Map();
 let cachedCount: number = 0;
 
+const filteredApplicationCache: Map<string, ApplicationModel[]> = new Map();
+let filteredCachedCount: number = 0;
+
 /**
  * Method that'll post a new application to the backend
  */
@@ -312,6 +315,60 @@ export async function fetchCompletedApplicationBatch(offset: number, amount: num
             const applicationArray = json.list.map((applicationData) => ApplicationModel.CREATE(applicationData));
             applicationCache.set(cacheKey, applicationArray);
             cachedCount = json.count;
+
+            return {
+                count: json.count,
+                applications: applicationArray
+            };
+        } else {
+            if (store) {
+                alertApiError(response.status, apis.applications.getBatchCompleted.errors, store);
+            }
+            return;
+        }
+
+    } catch (err) {
+        return;
+    }
+}
+
+/**
+ * Internal method that will fetch a given number of open applications, starting at a given offset,
+ * filtered by country and city.
+ */
+export async function fetchFilteredApplicationBatch(store: Store, offset: number, amount: number, country?: string, city?: string) {
+    const cacheKey = !country ? `${offset}${amount}` 
+                              : (!city ? `${offset}${amount}${country}` 
+                                       : `${offset}${amount}${country}${city}`);
+    
+    // If we have the current request cached, then simply return that!
+    if (filteredApplicationCache.has(cacheKey)) {
+        return {
+            count: filteredCachedCount,
+            applications: filteredApplicationCache.get(cacheKey),
+        };
+    }
+
+    let endPoint = apis.applications.getFilteredBatch.path.replace("{offset}", String(offset)).replace("{amount}", String(amount));
+    endPoint = country ? endPoint.replace("{country}", String(country)) : endPoint.replace("&country={country}", "")
+    endPoint = city ? endPoint.replace("{city}", String(city)) : endPoint.replace("&city={city}", "")
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        // tslint:disable-next-line completed-docs
+        const json: { count: number; list: ApplicationModelData[] } = await response.json();
+
+        if (response.ok) {
+            const applicationArray = json.list.map((applicationData) => ApplicationModel.CREATE(applicationData));
+
+            filteredApplicationCache.set(cacheKey, applicationArray);
+            filteredCachedCount = json.count;
 
             return {
                 count: json.count,
@@ -528,5 +585,84 @@ export async function updateStatus(application: ApplicationModel, statusNumber: 
         // Show error message
         store.currentErrorMessage = "Something went wrong while attempting to update your application, please try again later.";
     } finally {
+    }
+}
+
+/**
+ * Method used to fetch countries in which open applications exist
+ */
+export async function fetchApplicationCountries(store: Store) {
+    //const cacheKey = String(productId);
+
+    // If we have a cache hit, then simply return the cached product!
+    /*if (productCache.has(cacheKey)) {
+        const cacheHit = productCache.get(cacheKey);
+        return cacheHit ? cacheHit[0] : undefined;
+    }*/
+
+    const endPoint = apis.applications.getCountries.path;
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const list: string[] = await response.json();
+        
+
+        // If everything goes well we return the list of countries
+        if (response.ok) {
+            //productCache.set(cacheKey, [product]);
+            return list;
+        } else {
+            // ... else alert any errors that occurred to our users!
+            alertApiError(response.status, apis.applications.getCountries.errors, store);
+            return;
+        }
+
+    } catch (err) {
+        return;
+    }
+}
+
+/**
+ * Method used to fetch cities in which open applications exist in a given country
+ */
+export async function fetchApplicationCities(country: string, store: Store) {
+    //const cacheKey = String(productId);
+
+    // If we have a cache hit, then simply return the cached product!
+    /*if (productCache.has(cacheKey)) {
+        const cacheHit = productCache.get(cacheKey);
+        return cacheHit ? cacheHit[0] : undefined;
+    }*/
+
+    const endPoint = apis.applications.getCities.path.replace("{country}", country);
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const list: string[] = await response.json();
+        
+
+        // If everything goes well return list of cities
+        if (response.ok) {
+            return list;
+        } else {
+            // ... else alert any errors that occurred to our users!
+            alertApiError(response.status, apis.applications.getCountries.errors, store);
+            return;
+        }
+
+    } catch (err) {
+        return;
     }
 }

@@ -84,6 +84,12 @@ export const apis = {
                 404: "The requested applications could not be found. Please try again later.",
             }
         },
+        getFilteredBatch: {
+            path: `${basePath}/applications/filtered?offset={offset}&amount={amount}&country={country}&city={city}`,
+            errors: {
+                404: "The requested applications could not be found. Please try again later.",
+            }
+        },
         getById: {
             path: `${basePath}/applications/{applicationId}`,
             errors: {
@@ -99,7 +105,15 @@ export const apis = {
             errors: {
                 404: "The requested application could not be found. Please try again later.",
             },
-        }
+        },
+        getCountries: {
+            path: `${basePath}/applications/countries`,
+            errors: {}
+        },
+        getCities: {
+            path: `${basePath}/applications/cities?country={country}`,
+            errors: {}
+        },
     },
     products: {
         post: {
@@ -135,9 +149,23 @@ export const apis = {
                 404: "The requested products could not be found. Please try again later.",
             }
         },
+        getFilteredBatch: {
+            path: `${basePath}/products/filtered?offset={offset}&amount={amount}&country={country}&city={city}`,
+            errors: {
+                404: "The requested products could not be found. Please try again later.",
+            }
+        },
         getByProducer: {
             path: `${basePath}/products/producer/{producerId}?status={productStatus}`,
             errors: {},
+        },
+        getCountries: {
+            path: `${basePath}/products/countries`,
+            errors: {}
+        },
+        getCities: {
+            path: `${basePath}/products/cities?country={country}`,
+            errors: {}
         },
     }
 }

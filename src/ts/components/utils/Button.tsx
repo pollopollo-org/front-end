@@ -3,6 +3,7 @@ import React from "react";
 import { fonts } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
 import { Throbber } from "src/ts/components/utils/Throbber";
+import { Chevron } from "src/ts/components/utils";
 
 type ButtonProps = {
     /**
@@ -51,6 +52,16 @@ type ButtonProps = {
     throbberSize?: number;
 
     /**
+     * Whether or not to show chevorn
+     */
+    withChevron?: boolean;
+
+    /**
+     * Whether or not to show chevron inversed
+     */
+    showChevronInversed?: boolean;
+
+    /**
      * Optional function for onClick
      */
     onClick?(): void;
@@ -60,7 +71,7 @@ type ButtonProps = {
 /**
  * Styled button to be used instead of html button tag
  */
-export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, width, height, fontSize = 16, type, isPending, throbberSize, onClick }) => {
+export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, width, height, fontSize = 16, type, isPending, throbberSize, onClick, withChevron, showChevronInversed }) => {
     const buttonWidth = typeof width === "number" ? `${width}px` : width;
     const buttonHeight = height ? `${height}px` : undefined;
 
@@ -73,7 +84,19 @@ export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, w
                     <Throbber size={throbberSize} relative={true} inverted={true} />
                     </span>
                 </button>
-                : <button type={type} className={className} onClick={onClick}>{text}</button>}
+                : withChevron?
+                    <button type={type} className={className} onClick={onClick}>
+                        {text}
+                        <span className="chevron">
+                            <Chevron
+                                vertical
+                                size={10}
+                                inverseDuration={200}
+                                inversed={showChevronInversed}
+                            />
+                        </span>
+                    </button>
+                    :<button type={type} className={className} onClick={onClick}>{text}</button>}
 
 		    <style jsx>{`
                 button {
@@ -81,12 +104,10 @@ export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, w
                     width: ${buttonWidth};
                     height: ${buttonHeight};
                     padding: 10px 5px;
-
                     /** Colors */
                     background-color: ${ colors.secondary };
                     color: ${ colors.white };
                     transition: background-color 0.1s linear;
-
                     /** Border */
                     border: none;
                     border-radius: 2px;
@@ -95,12 +116,10 @@ export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, w
                     font-size: ${fontSize}px;
                     font-family: ${ fonts.text };
                     font-weight: 300;
-
                     /** Other */
                     position: relative;
                     cursor: pointer;
                     overflow: hidden;
-
                     & .throbber {
                         /**
                         * Position a throbber in the middle to be displayed
@@ -114,36 +133,36 @@ export const Button: React.SFC<ButtonProps> = ({className, withThrobber, text, w
                         width: ${throbberSize}px;
                         height: ${throbberSize}px;
                         pointer-events: none;
-
                         /**
                         * prepare transitions
                         */
                         transition: opacity 0.2s linear;
                     }
-
                     & .text {
                         opacity: 1;
                         transform: scale(1);
-
                         /**
                             * prepare transitions
                             */
                         transition: opacity 0.2s linear;
                     }
-
                     &.isPending .throbber {
                         opacity: 1;
                         transform: scale(1);
                     }
-
                     &.isPending .text {
                         opacity: 0;
                         transform: scale(0.5);
                     }
                 }
-
                 button:hover {
                     background-color: ${ colors.primary };
+                }
+
+                .chevron {
+                    position: absolute;
+                    top: 50%;
+                    right: 20%;
                 }
 			`}</style>
 		</React.Fragment>
