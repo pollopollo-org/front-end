@@ -565,25 +565,20 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 />
 
                 <style jsx>{`
+
                     .open-pending-section {
-                        /** Position the teaser on the bottom of the content section */
-                        position: absolute;
-                        bottom: 3px;
-                        margin-left: 100px;
-
-                        &.isSmall {
-                            margin-left: 5px;
-                        }
-
-                        /** Setup font */
-                        font-size: 12px;
+                         /** Setup font */
+                         font-size: 12px;
 
                         /** Prepare transitions */
                         transition: opacity 0.15s linear;
 
                         display: flex;
                         flex-direction: row;
+
+                        margin-top: 5px;
                     }
+   
 
                     .open-pending-section > span {
                         padding: 0 5px;
@@ -593,14 +588,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                         &.active {
                             cursor: pointer;
                         }
-                    }
-
-                    .open-pending-section .open {
-                        border-right: 1px solid ${ colors.pale};
-                    }
-
-                    .open-pending-section .pending {
-                        border-right: 1px solid ${ colors.pale};
                     }
 
                     .open-pending-section .open {
