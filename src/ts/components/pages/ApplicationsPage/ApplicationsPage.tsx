@@ -541,6 +541,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
             applications: response.applications,
             totalApplications: response.count,
         });
+        this.sortApplications(this.state.sortBy);
         this.setState({isPending: false});
     }
 
