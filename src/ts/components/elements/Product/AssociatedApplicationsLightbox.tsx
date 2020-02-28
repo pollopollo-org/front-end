@@ -11,11 +11,17 @@ type AssociatedApplicationsLightboxProps = {
      */
     displayOpenApplications?: boolean;
 
-    /**s
+    /**
      * Specifies if we should currently be displaying the pending applications
      * associated with the product
      */
     displayPendingApplications?: boolean;
+
+    /**
+     * Specifies if we should currently be displaying the completed applications
+     * associated with the product
+     */
+    displayCompletedApplications?: boolean;
 
     /**
      * Specifies the product that the lightbox should be connected to.
@@ -39,7 +45,7 @@ export class AssociatedApplicationsLightbox extends React.PureComponent<Associat
     public render(): JSX.Element {
         return (
             <Lightbox
-                active={!!this.props.displayOpenApplications || !!this.props.displayPendingApplications}
+                active={!!this.props.displayOpenApplications || !!this.props.displayPendingApplications || !!this.props.displayCompletedApplications}
                 onClose={this.props.onClose}
             >
                 <div>
@@ -87,6 +93,10 @@ export class AssociatedApplicationsLightbox extends React.PureComponent<Associat
         if (this.props.displayPendingApplications) {
             return "Pending applications";
         }
+        
+        if (this.props.displayCompletedApplications) {
+            return "Completed applications";
+        }
 
         return "";
     }
@@ -102,6 +112,10 @@ export class AssociatedApplicationsLightbox extends React.PureComponent<Associat
 
         if (this.props.displayPendingApplications) {
             return this.props.product.pendingApplications;
+        }
+
+        if (this.props.displayCompletedApplications) {
+            return this.props.product.completedApplications;
         }
 
         return [];
