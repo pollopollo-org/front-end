@@ -11,5 +11,6 @@
     "lockedOkButton": "Ok",
     "lockedDonateTitle" : "This application is locked",
     "lockedDialogTextDonate1": "The application is currently locked. This might be because someone else is making a donation or previously tried to.",
-    "lockedDialogTextDonate2": "You can choose another application or try again in 1 hour."
+    "lockedDialogTextDonate2": "You can choose another application or try again in 1 hour.",
+    "exchangeText": "Currently exchanged to"
 }

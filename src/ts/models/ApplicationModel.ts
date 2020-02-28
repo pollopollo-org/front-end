@@ -40,6 +40,7 @@ export type ApplicationModelData = {
     productTitle: string;
     productPrice: number;
     bytes: number;
+    bytesInCurrentDollars: number;
     producerId: number;
     motivation: string;
     status: number;
@@ -112,6 +113,11 @@ export class ApplicationModel {
     public readonly bytes: number;
 
     /**
+     * Describes the dollar convertion of the bytes by current rate.
+     */
+    public readonly bytesInCurrentDollars: number;
+
+    /**
      * Contains the id of the producer selling the product
      */
     public readonly producerId: number;
@@ -156,6 +162,7 @@ export class ApplicationModel {
         this.productTitle = data.productTitle;
         this.productPrice = data.productPrice;
         this.bytes = data.bytes;
+        this.bytesInCurrentDollars = data.bytesInCurrentDollars;
         this.productId = data.productId;
         this.producerId = data.producerId;
         this.motivation = data.motivation;
