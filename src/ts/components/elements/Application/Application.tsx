@@ -597,12 +597,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderMotivation = () => {
         const { application } = this.props;
 
+        const pendingOrCompleted =  application.status === ApplicationStatus.PENDING || application.status === ApplicationStatus.COMPLETED;
+
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
                     <h3>Requested product</h3>
                     <p>
-                        {application.productTitle} {(application.status === ApplicationStatus.PENDING || application.status === ApplicationStatus.COMPLETED) && <i>(${application.productPrice})</i>} {(application.status === ApplicationStatus.PENDING || application.status === ApplicationStatus.COMPLETED) && <i>(Bytes {application.bytes})</i>}
+        {application.productTitle} {pendingOrCompleted && <i>(${application.productPrice})</i>} {pendingOrCompleted && <i>(Bytes {application.bytes})</i>} {pendingOrCompleted && <span>{" "}{ApplicationJSON.exchangeText} <i>(${application.bytesInCurrentDollars})</i></span>}                          
                     </p>
                     <h3>Created</h3>
                     <p>
