@@ -37,6 +37,8 @@ export type ProductModelData = {
     openApplications: ApplicationModelData[];
     pendingApplications: ApplicationModelData[];
     closedApplications: ApplicationModelData[];
+    completedApplications?: ApplicationModelData[];
+
     // product stats
     dateLastDonation: string;
     completedDonationsPastWeek: number;
@@ -61,6 +63,8 @@ export type ProductModelFields = {
     openApplications: ApplicationModel[];
     pendingApplications: ApplicationModel[];
     closedApplications: ApplicationModel[];
+    completedApplications: ApplicationModel[];
+
     // product stats
     dateLastDonation: string;
     completedDonationsPastWeek: number;
@@ -126,7 +130,8 @@ export class ProductModel {
             pendingDonationsAllTime: data.pendingDonationsAllTime,
             openApplications: data.openApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
             pendingApplications: data.pendingApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
-            closedApplications: data.closedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData))
+            closedApplications: data.closedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
+            completedApplications: data.completedApplications ? data.completedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)) : []
         });
     }
 
@@ -232,6 +237,11 @@ export class ProductModel {
      */
     public readonly closedApplications: ApplicationModel[];
 
+    /**
+     * Specifies the amount of completed applications related to the product
+     */
+    public readonly completedApplications: ApplicationModel[];
+
     constructor(data: ProductModelFields) {
         this.id = data.id;
         this.description = data.description;
@@ -247,6 +257,8 @@ export class ProductModel {
         this.openApplications = data.openApplications;
         this.pendingApplications = data.pendingApplications;
         this.closedApplications = data.closedApplications;
+        this.completedApplications = data.completedApplications;
+
         // stats
         this.dateLastDonation = data.dateLastDonation;
         this.completedDonationsPastWeek = data.completedDonationsPastWeek;
@@ -346,7 +358,6 @@ export async function fetchFilteredProductBatch(store: Store, offset: number, am
                 "Content-Type": "application/json",
             }
         });
-
         // tslint:disable-next-line completed-docs
         const json: { count: number; list: ProductModelData[] } = await response.json();
 
@@ -354,7 +365,6 @@ export async function fetchFilteredProductBatch(store: Store, offset: number, am
         // and store the response in our cache before returning it.
         if (response.ok) {
             const productArray = json.list.map((productData) => ProductModel.CREATE(productData));
-
             const key = !country ? `${offset}${amount}` 
                                  : (!city ? `${offset}${amount}${country}` 
                                           : `${offset}${amount}${country}${city}`);
