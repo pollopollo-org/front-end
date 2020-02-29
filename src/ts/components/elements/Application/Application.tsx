@@ -604,7 +604,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
                     <h3>Requested product</h3>
                     <p>
-        {application.productTitle} {pendingOrCompleted && <i>(${application.productPrice})</i>} {pendingOrCompleted && <i>(Bytes {application.bytes})</i>} {pendingOrCompleted && <span>{" "}{ApplicationJSON.exchangeText} <i>(${application.bytesInCurrentDollars})</i></span>}                          
+                        {application.productTitle}
+                        {pendingOrCompleted && <>
+                            : <i>${application.productPrice}</i> - (<i>{application.bytes}</i> {"  "} Bytes, {ApplicationJSON.exchangeText}<i> ${application.bytesInCurrentDollars}</i>)
+                        </> }                       
                     </p>
                     <h3>Created</h3>
                     <p>
@@ -642,6 +645,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     }
 
                     p {
+                        margin: 4px 0 14px;
+                    }
+
+                    span {
                         margin: 4px 0 14px;
                     }
 
