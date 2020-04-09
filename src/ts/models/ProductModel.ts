@@ -37,7 +37,7 @@ export type ProductModelData = {
     openApplications: ApplicationModelData[];
     pendingApplications: ApplicationModelData[];
     closedApplications: ApplicationModelData[];
-    completedApplications: ApplicationModelData[];
+    completedApplications?: ApplicationModelData[];
 
     // product stats
     dateLastDonation: string;
@@ -131,7 +131,7 @@ export class ProductModel {
             openApplications: data.openApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
             pendingApplications: data.pendingApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
             closedApplications: data.closedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
-            completedApplications: data.completedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData))
+            completedApplications: data.completedApplications ? data.completedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)) : []
         });
     }
 
@@ -358,7 +358,6 @@ export async function fetchFilteredProductBatch(store: Store, offset: number, am
                 "Content-Type": "application/json",
             }
         });
-
         // tslint:disable-next-line completed-docs
         const json: { count: number; list: ProductModelData[] } = await response.json();
 
@@ -366,7 +365,6 @@ export async function fetchFilteredProductBatch(store: Store, offset: number, am
         // and store the response in our cache before returning it.
         if (response.ok) {
             const productArray = json.list.map((productData) => ProductModel.CREATE(productData));
-
             const key = !country ? `${offset}${amount}` 
                                  : (!city ? `${offset}${amount}${country}` 
                                           : `${offset}${amount}${country}${city}`);

@@ -158,7 +158,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             alertApiError(response.status, apis.user.authenticate.errors, store);
         }
     } catch (err) {
-        store.currentErrorMessage = "Something with your request when wrong, please try again later";
+        store.currentErrorMessage = "Something with your request went wrong, please try again later";
     }
 }
 
