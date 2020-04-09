@@ -65,7 +65,6 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
         return (
             <div>
                 <h1>Recent applications</h1>
-
                 <div className="list-of-applications">
                     <p>
                         {FrontPageJson.applicationsText}<a href={FrontPageJson.linkURL} target="_blank" rel="noreferrer">{FrontPageJson.linkText}</a>.

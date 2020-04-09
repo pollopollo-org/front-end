@@ -47,6 +47,10 @@ export const routes = {
     CreateApplication: {
         path: "/applications/create.html",
     },
+    aboutPage: {
+        path: "/about.html",
+        name: "About"
+    },
     default404: {
         path: "*"
     }
