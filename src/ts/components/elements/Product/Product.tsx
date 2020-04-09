@@ -330,7 +330,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
 
                 {this.props.userType === UserTypes.PRODUCER &&
                     this.renderProductEdit()}
-                {this.props.userType === UserTypes.RECEIVER &&
+                {(this.props.userType === UserTypes.RECEIVER && this.props.product.isActive) &&
                     this.renderApplyButton()}
 
                 {this.renderAssociatedApplicationsStatusTeaser()}
