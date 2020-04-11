@@ -17,6 +17,11 @@ type LoginFormProps = {
      * Contains a reference to the root store
      */
     store: Store;
+
+    /**
+     * Which page to redirect to after login
+     */
+    redirectPath: string
 } & RouterProps;
 
 export type LoginFormState = {
@@ -238,10 +243,11 @@ export class UnwrappedLoginForm extends React.PureComponent<LoginFormProps, Logi
         }
 
         this.setState({ isPending: true });
-        await logIn(this.state, this.props.store, this.props.history);
+        await logIn(this.state, this.props.store, this.props.history, this.props.redirectPath);
         this.setState({ isPending: false });
 
     }
 }
 
+// @ts-ignore
 export const LoginForm = withRouter(injectStore((store) => ({ store }), UnwrappedLoginForm));

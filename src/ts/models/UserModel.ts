@@ -125,7 +125,7 @@ export class UserModel {
  * Method that'll post a password and an email to the backend in an attempt to log
  * the user in with the given credentials
  */
-export async function logIn(data: LoginFormState, store: Store, history: History) {
+export async function logIn(data: LoginFormState, store: Store, history: History, path:string) {
     const endPoint = apis.user.authenticate.path;
 
     try {
@@ -153,7 +153,8 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
             // .. finally navigate the user back to the homepage, logged in.
-            history.push(routes.root.path);
+            //history.push(routes.root.path);
+            history.push(path);
         } else {
             alertApiError(response.status, apis.user.authenticate.errors, store);
         }
@@ -166,7 +167,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
  * Method that'll allow any user of the site to create a new user to the backend
  * while also reflecting the new user on the frontend
  */
-export async function postUser(data: RegisterFormState, store: Store, history: History) {
+export async function postUser(data: RegisterFormState, store: Store, history: History, redirectPath: string) {
     const endPoint = apis.user.create.path;
 
     try {
@@ -204,7 +205,7 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
             store.user = createUser(data.userDTO);
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
-            history.push(routes.root.path);
+            history.push(redirectPath);
         } else {
             alertApiError(response.status, apis.user.create.errors, store);
         }

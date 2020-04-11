@@ -17,6 +17,14 @@ type RegisterFormProps = {
      * Contains a reference to the main store of the application
      */
     store: Store;
+    /**
+     * The type of user to be registered, if inferred before reaching the registerform
+     */
+    inferredUserType: string | undefined;
+    /**
+     * The path to go to after registrering
+     */
+    redirectPath: string
 } & RouterProps;
 
 export type RegisterFormState = {
@@ -87,7 +95,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         streetNumber: "",
         zipcode: "",
         city: "",
-        userType: "",
+        userType: this.props.inferredUserType === undefined ? "" : this.props.inferredUserType,
         password: "",
         repeatedPassword: "",
     };
@@ -100,7 +108,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             <div className="allSection">
                 <h1>{ registerFormJson.title }</h1>
                 <form onSubmit={this.onSubmit}>
-                    {this.renderRadioButtons()}
+                    {this.props.inferredUserType === undefined ? this.renderRadioButtons() : this.renderPreinferredUserType()}
                     {this.renderInputFields()}
                     {this.renderSubmitButton()}
                 </form>
@@ -373,7 +381,26 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             </React.Fragment>
         );
     }
-    // tslint:enable-next-line max-func-body-length
+
+    /**
+     * Internal renderer that render preinfeered usertype
+     */
+    private renderPreinferredUserType(): React.ReactNode {
+        return (
+            <div>
+                {this.props.inferredUserType === UserTypes.PRODUCER 
+                ? <p>You are creating af producer profile to offer products.</p> 
+                : <p>You are creating af receiver profile to apply for products.</p>}
+                
+                <style jsx>{`
+                    p {
+                        text-align: center;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
 
     /**
      * Internal renderer that renders the radio buttons for choosing user type
@@ -640,7 +667,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         }
 
         this.setState({ isPending: true });
-        await postUser(this.state, this.props.store, this.props.history);
+        await postUser(this.state, this.props.store, this.props.history, this.props.redirectPath);
         this.setState({ isPending: false });
     }
 
@@ -653,4 +680,5 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     }
 }
 
+// @ts-ignore
 export const RegisterForm = withRouter(injectStore((store) => ({ store }), UnwrappedRegisterForm));

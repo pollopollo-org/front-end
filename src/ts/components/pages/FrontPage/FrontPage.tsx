@@ -4,14 +4,15 @@ import React from "react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 
-import { fonts, colors } from "src/ts/config";
+import { fonts, colors, routes } from "src/ts/config";
 
 import { Application } from "src/ts/components/elements/Application/Application";
 import { UserTypes } from "src/ts/models/UserModel";
 import { getUserType } from "src/ts/utils/getUserType";
 import FrontPageJson from "src/assets/data/frontpage.json";
-import { Throbber} from "src/ts/components/utils";
+import { Throbber, Button} from "src/ts/components/utils";
 import { fetchOpenApplicationBatch, fetchCompletedApplicationBatch, ApplicationModel } from "src/ts/models/ApplicationModel";
+import { Link } from "react-router-dom";
 
 export type FrontPageProps = {
     /**
@@ -61,9 +62,54 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
     /**
      * Main render method, used to render Frontpage
      */
+    // tslint:disable-next-line: max-func-body-length
     public render(): JSX.Element {
         return (
-            <div>
+            <div className="front-page">
+                <div className="action_section">
+                <h1>I want to...</h1>
+                    <div className="action_button">
+                        <Link className="link makeDonation" to={routes.applicationsPage.path}>
+                            <Button
+                                withThrobber={false}
+                                text={"Make a donation"}
+                                width="100%"
+                                height={50}
+                                fontSize={16}
+                                isPending={false}/>
+                        </Link>
+                        
+                    </div>
+                    <div className="action_button">
+                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.PRODUCER  ? routes.loginOrRegisterReceiver.path : routes.productsPage.path}>
+                            <Button
+                                withThrobber={false}
+                                text={"Apply for a product"}
+                                width="100%"
+                                height={50}
+                                fontSize={16}
+                                isPending={false}/>
+                        </Link>
+                    </div>
+                    <div className="action_button">
+                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.RECEIVER ? routes.loginOrRegisterProducer.path : routes.productsPage.path}>
+                            <Button
+                                withThrobber={false}
+                                text={"Offer product"}
+                                width="100%"
+                                height={50}
+                                fontSize={16}
+                                isPending={false}/>
+                        </Link>
+                    </div>
+                    <div className="about-link">
+                        <Link className="link" to={routes.register.path}>
+                            Learn more about <b>PolloPollo</b>
+                        </Link>
+                    </div>
+                </div>
+                
+                {/**
                 <h1>Recent applications</h1>
 
                 <div className="list-of-applications">
@@ -91,32 +137,45 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                             />;
                         }) : {}}
                 </div>
+                 */}
 
-                <h1>Recent donations</h1>
+                <div className="recent-donations">
+                    <h1>Recent donations</h1>
 
-                <div className="list-of-applications">
-                    <p>
-                        {FrontPageJson.donationsText}.
-                    </p>
-                    {(this.state.isPending) &&
-                            <i className="throbber-wrapper">
-                                <Throbber size={64} relative={true} />
-                            </i>
-                        }
-                    {this.state.donations ?
-                        this.state.donations.map((application, index) => {
-                            return <Application
-                                key={index}
-                                isOwnApplication={false}
-                                userType={getUserType(this.props.store.user, UserTypes.DONOR)}
-                                isOnReceiversPage={false}
-                                application={application}
-                                pastDonation={true}
-                            />;
-                        }) : {}}
+                    <div className="list-of-applications">
+                        <p>
+                            {FrontPageJson.donationsText}.
+                        </p>
+                        {(this.state.isPending) &&
+                                <i className="throbber-wrapper">
+                                    <Throbber size={64} relative={true} />
+                                </i>
+                            }
+                        {this.state.donations ?
+                            this.state.donations.map((application, index) => {
+                                return <Application
+                                    key={index}
+                                    isOwnApplication={false}
+                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    isOnReceiversPage={false}
+                                    application={application}
+                                    pastDonation={true}
+                                />;
+                            }) : {}}
+                    </div>
+
                 </div>
+                
 
                 <style jsx>{`
+
+                    .front-page {
+                        display: flex;
+                        justify-content: space-between;
+                        @media (max-width: 1000px) {
+                            flex-direction: column;
+                        }
+                    }
 
                     h1{
                         /** Override defaults */
@@ -129,16 +188,53 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         margin-bottom: 5px;
                     }
 
-                    .list-of-applications {
+                    .action_section {
+                        /** Temp dimensions of list */
+                        width: 90%; 
+                        margin-right: 100px;
+                        margin-bottom: 50px;
+                        @media (max-width: 1000px) {
+                            width: 100%;
+                        }
+
+                    }
+
+                    .action_button {
+                        margin-top: 15px;
+                    }
+
+                    .about-link {
+                        margin: 15px auto 0 auto;
+                    }
+
+                    /* Set link styling */
+                    :global(.link) {
+                        margin-top: 15px;
+						color: ${ colors.secondary};
+                        text-decoration: none;
+                        text-align: center;
+                    }
+
+                    :global(.link:hover) {
+                        text-decoration:underline;
+                        cursor:pointer;
+                    }
+
+                    .recent-donation {
                         /** Temp dimensions of list */
                         width: 45%;
+                        margin-bottom: 50px;
+                    }
+
+                    .list-of-applications {
+                        width: 100%; 
                         margin-bottom: 50px;
 
                         /**
                          * When the viewport gets too small, force rendering
                          * of applications to fill 100%
                          */
-                        @media (max-width: 768px) {
+                        @media (max-width: 1000px) {
                             width: 100%;
                             height: 100%;
                             margin: 0 auto 30px;
@@ -158,6 +254,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                     a:hover {
                         color: ${colors.secondary};
                     }
+
 
                 `}</style>
             </div>
@@ -191,7 +288,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
     /**
      * Callback that should be executed once an application gets donated to in order
      * to ensure that the locked status also is reflected on the UI
-     */
+     
     private onApplicationDonated = (index: number) => {
         const newApplicationList = this.state.applications;
 
@@ -201,7 +298,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                 applications: newApplicationList,
              });
         }
-    }
+    }*/
 }
 
 export const FrontPage = injectStore((store) => ({ store }), UnwrappedFrontPage);

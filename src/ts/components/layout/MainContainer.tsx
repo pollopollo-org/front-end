@@ -19,6 +19,8 @@ import { observer } from "mobx-react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Alert } from "src/ts/components/utils/Alert";
+import LoginOrRegisterPage from "src/ts/components/pages/LoginOrRegisterPage/LoginOrRegisterPage";
+import { UserTypes } from "src/ts/models/UserModel";
 
 
 
@@ -46,14 +48,26 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
                     <Switch>
                         <Route exact path={routes.root.path} component={FrontPage} />
                         <Route exact path={routes.register.path} component={RegisterForm} />
+                        {/* tslint:disable-next-line: react-this-binding-issue */}
+                        <Route exact path={routes.registerProducer.path} render={() => <RegisterForm inferredUserType={UserTypes.PRODUCER} redirectPath={routes.productsPage.path} />} />
+                        {/* tslint:disable-next-line: react-this-binding-issue */}
+                        <Route exact path={routes.registerReceiver.path} render={() => <RegisterForm inferredUserType={UserTypes.RECEIVER} redirectPath={routes.productsPage.path} />} />
                         <Route exact path={routes.profile.path} component={UserProfile} />
                         <Route exact path={routes.viewProfile.path} component={UserProfile} />
-                        <Route exact path={routes.login.path} component={LoginForm} />
+                        {/**<Route exact path={routes.login.path} component={LoginForm} /> */}
+                        {/* tslint:disable-next-line: react-this-binding-issue */}
+                        <Route exact path={routes.login.path} render={() => <LoginForm redirectPath={routes.root.path} />} />
+                        {/* tslint:disable-next-line: react-this-binding-issue */}
+                        <Route exact path={routes.loginRedirect.path} render={() => <LoginForm redirectPath={routes.productsPage.path} />} />
                         <Route exact path={routes.editProfile.path} component={EditProfile} />
                         <Route exact path={routes.createProduct.path} component={CreateProduct} />
                         <Route exact path={routes.productsPage.path} component={ProductsPage} />
                         <Route exact path={routes.applicationsPage.path} component={ApplicationsPage} />
                         <Route exact path={routes.CreateApplication.path} component={CreateApplication} />
+                        {/* tslint:disable-next-line: react-this-binding-issue */}
+                        <Route exact path={routes.loginOrRegisterProducer.path} render={() => <LoginOrRegisterPage userType={UserTypes.PRODUCER} />} />
+                        {/* tslint:disable-next-line: react-this-binding-issue */}
+                        <Route exact path={routes.loginOrRegisterReceiver.path} render={() => <LoginOrRegisterPage userType={UserTypes.RECEIVER} />} />
                         <Route path={routes.default404.path} component={NotFoundPage} />
                     </Switch>
                 </main>
