@@ -194,13 +194,17 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         margin-right: 100px;
                         margin-bottom: 50px;
                         @media (max-width: 1000px) {
+                            margin-right: 0;
                             width: 100%;
                         }
-
                     }
 
                     .action_button {
                         margin-top: 15px;
+                        max-width: 493px;
+                        @media (max-width: 1000px) {
+                            max-width: 100%;
+                        }
                     }
 
                     .about-link {
@@ -221,8 +225,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                     }
 
                     .recent-donation {
-                        /** Temp dimensions of list */
-                        width: 45%;
+                        width: 100%;
                         margin-bottom: 50px;
                     }
 
