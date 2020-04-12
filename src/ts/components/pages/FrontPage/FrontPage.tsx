@@ -67,12 +67,12 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
         return (
             <div className="front-page">
                 <div className="action_section">
-                <h1>I want to...</h1>
+                    <h1>{FrontPageJson.actionHeading}</h1>
                     <div className="action_button">
                         <Link className="link makeDonation" to={routes.applicationsPage.path}>
                             <Button
                                 withThrobber={false}
-                                text={"Make a donation"}
+                                text={FrontPageJson.makeDonation}
                                 width="100%"
                                 height={50}
                                 fontSize={16}
@@ -84,7 +84,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.PRODUCER  ? routes.loginOrRegisterReceiver.path : routes.productsPage.path}>
                             <Button
                                 withThrobber={false}
-                                text={"Apply for a product"}
+                                text={FrontPageJson.applyProduct}
                                 width="100%"
                                 height={50}
                                 fontSize={16}
@@ -95,7 +95,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.RECEIVER ? routes.loginOrRegisterProducer.path : routes.productsPage.path}>
                             <Button
                                 withThrobber={false}
-                                text={"Offer product"}
+                                text={FrontPageJson.offerProduct}
                                 width="100%"
                                 height={50}
                                 fontSize={16}
@@ -104,7 +104,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                     </div>
                     <div className="about-link">
                         <Link className="link" to={routes.register.path}>
-                            Learn more about <b>PolloPollo</b>
+                            {FrontPageJson.learnMore} <b>{FrontPageJson.pollo}</b>
                         </Link>
                     </div>
                 </div>
@@ -140,7 +140,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                  */}
 
                 <div className="recent-donations">
-                    <h1>Recent donations</h1>
+                 <h1>{FrontPageJson.donationsHeading}</h1>
 
                     <div className="list-of-applications">
                         <p>

@@ -3,6 +3,7 @@ import { fonts, colors, routes } from "src/ts/config";
 import { Button } from "src/ts/components/utils";
 import { Link } from "react-router-dom";
 import { UserTypes } from "src/ts/models/UserModel";
+import loginOrRegisterJSON from "src/assets/data/loginOrRegister.json";
 
 type LoginOrRegisterPageProps = {
     /**
@@ -22,15 +23,17 @@ export default class LoginOrRegisterPage extends React.PureComponent<LoginOrRegi
       return (
         <div className="loginCenterWrapper">
             <div className="loginSpacer">
-            <h1>Login or register</h1>
+                <h1>{loginOrRegisterJSON.title}</h1>
                 <div className="loginFormContainer">
-                <p>Please login using an existing {this.props.userType} profile or register as a new {this.props.userType}.</p>
+                    {this.props.userType === UserTypes.PRODUCER 
+                    ? <p>{loginOrRegisterJSON.createProducer}</p> 
+                    : <p>{loginOrRegisterJSON.createApplicant}</p>}
                     <div className="container">
                         <div className="button">
                             <Link className="link makeDonation" to={routes.loginRedirect.path}>
                                 <Button
                                     withThrobber={false}
-                                    text={"Login"}
+                                    text={loginOrRegisterJSON.login}
                                     width="100%"
                                     height={50}
                                     fontSize={16}/>
@@ -40,7 +43,7 @@ export default class LoginOrRegisterPage extends React.PureComponent<LoginOrRegi
                             <Link className="link makeDonation" to={this.props.userType === UserTypes.PRODUCER ? routes.registerProducer.path : routes.registerReceiver.path}>
                                 <Button
                                     withThrobber={false}
-                                    text={"Register"}
+                                    text={loginOrRegisterJSON.register}
                                     width="100%"
                                     height={50}
                                     fontSize={16}/>
@@ -48,7 +51,7 @@ export default class LoginOrRegisterPage extends React.PureComponent<LoginOrRegi
                         </div>
                         <div className="about-link">
                             <Link className="link" to={routes.register.path}>
-                                Learn more about <b>PolloPollo</b>
+                                {loginOrRegisterJSON.learnMore} <b>{loginOrRegisterJSON.pollo}</b>
                             </Link>
                     </div>
                     </div>

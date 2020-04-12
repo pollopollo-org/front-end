@@ -389,8 +389,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         return (
             <div>
                 {this.props.inferredUserType === UserTypes.PRODUCER 
-                ? <p>You are creating af producer profile to offer products.</p> 
-                : <p>You are creating af receiver profile to apply for products.</p>}
+                ? <p>{registerFormJson.producerProfileText}</p> 
+                : <p>{registerFormJson.receiverProfileText}</p>}
                 
                 <style jsx>{`
                     p {
