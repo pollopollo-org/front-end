@@ -1,9 +1,9 @@
 {
-    "lastTime": "Last time this product was donated:",
+    "lastTime": "Last donation:",
     "completedStats": "Completed donations:",
     "pendingStats": "Pending donations:",
-    "pastWeek": "The past week:",
-    "pastMonth": "The past month:",
+    "pastWeek": "Past week:",
+    "pastMonth": "Past month:",
     "allTime": "All time:",
     "stats": "Statistics",
     "product": "Product",

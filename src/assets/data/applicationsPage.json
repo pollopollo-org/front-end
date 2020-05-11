@@ -1,11 +1,11 @@
 {
     "title": "Applications",
-    "text": "This is a list of open applications currently waiting for donors. Once a donation is made, the application will no longer be visible. Applications made by you are visible on your profile page. To apply for a donation, browse the products under the products menu.",
+    "text": "This is a list of open applications currently waiting for donors. Only open applications are visible here. Your own applications can be found on your profile page. To apply for donation of a product, browse the products under the products menu.",
     "Filter": "Filter by:", 
     "RemoveFilter": "Remove filter",
     "PreviousPage": "Previous",
     "NextPage": "Next",
-    "noApplicationsAvailable": "There are currently no applications.",
+    "noApplicationsAvailable": "There are currently no open applications.",
     "Page": "Page", 
     "Of": "of"
 }

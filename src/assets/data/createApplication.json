@@ -1,7 +1,7 @@
 {
     "title": "Create Application",
-    "ApplyForProduct": "You are currently applying for this product:",
-    "MotivationTitle": "Please write a motivation for the application",
+    "ApplyForProduct": "You are applying for donation of this product:",
+    "MotivationTitle": "Please write a motivation for your application",
     "MotivationPlaceholder": "I am in need of this product because...",
     "buttonText": "Create"
 }
