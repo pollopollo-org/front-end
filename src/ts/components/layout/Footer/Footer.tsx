@@ -64,7 +64,7 @@ export class Footer extends React.PureComponent {
 							</div>
 						</div>
 						{/* PolloPollo logo */}
-						<div className="col">
+						<div className="col"> 
 							<div className="logo">
 								<i>
 									{ getSVG("logo", {fillColor: "white"}) }
@@ -80,6 +80,16 @@ export class Footer extends React.PureComponent {
 										<a href="https://obyte.org/" target="_blank" rel="noreferrer">
 											<i className="obyte">
 												{ getSVG("obyte", {fillColor: "white"}) }
+											</i>
+										</a>
+										<a href="https://cloud.dk" target="_blank" rel="noreferrer">
+											<i className="clouddk">
+											<img
+												className="clouddk"
+												title="clouddkogo" 
+												src={`${process.env.PUBLIC_URL}/icons/clouddk-logo-small.png`}
+												alt="clouddk"
+											/>
 											</i>
 										</a>
 									</li>
@@ -155,6 +165,13 @@ export class Footer extends React.PureComponent {
 					.obyte {
 						width: 70px;
 						height: 40px !important;
+						padding: 0px;
+						margin: 0;
+					}
+
+					.clouddk {
+						padding: 0px;
+						margin: 0;
 					}
 
 					.itu {

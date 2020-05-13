@@ -15,7 +15,7 @@ export default class AboutPage extends React.Component {
             <div className="divtop centertext">
                   <a href="#guides" className="anchors">Guides</a>&nbsp;|&nbsp;
                   <a href="#faq" className="anchors">FAQ</a>&nbsp;|&nbsp;
-                  <a href="#team" className="anchors">The team</a>&nbsp;|&nbsp;
+                  <a href="#team" className="anchors">Team</a>&nbsp;|&nbsp;
                   <a href="#articles" className="anchors">Articles</a>&nbsp;|&nbsp;
                   <a href="#terms" className="anchors">Terms & Conditions</a>
             </div>
@@ -52,33 +52,48 @@ export default class AboutPage extends React.Component {
             {/*tslint:disable-next-line: react-a11y-accessible-headings */}
             <h1 id="faq">Frequently Asked Questions</h1>       
             <br />     
-            <details>
-               <summary className="question">Why can I only use Obyte cryptocurrency for donations?</summary>
-               <p>The entire PolloPollo platform is built on the Obyte platform. To enable donations in other currencies, a more complex setup is required, both in terms of technology as well as regulatory frameworks. We do plan to enable other currencies as well.</p>
-            </details>
-            <br />
-            <details>
-               <summary className="question">Where can I acquire Bytes for donations?</summary>
-               <p>Bytes can be bought at several cryptocurrency exchanges. <a href="https://obyte.org/#exchanges" target="_blank" rel="noreferrer">See the list here.</a></p>
-            </details>                  
-            <br />
-            <details>
-               <summary className="question">Why is there no applications showing?</summary>
-               <p>If applicants haven't applied for donation of products, there are no open applications. PolloPollo does not control when applicants apply for donations of products.</p>
-            </details>                  
-            <br />
-            <details>
-               <summary className="question">Is there a way to support the PolloPollo project directly?</summary>
-               <p>We rely 100% on the work of volunteers, and always welcome more to help us improve the platform. Please join our <a href="https://discord.pollopollo.org" target="_blank" rel="noreferrer">Community Discord</a> and let us know you want to help.</p>
-            </details>
-            <br />
-            <details>
-               <summary className="question">Is there a way to financially support PolloPollo?</summary>
-               <p>Thanks to the generous partners helping us, the operational cost of the platform is close to zero. The best help would be to make donations regularly or suggesting new improvements to the platform.</p>
-            </details>
-
+            <div className="divtop">
+               <div className="divblockfaq">
+                  <details>
+                     <summary className="question">Why can I only use Obyte cryptocurrency for donations?</summary>
+                     <p>The entire PolloPollo platform is built on the Obyte platform. To enable donations in other currencies, a more complex setup is required, both in terms of technology as well as regulatory frameworks. We do plan to enable other currencies as well.</p>
+                  </details>
+                  <br />
+                  <details>
+                     <summary className="question">Where can I acquire Bytes for donations?</summary>
+                     <p>Bytes can be bought at several cryptocurrency exchanges. <a href="https://obyte.org/#exchanges" target="_blank" rel="noreferrer">See the list here.</a></p>
+                  </details>                  
+                  <br />
+                  <details>
+                     <summary className="question">Why is there no applications showing?</summary>
+                     <p>If applicants haven't applied for donation of products, there are no open applications. PolloPollo does not control when applicants apply for donations of products.</p>
+                  </details>                  
+                  <br />
+                  <details>
+                     <summary className="question">Is there a way to support the PolloPollo project directly?</summary>
+                     <p>We rely 100% on the work of volunteers, and always welcome more to help us improve the platform. Please join our <a href="https://discord.pollopollo.org" target="_blank" rel="noreferrer">Community Discord</a> and let us know you want to help.</p>
+                  </details>
+                  <br />
+               </div>
+               <div className="divblockfaq">
+                  <details>
+                     <summary className="question">Is there a way to financially support PolloPollo?</summary>
+                     <p>Thanks to the generous partners helping us, the operational cost of the platform is close to zero. The best help would be to make donations regularly or suggesting new improvements to the platform.</p>
+                  </details>
+                  <br />
+                  <details>
+                     <summary className="question">Why do all pages look so boring on PolloPollo?</summary>
+                     <p>The platform is intentionally built to be extremely lightweight and show properly on older smartphones with poor connectivity. We rather want the platform to be accessible to those who need it than look good in the eyes of those who don't.</p>
+                  </details>
+                  <br />
+                  <details>
+                     <summary className="question">Is the source code open source?</summary>
+                     <p>Yes, everything on PolloPollo is open source. The source code for the <a href="https://github.com/pollopollo-org/back-end" target="_blank" rel="noreferrer">back-end</a>, <a href="https://github.com/pollopollo-org/front-end" target="_blank" rel="noreferrer">front-end</a> and <a href="https://github.com/pollopollo-org/chat-bot" target="_blank" rel="noreferrer">chatbot</a> is on GitHub, and you are welcome to help us improve by creating pull requests.</p>
+                  </details>
+               </div>
+            </div>
             {/*tslint:disable-next-line: react-a11y-accessible-headings */}
-            <h1 id="team">The team</h1>
+            <h1 id="team">Team</h1>
             <p>PolloPollo is built and maintained 100% by volunteers. Over time a lot of people has helped. These are the awesome people making this platform possible:</p>
             <div className="divtop">
                <div className="divblock">
@@ -224,11 +239,11 @@ export default class AboutPage extends React.Component {
                <img
                      className="image" // for styling
                      title="Avatar" 
-                     src={`${process.env.PUBLIC_URL}/team/valerius.png`}
+                     src={`${process.env.PUBLIC_URL}/team/avatar_male.png`}
                      alt="a picture"
                   /><br />
-                  Valerius Coppens (NL)<br/>
-                  Advisory board
+                  Reny Ochoa (VE)<br />
+                  Representative, Venezuela
                </div>
                <div className="divblock">
                <img
@@ -267,11 +282,11 @@ export default class AboutPage extends React.Component {
                <img
                      className="image" // for styling
                      title="Avatar" 
-                     src={`${process.env.PUBLIC_URL}/team/avatar_male.png`}
+                     src={`${process.env.PUBLIC_URL}/team/valerius.png`}
                      alt="a picture"
                   /><br />
-                  Reny Ochoa (VE)<br />
-                  Representative, Venezuela
+                  Valerius Coppens (NL)<br/>
+                  Advisory board
                </div>
             </div>            
             <br />
@@ -290,8 +305,8 @@ export default class AboutPage extends React.Component {
 
 <br /><br />
             {/*tslint:disable-next-line: react-a11y-accessible-headings */}
-            <div className="terms">
             <h1 id="terms">Terms and Conditions</h1>
+            <div className="terms">
 <p>Last updated: May 11, 2020</p>
 <p>Please read these terms and conditions carefully before using Our Service.</p>
 <h1>Interpretation and Definitions</h1>
@@ -458,6 +473,12 @@ You agree that the original English text shall prevail in the case of a dispute.
 
                .divblock {
                   width: 25%;
+                  display: inline-block;
+               }
+
+               .divblockfaq {
+                  width: 50%;
+                  vertical-align:text-top;
                   display: inline-block;
                }
 
