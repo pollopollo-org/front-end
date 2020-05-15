@@ -228,6 +228,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     public render(): JSX.Element {
         return (
             <React.Fragment>
+                <div className={"application"}>
+                {this.renderApplicationId()}
                 <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.pastDonation ? "isClosed" : ""}`} ref={this.borderRef}>
 
                     <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
@@ -236,6 +238,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             {this.renderContentSection()}
                         </div>
 
+                        
                         {this.renderCornerInformation()}
                         {(this.props.isOwnApplication && this.props.isOnReceiversPage) && this.renderInteractWithOwnSection()}
                     
@@ -254,18 +257,23 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderConfirmDialogDonateApplication()}
                 {this.renderLockedDialogDonateApplication()}
                 {this.renderConfirmDialogReceival()}
+                </div>
 
                 <style jsx>{`
+                    .application {
+                        /** Setup dimensions of application */
+                        margin: 10px 0;
+                        padding: 0;
+                    }
                     /** Draws a border around the application */
                     .application-border {
                         /** Allow usage of position: absolute within */
                         position: relative;
 
-                        /** Setup dimensions of application */
-                        margin: 10px 0;
+                        margin: 0;
 
                         /** Setup internal dimensions */
-                        padding: 10px;
+                        
                         box-sizing: border-box;
 
                         /** Render a faded border around the application */
@@ -371,7 +379,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                     @media (max-width: 768px) {
                         .application-border {
-                            margin: 10px;
+                            /*margin: 10px;*/
                         }
                     }
 				`}</style>
@@ -476,7 +484,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 >
                     {application.productTitle}
                 </span>
-
                 {!this.state.isSmall && (
                     this.renderMotivationTeaser()
                 )}
@@ -761,6 +768,30 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
+     * Internal renderer that renders the id of the application
+     */
+    private renderApplicationId = () => {
+        const { application } = this.props;
+        return (
+            <div className={`id-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <span>#{application.applicationId}</span>
+                <style jsx>{`
+                    span {
+                        font-size: 10px;
+                        color: ${colors.primary};
+                    }
+                    .id-wrapper {
+                        /** Position the donate button in the top right corner */
+                        position: absolute;
+                        right: 10px;
+                        top: 1px;
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
      * Internal renderer that renders the donate button of the application
      */
     private renderDonateButton = () => {
@@ -772,15 +803,15 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
                 <style jsx>{`
                     .button-wrapper {
-                        /** Position the donate button in the top right corner */
+                        /** Position the price in the top right corner */
                         position: absolute;
-                        right: 0;
-                        top: 0;
+                        right: 10px;
+                        top: 5px;
                         z-index: 10;
 
-                        /** When mobile size, position button in the middle */
+                        /** When mobile size, position price in the middle */
                         &.isSmall {
-                            left: 100px;
+                            left: 105px;
                             top: 40px;
                             right: unset;
                         }

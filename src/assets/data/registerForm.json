@@ -12,5 +12,7 @@
     "street": "Street name",
     "streetNumber": "Street number",
     "zipcode": "Zip",
-    "city": "City"
+    "city": "City",
+    "producerProfileText": "You are creating a Producer profile to offer products.",
+    "receiverProfileText": "You are creating an Applicant profile to apply for products."
 }
