@@ -1,16 +1,18 @@
 {
-    "title": "Register as new user",
+    "title": "Register new user",
     "firstName": "First name",
-    "lastName": "Surname",
+    "lastName": "Last name",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
-    "userType__producer": "Producer",
-    "userType__reciever": "Reciever",
-    "userType__title": "What kind of user are you?",
+    "userType__producer": "Shop/Merchant",
+    "userType__reciever": "Applicant",
+    "userType__title": "Register as...",
     "submit": "Submit",
-    "street": "Street",
+    "street": "Street name",
     "streetNumber": "Street number",
-    "zipcode": "Zipcode",
-    "city": "City"
+    "zipcode": "Zip",
+    "city": "City",
+    "producerProfileText": "You are creating a Shop/Merchant profile to offer products.",
+    "receiverProfileText": "You are creating an Applicant profile to apply for products."
 }
