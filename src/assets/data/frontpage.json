@@ -1,8 +1,8 @@
 {
-    "applicationsText": "These are the most recent applications by users requesting a donation. To make a donation, you will need an Obyte wallet. You can download the wallet on the ",
+    "applicationsText": "Most recent applications. To make a donation, you need an Obyte wallet available on the ",
     "linkText": "Obyte website",
     "linkURL": "https://obyte.org/",
-    "donationsText": "These are the most recent donations completed through the website",
+    "donationsText": "Most recent donations completed"
     "actionHeading": "I want to...",
     "makeDonation": "Make a donation",
     "applyProduct": "Apply for a product",
@@ -10,5 +10,6 @@
     "learnMore": "Learn more about",
     "pollo": "PolloPollo.",
     "donationsHeading": "Recent donations"
+
 
 }

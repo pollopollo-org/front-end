@@ -1,8 +1,8 @@
 {
     "title": "Edit profile",
     "firstName": "First name",
-    "lastName": "Surname",
-    "street": "Street",
+    "lastName": "Last name",
+    "street": "Street name",
     "streetNumber": "Street number",
     "zipcode": "Zipcode",
     "city": "City",
@@ -14,6 +14,6 @@
     "oldPassword": "Confirm with old password",
     "saveButton": "Save",
     "wallet":"Wallet address",
-    "imageTypeAlert": "The file type of the uploaded image is not supprted. Please upload another image. The supported file types are: .png, .jpg, .jpeg.",
-    "passwordAlert": "Your passwords must match."
+    "imageTypeAlert": "This image type is not supported. Supported formats are: .png, .jpg, .jpeg.",
+    "passwordAlert": "Passwords must match."
 }

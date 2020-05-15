@@ -19,9 +19,9 @@ import { observer } from "mobx-react";
 import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Alert } from "src/ts/components/utils/Alert";
+import AboutPage from "src/ts/components/pages/AboutPage/AboutPage";
 import LoginOrRegisterPage from "src/ts/components/pages/LoginOrRegisterPage/LoginOrRegisterPage";
 import { UserTypes } from "src/ts/models/UserModel";
-
 
 
 type MainContainerProps = {
@@ -40,7 +40,9 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
     /**
      * Main render method
      */
+    
     public render(): JSX.Element {
+        
         return (
 
             <div className="main-container">
@@ -64,6 +66,7 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
                         <Route exact path={routes.productsPage.path} component={ProductsPage} />
                         <Route exact path={routes.applicationsPage.path} component={ApplicationsPage} />
                         <Route exact path={routes.CreateApplication.path} component={CreateApplication} />
+                        <Route exact path={routes.aboutPage.path} component={AboutPage} />
                         {/* tslint:disable-next-line: react-this-binding-issue */}
                         <Route exact path={routes.loginOrRegisterProducer.path} render={() => <LoginOrRegisterPage userType={UserTypes.PRODUCER} />} />
                         {/* tslint:disable-next-line: react-this-binding-issue */}
