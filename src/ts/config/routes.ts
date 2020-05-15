@@ -18,8 +18,18 @@ export const routes = {
         path: "/",
         name: "Home",
     },
+    aboutPage: {
+        path: "/about.html",
+        name: "About"
+    },
     register: {
         path: "/register.html",
+    },
+    registerProducer: {
+        path: "/registerproducer.html",
+    },
+    registerReceiver: {
+        path: "/registerreceiver.html",
     },
     profile: {
         path: "/profile.html",
@@ -29,6 +39,15 @@ export const routes = {
     },
     login: {
         path: "/login.html",
+    },
+    loginRedirect: {
+        path: "/loginredirect.html",
+    },
+    loginOrRegisterProducer: {
+        path: "/loginorregisterproducer.html",
+    },
+    loginOrRegisterReceiver: {
+        path: "/loginorregisterreceiver.html",
     },
     editProfile: {
         path: "/profile/edit.html",

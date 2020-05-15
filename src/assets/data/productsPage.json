@@ -1,7 +1,7 @@
 {
     "title": "Products",
-    "text1": "These are the products currently being offered by participants of the platform. Please note that most products will require you to pick it up at the producer. You should therefore always make sure to pick products from a producer located relatively nearby. If you need a product that isn’t here, you are welcome to contact a potential producer/merchant and ask them to join the platform and add the product so you can apply for a donation of it.",
-    "text2": "To apply for donation of a product, click the “Apply”-button and provide a short text describing your motivation for applying for the donation of this product. The text will be visible to donors browsing applications. Your open applications is listed in your profile page from where they can also be cancelled. When a donor makes a donation, you will be notified by email.",
+    "text1": "These products are offered by participants of the platform. As most products require you to pick it up at the shop make sure you only choose products from local shops. If you need a product that isn’t here, please contact a shop that can provide that product and ask them to join PolloPOllo.",
+    "text2": "To apply for donation of a product, simply click the “Apply”-button. Your application will be visible to donors browsing applications. Your open applications is listed in your profile page from where they can also be cancelled. When a donor makes a donation, you will be notified by email.",
     "Filter": "Filter by:", 
     "RemoveFilter": "Remove filter",
     "PreviousPage": "Previous",
