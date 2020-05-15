@@ -26,8 +26,11 @@ export default class AboutPage extends React.Component {
                <p>PolloPollo is a fully decentralized charitable platform using Distributed Ledger Technology. <br />It brings donors, applicants and providers of physical products together.<br />This 2 minute introduction video explains how the platform works.</p>
 
 
-               {/*tslint:disable-next-line: react-iframe-missing-sandbox */}
-               <iframe className="videoframe" width="560" height="315" src="https://www.youtube.com/embed/v8nxs0YRwUQ?autoplay=0" frameBorder="0" allowFullScreen></iframe><br />
+               
+               <div className="video-container">
+                  {/*tslint:disable-next-line: react-iframe-missing-sandbox */}
+                  <iframe className="videoframe" src="https://www.youtube.com/embed/v8nxs0YRwUQ?autoplay=0" frameBorder="0" allowFullScreen></iframe><br />
+               </div>
                <a href="https://www.youtube.com/watch?v=2W3XCSLQsAA"><p className="smalltext">Versión en español</p></a><br />
             </div>
                
@@ -80,8 +83,8 @@ export default class AboutPage extends React.Component {
             {/*tslint:disable-next-line: react-a11y-accessible-headings */}
             <h1 id="team">The team</h1>
             <p>PolloPollo is built and maintained 100% by volunteers. Over time a lot of people has helped. These are the awesome people making this platform possible:</p>
-            <div className="divtop">
-               <div className="divblock">
+            <div className="grid">
+               <div>
                <img
                   className="image" // for styling
                   title="Avatar" 
@@ -91,7 +94,7 @@ export default class AboutPage extends React.Component {
                   Casper Niebe (DK)<br/>
                   Founder
                </div>
-               <div className="divblock">
+               <div>
                   <img
                      className="image" // for styling
                      title="Avatar" 
@@ -101,7 +104,7 @@ export default class AboutPage extends React.Component {
                   Santiago Law (VE)<br />
                   Representative, Venezuela
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -111,7 +114,7 @@ export default class AboutPage extends React.Component {
                   Paul Murray (MX)<br />
                   Digital Content
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -121,10 +124,7 @@ export default class AboutPage extends React.Component {
                   John McLeod (UK)<br />
                   Public Relations
                </div>
-            </div>
-            <br />
-            <div className="divtop">
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -134,7 +134,7 @@ export default class AboutPage extends React.Component {
                   Markus Olesen Mohr (DK)<br/>
                   Developer
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -144,7 +144,7 @@ export default class AboutPage extends React.Component {
                   Sif Kristensen (DK)<br />
                   Developer
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -154,7 +154,7 @@ export default class AboutPage extends React.Component {
                   Jesper Falkenberg (DK)<br />
                   Developer
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -164,10 +164,7 @@ export default class AboutPage extends React.Component {
                   Lasse Felskov Agersten (DK)<br />
                   Developer
                </div>
-            </div>
-            <br />
-            <div className="divtop">
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -177,7 +174,7 @@ export default class AboutPage extends React.Component {
                   Trine Borre (DK)<br/>
                   Developer
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -187,7 +184,7 @@ export default class AboutPage extends React.Component {
                   Sophia Aumüller-Wagner (DK)<br />
                   Scrum Master
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -197,7 +194,7 @@ export default class AboutPage extends React.Component {
                   Muhammet Agar (DK)<br />
                   Scrum Master
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -207,10 +204,7 @@ export default class AboutPage extends React.Component {
                   Josefine Bowring (DK)<br />
                   Business Coach
                </div>
-            </div>            
-            <br />
-            <div className="divtop">
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -220,7 +214,7 @@ export default class AboutPage extends React.Component {
                   Christina Steinhauer (DK)<br/>
                   Developer
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -230,7 +224,7 @@ export default class AboutPage extends React.Component {
                   Valerius Coppens (NL)<br/>
                   Advisory board
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -240,7 +234,7 @@ export default class AboutPage extends React.Component {
                   Maxym Ukrainskyi (RU)<br />
                   Representative Russia
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -250,10 +244,7 @@ export default class AboutPage extends React.Component {
                   Daniel Schledermann (DK)<br />
                   DevOps
                </div>
-            </div>            
-            <br />            
-            <div className="divtop">
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -263,7 +254,7 @@ export default class AboutPage extends React.Component {
                   "Slackjore" (UK)<br />
                   Advisory board
                </div>
-               <div className="divblock">
+               <div>
                <img
                      className="image" // for styling
                      title="Avatar" 
@@ -273,8 +264,7 @@ export default class AboutPage extends React.Component {
                   Reny Ochoa (VE)<br />
                   Representative, Venezuela
                </div>
-            </div>            
-            <br />
+            </div>
 
             {/*tslint:disable-next-line: react-a11y-accessible-headings */}
             <h1 id="articles">Articles</h1>
@@ -384,6 +374,15 @@ You agree that the original English text shall prevail in the case of a dispute.
 
 
             <style jsx>{`
+               .grid {
+                  display: grid;
+                  grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) );
+                  grid-row-gap: 40px;
+                  
+               }
+
+               
+
                h1{
                   /** Override defaults */
                   margin: 30px 0 15px 0;
@@ -438,9 +437,35 @@ You agree that the original English text shall prevail in the case of a dispute.
                   text-align: center;
                }
 
-               .videoframe {
-                  display: block;
+               .video-container{
+                  position: relative;
+                  overflow: hidden;
+                  width: 560px;
+                  height: 315px;
                   margin: auto;
+                  @media (max-width: 700px) {
+                     width: 100%;
+                     height: 100%;
+                     padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+                  }
+               }
+
+               .videoframe {
+                  /*display: block;
+                  margin: auto;
+                  width="560" height="315"
+
+                  @media (max-width: 700px) {
+                            width: 100%;
+                        }*/
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  bottom: 0;
+                  right: 0;
+                  width: 100%;
+                  height: 100%;
+            
                }
 
                .smalltext {

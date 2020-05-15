@@ -26,7 +26,7 @@ export class Footer extends React.PureComponent {
 									<a href={`mailto:${footerJson.email}`}>{footerJson.email}</a>
 								</p>
 								<h5>{footerJson.community}</h5> 
-								<p>
+								<div className="community-logos">
 									{/* <a href={footerJson.discordURL} target="_blank" rel="noreferrer">{footerJson.discord}</a> */}
 									<a href={footerJson.discordURL} target="_blank" rel="noreferrer">
 										<div className="discord">
@@ -60,7 +60,7 @@ export class Footer extends React.PureComponent {
 											/>
 										</div>
 									</a>
-								</p>
+								</div>
 							</div>
 						</div>
 						{/* PolloPollo logo */}
@@ -176,18 +176,20 @@ export class Footer extends React.PureComponent {
 						position: relative;	
 						margin:  0 auto;
 						
+						
 					}
 
 					.twitter {
 						position: relative;
 						margin: 0 auto;
 						left: 40px;
+
 					}
 
 					.discord img {
 						position: absolute;
 						top:0;
-						left:0;
+						/*left:0;*/
 						overflow: hidden;
 						width: 36px;
 						height: 36px;
@@ -196,7 +198,7 @@ export class Footer extends React.PureComponent {
 					.twitter img {
 						position: absolute;
 						top: 2;
-						left: 0;
+						/*left: 0;*/
 						overflow: hidden;
 						width: 30px;
 						height: 30px;
@@ -237,6 +239,10 @@ export class Footer extends React.PureComponent {
 						margin: 7px 0 20px 0;
 					}
 
+					.community-logos {
+						margin: 7px 0 20px 0;
+					}
+
 					a {
 						color: ${ colors.white };
 						text-decoration: none;
@@ -270,6 +276,11 @@ export class Footer extends React.PureComponent {
 
 						.logo {
 							margin: 15px 0;
+						}
+
+						.community-logos {
+							margin: 7px auto 50px auto;
+							margin-left: -75px;
 						}
 
 					}
