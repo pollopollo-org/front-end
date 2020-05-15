@@ -50,7 +50,7 @@ export default class LoginOrRegisterPage extends React.PureComponent<LoginOrRegi
                                 </Link>
                         </div>
                         <div className="about-link">
-                            <Link className="link" to={routes.register.path}>
+                            <Link className="link" to={routes.aboutPage.path}>
                                 {loginOrRegisterJSON.learnMore} <b>{loginOrRegisterJSON.pollo}</b>
                             </Link>
                     </div>

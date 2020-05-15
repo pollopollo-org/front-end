@@ -18,6 +18,10 @@ export const routes = {
         path: "/",
         name: "Home",
     },
+    aboutPage: {
+        path: "/about.html",
+        name: "About"
+    },
     register: {
         path: "/register.html",
     },
@@ -61,10 +65,6 @@ export const routes = {
     },
     CreateApplication: {
         path: "/applications/create.html",
-    },
-    aboutPage: {
-        path: "/about.html",
-        name: "About"
     },
     default404: {
         path: "*"

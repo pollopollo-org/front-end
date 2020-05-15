@@ -103,7 +103,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         </Link>
                     </div>
                     <div className="about-link">
-                        <Link className="link" to={routes.register.path}>
+                        <Link className="link" to={routes.aboutPage.path}>
                             {FrontPageJson.learnMore} <b>{FrontPageJson.pollo}</b>
                         </Link>
                     </div>
