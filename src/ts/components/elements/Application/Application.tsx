@@ -987,14 +987,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={this.openConfirmationDialogReceival} />
+                <Button withThrobber={false} text={ApplicationJSON.confirmReceivalButtonTitle} width={110} height={35} fontSize={12} onClick={this.openConfirmationDialogReceival} />
 
                 <style jsx>{`
                     .button-wrapper {
                         /** Position the donate button in the top right corner */
                         position: absolute;
-                        right: 0;
-                        top: 0;
+                        right: 9px;
+                        top: 16px;
                         z-index: 10;
 
                         /** When mobile size, position button in the middle */

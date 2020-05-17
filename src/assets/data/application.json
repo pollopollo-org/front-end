@@ -7,6 +7,7 @@
     "confirmDeleteTitle" : "Confirm deletion",
     "confirmationDialogTextDelete": "Are you sure you want to delete this application?",
     "confirmReceivalTitle" : "Confirm receipt",
+    "confirmReceivalButtonTitle" : "Confirm receipt",
     "confirmationDialogTextReceival" : "Are you sure you want to confirm receipt of this product?",
     "lockedOkButton": "Ok",
     "lockedDonateTitle" : "This application is locked",
