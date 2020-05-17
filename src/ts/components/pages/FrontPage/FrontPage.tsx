@@ -102,6 +102,17 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                                 isPending={false}/>
                         </Link>
                     </div>
+                    <div className="action_button">
+                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.PRODUCER  ? routes.loginOrRegisterReceiver.path : routes.profile.path}>
+                            <Button
+                                withThrobber={false}
+                                text={FrontPageJson.confirmReceipt}
+                                width="100%"
+                                height={50}
+                                fontSize={16}
+                                isPending={false}/>
+                        </Link>
+                    </div>
                     <div className="about-link">
                         <Link className="link" to={routes.aboutPage.path}>
                             {FrontPageJson.learnMore} <b>{FrontPageJson.pollo}</b>
