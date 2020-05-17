@@ -603,17 +603,21 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     private renderMotivation = () => {
         const { application } = this.props;
-
+        
         const pendingOrCompleted =  application.status === ApplicationStatus.PENDING || application.status === ApplicationStatus.COMPLETED;
 
         return (
             <div className="description" ref={this.descriptionRef}>
                 <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
-                    <h3>Requested product</h3>
+                    <h3>{ApplicationJSON.requestedProductText}</h3>
                     <p>
                         {application.productTitle}
                         {pendingOrCompleted && <>
                             : <i>${application.productPrice}</i> - (<i>{application.bytes}</i> {"  "} Bytes, {ApplicationJSON.exchangeText}<i> ${application.bytesInCurrentDollars}</i>)
+                            <h3>{ApplicationJSON.contractSharedAddressText}</h3>
+                            <a href={`https://explorer.obyte.org/#${application.contractSharedAddress}`} target="_blank" rel="noreferrer">
+                                {application.contractSharedAddress}
+                            </a>
                         </> }                       
                     </p>
                     <h3>Created</h3>
@@ -983,14 +987,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button withThrobber={false} text={`Confirm receival`} width={110} height={35} fontSize={12} onClick={this.openConfirmationDialogReceival} />
+                <Button withThrobber={false} text={ApplicationJSON.confirmReceivalButtonTitle} width={110} height={35} fontSize={12} onClick={this.openConfirmationDialogReceival} />
 
                 <style jsx>{`
                     .button-wrapper {
                         /** Position the donate button in the top right corner */
                         position: absolute;
-                        right: 0;
-                        top: 0;
+                        right: 9px;
+                        top: 16px;
                         z-index: 10;
 
                         /** When mobile size, position button in the middle */

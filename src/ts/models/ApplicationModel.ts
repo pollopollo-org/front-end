@@ -46,6 +46,7 @@ export type ApplicationModelData = {
     status: number;
     creationDate: string;
     dateOfDonation?: string;
+    contractSharedAddress?: string;
 };
 // tslint:enable completed-docs
 
@@ -143,6 +144,11 @@ export class ApplicationModel {
      */
     public readonly dateOfDonation?: string;
 
+    /**
+     * The shared address of the Contract for this application (if a Contract exists)
+     */
+    public readonly contractSharedAddress?: string;
+
     constructor(data: ApplicationModelData) {
         // Parse the country from the supplied countryCode
         const country = countriesJson.find((c) => c.Code.toLowerCase() === data.country.toLowerCase());
@@ -169,6 +175,7 @@ export class ApplicationModel {
         this.status = convertNumberToApplicationStatus(data.status);
         this.creationDate = data.creationDate;
         this.dateOfDonation = data.dateOfDonation;
+        this.contractSharedAddress = data.contractSharedAddress ? data.contractSharedAddress : "Not implemented";
     }
 
     /**

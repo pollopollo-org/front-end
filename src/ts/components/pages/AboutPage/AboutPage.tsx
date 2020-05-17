@@ -91,7 +91,14 @@ export default class AboutPage extends React.Component {
                   src={`${process.env.PUBLIC_URL}/team/casper.png`}
                   alt="a picture"
                /><br />
-                  Casper Niebe (DK)<br/>
+                  Casper Niebe (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br/>
                   Founder
                </div>
                <div>
@@ -101,7 +108,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/santiago.png`}
                      alt="a picture"
                   /><br />
-                  Santiago Law (VE)<br />
+                  Santiago Law (
+                     <img
+                        className="flagimage" // for styling
+                        title="Venezuela" 
+                        src={`${process.env.PUBLIC_URL}/flags/ve.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Representative, Venezuela
                </div>
                <div>
@@ -111,7 +125,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/paul.png`}
                      alt="a picture"
                   /><br />
-                  Paul Murray (MX)<br />
+                  Paul Murray (
+                     <img
+                        className="flagimage" // for styling
+                        title="Mexico" 
+                        src={`${process.env.PUBLIC_URL}/flags/mx.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Digital Content
                </div>
                <div>
@@ -121,7 +142,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/john.png`}
                      alt="a picture"
                   /><br />
-                  John McLeod (UK)<br />
+                  John McLeod (
+                     <img
+                        className="flagimage" // for styling
+                        title="Great Britain" 
+                        src={`${process.env.PUBLIC_URL}/flags/gb.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Public Relations
                </div>
                <div>
@@ -131,7 +159,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/markus.png`}
                      alt="a picture"
                   /><br />
-                  Markus Olesen Mohr (DK)<br/>
+                  Markus Olesen Mohr (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br/>
                   Developer
                </div>
                <div>
@@ -141,7 +176,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/sif.png`}
                      alt="a picture"
                   /><br />
-                  Sif Kristensen (DK)<br />
+                  Sif Kristensen (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Developer
                </div>
                <div>
@@ -151,7 +193,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/jesper.png`}
                      alt="a picture"
                   /><br />
-                  Jesper Falkenberg (DK)<br />
+                  Jesper Falkenberg (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Developer
                </div>
                <div>
@@ -161,7 +210,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/lasse.jpg`}
                      alt="a picture"
                   /><br />
-                  Lasse Felskov Agersten (DK)<br />
+                  Lasse Felskov Agersten (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Developer
                </div>
                <div>
@@ -171,7 +227,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/trine.png`}
                      alt="a picture"
                   /><br />
-                  Trine Borre (DK)<br/>
+                  Trine Borre (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br/>
                   Developer
                </div>
                <div>
@@ -181,7 +244,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/sophia.jpg`}
                      alt="a picture"
                   /><br />
-                  Sophia Aumüller-Wagner (DK)<br />
+                  Sophia Aumüller-Wagner (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Scrum Master
                </div>
                <div>
@@ -191,7 +261,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/muhammet.jpg`}
                      alt="a picture"
                   /><br />
-                  Muhammet Agar (DK)<br />
+                  Muhammet Agar (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Scrum Master
                </div>
                <div>
@@ -201,7 +278,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/josefine.jpg`}
                      alt="a picture"
                   /><br />
-                  Josefine Bowring (DK)<br />
+                  Josefine Bowring (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Business Coach
                </div>
                <div>
@@ -211,7 +295,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/christina.jpg`}
                      alt="a picture"
                   /><br />
-                  Christina Steinhauer (DK)<br/>
+                  Christina Steinhauer (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br/>
                   Developer
                </div>
                <div>
@@ -221,7 +312,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/valerius.png`}
                      alt="a picture"
                   /><br />
-                  Valerius Coppens (NL)<br/>
+                  Valerius Coppens (
+                     <img
+                        className="flagimage" // for styling
+                        title="Netherlands" 
+                        src={`${process.env.PUBLIC_URL}/flags/nl.svg`}
+                        alt="a picture"
+                     />
+                  )<br/>
                   Advisory board
                </div>
                <div>
@@ -231,7 +329,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/maxym.png`}
                      alt="a picture"
                   /><br />
-                  Maxym Ukrainskyi (RU)<br />
+                  Maxym Ukrainskyi (
+                     <img
+                        className="flagimage" // for styling
+                        title="Russia" 
+                        src={`${process.env.PUBLIC_URL}/flags/ru.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Representative Russia
                </div>
                <div>
@@ -241,7 +346,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/daniel.jpg`}
                      alt="a picture"
                   /><br />
-                  Daniel Schledermann (DK)<br />
+                  Daniel Schledermann (
+                     <img
+                        className="flagimage" // for styling
+                        title="Denmark" 
+                        src={`${process.env.PUBLIC_URL}/flags/dk.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   DevOps
                </div>
                <div>
@@ -251,7 +363,12 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/avatar_male.png`}
                      alt="a picture"
                   /><br />
-                  "Slackjore" (UK)<br />
+                  "Slackjore" (                     <img
+                        className="flagimage" // for styling
+                        title="Great Britain" 
+                        src={`${process.env.PUBLIC_URL}/flags/gb.svg`}
+                        alt="a picture"
+                     />)<br />
                   Advisory board
                </div>
                <div>
@@ -261,7 +378,14 @@ export default class AboutPage extends React.Component {
                      src={`${process.env.PUBLIC_URL}/team/avatar_male.png`}
                      alt="a picture"
                   /><br />
-                  Reny Ochoa (VE)<br />
+                  Reny Ochoa (
+                     <img
+                        className="flagimage" // for styling
+                        title="Venezuela" 
+                        src={`${process.env.PUBLIC_URL}/flags/ve.svg`}
+                        alt="a picture"
+                     />
+                  )<br />
                   Representative, Venezuela
                </div>
             </div>
@@ -409,6 +533,13 @@ You agree that the original English text shall prevail in the case of a dispute.
               .image {
                  width: 120px;
                  height: 120px;
+              }
+
+              .flagimage {
+                 position: relative;
+                 top: 2px;
+                 width: 20px;
+                 height: 14px;
               }
 
               .terms {
