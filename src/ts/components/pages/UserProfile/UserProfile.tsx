@@ -720,11 +720,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 {isProducerUser(user)
                     ? <div className="filter-buttons">
                         <button className="filter-active" onClick={this.filterActiveProducts}>
-                            <i>{getSVG("check-square")}</i>
                             <span>Active products</span>
                         </button>
                         <button className="filter-inactive" onClick={this.filterInactiveProducts}>
-                            <i>{getSVG("square")}</i>
                             <span>Inactive products</span>
                         </button>
                     </div>
