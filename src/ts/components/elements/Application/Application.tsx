@@ -614,12 +614,14 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         {application.productTitle}
                         {pendingOrCompleted && <>
                             : <i>${application.productPrice}</i> - (<i>{application.bytes}</i> {"  "} Bytes, {ApplicationJSON.exchangeText}<i> ${application.bytesInCurrentDollars}</i>)
-                            <h3>{ApplicationJSON.contractSharedAddressText}</h3>
-                            <a href={`https://explorer.obyte.org/#${application.contractSharedAddress}`} target="_blank" rel="noreferrer">
-                                {application.contractSharedAddress}
-                            </a>
                         </> }                       
                     </p>
+                    {pendingOrCompleted && <>
+                            <h3>{ApplicationJSON.contractSharedAddressText}</h3>
+                            <p><a href={`https://explorer.obyte.org/#${application.contractSharedAddress}`} target="_blank" rel="noreferrer">
+                                {application.contractSharedAddress}
+                            </a></p>
+                        </> }  
                     <h3>Created</h3>
                     <p>
                         {application.creationDate}
