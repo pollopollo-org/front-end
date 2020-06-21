@@ -17,6 +17,7 @@ export enum ApplicationStatus {
     PENDING = "Pending",
     COMPLETED = "Completed",
     UNAVAILABLE = "Unavailable",
+    WITHDRAWN = "Withdrawn",
 }
 
 /**

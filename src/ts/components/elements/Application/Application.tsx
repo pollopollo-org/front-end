@@ -230,7 +230,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <React.Fragment>
                 <div className={"application"}>
                 {this.renderApplicationId()}
-                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.pastDonation ? "isClosed" : ""}`} ref={this.borderRef}>
+                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.application.status === ApplicationStatus.WITHDRAWN || this.props.pastDonation ? "isClosed" : ""}`} ref={this.borderRef}>
 
                     <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
                         <div className="sections">
@@ -608,7 +608,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED ? "isClosed" : ""}`}>
+                <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED || application.status === ApplicationStatus.WITHDRAWN ? "isClosed" : ""}`}>
                     <h3>{ApplicationJSON.requestedProductText}</h3>
                     <p>
                         {application.productTitle}

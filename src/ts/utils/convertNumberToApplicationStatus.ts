@@ -21,6 +21,9 @@ export function convertNumberToApplicationStatus(number: number, fallback?: Appl
         case 4:
             return ApplicationStatus.UNAVAILABLE;
 
+        case 5:
+            return ApplicationStatus.WITHDRAWN;
+
         default:
             return fallback || ApplicationStatus.OPEN;
     }
