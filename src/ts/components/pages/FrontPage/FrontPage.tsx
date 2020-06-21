@@ -161,7 +161,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                                     <Throbber size={64} relative={true} />
                                 </i>
                             }
-                        {this.state.donations ?
+                        {this.state.donations != undefined  ?
                             this.state.donations.map((application, index) => {
                                 return <Application
                                     key={index}
@@ -171,7 +171,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                                     application={application}
                                     pastDonation={true}
                                 />;
-                            }) : {}}
+                            }) : <h2><i>No recent donations to show</i></h2>}
                     </div>
 
                 </div>
@@ -180,11 +180,9 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                 <style jsx>{`
 
                     .front-page {
-                        display: flex;
-                        justify-content: space-between;
-                        @media (max-width: 1000px) {
-                            flex-direction: column;
-                        }
+                        display: grid;
+                        grid-template-columns: repeat( auto-fit, minmax(300px, 1fr) );
+                        grid-column-gap: 100px;
                     }
 
                     h1{
@@ -199,22 +197,11 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                     }
 
                     .action_section {
-                        /** Temp dimensions of list */
-                        width: 90%; 
-                        margin-right: 100px;
                         margin-bottom: 50px;
-                        @media (max-width: 1000px) {
-                            margin-right: 0;
-                            width: 100%;
-                        }
                     }
 
                     .action_button {
                         margin-top: 15px;
-                        max-width: 493px;
-                        @media (max-width: 1000px) {
-                            max-width: 100%;
-                        }
                     }
 
                     .about-link {

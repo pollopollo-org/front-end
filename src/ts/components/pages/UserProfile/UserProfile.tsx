@@ -90,19 +90,24 @@ export type UserState = {
     openApplications?: ApplicationModel[];
 
     /**
-     * Contains an array of open applications to be rendered if any
+     * Contains an array of pending applications to be rendered if any
      */
     pendingApplications?: ApplicationModel[];
 
     /**
-     * Contains an array of open applications to be rendered if any
+     * Contains an array of completed applications to be rendered if any
      */
     completedApplications?: ApplicationModel[];
 
     /**
-     * Contains an array of open applications to be rendered if any
+     * Contains an array of unavailable applications to be rendered if any
      */
     unavailableApplications?: ApplicationModel[];
+
+    /**
+     * Contains an array of withdrawn applications to be rendered if any
+     */
+    withDrawnApplications?: ApplicationModel[];
 
     /**
      * The initial load of applications, used to determine if we should load
@@ -618,8 +623,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 currentFilter = "Pending applications";
             } else if (this.applicationStatusIsCompleted(this.state.filterApplications)) {
                 currentFilter = "Completed applications";
-            } else {
+            } else if (this.applicationStatusIsUnavailable(this.state.filterApplications)){
                 currentFilter = "Unavailable applications";
+            } else {
+                currentFilter = "Withdrawn applications";
             }
         }
 
@@ -720,11 +727,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 {isProducerUser(user)
                     ? <div className="filter-buttons">
                         <button className="filter-active" onClick={this.filterActiveProducts}>
-                            <i>{getSVG("check-square")}</i>
                             <span>Active products</span>
                         </button>
                         <button className="filter-inactive" onClick={this.filterInactiveProducts}>
-                            <i>{getSVG("square")}</i>
                             <span>Inactive products</span>
                         </button>
                     </div>
@@ -740,6 +745,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         </button>
                         <button data-applicationstatus={ApplicationStatus.UNAVAILABLE} onClick={this.filterApplications}>
                             <span>Unavailable applications</span>
+                        </button>
+                        <button data-applicationstatus={ApplicationStatus.WITHDRAWN} onClick={this.filterApplications}>
+                            <span>Withdrawn applications</span>
                         </button>
                     </div>
                 }
@@ -963,6 +971,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             applications = this.state.completedApplications;
         } else if (this.applicationStatusIsUnavailable(this.state.filterApplications)) {
             applications = this.state.unavailableApplications;
+        } else if (this.applicationStatusIsWithdrawn(this.state.filterApplications)) {
+            applications = this.state.withDrawnApplications;
         }
 
         if (!applications || applications.length === 0) {
@@ -1106,6 +1116,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
             this.setState({ completedApplications: applications });
         } else if (status === ApplicationStatus.UNAVAILABLE) {
             this.setState({ unavailableApplications: applications });
+        } else if (status === ApplicationStatus.WITHDRAWN) {
+            this.setState({ withDrawnApplications: applications });
         }
 
         this.setState({ isPending: false, initialLoad: false });
@@ -1183,7 +1195,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal helper that'll filter active products
+     * Internal helper that'll filter applications
      */
     private filterApplications = (evt: React.MouseEvent<HTMLButtonElement>) => {
         const dataStatus = evt.currentTarget.dataset.applicationstatus;
@@ -1249,6 +1261,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     private applicationStatusIsUnavailable = (status: ApplicationStatus) => {
         return status === ApplicationStatus.UNAVAILABLE;
+    }
+
+    /**
+     * Internal helpter that returns true if the given application status is withdrawn
+     */
+    private applicationStatusIsWithdrawn = (status: ApplicationStatus) => {
+        return status === ApplicationStatus.WITHDRAWN;
     }
 }
 
