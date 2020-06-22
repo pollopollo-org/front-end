@@ -8,20 +8,6 @@ import footerJson from "src/assets/data/footer.json";
  * Footer to be placed at the bottom of all pages
  */
 export class Footer extends React.PureComponent {
-
-	/**
-	 * Insert cookie script
-	 */
-	componentDidMount () {
-		const script = document.createElement("script");
-
-		script.id = "CookieDeclaration";
-		script.src="https://consent.cookiebot.com/4fbb0a9a-2e8b-4434-be02-6a4a9e620b5f/cd.js";
-		script.type = "text/javascript";
-		script.async = true;
-	
-		document.body.appendChild(script);
-	}
 	/**
 	 * Main render method, used to render Footer
 	 */
