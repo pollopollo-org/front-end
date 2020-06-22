@@ -5,8 +5,28 @@ import { fonts, colors } from "src/ts/config";
  * The is the about page
  */
 export default class AboutPage extends React.Component {
+   // tslint:disable-next-line: completed-docs
+	instance: HTMLDivElement | null;
+
+	/**
+	 * Insert cookie script
+	 */
+	componentDidMount () {
+		const script = document.createElement("script");
+
+		script.id = "CookieDeclaration";
+		script.src="https://consent.cookiebot.com/4fbb0a9a-2e8b-4434-be02-6a4a9e620b5f/cd.js";
+		script.type = "text/javascript";
+		script.async = true;
+	
+		//document.body.appendChild(script);
+		if (this.instance != null) {
+		this.instance.appendChild(script);
+		}
+	}
+
     /**
-     * Her er docs
+     * Render about page
      */
    // tslint:disable-next-line: max-func-body-length
    render(){
@@ -493,6 +513,9 @@ You agree that the original English text shall prevail in the case of a dispute.
 <p>By visiting this page on our website: <a href="https://discord.pollopollo.org" rel="external nofollow noopener noreferrer" target="_blank">https://discord.pollopollo.org</a></p>
 </li>
 </ul>
+<h1>Cookie Policy</h1>
+{/*tslint:disable-next-line: react-this-binding-issue*/}
+<div ref={el => (this.instance = el)} />
 <br />
             </div>
 
