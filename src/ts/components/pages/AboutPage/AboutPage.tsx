@@ -31,7 +31,7 @@ export default class AboutPage extends React.Component {
                   {/*tslint:disable-next-line: react-iframe-missing-sandbox */}
                   <iframe className="videoframe" src="https://www.youtube.com/embed/z4BTYo3-YDk" frameBorder="0" allowFullScreen></iframe><br />
                </div>
-               <a href="https://www.youtube.com/embed/eWRGlQyK-94" target="_blank" rel="noreferrer"><p className="smalltext">Versión en español</p></a><br />
+               <a href="https://www.youtube.com/watch?v=eWRGlQyK-94" target="_blank" rel="noreferrer"><p className="smalltext">Versión en español</p></a><br />
             </div>
                
             {/*tslint:disable-next-line: react-a11y-accessible-headings */}
