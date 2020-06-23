@@ -12,6 +12,8 @@ import { observer } from "mobx-react";
 import { RouterProps } from "react-router";
 import userInfoJson from "src/assets/data/userInfo.json";
 import { Store } from "src/ts/store/Store";
+import { getUserType } from "src/ts/utils/getUserType";
+import { UserTypes } from "src/ts/models/UserModel";
 
 
 /**
@@ -353,7 +355,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                          * Enforce a minimum width on the userInfo making sure
                          * that it always renders nicely
                          */
-                        min-width: 175px;
+                        width: 200px;
 
                         /** By default element isn't clickable */
                         cursor: default;
@@ -383,6 +385,12 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         {userInfoJson.edit}
                     </Link>
                 </span>
+                {getUserType(this.props.store.user) === UserTypes.PRODUCER && <span className="link" onClick={this.onItemClick} role="link">
+                    <Link to={routes.withdrawBytes.path}>
+                        <i className="withdraw">{getSVG("dollar-sign")}</i>
+                        {userInfoJson.withdraw}
+                    </Link>
+                </span>}
                 <button onClick={this.signOut} role="button">
                     <i>{getSVG("log_out")}</i>
                     {userInfoJson.logOut}

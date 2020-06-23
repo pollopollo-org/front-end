@@ -59,6 +59,11 @@ export type ApplicationProps = {
     pastDonation: boolean;
 
     /**
+     * Whether to show the widthdraw button
+     */
+    showWithdrawButton?: boolean;
+
+    /**
      * Optional callback to execute once an application gets deleted
      */
     onApplicationDeleted?(): void;
@@ -230,7 +235,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <React.Fragment>
                 <div className={"application"}>
                 {this.renderApplicationId()}
-                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.application.status === ApplicationStatus.WITHDRAWN || this.props.pastDonation ? "isClosed" : ""}`} ref={this.borderRef}>
+                <div className={`application-border ${(this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.application.status === ApplicationStatus.WITHDRAWN || this.props.pastDonation) && !this.props.showWithdrawButton ? "isClosed" : ""}`} ref={this.borderRef}>
 
                     <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
                         <div className="sections">
@@ -608,7 +613,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED || application.status === ApplicationStatus.WITHDRAWN ? "isClosed" : ""}`}>
+                <div className={`description-content ${(application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED || application.status === ApplicationStatus.WITHDRAWN) && !this.props.showWithdrawButton ? "isClosed" : ""}`}>
                     <h3>{ApplicationJSON.requestedProductText}</h3>
                     <p>
                         {application.productTitle}
@@ -631,7 +636,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         {application.motivation}
                     </p>
                 </div>
-                {this.renderProducerLink()}
+                {!this.props.showWithdrawButton && this.renderProducerLink()}
 
                 <style jsx>{`
                     /** Shown when the collapsible is expanded */
@@ -766,6 +771,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             return this.renderPriceAndDate();
         } else if (this.props.userType === UserTypes.DONOR) {
             return this.renderDonateButton();
+        } else if (this.props.userType === UserTypes.PRODUCER && this.props.showWithdrawButton) {
+            return this.renderWithdrawButton();
         } else if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) {
             return this.renderPrice();
         } else {
@@ -825,6 +832,43 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 `}</style>
             </div>
         );
+    }
+
+    /**
+     * Internal renderer that renders the donate button of the application
+     */
+    private renderWithdrawButton = () => {
+        //const { application } = this.props;
+
+        return (
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <Button onClick={this.onWithdrawBytes} withThrobber={false} text={`Withdraw bytes`} width={110} height={35} fontSize={12} />
+
+                <style jsx>{`
+                    .button-wrapper {
+                        /** Position the price in the top right corner */
+                        position: absolute;
+                        right: 10px;
+                        top: 5px;
+                        z-index: 10;
+
+                        /** When mobile size, position price in the middle */
+                        &.isSmall {
+                            left: 105px;
+                            top: 40px;
+                            right: unset;
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Do something to withdraw the bytes
+     */
+    private onWithdrawBytes = () => {
+        console.log("WITHDRAW!");
     }
 
     /**

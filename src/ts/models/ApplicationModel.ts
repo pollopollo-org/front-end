@@ -483,6 +483,48 @@ export async function fetchApplicationByReceiver(receiverId: number, store: Stor
 }
 
 /**
+ * Method used to fetch all applications related to a specific producer from which bytes can be withdrawn
+ *
+ * Users must be logged in to perform this request.
+ */
+export async function fetchWithdrawableApplicationByProducer(producerId: number, store: Store) {
+    const cacheKey = `withdrawable-producer-${producerId}`;
+    // If we have a cache hit, then simply return the cached application!
+    if (applicationCache.has(cacheKey)) {
+        return applicationCache.get(cacheKey);
+    }
+
+    const endPoint = apis.applications.getWithdrawableByProducer.path.replace("{producerId}", String(producerId));
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const applicationsData: ApplicationModelData[] = await response.json();
+
+        // If everything goes well, then create a bunch of applicationModels from the
+        // data and add them to the cache before returning output.
+        if (response.ok) {
+            const applicationArray = applicationsData.map((applicationData) => ApplicationModel.CREATE(applicationData));
+            applicationCache.set(cacheKey, applicationArray);
+
+            return applicationArray;
+        } else {
+            // ... else alert any errors that occurred to our users!
+            alertApiError(response.status, apis.applications.getWithdrawableByProducer.errors, store);
+            return;
+        }
+
+    } catch (err) {
+        return;
+    }
+}
+
+/**
  * Helper for deleting application
  */
 export async function deleteApplication(applicationId: number, store: Store, callback?: () => void) {
