@@ -618,6 +618,57 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
 }
 
 /**
+ * Helper to withdraw bytes from an application
+ */
+export async function withdrawBytes(application: ApplicationModel, store: Store, callback?: () => void) {
+    try {
+        const token = localStorage.getItem("userJWT");
+
+        // The user MUST be logged in in order to be able to withdraw bytes
+        if (!token || !store.user) {
+            return;
+        }
+
+        // (furthermore the logged in user must be the owner of the product applied for, else 
+        // the backend will throw errors).
+        if (store.user.id !== application.producerId) {
+            return;
+        }
+
+        const result = await fetch(apis.applications.withdraw.path.replace("{producerId}", String(application.producerId)).replace("{applicationId}", String(application.applicationId)), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+        });
+
+        if (result.ok) {
+
+            // In case we have a callback, then call it
+            if (callback) {
+                /*
+                const newApplication = ApplicationModel.CREATE({
+                    ...application,
+                    country: <CountryCodes>application.country,
+                    // Completed application status
+                    status: 3
+                });
+                callback(newApplication);
+                */
+               callback();
+            }
+        } else {
+            alertApiError(result.status, apis.products.post.errors, store);
+        }
+    } catch (err) {
+        // Show error message
+        store.currentErrorMessage = "Something went wrong while attempting to withdraw bytes from the application, please try again later.";
+    } finally {
+    }
+}
+
+/**
  * Helper that locks the status of an application
  */
 export async function updateStatus(application: ApplicationModel, statusNumber: number, store: Store, callback?: (newApplication: ApplicationModel) => void) {

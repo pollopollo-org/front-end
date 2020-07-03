@@ -50,6 +50,9 @@ export const apis = {
         confirm: {
             path: `${basePath}/applications/{receiverId}/{applicationId}`,
         },
+        withdraw: {
+            path: `${basePath}/applications/withdraw/{producerId}/{applicationId}`,
+        },
         post: {
             path: `${basePath}/applications`,
             errors: {

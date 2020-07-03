@@ -73,8 +73,7 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
                         }
                     {this.state.applications != undefined ?
                         this.state.applications.map((application, index) => {
-                            //const onApplicationDonated = this.onApplicationDonated.bind(this, index);
-
+                            const onWithdraw = this.onWithdrawBytes.bind(this, index);
                             return <Application
                                 key={index}
                                 isOwnApplication={false}
@@ -82,7 +81,7 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
                                 isOnReceiversPage={false}
                                 application={application}
                                 // tslint:disable-next-line: react-this-binding-issue
-                                //onApplicationDonation={onApplicationDonated}
+                                onWithdrawBytes={onWithdraw}
                                 pastDonation={false}
                                 showWithdrawButton={true}
                             />;
@@ -141,6 +140,22 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
 
         this.setState({isPending: false});
     }
+
+    /**
+     * Callback that should be executed once an application gets donated to in order
+     * to ensure that the locked status also is reflected on the UI
+     */
+    private onWithdrawBytes = (index: number) => {
+        const newApplicationList = this.state.applications;
+
+        if (newApplicationList) {
+            newApplicationList.splice(index, 1);
+            this.setState({ 
+                applications: newApplicationList,
+             });
+        }
+    }
 }
+
 
 export const WithdrawPage = injectStore((store) => ({ store }), UnwrappedWithdrawPage);

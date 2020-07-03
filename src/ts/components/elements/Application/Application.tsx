@@ -2,7 +2,7 @@ import React from "react";
 import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus, fetchApplicationById } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus, fetchApplicationById, withdrawBytes } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -69,6 +69,11 @@ export type ApplicationProps = {
     onApplicationDeleted?(): void;
 
     /**
+     * Optional callback to execute once bytes get withdrawn from application
+     */
+    onWithdrawBytes?(): void;
+
+    /**
      * Optional callback to execute once an application is locked
      */
     onApplicationDonation?(): void;
@@ -113,6 +118,10 @@ export type ApplicationState = {
      * Specifies whether or not the confirmation dialog for donating to the application should be displayed
      */
     showDialogDonate: boolean;
+    /**
+     * Specifies whether or not the withdraw bytes dialog should be displayed
+     */
+    showDialogWithdraw: boolean;
     /**
      * Specifies whether or not the locked dialog for donating to the application should be displayed
      */
@@ -162,6 +171,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         isSmall: false,
         showDialogDelete: false,
         showDialogDonate: false,
+        showDialogWithdraw: false,
         showDialogLockedDonate: false,
         showReceiver: false,
         showDialogConfirmReceival: false,
@@ -261,6 +271,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderConfirmDialogDeleteApplication()}
                 {this.renderConfirmDialogDonateApplication()}
                 {this.renderLockedDialogDonateApplication()}
+                {this.renderConfirmDialogWithdrawFunds()}
                 {this.renderConfirmDialogReceival()}
                 </div>
 
@@ -842,7 +853,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
-                <Button onClick={this.onWithdrawBytes} withThrobber={false} text={`Withdraw bytes`} width={110} height={35} fontSize={12} />
+                <Button onClick={this.openConfirmationDialogWithdraw} withThrobber={false} text={`Withdraw bytes`} width={110} height={35} fontSize={12} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -862,13 +873,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 `}</style>
             </div>
         );
-    }
-
-    /**
-     * Do something to withdraw the bytes
-     */
-    private onWithdrawBytes = () => {
-        console.log("WITHDRAW!");
     }
 
     /**
@@ -1108,6 +1112,20 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 onClose={this.closeLockedDialogDonate}
                 confirmAction={this.closeLockedDialogDonate}
                 confirmButtonText={ApplicationJSON.lockedOkButton}
+            />
+        );
+    }
+
+    /**
+     * Dialog to confirm whether a producer wants to withdraw bytes
+     */
+    private renderConfirmDialogWithdrawFunds() {
+        return (
+            <Dialog title={ApplicationJSON.confirmWithdrawTitle}
+                text={ApplicationJSON.confirmDialogWithdraw}
+                active={this.state.showDialogWithdraw}
+                onClose={this.closeConfirmationDialogWithdraw}
+                confirmAction={this.withdrawBytesFromApplication}
             />
         );
     }
@@ -1411,6 +1429,19 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
+     * Listener that'll open the dialog once it has been executed
+     */
+    private openConfirmationDialogWithdraw = () => {
+        this.setState({ showDialogWithdraw: true });
+    }
+    /**
+     * Listener that'll close the dialog for withdrawing bytes
+     */
+    private closeConfirmationDialogWithdraw = () => {
+        this.setState({ showDialogWithdraw: false });
+    }
+
+    /**
      * Listener to cancel the dialog box and reset the state of the application.
      */
     private cancelConfirmationDialogDonate = async () => {
@@ -1481,6 +1512,21 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         await confirmReceival(this.props.application, this.props.store, this.props.confirmApplication);
         this.setState({ showDialogConfirmReceival: false, isPending: false });
+    }
+
+    /**
+     * Confirms withdrawal of bytes
+     */
+    private withdrawBytesFromApplication = async () => {
+        if (this.state.isPending || !this.props.store.user) {
+            return;
+        }
+
+        // Notify state that we've begun updating the applications
+        this.setState({ isPending: true });
+
+        await withdrawBytes(this.props.application, this.props.store, this.props.onWithdrawBytes);
+        this.setState({ showDialogWithdraw: false, isPending: false });
     }
 }
 
