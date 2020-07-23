@@ -2,7 +2,7 @@ import React from "react";
 import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
-import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus, fetchApplicationById } from "src/ts/models/ApplicationModel";
+import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus, fetchApplicationById, withdrawBytes } from "src/ts/models/ApplicationModel";
 
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
@@ -59,9 +59,19 @@ export type ApplicationProps = {
     pastDonation: boolean;
 
     /**
+     * Whether to show the widthdraw button
+     */
+    showWithdrawButton?: boolean;
+
+    /**
      * Optional callback to execute once an application gets deleted
      */
     onApplicationDeleted?(): void;
+
+    /**
+     * Optional callback to execute once bytes get withdrawn from application
+     */
+    onWithdrawBytes?(): void;
 
     /**
      * Optional callback to execute once an application is locked
@@ -108,6 +118,10 @@ export type ApplicationState = {
      * Specifies whether or not the confirmation dialog for donating to the application should be displayed
      */
     showDialogDonate: boolean;
+    /**
+     * Specifies whether or not the withdraw bytes dialog should be displayed
+     */
+    showDialogWithdraw: boolean;
     /**
      * Specifies whether or not the locked dialog for donating to the application should be displayed
      */
@@ -157,6 +171,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         isSmall: false,
         showDialogDelete: false,
         showDialogDonate: false,
+        showDialogWithdraw: false,
         showDialogLockedDonate: false,
         showReceiver: false,
         showDialogConfirmReceival: false,
@@ -230,7 +245,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <React.Fragment>
                 <div className={"application"}>
                 {this.renderApplicationId()}
-                <div className={`application-border ${this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.application.status === ApplicationStatus.WITHDRAWN || this.props.pastDonation ? "isClosed" : ""}`} ref={this.borderRef}>
+                <div className={`application-border ${(this.props.application.status === ApplicationStatus.UNAVAILABLE || this.props.application.status === ApplicationStatus.COMPLETED || this.props.application.status === ApplicationStatus.WITHDRAWN || this.props.pastDonation) && !this.props.showWithdrawButton ? "isClosed" : ""}`} ref={this.borderRef}>
 
                     <div className={`application ${this.state.isSmall ? "isSmall" : ""}`}>
                         <div className="sections">
@@ -256,6 +271,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderConfirmDialogDeleteApplication()}
                 {this.renderConfirmDialogDonateApplication()}
                 {this.renderLockedDialogDonateApplication()}
+                {this.renderConfirmDialogWithdrawFunds()}
                 {this.renderConfirmDialogReceival()}
                 </div>
 
@@ -608,7 +624,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         return (
             <div className="description" ref={this.descriptionRef}>
-                <div className={`description-content ${application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED || application.status === ApplicationStatus.WITHDRAWN ? "isClosed" : ""}`}>
+                <div className={`description-content ${(application.status === ApplicationStatus.UNAVAILABLE || application.status === ApplicationStatus.COMPLETED || application.status === ApplicationStatus.WITHDRAWN) && !this.props.showWithdrawButton ? "isClosed" : ""}`}>
                     <h3>{ApplicationJSON.requestedProductText}</h3>
                     <p>
                         {application.productTitle}
@@ -631,7 +647,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         {application.motivation}
                     </p>
                 </div>
-                {this.renderProducerLink()}
+                {!this.props.showWithdrawButton && this.renderProducerLink()}
 
                 <style jsx>{`
                     /** Shown when the collapsible is expanded */
@@ -766,6 +782,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             return this.renderPriceAndDate();
         } else if (this.props.userType === UserTypes.DONOR) {
             return this.renderDonateButton();
+        } else if (this.props.userType === UserTypes.PRODUCER && this.props.showWithdrawButton) {
+            return this.renderWithdrawButton();
         } else if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) {
             return this.renderPrice();
         } else {
@@ -806,6 +824,36 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         return (
             <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
                 <Button onClick={this.openConfirmationDialogDonate} withThrobber={false} text={`Donate $${application.productPrice}`} width={110} height={35} fontSize={12} />
+
+                <style jsx>{`
+                    .button-wrapper {
+                        /** Position the price in the top right corner */
+                        position: absolute;
+                        right: 10px;
+                        top: 5px;
+                        z-index: 10;
+
+                        /** When mobile size, position price in the middle */
+                        &.isSmall {
+                            left: 105px;
+                            top: 40px;
+                            right: unset;
+                        }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    /**
+     * Internal renderer that renders the donate button of the application
+     */
+    private renderWithdrawButton = () => {
+        //const { application } = this.props;
+
+        return (
+            <div className={`button-wrapper ${this.state.isSmall ? "isSmall" : ""}`}>
+                <Button onClick={this.openConfirmationDialogWithdraw} withThrobber={false} text={`Withdraw bytes`} width={110} height={35} fontSize={12} />
 
                 <style jsx>{`
                     .button-wrapper {
@@ -1064,6 +1112,20 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 onClose={this.closeLockedDialogDonate}
                 confirmAction={this.closeLockedDialogDonate}
                 confirmButtonText={ApplicationJSON.lockedOkButton}
+            />
+        );
+    }
+
+    /**
+     * Dialog to confirm whether a producer wants to withdraw bytes
+     */
+    private renderConfirmDialogWithdrawFunds() {
+        return (
+            <Dialog title={ApplicationJSON.confirmWithdrawTitle}
+                text={ApplicationJSON.confirmDialogWithdraw}
+                active={this.state.showDialogWithdraw}
+                onClose={this.closeConfirmationDialogWithdraw}
+                confirmAction={this.withdrawBytesFromApplication}
             />
         );
     }
@@ -1367,6 +1429,19 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     /**
+     * Listener that'll open the dialog once it has been executed
+     */
+    private openConfirmationDialogWithdraw = () => {
+        this.setState({ showDialogWithdraw: true });
+    }
+    /**
+     * Listener that'll close the dialog for withdrawing bytes
+     */
+    private closeConfirmationDialogWithdraw = () => {
+        this.setState({ showDialogWithdraw: false });
+    }
+
+    /**
      * Listener to cancel the dialog box and reset the state of the application.
      */
     private cancelConfirmationDialogDonate = async () => {
@@ -1437,6 +1512,21 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
         await confirmReceival(this.props.application, this.props.store, this.props.confirmApplication);
         this.setState({ showDialogConfirmReceival: false, isPending: false });
+    }
+
+    /**
+     * Confirms withdrawal of bytes
+     */
+    private withdrawBytesFromApplication = async () => {
+        if (this.state.isPending || !this.props.store.user) {
+            return;
+        }
+
+        // Notify state that we've begun updating the applications
+        this.setState({ isPending: true });
+
+        await withdrawBytes(this.props.application, this.props.store, this.props.onWithdrawBytes);
+        this.setState({ showDialogWithdraw: false, isPending: false });
     }
 }
 

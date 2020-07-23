@@ -2,7 +2,7 @@ import React from "react";
 import { colors } from "src/ts/config";
 import { fonts } from "src/ts/config/fonts";
 
-import { RouterProps, withRouter } from "react-router";
+import { RouterProps, withRouter} from "react-router";
 import registerFormJson from "src/assets/data/registerForm.json";
 
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
@@ -14,17 +14,17 @@ import { postUser, UserTypes } from "src/ts/models/UserModel";
 
 type RegisterFormProps = {
     /**
-     * Contains a reference to the main store of the application
-     */
-    store: Store;
-    /**
      * The type of user to be registered, if inferred before reaching the registerform
      */
-    inferredUserType: string | undefined;
+    inferredUserType: UserTypes | undefined;
     /**
      * The path to go to after registrering
      */
-    redirectPath: string
+    redirectPath: string;
+    /**
+     * Contains a reference to the main store of the application
+     */
+    store: Store;
 } & RouterProps;
 
 export type RegisterFormState = {

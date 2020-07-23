@@ -11,7 +11,7 @@ import { UserTypes } from "src/ts/models/UserModel";
 import { getUserType } from "src/ts/utils/getUserType";
 import FrontPageJson from "src/assets/data/frontpage.json";
 import { Throbber, Button} from "src/ts/components/utils";
-import { fetchOpenApplicationBatch, fetchCompletedApplicationBatch, ApplicationModel } from "src/ts/models/ApplicationModel";
+import { fetchCompletedApplicationBatch, ApplicationModel } from "src/ts/models/ApplicationModel";
 import { Link } from "react-router-dom";
 
 export type FrontPageProps = {
@@ -266,13 +266,13 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
      * page.
      */
     private fetchData = async () => {
-        const responseApplications = await fetchOpenApplicationBatch(0, 4);
+        //const responseApplications = await fetchOpenApplicationBatch(0, 4);
         const responseDonations = await fetchCompletedApplicationBatch(0, 4);
-
+        /*
         if (!responseApplications) {
             this.setState({ applications: undefined });
             return;
-        }
+        }*/
 
         if (!responseDonations) {
             this.setState({ donations: undefined });
@@ -280,7 +280,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
         }
 
         this.setState({
-            applications: responseApplications.applications,
+            //applications: responseApplications.applications,
             donations: responseDonations.applications,
         });
     }

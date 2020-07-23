@@ -21,7 +21,7 @@ type LoginFormProps = {
     /**
      * Which page to redirect to after login
      */
-    redirectPath: string
+    redirectPath: string;
 } & RouterProps;
 
 export type LoginFormState = {
