@@ -52,6 +52,9 @@ export const routes = {
     editProfile: {
         path: "/profile/edit.html",
     },
+    withdrawBytes: {
+        path: "/profile/withdrawbytes.html",
+    },
     productsPage: {
         path: "/products.html",
         name: "Products",

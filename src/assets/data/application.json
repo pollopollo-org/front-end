@@ -15,5 +15,7 @@
     "lockedDialogTextDonate2": "You can choose another application or try again in 1 hour.",
     "exchangeText": "currently worth",
     "requestedProductText": "Requested Product",
-    "contractSharedAddressText": "Smart Contract"
+    "contractSharedAddressText": "Smart Contract",
+    "confirmWithdrawTitle": "Withdraw bytes",
+    "confirmDialogWithdraw": "Are you sure you want to withdraw the funds from the application?"
 }

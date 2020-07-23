@@ -49,6 +49,9 @@ export const apis = {
         confirm: {
             path: `${basePath}/applications/{receiverId}/{applicationId}`,
         },
+        withdraw: {
+            path: `${basePath}/applications/withdraw/{producerId}/{applicationId}`,
+        },
         post: {
             path: `${basePath}/applications`,
             errors: {
@@ -98,6 +101,10 @@ export const apis = {
         },
         getByReceiver: {
             path: `${basePath}/applications/receiver/{receiverId}?status={applicationStatus}`,
+            errors: {},
+        },
+        getWithdrawableByProducer: {
+            path: `${basePath}/applications/producer/{producerId}`,
             errors: {},
         },
         delete: {
