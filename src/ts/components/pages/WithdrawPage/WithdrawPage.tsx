@@ -29,6 +29,12 @@ type WithdrawPageState = {
      * The list of applications to display
      */
     applications?: ApplicationModel[];  
+
+    /**
+     * Updated list of applications, used when removing an application from the ui
+     * Needed to make the removal happen immediately 
+     */
+    updatedApplications?: ApplicationModel[]; 
 }
 
 /**
@@ -41,7 +47,8 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
     public state: WithdrawPageState = {
         userId: this.props.store.user ? this.props.store.user.id : -1,
         isPending: true,
-        applications: []
+        applications: [],
+        updatedApplications: []
     }
 
     /**
@@ -51,6 +58,18 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
         await this.fetchApplications();
         this.setState({ isPending: false });
     }
+
+
+    /**
+     * Update state of applications when one is removed from the list
+     * Uses updatedApplications to make removal happem immediately.
+     * When applications was set directly in the callback it did not work
+     */
+    componentDidUpdate(prevProps: WithdrawPageProps, prevState: WithdrawPageState) {
+        if (prevState.updatedApplications !== this.state.updatedApplications) {
+          this.setState({applications: this.state.updatedApplications});
+        }
+      }
 
     /**
      * Main render method for the entire component
@@ -71,7 +90,7 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
                                 <Throbber size={64} relative={true} />
                             </i>
                         }
-                    {this.state.applications != undefined ?
+                    {(this.state.applications != undefined && this.state.applications.length != 0) ?
                         this.state.applications.map((application, index) => {
                             const onWithdraw = this.onWithdrawBytes.bind(this, index);
                             return <Application
@@ -98,7 +117,7 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
                         }
                     }
 
-                    h1 {
+                    h1, h2 {
                         text-align: center;
                     }
 
@@ -147,12 +166,9 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
      */
     private onWithdrawBytes = (index: number) => {
         const newApplicationList = this.state.applications;
-
         if (newApplicationList) {
             newApplicationList.splice(index, 1);
-            this.setState({ 
-                applications: newApplicationList,
-             });
+            this.setState({updatedApplications: newApplicationList});
         }
     }
 }

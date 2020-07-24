@@ -647,15 +647,6 @@ export async function withdrawBytes(application: ApplicationModel, store: Store,
 
             // In case we have a callback, then call it
             if (callback) {
-                /*
-                const newApplication = ApplicationModel.CREATE({
-                    ...application,
-                    country: <CountryCodes>application.country,
-                    // Completed application status
-                    status: 3
-                });
-                callback(newApplication);
-                */
                callback();
             }
         } else {
