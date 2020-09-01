@@ -211,6 +211,7 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
         }
     } catch (err) {
         store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
+        console.log(err);
     }
 }
 

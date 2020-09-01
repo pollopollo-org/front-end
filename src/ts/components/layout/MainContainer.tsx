@@ -50,7 +50,9 @@ export class UnwrappedMainContainer extends React.Component<MainContainerProps> 
                 <main>
                     <Switch>
                         <Route exact path={routes.root.path} component={FrontPage} />
-                        <Route exact path={routes.register.path} component={RegisterForm} />
+                        {/* tslint:disable-next-line: react-this-binding-issue 
+                            @ts-ignore*/}
+                        <Route exact path={routes.register.path} render={() => <RegisterForm redirectPath={routes.root.path}/>} />
                         {/* tslint:disable-next-line: react-this-binding-issue 
                             @ts-ignore*/}
                         <Route exact path={routes.registerProducer.path} render={() => <RegisterForm inferredUserType={UserTypes.PRODUCER} redirectPath={routes.productsPage.path}/>} />
