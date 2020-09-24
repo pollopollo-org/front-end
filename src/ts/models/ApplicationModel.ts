@@ -226,7 +226,6 @@ export async function postApplication(data: CreateApplicationState, store: Store
                 userId: store.user.id,
                 productId: store.product.id,
                 motivation: data.motivation,
-                producerId: data.product?.producerId
             }),
         });
 
