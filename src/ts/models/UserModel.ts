@@ -39,7 +39,7 @@ export type UserToken = {
 /**
  * Contains the path to the backend which is used to resolve images
  */
-const BACKEND_URL = "https://api.pollopollo.org";
+const BACKEND_URL = process.env.BACKEND_URL;
 
 /**
  * Defines the data required to create a user model.

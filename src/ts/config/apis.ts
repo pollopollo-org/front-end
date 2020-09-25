@@ -1,4 +1,4 @@
-const basePath = "https://api.pollopollo.org/api";
+const basePath = process.env.API_URL;
 
 export type Errors = {
     [key: number]: string;
@@ -7,7 +7,7 @@ export type Errors = {
 export const apis = {
     user: {
         create: {
-            path: `${basePath}/users/`,
+            path: `${basePath}/users`,
             errors: {
                 400: "Invalid information passed, please correct your data and try again",
                 409: "A user with the given email already exists, please log in instead.",

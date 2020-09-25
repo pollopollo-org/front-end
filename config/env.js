@@ -32,9 +32,10 @@ var dotenvFiles = [
 // https://github.com/motdotla/dotenv-expand
 dotenvFiles.forEach(dotenvFile => {
   if (fs.existsSync(dotenvFile)) {
+    console.log("Loading .env: " + dotenvFile);
     require('dotenv-expand')(
       require('dotenv').config({
-        path: dotenvFile,
+        path: dotenvFile
       })
     );
   }
@@ -61,6 +62,7 @@ process.env.NODE_PATH = (process.env.NODE_PATH || '')
 const REACT_APP = /^REACT_APP_/i;
 
 function getClientEnvironment(publicUrl) {
+
   const raw = Object.keys(process.env)
     .filter(key => REACT_APP.test(key))
     .reduce(
@@ -77,6 +79,8 @@ function getClientEnvironment(publicUrl) {
         // This should only be used as an escape hatch. Normally you would put
         // images into the `src` and `import` them in code to get their paths.
         PUBLIC_URL: publicUrl,
+        API_URL: process.env.API_URL || "https://api.pollopollo.org/api",
+        BACKEND_URL: process.env.BACKEND_URL || "https://api.pollopollo.org",
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin
@@ -89,6 +93,12 @@ function getClientEnvironment(publicUrl) {
       {}
     ),
   };
+
+  process.env.API_URL = process.env.API_URL || "https://api.pollopollo.org/api";
+  process.env.BACKEND_URL = process.env.BACKEND_URL || "https://api.pollopollo.org";
+
+  console.log("Using API_URL: " + process.env.API_URL);
+  console.log("Using BACKEND_URL: " + process.env.BACKEND_URL);
 
   return { raw, stringified };
 }
