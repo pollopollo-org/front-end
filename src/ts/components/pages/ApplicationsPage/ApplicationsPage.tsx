@@ -526,11 +526,11 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
         let response = null;
 
         if (this.state.filterCountry && this.state.filterCity) {
-            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.state.filterCountry, this.state.filterCity);
+            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, BATCH_SIZE, this.state.filterCountry, this.state.filterCity);
         } else if (this.state.filterCountry) {
-            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.state.filterCountry);
+            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, BATCH_SIZE, this.state.filterCountry);
         } else {
-            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE);
+            response = await fetchFilteredApplicationBatch(this.props.store, pageIndex * BATCH_SIZE, BATCH_SIZE);
         }
         
         if (!response) {
