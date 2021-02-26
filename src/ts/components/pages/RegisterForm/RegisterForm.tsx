@@ -436,6 +436,19 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         />
                         <label htmlFor="Receiver">{registerFormJson.userType__reciever}</label>
                     </div>
+                    <div className="userType D">
+                        <input
+                            type="radio"
+                            className="userTypeButton"
+                            name="userType"
+                            id="Donor"
+                            value="Donor"
+                            aria-checked={this.state.userType === "Donor"}
+                            checked={this.state.userType === "Donor"}
+                            onChange={this.onUserTypeClick}
+                        />
+                        <label htmlFor="Donor">{registerFormJson.userType__donor}</label>
+                    </div>
                 </div>
 
                 <style jsx>{`
