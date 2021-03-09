@@ -379,12 +379,12 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 <div className="thumbnail">
                     <Thumbnail src={this.props.product.thumbnail} callback={this.openImageLightbox} />
                 </div>
-                <img
+                {product.location && <img
                     className="flag"
                     title={product.location}
                     src={`${process.env.PUBLIC_URL}/flags/${product.countryCode.toLowerCase()}.svg`}
                     alt={product.location}
-                />
+                />}
                 <style jsx>{`
 
                     /** Thumbnail img in the .section-thumbnail */

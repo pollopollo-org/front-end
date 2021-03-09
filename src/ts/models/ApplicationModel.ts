@@ -23,7 +23,8 @@ export enum ApplicationStatus {
 /**
  * Contains the path to the backend which is used to resolve images
  */
-const BACKEND_URL = "https://api.pollopollo.org";
+//const BACKEND_URL = "https://api.pollopollo.org";
+const BACKEND_URL = "http://localhost:5000";
 
 /**
  * Defines the data required to create an application model.

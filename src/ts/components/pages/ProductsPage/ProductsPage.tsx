@@ -536,7 +536,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
      */
     private fetchProducts = async (pageIndex: number) => {
         this.setState({isPending: true});
-        //this.setState({products: []});
+        this.setState({products: []});
         let response = null;
         if (this.state.filterCountry && this.state.filterCity) {
             response = await fetchFilteredProductBatch(this.props.store, pageIndex * BATCH_SIZE, (pageIndex + 1) * BATCH_SIZE, this.state.filterCountry, this.state.filterCity);
