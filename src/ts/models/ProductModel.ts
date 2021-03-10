@@ -90,8 +90,7 @@ export type ProductPostData = {
 /**
  * Contains the path to the backend which is used to resolve images
  */
-//const BACKEND_URL = "https://api.pollopollo.org";
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://api.pollopollo.org";
 
 /**
  *  Product model reflecting the data of a product
@@ -121,11 +120,11 @@ export class ProductModel {
             location,
             thumbnail,
             rank: data.rank,
-            //Add null checks here for it to currently work.
+            //Add null checks to show products with no stats
             dateLastDonation: data.dateLastDonation ? data.dateLastDonation : "",
             completedDonationsPastWeek: data.completedDonationsPastWeek ?  data.completedDonationsPastWeek : 0,
             completedDonationsPastMonth: data.completedDonationsPastMonth ? data.completedDonationsPastMonth : 0,
-            completedDonationsAllTime: data.completedDonationsAllTime,
+            completedDonationsAllTime: data.completedDonationsAllTime ? data.completedDonationsAllTime : 0,
             pendingDonationsPastWeek: data.pendingDonationsPastWeek ? data.pendingDonationsPastWeek : 0,
             pendingDonationsPastMonth: data.pendingDonationsPastMonth ? data.pendingDonationsPastMonth : 0,
             pendingDonationsAllTime: data.pendingDonationsAllTime ? data.pendingDonationsAllTime : 0,

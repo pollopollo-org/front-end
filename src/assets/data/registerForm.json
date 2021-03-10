@@ -7,7 +7,6 @@
     "confirmPassword": "Confirm Password",
     "userType__producer": "Shop/Merchant",
     "userType__reciever": "Applicant",
-    "userType__donor": "Donor",
     "userType__title": "Register as...",
     "submit": "Submit",
     "street": "Street name",
