@@ -90,7 +90,7 @@ export type ProductPostData = {
 /**
  * Contains the path to the backend which is used to resolve images
  */
-const BACKEND_URL = "https://api.pollopollo.org";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 /**
  *  Product model reflecting the data of a product
