@@ -111,7 +111,6 @@ export class ProductModel {
         } else {
             location = country.Name;
         }
-
         return new ProductModel({
             ...data,
             id: data.productId,
@@ -121,16 +120,17 @@ export class ProductModel {
             location,
             thumbnail,
             rank: data.rank,
-            dateLastDonation: data.dateLastDonation,
-            completedDonationsPastWeek: data.completedDonationsPastWeek,
-            completedDonationsPastMonth: data.completedDonationsPastMonth,
-            completedDonationsAllTime: data.completedDonationsAllTime,
-            pendingDonationsPastWeek: data.pendingDonationsPastWeek,
-            pendingDonationsPastMonth: data.pendingDonationsPastMonth,
-            pendingDonationsAllTime: data.pendingDonationsAllTime,
-            openApplications: data.openApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
-            pendingApplications: data.pendingApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
-            closedApplications: data.closedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)),
+            //Add null checks to show products with no stats
+            dateLastDonation: data.dateLastDonation ? data.dateLastDonation : "",
+            completedDonationsPastWeek: data.completedDonationsPastWeek ?  data.completedDonationsPastWeek : 0,
+            completedDonationsPastMonth: data.completedDonationsPastMonth ? data.completedDonationsPastMonth : 0,
+            completedDonationsAllTime: data.completedDonationsAllTime ? data.completedDonationsAllTime : 0,
+            pendingDonationsPastWeek: data.pendingDonationsPastWeek ? data.pendingDonationsPastWeek : 0,
+            pendingDonationsPastMonth: data.pendingDonationsPastMonth ? data.pendingDonationsPastMonth : 0,
+            pendingDonationsAllTime: data.pendingDonationsAllTime ? data.pendingDonationsAllTime : 0,
+            openApplications: data.openApplications ? data.openApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)) : [],
+            pendingApplications: data.pendingApplications ? data.pendingApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)) : [],
+            closedApplications: data.closedApplications ? data.closedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)) : [],
             completedApplications: data.completedApplications ? data.completedApplications.map((applicationData) => ApplicationModel.CREATE(applicationData)) : []
         });
     }
@@ -360,7 +360,6 @@ export async function fetchFilteredProductBatch(store: Store, offset: number, am
         });
         // tslint:disable-next-line completed-docs
         const json: { count: number; list: ProductModelData[] } = await response.json();
-
         // In case everything wen't well, then convert our data to product models
         // and store the response in our cache before returning it.
         if (response.ok) {
