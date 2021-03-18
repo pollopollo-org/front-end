@@ -12,20 +12,13 @@ To build the PolloPollo frontend you should follow the process below.
 2. Clone the project
 3. Run the command `yarn install` in a terminal located at the project root
 4. 
-    a. To specify which backend to connect to, make a copy of `.env.development.template` called `.env.development` and add the URL to your running backend, for example:
+    1. To specify which backend to connect to, make a copy of `.env.development.template` called `.env.development` and add the URL to your running backend, for example:
 
     ```
     REACT_APP_BACKEND_URL=http://localhost:5000/api
     ```
 
-    b. To specify which Obyte protocol to use, change the REACT_APP_OBYTE_PROTOCOL to either 
-    ```
-    obyte
-    ``` for a normal wallet
-    or
-    ```
-    obyte-tn
-    ``` for a TestNet wallet
+    2. To specify which Obyte protocol to use, change the REACT_APP_OBYTE_PROTOCOL to either ```obyte``` for a normal wallet or ```obyte-tn``` for a TestNet wallet.
 
 5. You can now use either of the two following commands to interact with the project:
    * `yarn run start` to start a development server, OR
