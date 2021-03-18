@@ -566,7 +566,7 @@ export async function deleteApplication(applicationId: number, store: Store, cal
  */
 export async function initiateDonation(applicationId: number, callback?: () => void) {
     //Redirect to the chatbot in wallet
-    window.location.href = `${process.env.REACT_APP_OBYTE_PROTOCOL}:AymLnfCdnKSzNHwMFdGnTmGllPdv6Qxgz1fHfbkEcDKo@obyte.org/bb#${applicationId}`;
+    window.location.href = `${process.env.REACT_APP_OBYTE_PROTOCOL}:${process.env.REACT_APP_OBYTE_PAIRING_CODE}#${applicationId}`;
     if (callback) {
         callback();
     }
