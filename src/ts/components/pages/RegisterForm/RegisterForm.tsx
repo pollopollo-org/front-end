@@ -111,7 +111,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     public render(): JSX.Element {
         return (
             <div className="allSection">
-                <h1>{ registerFormJson.title }</h1>
+                <h1 className="register-heading">{ registerFormJson.title }</h1>
                 <form className="register-form" onSubmit={this.onSubmit}>
                     {this.props.inferredUserType === undefined ? this.renderRadioButtons() : this.renderPreinferredUserType()}
                     {this.renderInputFields()}
@@ -120,9 +120,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
 
                 <style jsx>{`
 
-                    h1 {
-                        margin: 0 0 8px;
-                        line-height: 30px;
+                    .register-heading {
+                        margin-top: 3rem;
                         text-align: center;
                     }
 
@@ -134,7 +133,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     .allSection {
                         width: 540px;
                         height: calc(100% - 60px);
-                        margin: 30px auto;
+                        margin: auto;
                     }
 
                     /**
@@ -480,7 +479,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
 
                     .radioSection {
                         text-align: center;
-                        margin: 0 0 10px 22px;
+                        margin-top: 3rem;
+                        margin-bottom: 1rem;
                     }
 
                     .userTypeButton{
@@ -611,14 +611,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     protected onStreetNumberChanged = (evt: React.FormEvent<HTMLInputElement>) => {
         this.setState({ streetNumber: evt.currentTarget.value });
     }
-
-    /**
-     * Method that'll get triggered each time the input is changed, in order to
-     * properly update state
-     */
-         protected onWalletAddressChanged = (evt: React.FormEvent<HTMLInputElement>) => {
-            this.setState({ walletAddress: evt.currentTarget.value });
-        }
 
     /**
      * Method that'll get triggered each time the input is changed, in order to
