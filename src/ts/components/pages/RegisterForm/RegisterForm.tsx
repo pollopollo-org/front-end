@@ -53,7 +53,7 @@ export type RegisterFormState = {
      */
     streetNumber: string;
     /**
-     * The street number the user lives in
+     * The zipcode the user lives in
      */
     zipcode: string;
     /**
