@@ -55,10 +55,6 @@ export type RegisterFormState = {
     /**
      * The street number the user lives in
      */
-    walletAddress: string;
-    /**
-     * The zipcode the user lives in
-     */
     zipcode: string;
     /**
      * The city the user lives in
@@ -97,7 +93,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         country: "",
         street: "",
         streetNumber: "",
-        walletAddress: "",
         zipcode: "",
         city: "",
         userType: this.props.inferredUserType === undefined ? "" : this.props.inferredUserType,
