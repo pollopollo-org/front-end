@@ -1,4 +1,4 @@
-import { DonorModel } from './../models/DonorModel';
+import { DonorModel } from "src/ts/models/DonorModel";
 import { observable } from "mobx";
 
 import { ApplicationModel } from "src/ts/models/ApplicationModel";

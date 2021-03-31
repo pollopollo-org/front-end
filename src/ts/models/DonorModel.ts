@@ -2,15 +2,16 @@ import { apis } from "src/ts/config/apis";
 import { Store } from "src/ts/store/Store";
 import { alertApiError } from "src/ts/utils/alertApiError";
 
-import { EditProfileState } from "src/ts/components/pages/EditProfile/EditProfile";
+// import { EditProfileState } from "src/ts/components/pages/EditProfile/EditProfile";
 import { asyncTimeout } from "src/ts/utils";
-import { routes } from "src/ts/config";
+// import { routes } from "src/ts/config";
 import { History } from "history";
-import { objectToFormData } from "src/ts/utils/objectToFormData";
+// import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { LoginFormState } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterFormState } from "src/ts/components/pages/RegisterForm/RegisterForm";
-import { stringify } from "querystring";
+// import { stringify } from "querystring";
 
+// tslint:disable-next-line:completed-docs
 export type DonorModelData = {
     AaAccount : string;
     UID : string;
@@ -20,6 +21,7 @@ export type DonorModelData = {
     WalletAddress? : string;
     userRole: "Donor";
 }
+
 export class DonorModel {
     
     public readonly AaAccount : string;
@@ -78,17 +80,15 @@ export async function logIn(data: LoginFormState, store: Store, history: History
 }
 export async function postDonor(data: RegisterFormState, store: Store, history: History, redirectPath: string) {
     const endPoint = apis.donors.create.path;
-
     try {
         const startedAt = performance.now();
 
         
         const body = JSON.stringify({
-            password: data.password,
+            AaAccount: "__testing__",
             email: data.email,
-            //AaAccount: Add the random string.
-        });
-        
+            password: data.password
+        });        
 
         const response = await fetch(endPoint, {
             method: "POST",

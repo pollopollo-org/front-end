@@ -2,7 +2,7 @@
   "extends": ["tslint-microsoft-contrib/recommended"],
   "rules": {
     "interface-over-type-literal": false,
-    "completed-docs": true,
+    "completed-docs": false,
     "quotemark": [
       true,
       "double"
