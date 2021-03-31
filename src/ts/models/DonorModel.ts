@@ -83,9 +83,8 @@ export async function postDonor(data: RegisterFormState, store: Store, history: 
     try {
         const startedAt = performance.now();
 
-        
         const body = JSON.stringify({
-            AaAccount: "__testing__",
+            AaAccount: "__testing__",  // should be removed from frontend and generated on obyte
             email: data.email,
             password: data.password
         });        
