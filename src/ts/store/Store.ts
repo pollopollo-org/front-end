@@ -1,3 +1,4 @@
+import { DonorModel } from './../models/DonorModel';
 import { observable } from "mobx";
 
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
@@ -60,6 +61,9 @@ export class Store {
      */
     @observable
     public currentErrorMessage: string;
+
+    @observable
+    public donor : DonorModel;
 
     constructor(initial: StoreArgs) {
         this.user = initial.user;

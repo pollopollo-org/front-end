@@ -6,15 +6,12 @@ import { DonorModel, DonorModelData } from "src/ts/models/DonorModel";
 /**
  * Simple helper that create a new user based on the information passed
  */
-export function createUser(userData: UserModelData | ProducerModelData | DonorModelData) {
+export function createUser(userData: UserModelData | ProducerModelData) {
     if (userData.userRole === UserTypes.PRODUCER) {
         let data = <ProducerModelData> userData;
         return new ProducerModel(data);
     }
-    else if(userData.userRole === UserTypes.DONOR) {
-        let data = <DonorModelData> userData;
-        return new DonorModel(data);
-    } else {
+    else {
         return new ReceiverModel(userData);
     }
 }
