@@ -163,7 +163,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
     }
 }
 
-/**
+/*
  * Method that'll allow any user of the site to create a new user to the backend
  * while also reflecting the new user on the frontend
  */
