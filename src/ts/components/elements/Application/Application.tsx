@@ -1566,14 +1566,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         this.setState({ showDialogWithdraw: false });
     }
 
-    /**
-     * Listener to cancel the dialog box and reset the state of the application.
-     */
-    private cancelConfirmationDialogDonate = async () => {
-        await updateStatus(this.props.application, 0, this.props.store);
-        this.setState({ showPollopolloDonation: false});
-    }
-
     private closeDonation = async () => {
         await updateStatus(this.props.application, 0, this.props.store);
         this.setState({ showDialogDonate: false });
