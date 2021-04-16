@@ -9,11 +9,13 @@ import { History } from "history";
 import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { LoginFormState } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterFormState } from "src/ts/components/pages/RegisterForm/RegisterForm";
+import { createDonor } from "src/ts/utils/createDonor";
 
 export enum UserTypes {
-    PRODUCER = "Producer",
-    RECEIVER = "Receiver",
-    DONOR = "Donor"
+    PRODUCER    = "Producer",
+    RECEIVER    = "Receiver",
+    DONOR       = "Donor",
+    UNDEFINED   = "Undefined"
 }
 
 /**
@@ -148,7 +150,10 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             localStorage.setItem("userJWT", data.token);
 
             const { createUser } = await import("src/ts/utils/createUser");
-            store.user = createUser(data.userDTO);
+
+            // check which type of user is created
+            if(data.userRole === UserTypes.DONOR) createDonor(data.userDTO);
+            else store.user = createUser(data.userDTO);
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 

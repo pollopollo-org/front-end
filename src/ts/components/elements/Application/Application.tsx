@@ -9,7 +9,7 @@ import { Button, Chevron } from "src/ts/components/utils";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { getSVG } from "src/assets/svg";
 import { Dialog } from "src/ts/components/utils/Dialog";
-import { fonts } from "src/ts/config";
+import { fonts, routes } from "src/ts/config";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { Store } from "src/ts/store/Store";
 import { injectStore } from "src/ts/store/injectStore";
@@ -252,6 +252,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     // tslint:disable-next-line: max-func-body-length
     public render(): JSX.Element {
+        console.log(this.props);
         return (
             <React.Fragment>
                 <div className={"application"}>
@@ -791,17 +792,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Render information or button in upper right corner of application
      */
     private renderCornerInformation = () => {
-        if (this.props.pastDonation) {
-            return this.renderPriceAndDate();
-        } else if (this.props.userType === UserTypes.DONOR) {
-            return this.renderDonateButton();
-        } else if (this.props.userType === UserTypes.PRODUCER && this.props.showWithdrawButton) {
-            return this.renderWithdrawButton();
-        } else if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) {
-            return this.renderPrice();
-        } else {
-            return;
-        }
+        if (this.props.pastDonation) return this.renderPriceAndDate();
+
+        if (this.props.userType === UserTypes.DONOR || UserTypes.UNDEFINED) return this.renderDonateButton();
+        if (this.props.userType === UserTypes.PRODUCER && this.props.showWithdrawButton)  return this.renderWithdrawButton();
+        if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) return this.renderPrice();
+        
+        return;
     }
 
     /**
@@ -1122,7 +1119,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderDonationChoice() {
 
         const text = (<>{ApplicationJSON.DonationChoiceText}?</>);
-
+        // if(this.props.userType === UserTypes.DONOR)
+        // console.log(this.props);
         return (
             <Lightbox active={this.state.showDialogDonate} onClose={this.closeDonation}>
 
@@ -1182,6 +1180,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             withThrobber={true}
                             text="PolloPollo"
                         />
+                        <a href={routes.registerDonor.path}>link to create Donor</a>
                         <Button
                             className="obyte-donation btn-obyte"
                             withThrobber={false}
@@ -1506,7 +1505,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     private pollopolloDonation = async () => {
-        this.setState({ showPollopolloDonation: true });
+        if(this.props.userType === UserTypes.DONOR) this.setState({ showPollopolloDonation: true });
+        else {
+            routes.registerProducer.path;
+        }
     }
 
     private obyteDonation = async () => {

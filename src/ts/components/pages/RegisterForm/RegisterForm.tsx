@@ -431,8 +431,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             name="userType"
                             id="Donor"
                             value="Donor"
-                            aria-checked={this.state.userType === "Donor"}
-                            checked={this.state.userType === "Donor"}
+                            aria-checked={this.state.userType === UserTypes.DONOR}
+                            checked={this.state.userType === UserTypes.DONOR}
                             onChange={this.onUserTypeClick}
                         />
                         <label className="register-radio-button" htmlFor="Donor">{registerFormJson.userType__donor}</label>
