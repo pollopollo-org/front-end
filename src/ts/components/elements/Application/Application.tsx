@@ -118,9 +118,17 @@ export type ApplicationState = {
      * Specifies whether or not the confirmation dialog for donating to the application should be displayed
      */
     showDialogDonate: boolean;
+
+    showObyteDonation: boolean;
+
+    showPollopolloDonation: boolean;
     /**
      * Specifies whether or not the withdraw bytes dialog should be displayed
      */
+     showDialogDonationChoice: boolean;
+     /**
+      * Specifies whether or not the withdraw bytes dialog should be displayed
+      */
     showDialogWithdraw: boolean;
     /**
      * Specifies whether or not the locked dialog for donating to the application should be displayed
@@ -171,6 +179,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         isSmall: false,
         showDialogDelete: false,
         showDialogDonate: false,
+        showObyteDonation: false,
+        showPollopolloDonation: false,
+        showDialogDonationChoice: false,
         showDialogWithdraw: false,
         showDialogLockedDonate: false,
         showReceiver: false,
@@ -269,7 +280,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 {this.renderProducerLightbox()}
                 {this.renderProductLightbox()}
                 {this.renderConfirmDialogDeleteApplication()}
-                {this.renderConfirmDialogDonateApplication()}
+                {this.renderConfirmDialogDonateObyte()}
+                {this.renderConfirmDialogDonatePolloPollo()}
+                {this.renderDonationChoice()}
                 {this.renderLockedDialogDonateApplication()}
                 {this.renderConfirmDialogWithdrawFunds()}
                 {this.renderConfirmDialogReceival()}
@@ -1073,10 +1086,19 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         );
     }
 
-    /**
-     * Dialog to confirm whether a donor wants to donate to an application
-     */
-    private renderConfirmDialogDonateApplication() {
+    private renderConfirmDialogDonatePolloPollo() {
+        const text = (<>USER FUNDS AND LOGIC HAS TO BE IMPLEMENTED</>);
+        return (
+            <Dialog title={ApplicationJSON.confirmDonateTitle}
+                text={text}
+                active={this.state.showPollopolloDonation}
+                onClose={this.closeConfirmation}
+                confirmAction={this.initiateDonation}
+            />
+        )
+    }
+
+    private renderConfirmDialogDonateObyte() {
         const text = (<>
             {ApplicationJSON.confirmationDialogTextDonate1}
             <br /><br />
@@ -1084,14 +1106,92 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             <br /><br />
             {ApplicationJSON.confirmationDialogTextDonate3}
         </>);
-
         return (
             <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={text}
-                active={this.state.showDialogDonate}
-                onClose={this.cancelConfirmationDialogDonate}
+                active={this.state.showObyteDonation}
+                onClose={this.closeConfirmation}
                 confirmAction={this.initiateDonation}
             />
+        )
+    }
+
+    /**
+     * Dialog to confirm whether a donor wants to donate to an application
+     */
+    private renderDonationChoice() {
+
+        const text = (<>{ApplicationJSON.DonationChoiceText}?</>);
+
+        return (
+            <Lightbox active={this.state.showDialogDonate} onClose={this.closeDonation}>
+
+            <style jsx>{`
+                    .dialog {
+                        margin: 10px 20px;
+                        width: max-content;
+                        max-width: 500px;
+                        text-align: center;
+
+                        @media (max-width: 600px) {
+                            line-height: 1.3em;
+                            max-width: calc(100% - 40px);
+                            text-align: center;
+                        }
+                    }
+
+                    p {
+                        margin: 20px 0;
+                        line-height: 1.4;
+                    }
+                    
+                    .dialog-buttons {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: flex-end;
+                        margin-bottom: 20px;
+                    }
+
+                    .dialog button {
+                        padding: 7px;
+                        margin: 5px;
+                        width: 50%;
+                        border: none;
+                        border-radius: 2px;
+                        cursor: pointer;
+                    }
+
+                    .dialog :global(.btn-obyte) {
+                        background-color: CornflowerBlue;
+                        margin-left: 20px;
+                    }
+
+                `}</style>
+
+                <div className="dialog">
+                    <h3>{ApplicationJSON.DonationChoiceTitle}</h3>
+                    <p>{text}</p>
+                    
+                    <div className="dialog-buttons">
+                        <Button
+                            onClick={this.pollopolloDonation}
+                            className="pollopollo-donation"
+                            isPending={false}
+                            throbberSize={24}
+                            width="50%"
+                            withThrobber={true}
+                            text="PolloPollo"
+                        />
+                        <Button
+                            className="obyte-donation btn-obyte"
+                            withThrobber={false}
+                            onClick={this.obyteDonation}
+                            width="50%"
+                            text="Obyte-wallet"
+                        />
+                    </div>
+                </div>
+            </Lightbox>
         );
     }
 
@@ -1393,11 +1493,25 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         this.setState({ showDialogDelete: true });
     }
 
+    private closeConfirmation = () => {
+        this.setState({ showPollopolloDonation: false });
+        this.setState({ showObyteDonation: false });
+    }
+
     /**
      * Listener that'll close the dialog for deletion once it has been executed
      */
     private closeConfirmationDialogDelete = () => {
         this.setState({ showDialogDelete: false });
+    }
+
+    private pollopolloDonation = async () => {
+        this.setState({ showPollopolloDonation: true });
+    }
+
+    private obyteDonation = async () => {
+        // show DonationConfirmation
+        this.setState({ showObyteDonation: true });  // rename showDialogDonate -> showDialogDonationConfirmation 
     }
 
     /**
@@ -1413,12 +1527,23 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             this.closeConfirmationDialogDonate();
             this.openLockedDialogDonate();
         }
-        else {
-            // Set status to 1 (Locked). and show the normal dialog box
+
+        if (this.state.showDialogDonationChoice === true) {
+            this.setState({ showDialogDonationChoice: false });
+
             await updateStatus(this.props.application, 1, this.props.store);
-    
+            this.setState({ showDialogDonationChoice: true });
+        }
+        else {
             this.setState({ showDialogDonate: true });
         }
+
+        // else {
+        //     // Set status to 1 (Locked). and show the normal dialog box
+        //     await updateStatus(this.props.application, 1, this.props.store);
+    
+        //     this.setState({ showDialogDonationChoice: true });
+        // }
     }
 
     /**
@@ -1441,12 +1566,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         this.setState({ showDialogWithdraw: false });
     }
 
-    /**
-     * Listener to cancel the dialog box and reset the state of the application.
-     */
-    private cancelConfirmationDialogDonate = async () => {
+    private closeDonation = async () => {
         await updateStatus(this.props.application, 0, this.props.store);
-        this.closeConfirmationDialogDonate();
+        this.setState({ showDialogDonate: false });
     }
 
     /**
@@ -1496,6 +1618,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * also closes the dialog
      */
     private initiateDonation = async () => {
+        await updateStatus(this.props.application, 1, this.props.store);
         await initiateDonation(this.props.application.applicationId, this.props.onApplicationDonation);
     }
 

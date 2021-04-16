@@ -32,13 +32,12 @@ export class DonorModel {
     public readonly WalletAddress? : string;
 
     constructor(data: DonorModelData) {
-        this.AaAccount =data.AaAccount;
-        this.UID =data.UID;
+        this.AaAccount = data.AaAccount;
+        this.UID = data.UID;
         this.Password = data.Password;
         this.email = data.email;
         this.DeviceAddress = data.DeviceAddress;
         this.WalletAddress = data.WalletAddress;
-    
     }
 }
 export async function logIn(data: LoginFormState, store: Store, history: History, path:string) {
@@ -64,7 +63,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             localStorage.setItem("userJWT", data.token);
 
             const { createDonor } = await import("src/ts/utils/createDonor");
-            store.donor = createDonor(data.DonorDTO);
+            store.donor = createDonor(data);
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
@@ -82,9 +81,8 @@ export async function postDonor(data: RegisterFormState, store: Store, history: 
     const endPoint = apis.donors.create.path;
     try {
         const startedAt = performance.now();
-
-        const body = JSON.stringify({
-            AaAccount: "__testing__",  // should be removed from frontend and generated on obyte
+        // should be removed from frontend and generated on obyte
+        const body = JSON.stringify({ 
             email: data.email,
             password: data.password
         });        
@@ -101,9 +99,9 @@ export async function postDonor(data: RegisterFormState, store: Store, history: 
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem("donorJWT", data.token);
-
+            
             const { createDonor } = await import("src/ts/utils/createDonor");
-            store.donor = createDonor(data.DonorDTO);
+            store.donor = createDonor(data);
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
             history.push(redirectPath);

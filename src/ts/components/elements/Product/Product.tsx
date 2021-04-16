@@ -211,6 +211,7 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 <div className={`product-border ${!this.props.product.isActive ? "isInactive" : ""}`} ref={this.borderRef}>
                     {this.renderProduct()}
                     {this.renderDescription()}
+                    {this.renderDonateButton()}
                 </div>
 
                 {this.renderProducerLightbox()}
@@ -824,7 +825,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
             </div>
         );
     }
-
     /**
      * Internal renderer that renders teaser information for associated
      * applications
@@ -1213,6 +1213,21 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                 `}</style>
             </div>
         );
+    }
+
+    private renderDonateButton = () => {
+        return;
+        // return (
+        //     // <UserLightbox
+        //     //     showLightbox={this.state.showProducer}
+        //     //     onClose={this.closeProducerLightbox}
+        //     //     user={this.state.producer}
+        //     //     isOwn={this.props.isOwnProduct}
+        //     //     isOnProfile={this.props.isOnProducersPage}
+        //     //     userId={this.props.product.producerId}
+        //     //     userType={"producer"} 
+        //     // />
+        // );
     }
 
     /**
