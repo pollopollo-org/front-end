@@ -11,6 +11,7 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Button } from "src/ts/components/utils";
 import { postUser, UserTypes } from "src/ts/models/UserModel";
+import { postDonor } from "src/ts/models/DonorModel";
 
 type RegisterFormProps = {
     /**
@@ -430,8 +431,8 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             name="userType"
                             id="Donor"
                             value="Donor"
-                            aria-checked={this.state.userType === "Donor"}
-                            checked={this.state.userType === "Donor"}
+                            aria-checked={this.state.userType === UserTypes.DONOR}
+                            checked={this.state.userType === UserTypes.DONOR}
                             onChange={this.onUserTypeClick}
                         />
                         <label className="register-radio-button" htmlFor="Donor">{registerFormJson.userType__donor}</label>
@@ -655,7 +656,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             this.props.store.currentErrorMessage = "Please choose a country.";
             return false;
         }
-        else if (!this.state.country || !this.state.country.match(/[^0-9]+/)) {
+        else if (this.state.userType !== UserTypes.DONOR && (!this.state.country || !this.state.country.match(/[^0-9]+/))) {
             this.props.store.currentErrorMessage = "There was an error with the selected country.";
 
             return false;
@@ -684,7 +685,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         }
 
         this.setState({ isPending: true });
-        await postUser(this.state, this.props.store, this.props.history, this.props.redirectPath);
+
+        if(this.state.userType === UserTypes.DONOR) await postDonor(this.state, this.props.store, this.props.history, this.props.redirectPath);
+        else await postUser(this.state, this.props.store, this.props.history, this.props.redirectPath);
         this.setState({ isPending: false });
     }
 
@@ -693,7 +696,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
      */
     private newCountrySelected = (newCountry:string) => {
         this.setState({country: newCountry,});
-        console.log(this.state.country);
     }
 }
 

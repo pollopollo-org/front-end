@@ -1,6 +1,8 @@
 {
     "motivation": "Motivation",
     "confirmDonateTitle" : "Confirm donation",
+    "DonationChoiceTitle" : "Choose donation method",
+    "DonationChoiceText" : "Do you want to donate using a PolloPollo account or using an oByte-wallet",
     "confirmationDialogTextDonate1" : "Thank you for donating.",
     "confirmationDialogTextDonate2" : "To prevent others from donating to the same application, the application will now be locked for 60 minutes. If you fail to make the donation within 60 minutes, the application will be re-opened for others to donate to it.",
     "confirmationDialogTextDonate3" : "Once your donation has been confirmed, the application’s state will be pending, waiting for the receiver to confirm reception of the product. If the receiver fails to confirm reception within 30 days, the funds you donated will be returned to your wallet.",

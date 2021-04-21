@@ -9,11 +9,13 @@ import { History } from "history";
 import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { LoginFormState } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterFormState } from "src/ts/components/pages/RegisterForm/RegisterForm";
+import { createDonor } from "src/ts/utils/createDonor";
 
 export enum UserTypes {
-    PRODUCER = "Producer",
-    RECEIVER = "Receiver",
-    DONOR = "Donor"
+    PRODUCER    = "Producer",
+    RECEIVER    = "Receiver",
+    DONOR       = "Donor",
+    UNDEFINED   = "Undefined"
 }
 
 /**
@@ -136,7 +138,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 password: data.password,
-                email: data.email,
+                email: data.email
             })
         });
 
@@ -146,8 +148,16 @@ export async function logIn(data: LoginFormState, store: Store, history: History
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem("userJWT", data.token);
-
+            
             const { createUser } = await import("src/ts/utils/createUser");
+
+            // check which type of user is created
+            
+            if(data.dto === undefined) store.user = createUser(data.userDTO);
+            else{
+                createDonor(data.dto.dto);
+            }
+
             store.user = createUser(data.userDTO);
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
@@ -163,7 +173,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
     }
 }
 
-/**
+/*
  * Method that'll allow any user of the site to create a new user to the backend
  * while also reflecting the new user on the frontend
  */
@@ -211,7 +221,6 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
         }
     } catch (err) {
         store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
-        console.log(err);
     }
 }
 

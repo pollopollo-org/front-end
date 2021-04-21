@@ -155,7 +155,6 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
         }
 
         const picture = this.getProfilePictureURL();
-
         return (
             <div className="allSection">
                 <h1>{editProfileJson.title}</h1>
