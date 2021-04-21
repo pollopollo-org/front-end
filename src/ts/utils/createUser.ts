@@ -8,17 +8,16 @@ import { DonorModel, DonorModelData } from "src/ts/models/DonorModel";
  */
 
 // export function createUser(userData: UserModelData | DonorModelData | ProducerModelData) {
-
 //     switch(userData.userRole) {
 //         case UserTypes.PRODUCER :
 //             return new ProducerModel(userData as ProducerModelData);
-
-//         case UserTypes.RECEIVER :
-//             return new ReceiverModel(userData as UserModelData);
-
-//         default :
-//         case UserTypes.RECEIVER :
+//
+//         case UserTypes.Donor :
 //             return new DonorModel(userData as DonorModelData);
+//         
+//         case UserTypes.RECEIVER :
+//         default :
+//             return new ReceiverModel(userData as ReceiverModelData);
 //     }
 // }
 
@@ -29,6 +28,7 @@ export function createUser(userData: UserModelData | ProducerModelData) {
     return new ReceiverModel(userData);
   }
 }
+
 export function createDonor(userData: DonorModelData) {
   return new DonorModel(<DonorModelData>userData);
 }
