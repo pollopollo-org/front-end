@@ -23,6 +23,7 @@ export enum DataProviders {
 type StoreArgs = {
     applications?: ApplicationModel[];
     user?: UserModel;
+    donor?: DonorModel;
 }
 // tslint:enable completed-docs
 
@@ -38,7 +39,7 @@ export class Store {
      * about a user - either a producer or a receiver.
      */
     @observable
-    public user?: UserModel;
+    public user?:  DonorModel | UserModel;
 
     /**
      * Contains a reference to the ProductModel, which containts fetched data
@@ -63,7 +64,7 @@ export class Store {
     public currentErrorMessage: string;
 
     @observable
-    public donor : DonorModel;
+    public donor?: DonorModel;
 
     constructor(initial: StoreArgs) {
         this.user = initial.user;

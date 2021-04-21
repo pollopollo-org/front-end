@@ -3,7 +3,7 @@ import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
 import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus, fetchApplicationById, withdrawBytes } from "src/ts/models/ApplicationModel";
-
+import { UserModel } from "src/ts/models/UserModel";
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
@@ -1324,7 +1324,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         if (!this.state.product) {
             return;
         }
-
+        if(!(this.props.store.user instanceof UserModel))
+        {
+            return;
+        }
         const isOwnProduct = this.props.store.user ? this.props.store.user.id === this.props.application.producerId : false;
 
         return (

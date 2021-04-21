@@ -1,3 +1,4 @@
+
 import { apis } from "src/ts/config/apis";
 import { Store } from "src/ts/store/Store";
 import { alertApiError } from "src/ts/utils/alertApiError";
@@ -10,7 +11,7 @@ import { History } from "history";
 import { LoginFormState } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterFormState } from "src/ts/components/pages/RegisterForm/RegisterForm";
 // import { stringify } from "querystring";
-
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 // tslint:disable-next-line:completed-docs
 export type DonorModelData = {
     AaAccount : string;
@@ -30,6 +31,7 @@ export class DonorModel {
     public readonly email : string;
     public readonly DeviceAddress? : string;
     public readonly WalletAddress? : string;
+    public readonly thumbnail? : string;
 
     constructor(data: DonorModelData) {
         this.AaAccount = data.AaAccount;
@@ -38,6 +40,13 @@ export class DonorModel {
         this.email = data.email;
         this.DeviceAddress = data.DeviceAddress;
         this.WalletAddress = data.WalletAddress;
+    }
+    public getThumbnail(): string | undefined {
+        if (this.thumbnail) {
+            return `${BACKEND_URL}/${this.thumbnail}`;
+        } else {
+            return;
+        }
     }
 }
 export async function logIn(data: LoginFormState, store: Store, history: History, path:string) {

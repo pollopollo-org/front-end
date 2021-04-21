@@ -5,7 +5,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
 import { getSVG } from "src/assets/svg";
-import { UserModel, UserTypes, fetchUser } from "src/ts/models/UserModel";
+import { UserModel,  fetchUser } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
 import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
@@ -22,7 +22,6 @@ import { Throbber } from "src/ts/components/utils";
 import { Fade } from "src/ts/components/transitions/Fade";
 import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
-
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
@@ -129,10 +128,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Setup initial state
      */
     public state: UserState = {
-        userId: this.props.store.user ? this.props.store.user.id : 0,
+        userId: this.props.store.user ? (this.props.store.user as UserModel).id : 0,
         isSelf: false,
         isSmall: false,
-        renderedUser: this.props.store.user,
+        renderedUser: this.props.store.user as UserModel,
         filterActiveProducts: true,
         filterApplications: ApplicationStatus.OPEN,
         isPending: true,
@@ -182,7 +181,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
             this.loadUser();
-        } else if (!readonlyUserId && this.props.store.user && this.props.store.user.id !== Number(this.state.userId)) {
+        } else if (!readonlyUserId && this.props.store.user && (this.props.store.user as UserModel).id !== Number(this.state.userId)) {
             this.loadUser();
         }
     }
@@ -569,7 +568,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         {products && products.map((product, index) => {
                             const isOnProducersPage = product.producerId === this.state.userId;
                             const isOwnProduct = this.props.store.user
-                                ? this.props.store.user.id === product.producerId
+                                ? (this.props.store.user as UserModel).id === product.producerId
                                 : false;
 
                             const updateProduct = this.updateProduct.bind(this, index);
@@ -581,7 +580,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     isOnProducersPage={isOnProducersPage}
                                     isOwnProduct={isOwnProduct}
                                     updateProduct={updateProduct}
-                                    userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
+                                    userType={getUserType((this.props.store.user as UserModel))}
                                 />
                             );
                         })}
@@ -998,7 +997,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         {applications && applications.map((application, index) => {
                             const isOnReceiversPage = application.receiverId === this.state.userId;
                             const isOwnApplication = this.props.store.user
-                                ? this.props.store.user.id === application.receiverId
+                                ? (this.props.store.user as UserModel).id === application.receiverId
                                 : false;
 
                             const onApplicationDeleted = this.onApplicationDeleted.bind(this, index);
@@ -1008,7 +1007,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <Application
                                     key={index}
                                     isOwnApplication={isOwnApplication}
-                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    userType={getUserType((this.props.store.user as UserModel))}
                                     isOnReceiversPage={isOnReceiversPage}
                                     application={application}
                                     onApplicationDeleted={onApplicationDeleted}
@@ -1065,7 +1064,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <Application
                                     key={index}
                                     isOwnApplication={false}
-                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    userType={getUserType((this.props.store.user as UserModel))}
                                     isOnReceiversPage={true}
                                     application={application}
                                     pastDonation={true}
@@ -1155,7 +1154,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 renderedUser: user,
             });
         } else {
-            user = this.props.store.user;
+            user = (this.props.store.user as UserModel);
 
             // ... however, if we doesn't match, then we should render our own
             // user

@@ -155,10 +155,10 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             
             if(data.dto === undefined) store.user = createUser(data.userDTO);
             else{
-                createDonor(data.dto.dto);
+                store.user = createDonor(data.dto);
             }
 
-            store.user = createUser(data.userDTO);
+            //store.user = createUser(data.userDTO);
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
