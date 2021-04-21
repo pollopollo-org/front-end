@@ -9,7 +9,7 @@ import { Button, Chevron } from "src/ts/components/utils";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
 import { getSVG } from "src/assets/svg";
 import { Dialog } from "src/ts/components/utils/Dialog";
-import { fonts } from "src/ts/config";
+import { fonts, routes } from "src/ts/config";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { Store } from "src/ts/store/Store";
 import { injectStore } from "src/ts/store/injectStore";
@@ -791,17 +791,13 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      * Render information or button in upper right corner of application
      */
     private renderCornerInformation = () => {
-        if (this.props.pastDonation) {
-            return this.renderPriceAndDate();
-        } else if (this.props.userType === UserTypes.DONOR) {
-            return this.renderDonateButton();
-        } else if (this.props.userType === UserTypes.PRODUCER && this.props.showWithdrawButton) {
-            return this.renderWithdrawButton();
-        } else if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) {
-            return this.renderPrice();
-        } else {
-            return;
-        }
+        if (this.props.pastDonation) return this.renderPriceAndDate();
+
+        if (this.props.userType === UserTypes.DONOR || UserTypes.UNDEFINED) return this.renderDonateButton();
+        if (this.props.userType === UserTypes.PRODUCER && this.props.showWithdrawButton)  return this.renderWithdrawButton();
+        if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) return this.renderPrice();
+        
+        return;
     }
 
     /**
@@ -1122,66 +1118,69 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderDonationChoice() {
 
         const text = (<>{ApplicationJSON.DonationChoiceText}?</>);
-
+        const isLoggedIn = (this.props.userType === UserTypes.DONOR)
         return (
-            <Lightbox active={this.state.showDialogDonate} onClose={this.closeDonation}>
+        <Lightbox active={this.state.showDialogDonate} onClose={this.closeDonation}>
 
-            <style jsx>{`
-                    .dialog {
-                        margin: 10px 20px;
-                        width: max-content;
-                        max-width: 500px;
+        <style jsx>{`
+                .dialog {
+                    margin: 10px 20px;
+                    width: max-content;
+                    max-width: 500px;
+                    text-align: center;
+
+                    @media (max-width: 600px) {
+                        line-height: 1.3em;
+                        max-width: calc(100% - 40px);
                         text-align: center;
-
-                        @media (max-width: 600px) {
-                            line-height: 1.3em;
-                            max-width: calc(100% - 40px);
-                            text-align: center;
-                        }
                     }
+                }
 
-                    p {
-                        margin: 20px 0;
-                        line-height: 1.4;
-                    }
-                    
-                    .dialog-buttons {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: flex-end;
-                        margin-bottom: 20px;
-                    }
+                p {
+                    margin: 20px 0;
+                    line-height: 1.4;
+                }
+                
+                .dialog-buttons {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    margin-bottom: 20px;
+                }
 
-                    .dialog button {
-                        padding: 7px;
-                        margin: 5px;
-                        width: 50%;
-                        border: none;
-                        border-radius: 2px;
-                        cursor: pointer;
-                    }
+                .dialog button {
+                    padding: 7px;
+                    margin: 5px;
+                    width: 50%;
+                    border: none;
+                    border-radius: 2px;
+                    cursor: pointer;
+                }
 
-                    .dialog :global(.btn-obyte) {
-                        background-color: CornflowerBlue;
-                        margin-left: 20px;
-                    }
+                .dialog :global(.btn-obyte) {
+                    background-color: CornflowerBlue;
+                    margin-left: 20px;
+                }
 
-                `}</style>
+            `}</style>
 
-                <div className="dialog">
-                    <h3>{ApplicationJSON.DonationChoiceTitle}</h3>
-                    <p>{text}</p>
-                    
-                    <div className="dialog-buttons">
+            <div className="dialog">
+                <h3>{ApplicationJSON.DonationChoiceTitle}</h3>
+                <p>{text}</p>
+                
+                <div className="dialog-buttons">
+                    {isLoggedIn ? (
                         <Button
-                            onClick={this.pollopolloDonation}
-                            className="pollopollo-donation"
-                            isPending={false}
-                            throbberSize={24}
-                            width="50%"
-                            withThrobber={true}
-                            text="PolloPollo"
-                        />
+                        onClick={this.pollopolloDonation}
+                        className="pollopollo-donation"
+                        isPending={false}
+                        throbberSize={24}
+                        width="50%"
+                        withThrobber={true}
+                        text="PolloPollo"
+                    />) : (
+                            <a href={routes.registerDonor.path}>link to create Donor</a>
+                        )}
                         <Button
                             className="obyte-donation btn-obyte"
                             withThrobber={false}
@@ -1189,9 +1188,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             width="50%"
                             text="Obyte-wallet"
                         />
-                    </div>
                 </div>
-            </Lightbox>
+            </div>
+        </Lightbox>
         );
     }
 
@@ -1506,7 +1505,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     private pollopolloDonation = async () => {
-        this.setState({ showPollopolloDonation: true });
+        if(this.props.userType === UserTypes.DONOR) this.setState({ showPollopolloDonation: true });
+        else {
+            routes.registerProducer.path;
+        }
     }
 
     private obyteDonation = async () => {

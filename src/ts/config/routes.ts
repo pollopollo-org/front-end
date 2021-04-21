@@ -43,6 +43,9 @@ export const routes = {
     loginRedirect: {
         path: "/loginredirect.html",
     },
+    registerDonor: {
+        path: "/registerdonor.html",
+    },
     loginOrRegisterProducer: {
         path: "/loginorregisterproducer.html",
     },

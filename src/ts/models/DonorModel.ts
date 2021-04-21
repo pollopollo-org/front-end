@@ -81,10 +81,12 @@ export async function postDonor(data: RegisterFormState, store: Store, history: 
     const endPoint = apis.donors.create.path;
     try {
         const startedAt = performance.now();
-        // should be removed from frontend and generated on obyte
+       
+
         const body = JSON.stringify({ 
             email: data.email,
-            password: data.password
+            password: data.password,
+            aaAccount: ""
         });        
 
         const response = await fetch(endPoint, {
@@ -110,7 +112,6 @@ export async function postDonor(data: RegisterFormState, store: Store, history: 
         }
     } catch (err) {
         store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
-        console.log(err);
     }
 }
 

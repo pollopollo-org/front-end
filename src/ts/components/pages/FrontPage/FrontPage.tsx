@@ -69,7 +69,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                 <div className="action_section">
                     <h1>{FrontPageJson.actionHeading}</h1>
                     <div className="action_button">
-                        <Link className="link makeDonation" to={routes.productsPage.path}>
+                        <Link className="link makeDonation" to={routes.applicationsPage.path}>
                             <Button
                                 withThrobber={false}
                                 text={FrontPageJson.makeDonation}
