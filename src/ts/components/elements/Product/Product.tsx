@@ -430,7 +430,6 @@ class UnwrappedProduct extends React.PureComponent<ProductProps, ProductState> {
                     </span>
 
                     {
-                        this.props.userType === UserTypes.PRODUCER &&
                         <span
                             className={`price ${this.state.isSmall ? "isSmall" : ""}
                                                 ${isOwnProduct ? "isOwnProduct" : ""}`}
