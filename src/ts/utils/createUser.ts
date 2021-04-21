@@ -3,10 +3,9 @@ import { ProducerModel, ProducerModelData } from "src/ts/models/ProducerModel";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { DonorModel, DonorModelData } from "src/ts/models/DonorModel";
 
-/**
- * Simple helper that create a new user based on the information passed
- */
 
+// Function for use when Donor users gets refactored correctly
+//
 // export function createUser(userData: UserModelData | DonorModelData | ProducerModelData) {
 //     switch(userData.userRole) {
 //         case UserTypes.PRODUCER :
@@ -20,6 +19,10 @@ import { DonorModel, DonorModelData } from "src/ts/models/DonorModel";
 //             return new ReceiverModel(userData as ReceiverModelData);
 //     }
 // }
+
+/**
+ * Simple helper that create a new user based on the information passed
+ */
 
 export function createUser(userData: UserModelData | ProducerModelData) {
   if (userData.userRole === UserTypes.PRODUCER) {
