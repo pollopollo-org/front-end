@@ -112,7 +112,6 @@ export async function postDonor(data: RegisterFormState, store: Store, history: 
         }
     } catch (err) {
         store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
-        console.log(err);
     }
 }
 
