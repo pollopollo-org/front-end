@@ -138,7 +138,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 password: data.password,
-                email: data.email,
+                email: data.email
             })
         });
 
@@ -148,12 +148,28 @@ export async function logIn(data: LoginFormState, store: Store, history: History
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem("userJWT", data.token);
-
+            
             const { createUser } = await import("src/ts/utils/createUser");
 
             // check which type of user is created
-            if(data.userRole === UserTypes.DONOR) createDonor(data.userDTO);
-            else store.user = createUser(data.userDTO);
+            
+            if(data.dto === undefined) store.user = createUser(data.userDTO);
+            else{
+                console.log(data);
+                createDonor(data.dto.dto);
+            }
+
+            store.user = createUser(data.userDTO);
+
+
+            // if(data.dto.userRole === UserTypes.DONOR) {
+            //     console.log("creating donor");
+            //     createDonor(data.dto.userDTO);
+            // } 
+            // else {
+            //     console.log("creating normal user");
+            //     store.user = createUser(data.userDTO);
+            // };
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 

@@ -1119,68 +1119,69 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderDonationChoice() {
 
         const text = (<>{ApplicationJSON.DonationChoiceText}?</>);
-        // if(this.props.userType === UserTypes.DONOR)
-        // console.log(this.props);
+        const isLoggedIn = (this.props.userType === UserTypes.DONOR)
         return (
-            <Lightbox active={this.state.showDialogDonate} onClose={this.closeDonation}>
+        <Lightbox active={this.state.showDialogDonate} onClose={this.closeDonation}>
 
-            <style jsx>{`
-                    .dialog {
-                        margin: 10px 20px;
-                        width: max-content;
-                        max-width: 500px;
+        <style jsx>{`
+                .dialog {
+                    margin: 10px 20px;
+                    width: max-content;
+                    max-width: 500px;
+                    text-align: center;
+
+                    @media (max-width: 600px) {
+                        line-height: 1.3em;
+                        max-width: calc(100% - 40px);
                         text-align: center;
-
-                        @media (max-width: 600px) {
-                            line-height: 1.3em;
-                            max-width: calc(100% - 40px);
-                            text-align: center;
-                        }
                     }
+                }
 
-                    p {
-                        margin: 20px 0;
-                        line-height: 1.4;
-                    }
-                    
-                    .dialog-buttons {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: flex-end;
-                        margin-bottom: 20px;
-                    }
+                p {
+                    margin: 20px 0;
+                    line-height: 1.4;
+                }
+                
+                .dialog-buttons {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    margin-bottom: 20px;
+                }
 
-                    .dialog button {
-                        padding: 7px;
-                        margin: 5px;
-                        width: 50%;
-                        border: none;
-                        border-radius: 2px;
-                        cursor: pointer;
-                    }
+                .dialog button {
+                    padding: 7px;
+                    margin: 5px;
+                    width: 50%;
+                    border: none;
+                    border-radius: 2px;
+                    cursor: pointer;
+                }
 
-                    .dialog :global(.btn-obyte) {
-                        background-color: CornflowerBlue;
-                        margin-left: 20px;
-                    }
+                .dialog :global(.btn-obyte) {
+                    background-color: CornflowerBlue;
+                    margin-left: 20px;
+                }
 
-                `}</style>
+            `}</style>
 
-                <div className="dialog">
-                    <h3>{ApplicationJSON.DonationChoiceTitle}</h3>
-                    <p>{text}</p>
-                    
-                    <div className="dialog-buttons">
+            <div className="dialog">
+                <h3>{ApplicationJSON.DonationChoiceTitle}</h3>
+                <p>{text}</p>
+                
+                <div className="dialog-buttons">
+                    {isLoggedIn ? (
                         <Button
-                            onClick={this.pollopolloDonation}
-                            className="pollopollo-donation"
-                            isPending={false}
-                            throbberSize={24}
-                            width="50%"
-                            withThrobber={true}
-                            text="PolloPollo"
-                        />
-                        <a href={routes.registerDonor.path}>link to create Donor</a>
+                        onClick={this.pollopolloDonation}
+                        className="pollopollo-donation"
+                        isPending={false}
+                        throbberSize={24}
+                        width="50%"
+                        withThrobber={true}
+                        text="PolloPollo"
+                    />) : (
+                            <a href={routes.registerDonor.path}>link to create Donor</a>
+                        )}
                         <Button
                             className="obyte-donation btn-obyte"
                             withThrobber={false}
@@ -1188,9 +1189,9 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                             width="50%"
                             text="Obyte-wallet"
                         />
-                    </div>
                 </div>
-            </Lightbox>
+            </div>
+        </Lightbox>
         );
     }
 
