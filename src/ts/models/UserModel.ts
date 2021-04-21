@@ -155,21 +155,10 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             
             if(data.dto === undefined) store.user = createUser(data.userDTO);
             else{
-                console.log(data);
                 createDonor(data.dto.dto);
             }
 
             store.user = createUser(data.userDTO);
-
-
-            // if(data.dto.userRole === UserTypes.DONOR) {
-            //     console.log("creating donor");
-            //     createDonor(data.dto.userDTO);
-            // } 
-            // else {
-            //     console.log("creating normal user");
-            //     store.user = createUser(data.userDTO);
-            // };
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
@@ -232,7 +221,6 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
         }
     } catch (err) {
         store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
-        console.log(err);
     }
 }
 

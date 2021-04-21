@@ -252,7 +252,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
      */
     // tslint:disable-next-line: max-func-body-length
     public render(): JSX.Element {
-        console.log(this.props);
         return (
             <React.Fragment>
                 <div className={"application"}>
