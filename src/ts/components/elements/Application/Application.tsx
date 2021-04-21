@@ -20,6 +20,7 @@ import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { ProductModel, fetchProductById } from "src/ts/models/ProductModel";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { Product } from "src/ts/components/elements/Product/Product";
+import { Link } from "react-router-dom";
 
 export type ApplicationProps = {
     /**
@@ -1144,7 +1145,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                 .dialog-buttons {
                     display: flex;
                     flex-direction: row;
-                    justify-content: flex-end;
+                    justify-content: center;
                     margin-bottom: 20px;
                 }
 
@@ -1155,6 +1156,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                     border: none;
                     border-radius: 2px;
                     cursor: pointer;
+                }
+
+                .btn-login {
+                    width: 100%;
                 }
 
                 .dialog :global(.btn-obyte) {
@@ -1179,13 +1184,23 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         withThrobber={true}
                         text="PolloPollo"
                     />) : (
-                            <a href={routes.registerDonor.path}>link to create Donor</a>
+                        <div className="btn-login">
+                            <Link className="pollopollo-donation" to={routes.loginRedirect.path}>
+                                <Button
+                                    withThrobber={false}
+                                    text="Login"
+                                    width="100%"
+                                    height={50}
+                                    fontSize={16}
+                                    isPending={false}/>
+                            </Link>  
+                        </div>
                         )}
                         <Button
                             className="obyte-donation btn-obyte"
                             withThrobber={false}
                             onClick={this.obyteDonation}
-                            width="50%"
+                            width="100%"
                             text="Obyte-wallet"
                         />
                 </div>
@@ -1506,9 +1521,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
 
     private pollopolloDonation = async () => {
         if(this.props.userType === UserTypes.DONOR) this.setState({ showPollopolloDonation: true });
-        else {
-            routes.registerProducer.path;
-        }
     }
 
     private obyteDonation = async () => {
