@@ -1,6 +1,6 @@
-import { UserModelData, UserTypes } from "src/ts/models/UserModel";
+import { UserModel, UserModelData, UserTypes } from "src/ts/models/UserModel";
 import { ProducerModel, ProducerModelData } from "src/ts/models/ProducerModel";
-import { ReceiverModel } from "src/ts/models/ReceiverModel";
+import { ReceiverModel, ReceiverModelData } from "src/ts/models/ReceiverModel";
 import { DonorModel, DonorModelData } from "src/ts/models/DonorModel";
 
 
@@ -24,12 +24,11 @@ import { DonorModel, DonorModelData } from "src/ts/models/DonorModel";
  * Simple helper that create a new user based on the information passed
  */
 
-export function createUser(userData: UserModelData | ProducerModelData) {
-  if (userData.userRole === UserTypes.PRODUCER) {
-    return new ProducerModel(<ProducerModelData>userData);
-  } else {
-    return new ReceiverModel(userData);
-  }
+export function createUser(userData: UserModelData | DonorModelData) : UserModel | DonorModel {
+  if (userData.userRole === UserTypes.PRODUCER) return new ProducerModel(<ProducerModelData>userData);
+  if (userData.userRole === UserTypes.RECEIVER) return new ReceiverModel(<ReceiverModelData>userData);
+  if (userData.userRole === UserTypes.DONOR) return new DonorModel(<DonorModelData> userData);
+  throw new Error("No usertype assigned.");
 }
 
 export function createDonor(userData: DonorModelData) {

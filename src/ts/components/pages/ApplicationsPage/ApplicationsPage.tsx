@@ -9,8 +9,7 @@ import { Throbber, Button } from "src/ts/components/utils";
 import { ApplicationModel, fetchFilteredApplicationBatch, fetchApplicationCountries, fetchApplicationCities } from "src/ts/models/ApplicationModel";
 import { Application } from "src/ts/components/elements/Application/Application";
 import { getUserType } from "src/ts/utils/getUserType";
-import { UserTypes } from "src/ts/models/UserModel";
-
+import { UserModel } from "src/ts/models/UserModel";
 export type ApplicationsPageProps = {
     /**
      * Contains a reference to the root sotre
@@ -257,7 +256,7 @@ class UnwrappedApplicationsPage extends React.PureComponent<ApplicationsPageProp
                         <Application
                             key={index}
                             application={application}
-                            userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                            userType={getUserType(this.props.store.user as UserModel)}
                             isOnReceiversPage={false}
                             isOwnApplication={false}
                             // tslint:disable-next-line: react-this-binding-issue

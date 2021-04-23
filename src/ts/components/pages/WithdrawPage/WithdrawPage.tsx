@@ -4,9 +4,8 @@ import { ApplicationModel, fetchWithdrawableApplicationByProducer } from "src/ts
 import { injectStore } from "src/ts/store/injectStore";
 import { Throbber } from "src/ts/components/utils/Throbber";
 import { getUserType } from "src/ts/utils/getUserType";
-import { UserTypes } from "src/ts/models/UserModel";
 import { Application } from "src/ts/components/elements/Application/Application";
-
+import { UserModel } from "src/ts/models/UserModel";
 export type WithdrawPageProps = {
     /**
      * Contains a reference to the root sotre
@@ -44,8 +43,9 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
     /**
      * Setup initial state
      */
+    
     public state: WithdrawPageState = {
-        userId: this.props.store.user ? this.props.store.user.id : -1,
+        userId: this.props.store.user ? (this.props.store.user as UserModel).id : -1,
         isPending: true,
         applications: [],
         updatedApplications: []
@@ -79,62 +79,69 @@ class UnwrappedWithdrawPage extends React.PureComponent<WithdrawPageProps, Withd
         if (this.state.userId == -1) {
             return <h1>There's no user available to be rendered!</h1>;
         }
+        if(!(this.props.store.user instanceof UserModel))
+        {
+            return <h2>Currently logged into a donor</h2>;
+        }
+        else 
+        {
+            return (
+                
+                <div className="page">
+                    <h1>Withdraw funds</h1>
 
-        return (
-            <div className="page">
-                <h1>Withdraw funds</h1>
+                    <div className="list-of-applications">
+                        {(this.state.isPending) &&
+                                <i className="throbber-wrapper">
+                                    <Throbber size={64} relative={true} />
+                                </i>
+                            }
+                        {(this.state.applications != undefined && this.state.applications.length != 0) ?
+                            this.state.applications.map((application, index) => {
+                                const onWithdraw = this.onWithdrawBytes.bind(this, index);
+                                return <Application
+                                    key={index}
+                                    isOwnApplication={false}
+                                    userType={getUserType((this.props.store.user as UserModel))}
+                                    isOnReceiversPage={false}
+                                    application={application}
+                                    // tslint:disable-next-line: react-this-binding-issue
+                                    onWithdrawBytes={onWithdraw}
+                                    pastDonation={false}
+                                    showWithdrawButton={true}
+                                />;
+                            }) : <h2><i>No applications to withdraw bytes from</i></h2>}
+                    </div>
 
-                <div className="list-of-applications">
-                    {(this.state.isPending) &&
-                            <i className="throbber-wrapper">
-                                <Throbber size={64} relative={true} />
-                            </i>
+                    <style jsx>{`
+                        .page{
+                            width: 500px;
+                            margin: auto;
+
+                            @media (max-width: 550px) {
+                                width: 100%;
+                            }
                         }
-                    {(this.state.applications != undefined && this.state.applications.length != 0) ?
-                        this.state.applications.map((application, index) => {
-                            const onWithdraw = this.onWithdrawBytes.bind(this, index);
-                            return <Application
-                                key={index}
-                                isOwnApplication={false}
-                                userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
-                                isOnReceiversPage={false}
-                                application={application}
-                                // tslint:disable-next-line: react-this-binding-issue
-                                onWithdrawBytes={onWithdraw}
-                                pastDonation={false}
-                                showWithdrawButton={true}
-                            />;
-                        }) : <h2><i>No applications to withdraw bytes from</i></h2>}
+
+                        h1, h2 {
+                            text-align: center;
+                        }
+
+                        .list-of-applications {
+                            width: 500px; 
+                            margin: 0;
+                            /**
+                             * When the viewport gets too small, force rendering
+                             * of applications to fill 100%
+                             */
+                            @media (max-width: 550px) {
+                                width: 100%;
+                            }
+                        }
+                    `}</style>
                 </div>
-
-                <style jsx>{`
-                    .page{
-                        width: 500px;
-                        margin: auto;
-
-                        @media (max-width: 550px) {
-                            width: 100%;
-                        }
-                    }
-
-                    h1, h2 {
-                        text-align: center;
-                    }
-
-                    .list-of-applications {
-                        width: 500px; 
-                        margin: 0;
-                        /**
-                         * When the viewport gets too small, force rendering
-                         * of applications to fill 100%
-                         */
-                        @media (max-width: 550px) {
-                            width: 100%;
-                        }
-                    }
-                `}</style>
-            </div>
-        );
+            );
+        }
     }
 
     /**

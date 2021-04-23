@@ -3,7 +3,7 @@ import ApplicationJSON from "src/assets/data/application.json"
 
 import { colors } from "src/ts/config/colors";
 import { ApplicationModel, ApplicationStatus, deleteApplication, initiateDonation, confirmReceival, updateStatus, fetchApplicationById, withdrawBytes } from "src/ts/models/ApplicationModel";
-
+import { UserModel } from "src/ts/models/UserModel";
 import { easings } from "src/ts/config/easings";
 import { Button, Chevron } from "src/ts/components/utils";
 import { UserTypes, fetchUser } from "src/ts/models/UserModel";
@@ -20,7 +20,11 @@ import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { ProductModel, fetchProductById } from "src/ts/models/ProductModel";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { Product } from "src/ts/components/elements/Product/Product";
+
+import { DonorModel } from "src/ts/models/DonorModel";
+
 import { Link } from "react-router-dom";
+
 
 export type ApplicationProps = {
     /**
@@ -144,7 +148,7 @@ export type ApplicationState = {
      * Specifies the loaded receiver of the application (if any). Will first be
      * loaded if the user wishes to see information about the receiver
      */
-    receiver?: ReceiverModel;
+    receiver?: ReceiverModel | DonorModel;
     /**
      * Specifies the loaded receiver of the application (if any). Will first be
      * loaded if the user wishes to see information about the receiver
@@ -1084,7 +1088,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     private renderConfirmDialogDonatePolloPollo() {
-        const text = (<>USER FUNDS AND LOGIC HAS TO BE IMPLEMENTED</>);
+        const { application } = this.props;
+        const text = (<>Are you sure you want to donate <strong>${application.productPrice}</strong> to <strong>{application.receiverName}</strong>?</>);
         return (
             <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={text}
@@ -1182,7 +1187,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         throbberSize={24}
                         width="50%"
                         withThrobber={true}
-                        text="PolloPollo"
+                        text="PolloPollo account"
                     />) : (
                         <div className="btn-login">
                             <Link className="pollopollo-donation" to={routes.loginRedirect.path}>
@@ -1339,7 +1344,10 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
         if (!this.state.product) {
             return;
         }
-
+        if(!(this.props.store.user instanceof UserModel))
+        {
+            return;
+        }
         const isOwnProduct = this.props.store.user ? this.props.store.user.id === this.props.application.producerId : false;
 
         return (

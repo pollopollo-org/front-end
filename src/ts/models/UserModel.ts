@@ -10,6 +10,7 @@ import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { LoginFormState } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterFormState } from "src/ts/components/pages/RegisterForm/RegisterForm";
 import { createDonor } from "src/ts/utils/createDonor";
+import { DonorModel } from "src/ts/models/DonorModel";
 
 export enum UserTypes {
     PRODUCER    = "Producer",
@@ -155,10 +156,10 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             
             if(data.dto === undefined) store.user = createUser(data.userDTO);
             else{
-                createDonor(data.dto.dto);
+                store.user = createDonor(data.dto);
             }
 
-            store.user = createUser(data.userDTO);
+            //store.user = createUser(data.userDTO);
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
@@ -258,7 +259,7 @@ export async function fetchUser(userId: string, store: Store) {
  * This will only be possible if the user has already logged in previously,
  * since it relies on a token being stored in the localStorage.
  */
-export async function fetchSelf(): Promise<UserModel | undefined> {
+export async function fetchSelf(): Promise<UserModel | DonorModel | undefined> {
     const token = localStorage.getItem("userJWT");
 
     // It is only possible to fetch self when a token is stored since that is

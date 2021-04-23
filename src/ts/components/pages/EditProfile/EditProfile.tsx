@@ -10,7 +10,7 @@ import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 import { editProfile, UserTypes } from "src/ts/models/UserModel";
-
+import { UserModel } from "src/ts/models/UserModel";
 type EditProfileProps = {
     /**
      * Contains a reference to the root store
@@ -122,7 +122,12 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
      */
     public componentDidMount(): void {
         const { store } = this.props;
-
+        console.log("hi")
+        console.log(store.user);
+        if(!(store.user instanceof UserModel))
+        {
+            return;
+        }
         if (store.user) {
             this.setState({
                 userId: store.user.id,
@@ -153,7 +158,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
         if (!this.props.store.user) {
             return <h1>No user currently logged in!</h1>;
         }
-
+        if(!(this.props.store.user instanceof UserModel))
+        {
+            return <h2>Currently logged in, as a donor!</h2>;
+        }
         const picture = this.getProfilePictureURL();
         return (
             <div className="allSection">
@@ -787,6 +795,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
      * otherwise not
      */
     private getProfilePictureURL = () => {
+        
         if (isNullOrUndefined(this.state.profilePicture)) {
             return this.props.store.user ? this.props.store.user.getThumbnail() : "";
         } else {

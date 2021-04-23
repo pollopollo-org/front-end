@@ -14,7 +14,9 @@ import userInfoJson from "src/assets/data/userInfo.json";
 import { Store } from "src/ts/store/Store";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
-
+import { UserModel } from "src/ts/models/UserModel";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
+import { DonorModel } from "src/ts/models/DonorModel";
 
 /**
  * Specification of props required to render <UserInfo />.
@@ -114,7 +116,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 )}
                 {this.props.store.user && (
                     <>
-                        <span className="name">{this.props.store.user.firstName} {this.props.store.user.surName}</span>
+                        <span className="name">{(this.props.store.user as UserModel).firstName} {(this.props.store.user as UserModel).surName}</span>
                         <span className="chevron">
                             <Chevron
                                 vertical
@@ -385,7 +387,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         {userInfoJson.edit}
                     </Link>
                 </span>
-                {getUserType(this.props.store.user) === UserTypes.PRODUCER && <span className="link" onClick={this.onItemClick} role="link">
+                {getUserType(this.props.store.user as UserModel) === UserTypes.PRODUCER && <span className="link" onClick={this.onItemClick} role="link">
                     <Link to={routes.withdrawBytes.path}>
                         <i className="withdraw">{getSVG("dollar-sign")}</i>
                         {userInfoJson.withdraw}
@@ -519,7 +521,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
         return (
             <div className="user">
-                <b>{this.props.store.user.firstName} {this.props.store.user.surName}</b><br />
+                <b>{(this.props.store.user as UserModel).firstName} {(this.props.store.user as UserModel).surName}</b><br />
                 {this.renderUserType()}
 
                 <style jsx>{`
@@ -561,11 +563,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      */
     protected renderUserType(): React.ReactNode {
         // ... Otherwise return label based on user type
-        if (this.props.store.user instanceof ProducerModel) {
+        if (this.props.store.user instanceof ProducerModel)
             return "Producer";
-        } else {
+        if (this.props.store.user instanceof ReceiverModel) 
             return "Reciever";
-        }
+        if (this.props.store.user instanceof DonorModel) 
+            return "Donor";
+        return "Unknown"
     }
 
     /**
