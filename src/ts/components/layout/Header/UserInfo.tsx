@@ -563,16 +563,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      */
     protected renderUserType(): React.ReactNode {
         // ... Otherwise return label based on user type
-        if (this.props.store.user instanceof ProducerModel) {
+        if (this.props.store.user instanceof ProducerModel)
             return "Producer";
-        } else if (this.props.store.user instanceof ReceiverModel) {
+        if (this.props.store.user instanceof ReceiverModel) 
             return "Reciever";
-        } else if (this.props.store.user instanceof DonorModel) {
+        if (this.props.store.user instanceof DonorModel) 
             return "Donor";
-        } else {
-            //TODO: best default value for an unknown user?
-            return "Uknown"
-        }
+        return "Unknown"
     }
 
     /**
