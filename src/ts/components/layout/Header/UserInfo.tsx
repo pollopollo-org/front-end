@@ -15,6 +15,8 @@ import { Store } from "src/ts/store/Store";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
 import { UserModel } from "src/ts/models/UserModel";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
+import { DonorModel } from "src/ts/models/DonorModel";
 
 /**
  * Specification of props required to render <UserInfo />.
@@ -563,8 +565,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
         // ... Otherwise return label based on user type
         if (this.props.store.user instanceof ProducerModel) {
             return "Producer";
-        } else {
+        } else if (this.props.store.user instanceof ReceiverModel) {
             return "Reciever";
+        } else if (this.props.store.user instanceof DonorModel) {
+            return "Donor";
+        } else {
+            //TODO: best default value for an unknown user?
+            return "Uknown"
         }
     }
 
