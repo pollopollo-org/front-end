@@ -20,6 +20,7 @@ import { Thumbnail } from "src/ts/components/utils/Thumbnail";
 import { ProductModel, fetchProductById } from "src/ts/models/ProductModel";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { Product } from "src/ts/components/elements/Product/Product";
+import { DonorModel } from "src/ts/models/DonorModel";
 
 export type ApplicationProps = {
     /**
@@ -143,7 +144,7 @@ export type ApplicationState = {
      * Specifies the loaded receiver of the application (if any). Will first be
      * loaded if the user wishes to see information about the receiver
      */
-    receiver?: ReceiverModel;
+    receiver?: ReceiverModel | DonorModel;
     /**
      * Specifies the loaded receiver of the application (if any). Will first be
      * loaded if the user wishes to see information about the receiver

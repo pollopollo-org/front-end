@@ -6,18 +6,18 @@ import { DonorModel } from "src/ts/models/DonorModel";
 /**
  * Check if the user is a producer
  */
-export function isProducerUser(model: UserModel): model is ProducerModel {
+export function isProducerUser(model: UserModel | DonorModel): model is ProducerModel {
     return model instanceof ProducerModel;
 }
 
 /**
  * Check if the user is a receiver
  */
-export function isReceiverUser(model: UserModel): model is ReceiverModel {
+export function isReceiverUser(model: UserModel | DonorModel): model is ReceiverModel {
     return model instanceof ReceiverModel;
 }
 
 
-export function isDonerUser(model: DonorModel): model is DonorModel {
+export function isDonorUser(model: DonorModel): model is DonorModel {
     return model instanceof DonorModel;
 }

@@ -22,6 +22,7 @@ import { Throbber } from "src/ts/components/utils";
 import { Fade } from "src/ts/components/transitions/Fade";
 import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
+import { DonorModel } from "src/ts/models/DonorModel";
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
@@ -38,7 +39,7 @@ export type UserState = {
     /**
      * Specifies the user to be rendered
      */
-    renderedUser?: UserModel;
+    renderedUser?: UserModel | DonorModel;
 
     /**
      * Specifies whether the rendered user is the user themself, which means
@@ -1141,7 +1142,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     private loadUser = async () => {
         // tslint:disable-next-line completed-docs
         const readonlyUserId = (this.props.match.params as { userId: string }).userId;
-        let user: UserModel | undefined;
+        let user: UserModel | DonorModel | undefined;
 
         // If we have a match on the route, that means we should attempt to 
         // render the given user in readonly mode

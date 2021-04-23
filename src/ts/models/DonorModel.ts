@@ -31,7 +31,7 @@ export class DonorModel {
     public readonly email : string;
     public readonly DeviceAddress? : string;
     public readonly WalletAddress? : string;
-    public readonly thumbnail? : string;
+    private readonly thumbnail? : string;
 
     constructor(data: DonorModelData) {
         this.AaAccount = data.AaAccount;
