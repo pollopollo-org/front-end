@@ -1084,7 +1084,8 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     private renderConfirmDialogDonatePolloPollo() {
-        const text = (<>USER FUNDS AND LOGIC HAS TO BE IMPLEMENTED</>);
+        const { application } = this.props;
+        const text = (<>Are you sure you want to donate <strong>${application.productPrice}</strong> to <strong>{application.receiverName}</strong>?</>);
         return (
             <Dialog title={ApplicationJSON.confirmDonateTitle}
                 text={text}
