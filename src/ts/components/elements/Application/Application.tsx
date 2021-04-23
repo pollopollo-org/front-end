@@ -1177,7 +1177,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
                         throbberSize={24}
                         width="50%"
                         withThrobber={true}
-                        text="PolloPollo"
+                        text="PolloPollo account"
                     />) : (
                             <a href={routes.registerDonor.path}>link to create Donor</a>
                         )}
