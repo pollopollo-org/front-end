@@ -1560,12 +1560,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
             this.setState({ showDialogDonate: true });
         }
 
-        // else {
-        //     // Set status to 1 (Locked). and show the normal dialog box
-        //     await updateStatus(this.props.application, 1, this.props.store);
-    
-        //     this.setState({ showDialogDonationChoice: true });
-        // }
     }
 
     /**
@@ -1589,7 +1583,6 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     }
 
     private closeDonation = async () => {
-        await updateStatus(this.props.application, 0, this.props.store);
         this.setState({ showDialogDonate: false });
     }
 
