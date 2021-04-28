@@ -1,3 +1,4 @@
+import { UserModel } from "src/ts/models/UserModel";
 import { CountryCodes } from "src/ts/models/CountryCodes";
 import countriesJson from "src/assets/countries.json";
 import { History } from "history";
@@ -484,10 +485,10 @@ export async function postProduct(data: ProductPostData, store: Store, history: 
 
         // If either a user haven't been logged in or if we're currently missing
         // a token, then we cannot process this process, and hence we bail out.
-        if (!store.user || !token) {
+        if ((!store.user || !token) || !(store.user instanceof UserModel)) {
             return;
         }
-
+        
         const result = await fetch(apis.products.post.path, {
             method: "POST",
             headers: {
@@ -563,10 +564,10 @@ export async function toggleProductAvailability(product: ProductModel, store: St
         // The user MUST be logged in in order to be able to toggle the product
         // availability. (furthermore the logged in user must be the owner of
         // the product, else the backend will throw errors).
-        if (!token || !store.user) {
+        if ((!token || !store.user) || !(store.user instanceof UserModel)) {
             return;
         }
-
+        
         const result = await fetch(apis.products.put.path.replace("{productId}", String(product.id)), {
             method: "PUT",
             headers: {

@@ -12,7 +12,7 @@ import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
 import { Link } from "react-router-dom";
 import { getSVG } from "src/assets/svg";
-
+import { UserModel } from "src/ts/models/UserModel";
 export type ProductsPageProps = {
     /**
      * Contains a reference to the root sotre
@@ -262,7 +262,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                         <Product
                             key={index}
                             product={product}
-                            userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
+                            userType={getUserType(this.props.store.user as UserModel)}
                             isOnProducersPage={false}
                             isOwnProduct={false}
                         />
@@ -283,7 +283,7 @@ class UnwrappedProductsPage extends React.PureComponent<ProductsPageProps, Produ
                 <div className="allDiv">
                     <div className="header">
                         <h1>{ProductsPageJson.title}</h1>
-                        {getUserType(this.props.store.user) === UserTypes.PRODUCER && (
+                        {getUserType(this.props.store.user as UserModel) === UserTypes.PRODUCER && (
                             <Link className="productsPage__link newProduct" to={routes.createProduct.path} title="Create new product">
                                 <i>
                                     {getSVG("plus-square")}

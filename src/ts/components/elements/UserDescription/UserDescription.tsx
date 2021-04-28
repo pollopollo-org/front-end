@@ -8,12 +8,13 @@ import profileJson from "src/assets/data/profile.json";
 import { UserModel } from "src/ts/models/UserModel";
 import { getSVG } from "src/assets/svg";
 import { colors } from "src/ts/config";
+import { DonorModel } from "src/ts/models/DonorModel";
 
 type UserDescriptionProps = {
     /**
      * Contains all the information about the user that should be described
      */
-    user?: UserModel;
+    user?: UserModel | DonorModel;
 
     /**
      * Specifies whehter the rendered user is the user themself, which means
@@ -30,7 +31,7 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
      * Main render method
      */
     public render(): React.ReactNode {
-        const { user } = this.props;
+        const user  = this.props.user as UserModel;
 
         if (!user) {
             return <h1>There is no user available for rendering</h1>;
@@ -168,11 +169,13 @@ export class UserDescription extends React.PureComponent<UserDescriptionProps> {
      * country code
      */
     private extractCountry = () => {
-        const user = this.props.user;
+        const user = this.props.user as UserModel;
 
         if (!user) {
             return "Unknown";
         }
+        
+
 
         const countryData = countriesJson.find((country) => country.Code === user.country);
 

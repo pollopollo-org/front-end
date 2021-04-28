@@ -13,7 +13,7 @@ import FrontPageJson from "src/assets/data/frontpage.json";
 import { Throbber, Button} from "src/ts/components/utils";
 import { fetchCompletedApplicationBatch, ApplicationModel } from "src/ts/models/ApplicationModel";
 import { Link } from "react-router-dom";
-
+import { UserModel } from "src/ts/models/UserModel";
 export type FrontPageProps = {
     /**
      * Contains a reference to the root sotre
@@ -81,7 +81,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         
                     </div>
                     <div className="action_button">
-                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.PRODUCER  ? routes.loginOrRegisterReceiver.path : routes.productsPage.path}>
+                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user as UserModel) === UserTypes.PRODUCER  ? routes.loginOrRegisterReceiver.path : routes.productsPage.path}>
                             <Button
                                 withThrobber={false}
                                 text={FrontPageJson.applyProduct}
@@ -92,7 +92,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         </Link>
                     </div>
                     <div className="action_button">
-                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.RECEIVER ? routes.loginOrRegisterProducer.path : routes.productsPage.path}>
+                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user as UserModel) === UserTypes.RECEIVER ? routes.loginOrRegisterProducer.path : routes.productsPage.path}>
                             <Button
                                 withThrobber={false}
                                 text={FrontPageJson.offerProduct}
@@ -103,7 +103,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                         </Link>
                     </div>
                     <div className="action_button">
-                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user) === UserTypes.PRODUCER  ? routes.loginOrRegisterReceiver.path : routes.profile.path}>
+                        <Link className="link makeDonation" to={this.props.store.user === undefined || getUserType(this.props.store.user as UserModel) === UserTypes.PRODUCER  ? routes.loginOrRegisterReceiver.path : routes.profile.path}>
                             <Button
                                 withThrobber={false}
                                 text={FrontPageJson.confirmReceipt}
@@ -166,7 +166,7 @@ class UnwrappedFrontPage extends React.Component<FrontPageProps, FrontPageState>
                                 return <Application
                                     key={index}
                                     isOwnApplication={false}
-                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    userType={getUserType(this.props.store.user as UserModel)}
                                     isOnReceiversPage={false}
                                     application={application}
                                     pastDonation={true}
