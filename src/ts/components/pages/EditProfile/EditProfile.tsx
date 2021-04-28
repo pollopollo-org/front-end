@@ -122,6 +122,9 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
      */
     public componentDidMount(): void {
         const { store } = this.props;
+        if(store.user && isProducerUser(store.user) && store.user.wallet === undefined){
+            window.location.reload();
+        }
 
         if (store.user) {
             this.setState({
@@ -140,7 +143,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 description: store.user.description,
                 profilePicture: undefined,
                 wallet: isProducerUser(store.user) ? store.user.wallet : "",
-                pairingLink: isProducerUser(store.user) ? store.user.pairingLink : "",
+                pairingLink: isProducerUser(store.user) ? "obyte-tn:AqqokWgwcg8cUN0Sowm3y9gwkpX5spgkFvAQ/mhXWWWz@obyte.org/bb-test#" + (store.user.pairingLink + "").split("#", 2)[1] : "",
             });
         }
     }
