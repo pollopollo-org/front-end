@@ -798,7 +798,7 @@ class UnwrappedApplication extends React.PureComponent<ApplicationProps, Applica
     private renderCornerInformation = () => {
         if (this.props.pastDonation) return this.renderPriceAndDate();
 
-        if (this.props.userType === UserTypes.DONOR || UserTypes.UNDEFINED) return this.renderDonateButton();
+        if (this.props.userType === UserTypes.DONOR || this.props.userType === UserTypes.UNDEFINED) return this.renderDonateButton();
         if (this.props.userType === UserTypes.PRODUCER && this.props.showWithdrawButton)  return this.renderWithdrawButton();
         if (this.props.userType === UserTypes.PRODUCER || this.props.userType === UserTypes.RECEIVER) return this.renderPrice();
         
