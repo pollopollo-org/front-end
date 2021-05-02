@@ -122,9 +122,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
      */
     public componentDidMount(): void {
         const { store } = this.props;
-
-        console.log("hi")
-        console.log(store.user);
+        
         if(!(store.user instanceof UserModel))
         {
             return;
