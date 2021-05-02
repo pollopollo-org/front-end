@@ -122,12 +122,16 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
      */
     public componentDidMount(): void {
         const { store } = this.props;
-        console.log("hi")
-        console.log(store.user);
+
         if(!(store.user instanceof UserModel))
         {
             return;
         }
+
+        if(store.user && isProducerUser(store.user) && store.user.wallet === undefined){
+            window.location.reload();
+        }
+
         if (store.user) {
             this.setState({
                 userId: store.user.id,
@@ -145,7 +149,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 description: store.user.description,
                 profilePicture: undefined,
                 wallet: isProducerUser(store.user) ? store.user.wallet : "",
-                pairingLink: isProducerUser(store.user) ? store.user.pairingLink : "",
+                // For the pairingLink, we use the chatbot link from the .env files, but keep the pairingSecret from the store.user.pairingLink
+                pairingLink: isProducerUser(store.user) ? `${process.env.REACT_APP_OBYTE_PROTOCOL}:${process.env.REACT_APP_OBYTE_PAIRING_CODE}#` + (store.user.pairingLink + "").split("#", 2)[1] : "",
             });
         }
     }
