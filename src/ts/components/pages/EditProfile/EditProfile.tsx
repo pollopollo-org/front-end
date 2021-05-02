@@ -151,7 +151,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 description: store.user.description,
                 profilePicture: undefined,
                 wallet: isProducerUser(store.user) ? store.user.wallet : "",
-                pairingLink: isProducerUser(store.user) ? "obyte-tn:AqqokWgwcg8cUN0Sowm3y9gwkpX5spgkFvAQ/mhXWWWz@obyte.org/bb-test#" + (store.user.pairingLink + "").split("#", 2)[1] : "",
+                pairingLink: isProducerUser(store.user) ? `${process.env.REACT_APP_OBYTE_PROTOCOL}:${process.env.REACT_APP_OBYTE_PAIRING_CODE}#` + (store.user.pairingLink + "").split("#", 2)[1] : "",
             });
         }
     }
