@@ -968,14 +968,65 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         return (
             <div className="deposit">
-                <h1>Balance: 100kr USD</h1>
+                <div className="balance-display">
+
+                    <h3>Available funds: <code><span className="balance-curency">$</span>1000</code></h3>
+
+                    <div className="balance-type">
+                        <small>OUSD</small>
+                        <code><span className="balance-curency">$</span>8.19</code>
+                    </div>
+
+                    <div className="balance-type">
+                        <small>Bytes</small>
+                        <code><span className="balance-curency">$</span>12.19</code>
+                    </div>
+
+                </div>
                 <Button onClick={this.openDeposit} withThrobber={false} text={"title should be set in json"} width={110} height={35} fontSize={12} />
                     <Lightbox active={this.state.showDepositLightbox} onClose={this.closeDeposit}>
                         <div className="dialog">
+                            
                             <h3>deposit</h3>
                             <p>placeholder, should be buttons</p>
                         </div>
+
+                        <div className="dialog-buttons">
+
+                            <Button
+                                className="xd"
+                                isPending={false}
+                                throbberSize={24}
+                                width="50%"
+                                withThrobber={true}
+                                text="obyte"
+                            />
+
+                            <Button
+                                className="xdxd"
+                                withThrobber={false}
+                                width="100%"
+                                text="coinify"
+                            />
+                        </div>
                     </Lightbox>
+                    <style jsx>{`
+                    .balance-display {
+                        display: flex;
+                    }
+
+                    .balance-type {
+                        margin-right: 1rem;
+                    }
+
+                    .balance-type small {
+                        margin-right: 0.2rem;
+                    }
+
+                    h3 {
+                        margin: 0;
+                    }
+                `}</style>
             </div>
         )
     }
