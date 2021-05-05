@@ -18,11 +18,12 @@ import { colors } from "src/ts/config";
 import { ProductModel, fetchProductByProducer, ProductStatus } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
-import { Throbber } from "src/ts/components/utils";
+import { Button, Throbber } from "src/ts/components/utils";
 import { Fade } from "src/ts/components/transitions/Fade";
 import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { DonorModel } from "src/ts/models/DonorModel";
+import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
@@ -115,6 +116,8 @@ export type UserState = {
      */
     initialLoad?: boolean;
 
+    showDepositLightbox: boolean;
+
 
 }
 
@@ -136,7 +139,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         filterActiveProducts: true,
         filterApplications: ApplicationStatus.OPEN,
         isPending: true,
-        initialLoad: true
+        initialLoad: true,
+        showDepositLightbox: false
     }
 
 
@@ -243,6 +247,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     <h2>{this.state.isSelf ? userProfileJson.ownApplications : userProfileJson.othersApplications}</h2>
                                     {this.state.isSelf && this.renderFilterDropdown()}
                                 </div>
+
+                                {this.renderDepositButton()}
 
                                 {this.renderApplications()}
 
@@ -956,6 +962,33 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 this.setState({ pendingApplications: newPendingApplicationList });
             }
         }
+    }
+
+    private renderDepositButton = () => {
+
+        return (
+            <div className="deposit">
+                <h1>Balance: 100kr USD</h1>
+                <Button onClick={this.openDeposit} withThrobber={false} text={"title should be set in json"} width={110} height={35} fontSize={12} />
+                    <Lightbox active={this.state.showDepositLightbox} onClose={this.closeDeposit}>
+                        <div className="dialog">
+                            <h3>deposit</h3>
+                            <p>placeholder, should be buttons</p>
+                        </div>
+                    </Lightbox>
+            </div>
+        )
+    }
+
+    private openDeposit = async () => {
+        this.setState({ showDepositLightbox: true });
+        console.log("open!");
+    }
+
+
+    private closeDeposit = async () => {
+        this.setState({ showDepositLightbox: false });
+        // console.log("close!");
     }
 
     /**
