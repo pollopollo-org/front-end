@@ -18,8 +18,11 @@ export type DonorModelData = {
     UID : string;
     Password: string;
     email : string;
+    firstName?: string;
+    surName?: string;
     DeviceAddress? : string;
     WalletAddress? : string;
+    country?: string;
     userRole: "Donor";
 }
 
@@ -31,7 +34,11 @@ export class DonorModel {
     public readonly email : string;
     public readonly DeviceAddress? : string;
     public readonly WalletAddress? : string;
+    public readonly firstName?: string;
+    public readonly surName?: string;
+    public readonly country?: string;
     private readonly thumbnail? : string;
+
 
     constructor(data: DonorModelData) {
         this.AaAccount = data.AaAccount;

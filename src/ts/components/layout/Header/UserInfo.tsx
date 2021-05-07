@@ -521,7 +521,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
         return (
             <div className="user">
-                <b>{(this.props.store.user as UserModel).firstName} {(this.props.store.user as UserModel).surName}</b><br />
+                <b>{(this.props.store.user).firstName} {(this.props.store.user).surName}</b><br />
                 {this.renderUserType()}
 
                 <style jsx>{`
