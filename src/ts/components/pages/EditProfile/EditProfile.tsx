@@ -9,8 +9,9 @@ import { isProducerUser } from "src/ts/utils/verifyUserModel";
 import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
-import { editProfile, UserTypes } from "src/ts/models/UserModel";
-
+import { editProfile} from "src/ts/models/UserModel";
+import { UserModel } from "src/ts/models/UserModel";
+import { DonorModel } from "src/ts/models/DonorModel";
 type EditProfileProps = {
     /**
      * Contains a reference to the root store
@@ -131,8 +132,8 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
         if(store.user && isProducerUser(store.user) && store.user.wallet === undefined){
             window.location.reload();
         }
-
-        if (store.user) {
+        
+        if (store.user instanceof UserModel) {
             this.setState({
                 userId: store.user.id,
                 firstName: store.user.firstName,
@@ -151,6 +152,19 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                 wallet: isProducerUser(store.user) ? store.user.wallet : "",
                 // For the pairingLink, we use the chatbot link from the .env files, but keep the pairingSecret from the store.user.pairingLink
                 pairingLink: isProducerUser(store.user) ? `${process.env.REACT_APP_OBYTE_PROTOCOL}:${process.env.REACT_APP_OBYTE_PAIRING_CODE}#` + (store.user.pairingLink + "").split("#", 2)[1] : "",
+            });
+        } else if (store.user instanceof DonorModel)
+        {
+            this.setState({
+                userId: store.user.id,
+                firstName: store.user.firstName,
+                lastName: store.user.surName,
+                country: store.user.country,
+                password: "",
+                repeatedPassword: "",
+                oldPassword: "",
+                description: store.user.description,
+                profilePicture: undefined
             });
         }
     }
@@ -171,24 +185,23 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
         return (
             <div className="allSection">
                 <h1>{editProfileJson.title}</h1>
+                
                 <form onSubmit={this.sendToBackEnd}>
                     <div className="inputPicDescSection">
                         <div className="inputFieldsSection">
-                            <div className="required">
+                            <div {...this.props.store.user instanceof UserModel? {className:"required"} : {}}>
                                 <input
                                 className="input name first"
-                                required
-                                aria-required={true}
+                                {...this.props.store.user instanceof UserModel? {className: "required", "aria-required":true} : {}}
                                 value={this.state.firstName}
                                 placeholder={editProfileJson.firstName}
                                 onChange={this.onFirstnameChanged}
                                 />
                             </div>
-                            <div className="required">
+                            <div {...this.props.store.user instanceof UserModel? {className:"required"} : {}}>
                                 <input
                                     className="input name last"
-                                    required
-                                    aria-required={true}
+                                    {...this.props.store.user instanceof UserModel? {className: "required", "aria-required":true} : {}}
                                     value={this.state.lastName}
                                     placeholder={editProfileJson.lastName}
                                     onChange={this.onLastnameChanged}
@@ -198,6 +211,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                 <><div className="required">
                                     <input
                                         className="input street name"
+                                        //Check to conditionally add prop required if user is of type UserModel.
                                         required
                                         aria-required={true}
                                         value={this.state.street}
@@ -233,7 +247,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                 </div></>
                             }
                             <div className="SelectCountryDiv">
-                                <span className="required-select">
+                                <span {...this.props.store.user instanceof UserModel? {className:"required-select"} : {}}>
                                     <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country} />
                                 </span>
                             </div>
@@ -246,7 +260,7 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
                                 aria-required={true}
                                 placeholder={editProfileJson.email}
                             />
-                            {this.state.userType === UserTypes.PRODUCER && <div className="wallet-wrapper">
+                            {isProducerUser(this.props.store.user) && <div className="wallet-wrapper">
                                 <input
                                     className="input wallet"
                                     value={this.state.wallet || ""}
