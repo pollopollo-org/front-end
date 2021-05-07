@@ -10,7 +10,7 @@ import { isNullOrUndefined } from "util";
 import { Button } from "src/ts/components/utils";
 import { SelectCountry } from "src/ts/components/utils/SelectCountry";
 import { editProfile, UserTypes } from "src/ts/models/UserModel";
-import { UserModel } from "src/ts/models/UserModel";
+
 type EditProfileProps = {
     /**
      * Contains a reference to the root store
@@ -123,10 +123,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
     public componentDidMount(): void {
         const { store } = this.props;
 
-        if(!(store.user instanceof UserModel))
-        {
-            return;
-        }
+        // if(!(store.user instanceof UserModel))
+        // {
+        //     return;
+        // }
 
         if(store.user && isProducerUser(store.user) && store.user.wallet === undefined){
             window.location.reload();
@@ -163,10 +163,10 @@ class UnwrappedEditProfile extends React.PureComponent<EditProfileProps, EditPro
         if (!this.props.store.user) {
             return <h1>No user currently logged in!</h1>;
         }
-        if(!(this.props.store.user instanceof UserModel))
-        {
-            return <h2>Currently logged in, as a donor!</h2>;
-        }
+        // if(!(this.props.store.user instanceof UserModel))
+        // {
+        //     return <h2>Currently logged in, as a donor!</h2>;
+        // }
         const picture = this.getProfilePictureURL();
         return (
             <div className="allSection">

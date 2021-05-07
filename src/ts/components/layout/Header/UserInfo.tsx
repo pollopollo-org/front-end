@@ -116,7 +116,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 )}
                 {this.props.store.user && (
                     <>
-                        <span className="name">{(this.props.store.user as UserModel).firstName} {(this.props.store.user as UserModel).surName}</span>
+                        <span className="name">{(this.props.store.user).firstName} {(this.props.store.user).surName}</span>
                         <span className="chevron">
                             <Chevron
                                 vertical
