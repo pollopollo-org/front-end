@@ -1090,8 +1090,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         console.log(evt.currentTarget.value);
     }
 
-    private generateObyteURI(donor: DonorModel, amount: number, asset = 'base') {
-        return `${process.env['REACT_APP_OBYTE_PROTOCOL']}:${donor.AaAccount}?amount=${amount}&amp;asset=${asset}`
+    private generateObyteURI(aaAccount: string, amount = 10000, asset = "base") {
+        return `${process.env["REACT_APP_OBYTE_PROTOCOL"]}:${aaAccount}?amount=${amount}&asset=${asset}`
     }
 
     private addFundsObyte = async () => {
