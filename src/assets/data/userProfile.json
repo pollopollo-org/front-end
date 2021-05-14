@@ -15,5 +15,7 @@
     "donationsWorth": "donations worth $",
     "availableFunds" : "Available funds",
     "addFundsButtonLabel" : "Add funds",
-    "addFundsButtonTitle" : "Add funds to your PolloPollo account"
+    "addFundsButtonTitle" : "Add funds to your PolloPollo account",
+    "specifyFundsLabel" : "Amount to deposit",
+    "specifyPaymentForm" : "Chose how you want to deposit"
 }

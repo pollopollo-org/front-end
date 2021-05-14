@@ -38,7 +38,7 @@ export type UserState = {
      */
     userId: number;
 
-    funds_input: number;
+    fundsInput: number;
 
     /**
      * Specifies the user to be rendered
@@ -135,7 +135,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Setup initial state
      */
     public state: UserState = {
-        funds_input: 0,
+        fundsInput: 10000,
         userId: this.props.store.user ? (this.props.store.user as UserModel).id : 0,
         isSelf: false,
         isSmall: false,
@@ -968,24 +968,25 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
     }
 
+    // tslint:disable-next-line max-func-body-length
     private renderDepositButton = () => {
 
         return (
             <div className="deposit">
 
                 <div className="balance-currency">
-                    <h3>{userProfileJson.availableFunds}: <code>$1000</code></h3>
+                    <h3>{userProfileJson.availableFunds}: <code>$10000000000</code></h3>
                 </div>
 
                 <div className="balance-display">
                     <div className="balance-type">
                         <small>OUSD</small>
-                        <code><span className="balance-curency">$</span>8.19</code>
+                        <code><span className="balance-curency">$</span>9000000</code>
                     </div>
 
                     <div className="balance-type">
                         <small>Bytes</small>
-                        <code><span className="balance-curency">$</span>12.19</code>
+                        <code><span className="balance-curency">$</span>80.000</code>
                     </div>
                 </div>
 
@@ -999,13 +1000,15 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             </div>
                             <div className="group">
                                 <div className="input-group">
-                                    <label className="input-label">pls input amount</label>
+                                    <label className="input-label">{userProfileJson.specifyFundsLabel}</label>
                                     <input
                                         type="number"
                                         className="input-funds"
-                                        aria-valuemin={0}
-                                        aria-valuenow={0}
-                                        aria-valuemax={100}
+                                        aria-valuemin={10000}
+                                        aria-valuenow={10000}
+                                        aria-valuemax={Number.MAX_VALUE}
+                                        value={this.state.fundsInput}
+                                        defaultValue="10000"
                                         id="input_funds"
                                         aria-required={true}
                                         onChange={this.updateFunds}
@@ -1013,33 +1016,21 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 </div>
 
                                 <div className="input-group">
-                                    <label className="input-label">please select paymentform</label>
+                                    <label className="input-label">{userProfileJson.specifyPaymentForm}</label>
                                     <div className="dialog-buttons">
                                         <Button
-                                            className="btn coinify-btn"
+                                            className="coinify-btn"
                                             isPending={false}
                                             throbberSize={24}
                                             width="50%"
                                             withThrobber={true}
                                             text="Coinify"
                                         />
-
-                                        <Button
-                                            className="btn btn-obyte"
-                                            withThrobber={false}
-                                            onClick={this.addFundsObyte}
-                                            width="100%"
-                                            text="Obyte wallet"
-                                        />
+                                        <a className="btn" href={this.generateObyteURI(this.state.renderedUser as DonorModel, this.state.fundsInput)}>Obyte wallet</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
-                        <a href={this.generateObyteURI(this.state.renderedUser as DonorModel)}>
-                            Deposit bytes
-                        </a>
 
                     </Lightbox>
                     <style jsx>{`
@@ -1099,13 +1090,37 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         font-size: 16px;
                     }
 
+                    .btn {
+                        text-align: center;
+                        font-weight: 300;
+                        width: 50%;
+                        text-decoration: none;
+                        padding: 10px 5px;
+                        background-color: ${ colors.secondary };
+                        color: ${ colors.white };
+                        transition: background-color 0.1s linear;
+                        border: none;
+                        border-radius: 2px;
+                        
+                        font-family: ${ fonts.text };
+                        cursor: pointer;
+                    }
+
+                    .btn:hover {
+                        background-color: ${ colors.primary };
+                    }
+
                 `}</style>
             </div>
         )
     }
 
     protected updateFunds = (evt: React.FormEvent<HTMLInputElement>) => {
-        console.log(evt.currentTarget.value);
+        var input = parseFloat(evt.currentTarget.value);
+        // a check for users having an aaacount should be implemented.
+
+        if(!isNaN(input) && input >= 10000) this.setState({fundsInput: input})
+        else return;
     }
 
     private generateObyteURI(user : DonorModel, amount = 10000, asset = "base") {
@@ -1116,12 +1131,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         const base64_string = btoa(stringified)
         const encoded_base64_string = encodeURIComponent(base64_string)
         return `${process.env["REACT_APP_OBYTE_PROTOCOL"]}:${process.env["REACT_APP_AAADDRESS"]}?base64data=${encoded_base64_string}&amount=${amount}&asset=${asset}`
-    }
-
-    private addFundsObyte = async () => {
-        // omregner dollars til bytes
-
-        // o
     }
 
     private openDeposit = async () => {
