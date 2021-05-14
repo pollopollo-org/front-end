@@ -1,8 +1,6 @@
-
 import { apis } from "src/ts/config/apis";
 import { Store } from "src/ts/store/Store";
 import { alertApiError } from "src/ts/utils/alertApiError";
-
 // import { EditProfileState } from "src/ts/components/pages/EditProfile/EditProfile";
 import { asyncTimeout } from "src/ts/utils";
 // import { routes } from "src/ts/config";
@@ -14,32 +12,50 @@ import { RegisterFormState } from "src/ts/components/pages/RegisterForm/Register
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 // tslint:disable-next-line:completed-docs
 export type DonorModelData = {
+    id : number;
     AaAccount : string;
     UID : string;
     Password: string;
     email : string;
-    DeviceAddress? : string;
-    WalletAddress? : string;
+    firstName: string;
+    surName: string;
+    DeviceAddress : string;
+    WalletAddress : string;
+    description: string;
+    thumbnail? : string;
+    country: string;
     userRole: "Donor";
 }
 
 export class DonorModel {
-    
+    public readonly id : number;
     public readonly AaAccount : string;
     public readonly UID : string;
     public readonly Password: string;
     public readonly email : string;
     public readonly DeviceAddress? : string;
     public readonly WalletAddress? : string;
+    public readonly firstName: string;
+    public readonly surName: string;
+    public readonly country: string;
+    public readonly description: string;
     private readonly thumbnail? : string;
 
+
     constructor(data: DonorModelData) {
+        //Never used, only to support typescript polymorphism.
+        this.id = 0;
         this.AaAccount = data.AaAccount;
         this.UID = data.UID;
         this.Password = data.Password;
         this.email = data.email;
         this.DeviceAddress = data.DeviceAddress;
         this.WalletAddress = data.WalletAddress;
+        this.firstName = data.firstName;
+        this.surName = data.surName;
+        this.country = data.country;
+        this.description = data.description;
+        this.thumbnail = data.thumbnail;
     }
     public getThumbnail(): string | undefined {
         if (this.thumbnail) {
