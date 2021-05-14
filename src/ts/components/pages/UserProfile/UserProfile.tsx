@@ -24,7 +24,6 @@ import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { DonorModel } from "src/ts/models/DonorModel";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
-import { ReceiverModel } from "src/ts/models/ReceiverModel";
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
