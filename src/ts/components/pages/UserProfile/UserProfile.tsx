@@ -996,37 +996,42 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             <div className="dialog">
                                 <h3>{userProfileJson.addFundsButtonTitle}</h3>
                             </div>
+                            <div className="group">
+                                <div className="input-group">
+                                    <label className="input-label">pls input amount</label>
+                                    <input
+                                        type="number"
+                                        className="input-funds"
+                                        aria-valuemin={0}
+                                        aria-valuenow={0}
+                                        aria-valuemax={100}
+                                        id="input_funds"
+                                        aria-required={true}
+                                        onChange={this.updateFunds}
+                                    />
+                                </div>
 
-                            <label>pls input amount</label>
-                            <input
-                                type="number"
-                                className="input-funds"
-                                aria-valuemin={0}
-                                aria-valuenow={0}
-                                aria-valuemax={100}
-                                id="input_funds"
-                                aria-required={true}
-                                onChange={this.updateFunds}
-                            />
+                                <div className="input-group">
+                                    <label className="input-label">please select paymentform</label>
+                                    <div className="dialog-buttons">
+                                        <Button
+                                            className="btn coinify-btn"
+                                            isPending={false}
+                                            throbberSize={24}
+                                            width="50%"
+                                            withThrobber={true}
+                                            text="Coinify"
+                                        />
 
-                            <label>please select paymentform</label>
-                            <div className="dialog-buttons">
-                                <Button
-                                    className="btn coinify-btn"
-                                    isPending={false}
-                                    throbberSize={24}
-                                    width="50%"
-                                    withThrobber={true}
-                                    text="Coinify"
-                                />
-
-                                <Button
-                                    className="btn btn-obyte"
-                                    withThrobber={false}
-                                    onClick={this.addFundsObyte}
-                                    width="100%"
-                                    text="Obyte wallet"
-                                />
+                                        <Button
+                                            className="btn btn-obyte"
+                                            withThrobber={false}
+                                            onClick={this.addFundsObyte}
+                                            width="100%"
+                                            text="Obyte wallet"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -1057,6 +1062,10 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         margin: 0 0 10px 0;
                     }
 
+                    .group {
+                        margin: 2rem 0;
+                    }
+
                     .deposit-wrapper {
                         margin: 1rem;
                     }
@@ -1065,14 +1074,22 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         display: flex;
                     }
 
-                    .dialog :global(.coinify-btn) {
+                    .input-label {
+                        display:inline-block;
+                        margin-bottom: 0.4rem;
+                    }
+
+                    .input-group {
+                        margin-bottom: 1rem;
+                    }
+
+                    .dialog-buttons :global(.coinify-btn) {
                         background-color: #F4C567;
                         margin-right: 20px;
                     }
 
                     .input-funds {
                         padding: 0.6rem 0;
-                        margin: 1rem 0;
                         width: 100%;
                         border: 1px solid ${ colors.pale };
                         border-transition: border-color 0.15s linear;
