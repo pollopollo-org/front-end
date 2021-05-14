@@ -12,12 +12,14 @@ To build the PolloPollo frontend you should follow the process below.
 2. Clone the project
 3. Run the command `yarn install` in a terminal located at the project root
 4. 
-    1. To specify which backend to connect to, make a copy of `.env.development.template` called `.env.development` and add the URL to your running backend, for example:
+    1. Make a copy of `.env.development.template` called `.env.development` and fill in the details. 
+    2. To specify which backend to connect to, add the URL to your running backend, for example:
     ```
     REACT_APP_BACKEND_URL=http://localhost:5000/api
     ```
-    2. To specify which Obyte protocol to use, change the REACT_APP_OBYTE_PROTOCOL to either ```obyte``` for a normal wallet or ```obyte-tn``` for a TestNet wallet.
-    3. To specify which pairing code is used for the chatbot, change the REACT_APP_OBYTE_PAIRING_CODE to the specified paring code, for example `<paring_code>@obyte.org/bb-test`
+    3. To specify which Obyte protocol to use, change the `REACT_APP_OBYTE_PROTOCOL` to either ```obyte``` for a normal wallet or ```obyte-tn``` for a TestNet wallet.
+    3. To specify which pairing code is used for the chatbot, change the `REACT_APP_OBYTE_PAIRING_CODE to the specified paring code, for example `<paring_code>@obyte.org/bb-test`
+    4. To specify the address of the Autonomous Agent, specify `REACT_APP_AAADDRESS`. The address to the AA can be found in the sqlite database in the chat-bot.
 
 5. You can now use either of the two following commands to interact with the project:
    * `yarn run start` to start a development server, OR
