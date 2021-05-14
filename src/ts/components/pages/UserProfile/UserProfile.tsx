@@ -24,6 +24,7 @@ import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { DonorModel } from "src/ts/models/DonorModel";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
@@ -153,7 +154,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** 
+    /**
      * Reference to the div tag with class name fefefe
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
@@ -255,7 +256,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                                 {this.renderApplications()}
 
-                                {!this.state.isSelf && 
+                                {!this.state.isSelf &&
                                     <>
                                     <h2 className="pastDonations">{userProfileJson.pastDonations}</h2>
                                     {this.renderPastDonations()}
@@ -351,7 +352,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             /* Allign with h1 */
                             margin-bottom: -2px;
                         }
-                    } 
+                    }
 
                     /**
                      * List of user's products/applications,
@@ -463,7 +464,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         <p><span className="semibold">{userProfileJson.pastMonth}</span> {user.completedDonationsPastMonthNo} {userProfileJson.donationsWorth}{user.completedDonationsPastMonthPrice}</p>
                         <p><span className="semibold">{userProfileJson.allTime}</span> {user.completedDonationsAllTimeNo} {userProfileJson.donationsWorth}{user.completedDonationsAllTimePrice}</p>
                     </div>
-                    
+
                     <div className="statsblockleft">
                         <p><span className="bold">{userProfileJson.pendingDonationsStats}</span></p>
                         <div className="statsblock">
@@ -500,7 +501,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     .semibold {
-                        font-weight: 500; 
+                        font-weight: 500;
                     }
 
                     .statsblockleft {
@@ -512,7 +513,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 display: block;
                             }
                         }
-                    
+
                     @media only screen and (max-width: 800px) {
                         h2 {
                             margin-top: 15px;
@@ -523,7 +524,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         }
                     }
                 `}</style>
-            
+
             </>
         );
     }
@@ -608,7 +609,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal render method that'll render the button that manage the 
+     * Internal render method that'll render the button that manage the
      * dropdown for filtering
      */
     private renderFilterDropdown() {
@@ -715,14 +716,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     .show {
                         font-weight: bold;
                     }
-                    
+
                 `}</style>
             </div>
         );
     }
 
     /**
-     * Internal render method to render the options of filtering 
+     * Internal render method to render the options of filtering
      */
     private renderFilterButtons() {
         const { renderedUser: user } = this.state;
@@ -971,11 +972,11 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         return (
             <div className="deposit">
-                
+
                 <div className="balance-currency">
                     <h3>{userProfileJson.availableFunds}: <code>$1000</code></h3>
                 </div>
-                
+
                 <div className="balance-display">
                     <div className="balance-type">
                         <small>OUSD</small>
@@ -987,12 +988,12 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         <code><span className="balance-curency">$</span>12.19</code>
                     </div>
                 </div>
-                
+
                 <Button onClick={this.openDeposit} withThrobber={false} text={userProfileJson.addFundsButtonLabel} width={110} height={35} fontSize={12} />
                     <Lightbox active={this.state.showDepositLightbox} onClose={this.closeDeposit}>
                         <div className="deposit-wrapper">
 
-                            
+
                             <div className="dialog">
                                 <h3>{userProfileJson.addFundsButtonTitle}</h3>
                             </div>
@@ -1036,8 +1037,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         </div>
 
 
-                        <a href="obyte:L7OE3Q4QPAFQIGYOXWERMQJGH3LV22YF?amount=981273&amp;asset=base">
-                            open Send screen with bytes
+                        <a href={this.generateObyteURI(this.state.renderedUser as DonorModel)}>
+                            Deposit bytes
                         </a>
 
                     </Lightbox>
@@ -1105,6 +1106,16 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
     protected updateFunds = (evt: React.FormEvent<HTMLInputElement>) => {
         console.log(evt.currentTarget.value);
+    }
+
+    private generateObyteURI(user : DonorModel, amount = 10000, asset = "base") {
+        const data = {
+            donor: user.AaAccount
+        }
+        const stringified = JSON.stringify(data)
+        const base64_string = btoa(stringified)
+        const encoded_base64_string = encodeURIComponent(base64_string)
+        return `${process.env["REACT_APP_OBYTE_PROTOCOL"]}:${process.env["REACT_APP_AAADDRESS"]}?base64data=${encoded_base64_string}&amount=${amount}&asset=${asset}`
     }
 
     private addFundsObyte = async () => {
@@ -1308,7 +1319,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         const readonlyUserId = (this.props.match.params as { userId: string }).userId;
         let user: UserModel | DonorModel | undefined;
 
-        // If we have a match on the route, that means we should attempt to 
+        // If we have a match on the route, that means we should attempt to
         // render the given user in readonly mode
         if (readonlyUserId) {
             user = await fetchUser(readonlyUserId, this.props.store);
