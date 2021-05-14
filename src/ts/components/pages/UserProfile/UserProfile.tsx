@@ -1032,7 +1032,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         </div>
 
 
-                        <a href={this.generateObyteURI("UA2OPEG2BLTAAPZGWQ4IHEZLHOD22BBJ", (this.state.renderedUser as DonorModel))}>
+                        <a href={this.generateObyteURI(this.state.renderedUser as DonorModel)}>
                             Deposit bytes
                         </a>
 
@@ -1091,8 +1091,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         console.log(evt.currentTarget.value);
     }
 
-    private generateObyteURI(aaAccount: string, amount = 10000, asset = "base", user : DonorModel) {
-        return `${process.env["REACT_APP_OBYTE_PROTOCOL"]}:UA2OPEG2BLTAAPZGWQ4IHEZLHOD22BBJ?donor=${user.AaAccount}&amount=${amount}&from_address=${user.WalletAddress}&asset=${asset}`
+    private generateObyteURI(user : DonorModel, amount = 10000, asset = "base") {
+        const data = {
+            donor: user.AaAccount
+        }
+        const stringified = JSON.stringify(data)
+        const base64_string = btoa(stringified)
+        const encoded_base64_string = encodeURIComponent(base64_string)
+        return `${process.env["REACT_APP_OBYTE_PROTOCOL"]}:${process.env["REACT_APP_AAADDRESS"]}?base64data=${encoded_base64_string}&amount=${amount}&asset=${asset}`
     }
 
     private addFundsObyte = async () => {
