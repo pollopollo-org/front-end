@@ -14,7 +14,7 @@ import userProfileJson from "src/assets/data/userProfile.json";
 import { ApplicationModel, fetchApplicationByReceiver, ApplicationStatus } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
-import { colors } from "src/ts/config";
+import { colors, fonts } from "src/ts/config";
 import { ProductModel, fetchProductByProducer, ProductStatus } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
@@ -36,6 +36,8 @@ export type UserState = {
      * Specifies the id of the currently rendered user
      */
     userId: number;
+
+    funds_input: number;
 
     /**
      * Specifies the user to be rendered
@@ -132,6 +134,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Setup initial state
      */
     public state: UserState = {
+        funds_input: 0,
         userId: this.props.store.user ? (this.props.store.user as UserModel).id : 0,
         isSelf: false,
         isSmall: false,
@@ -968,10 +971,12 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         return (
             <div className="deposit">
+                
+                <div className="balance-currency">
+                    <h3>{userProfileJson.availableFunds}: <code>$1000</code></h3>
+                </div>
+                
                 <div className="balance-display">
-
-                    <h3>Available funds: <code><span className="balance-curency">$</span>1000</code></h3>
-
                     <div className="balance-type">
                         <small>OUSD</small>
                         <code><span className="balance-curency">$</span>8.19</code>
@@ -981,36 +986,61 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         <small>Bytes</small>
                         <code><span className="balance-curency">$</span>12.19</code>
                     </div>
-
                 </div>
-                <Button onClick={this.openDeposit} withThrobber={false} text={"title should be set in json"} width={110} height={35} fontSize={12} />
+                
+                <Button onClick={this.openDeposit} withThrobber={false} text={userProfileJson.addFundsButtonLabel} width={110} height={35} fontSize={12} />
                     <Lightbox active={this.state.showDepositLightbox} onClose={this.closeDeposit}>
-                        <div className="dialog">
+                        <div className="deposit-wrapper">
+
                             
-                            <h3>deposit</h3>
-                            <p>placeholder, should be buttons</p>
-                        </div>
+                            <div className="dialog">
+                                <h3>{userProfileJson.addFundsButtonTitle}</h3>
+                            </div>
 
-                        <div className="dialog-buttons">
-
-                            <Button
-                                className="xd"
-                                isPending={false}
-                                throbberSize={24}
-                                width="50%"
-                                withThrobber={true}
-                                text="obyte"
+                            <label>pls input amount</label>
+                            <input
+                                type="number"
+                                className="input-funds"
+                                aria-valuemin={0}
+                                aria-valuenow={0}
+                                aria-valuemax={100}
+                                id="input_funds"
+                                aria-required={true}
+                                onChange={this.updateFunds}
                             />
 
-                            <Button
-                                className="xdxd"
-                                withThrobber={false}
-                                width="100%"
-                                text="coinify"
-                            />
+                            <label>please select paymentform</label>
+                            <div className="dialog-buttons">
+                                <Button
+                                    className="btn coinify-btn"
+                                    isPending={false}
+                                    throbberSize={24}
+                                    width="50%"
+                                    withThrobber={true}
+                                    text="Coinify"
+                                />
+
+                                <Button
+                                    className="btn btn-obyte"
+                                    withThrobber={false}
+                                    onClick={this.addFundsObyte}
+                                    width="100%"
+                                    text="Obyte wallet"
+                                />
+                            </div>
                         </div>
+
+
+                        <a href="obyte:L7OE3Q4QPAFQIGYOXWERMQJGH3LV22YF?amount=981273&amp;asset=base">
+                            open Send screen with bytes
+                        </a>
+
                     </Lightbox>
                     <style jsx>{`
+                    .balance-currency {
+                        margin-right: 2rem;
+                    }
+
                     .balance-display {
                         display: flex;
                     }
@@ -1024,22 +1054,55 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     h3 {
-                        margin: 0;
+                        margin: 0 0 10px 0;
                     }
+
+                    .deposit-wrapper {
+                        margin: 1rem;
+                    }
+
+                    .dialog-buttons {
+                        display: flex;
+                    }
+
+                    .dialog :global(.coinify-btn) {
+                        background-color: #F4C567;
+                        margin-right: 20px;
+                    }
+
+                    .input-funds {
+                        padding: 0.6rem 0;
+                        margin: 1rem 0;
+                        width: 100%;
+                        border: 1px solid ${ colors.pale };
+                        border-transition: border-color 0.15s linear;
+                        border-radius: 3px;
+                        font-family: ${ fonts.text};
+                        font-size: 16px;
+                    }
+
                 `}</style>
             </div>
         )
     }
 
+    protected updateFunds = (evt: React.FormEvent<HTMLInputElement>) => {
+        console.log(evt.currentTarget.value);
+    }
+
+    private addFundsObyte = async () => {
+        // omregner dollars til bytes
+
+        // o
+    }
+
     private openDeposit = async () => {
         this.setState({ showDepositLightbox: true });
-        console.log("open!");
     }
 
 
     private closeDeposit = async () => {
         this.setState({ showDepositLightbox: false });
-        // console.log("close!");
     }
 
     /**

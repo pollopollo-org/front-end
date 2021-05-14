@@ -12,5 +12,8 @@
     "pastWeek": "Past week:",
     "pastMonth": "Past month:",
     "allTime": "All time:",
-    "donationsWorth": "donations worth $"
+    "donationsWorth": "donations worth $",
+    "availableFunds" : "Available funds",
+    "addFundsButtonLabel" : "Add funds",
+    "addFundsButtonTitle" : "Add crypto (shiba inu coin pls) to your PolloPollo account"
 }
