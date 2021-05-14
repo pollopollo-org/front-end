@@ -7,7 +7,7 @@ import { routes } from "src/ts/config/routes";
 import { getSVG } from "src/assets/svg";
 import { UserModel,  fetchUser } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
-import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
+import { isDonorUser, isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import userProfileJson from "src/assets/data/userProfile.json";
@@ -251,8 +251,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     {this.state.isSelf && this.renderFilterDropdown()}
                                 </div>
 
-                                {this.renderDepositButton()}
-
                                 {this.renderApplications()}
 
                                 {!this.state.isSelf &&
@@ -261,6 +259,13 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     {this.renderPastDonations()}
                                     </>
                                 }
+                            </>
+                        )}
+                        {isDonorUser(user) && (
+                            <>
+
+                                {this.renderDepositButton()}
+
                             </>
                         )}
                     </div>

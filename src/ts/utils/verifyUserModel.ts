@@ -18,6 +18,6 @@ export function isReceiverUser(model: UserModel | DonorModel): model is Receiver
 }
 
 
-export function isDonorUser(model: DonorModel): model is DonorModel {
+export function isDonorUser(model: UserModel | DonorModel): model is DonorModel {
     return model instanceof DonorModel;
 }
