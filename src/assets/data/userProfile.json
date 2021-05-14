@@ -12,5 +12,10 @@
     "pastWeek": "Past week:",
     "pastMonth": "Past month:",
     "allTime": "All time:",
-    "donationsWorth": "donations worth $"
+    "donationsWorth": "donations worth $",
+    "availableFunds" : "Available funds",
+    "addFundsButtonLabel" : "Add funds",
+    "addFundsButtonTitle" : "Add funds to your PolloPollo account",
+    "specifyFundsLabel" : "Amount to deposit",
+    "specifyPaymentForm" : "Chose how you want to deposit"
 }
