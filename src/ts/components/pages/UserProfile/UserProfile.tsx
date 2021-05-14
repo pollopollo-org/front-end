@@ -24,6 +24,7 @@ import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { DonorModel } from "src/ts/models/DonorModel";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
@@ -1031,8 +1032,8 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         </div>
 
 
-                        <a href="obyte:L7OE3Q4QPAFQIGYOXWERMQJGH3LV22YF?amount=981273&amp;asset=base">
-                            open Send screen with bytes
+                        <a href={this.generateObyteURI((this.state.renderedUser as ReceiverModel).id.toString(), 981273)}>
+                            Deposit bytes
                         </a>
 
                     </Lightbox>
