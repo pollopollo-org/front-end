@@ -135,7 +135,7 @@ export class Menu extends React.Component<MenuProps> {
                 <li key={link.name} className={className} onClick={this.props.closeHeader} role="link">
                     <Link to={link.path}>{link.name}</Link>
                     <span className="underline" />
-
+                    
                     <style jsx>{`
                         li {
                             /** Setup spacing between menu items */

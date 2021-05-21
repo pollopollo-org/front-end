@@ -24,6 +24,7 @@ import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
 import { DonorModel } from "src/ts/models/DonorModel";
 import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
+
 export type UserProps = {
     /**
      * Contains a reference to the user model that should be rendered
@@ -978,22 +979,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         return (
             <div className="deposit">
 
-                <div className="balance-currency">
-                    <h3>{userProfileJson.availableFunds}: <code>$10000000000</code></h3>
-                </div>
-
-                <div className="balance-display">
-                    <div className="balance-type">
-                        <small>OUSD</small>
-                        <code><span className="balance-curency">$</span>9000000</code>
-                    </div>
-
-                    <div className="balance-type">
-                        <small>Bytes</small>
-                        <code><span className="balance-curency">$</span>80.000</code>
-                    </div>
-                </div>
-
                 <Button onClick={this.openDeposit} withThrobber={false} text={userProfileJson.addFundsButtonLabel} width={110} height={35} fontSize={12} />
                     <Lightbox active={this.state.showDepositLightbox} onClose={this.closeDeposit}>
                         <div className="deposit-wrapper">
@@ -1105,7 +1090,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         transition: background-color 0.1s linear;
                         border: none;
                         border-radius: 2px;
-                        
+
                         font-family: ${ fonts.text };
                         cursor: pointer;
                     }

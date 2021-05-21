@@ -102,6 +102,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
         store.currentErrorMessage = "Something with your request went wrong, please try again later";
     }
 }
+
 export async function postDonor(data: RegisterFormState, store: Store, history: History, redirectPath: string) {
     const endPoint = apis.donors.create.path;
     try {
@@ -164,6 +165,29 @@ export async function fetchUser(AaAccount: string, store: Store) {
             return;
         }
 
+    } catch (err) {
+        return;
+    }
+}
+
+
+export async function fetchAvailableFunds(AaAccount: string, store: Store) {
+    const endPoint = apis.donors.getBalance.path.replace("{aaDonorAccount}", AaAccount);
+
+    try {
+        const response = await fetch(endPoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        
+        if(response.ok) {
+            return await response.json();
+        } else {
+            alertApiError(response.status, apis.donors.get.errors, store);
+            return;
+        }
     } catch (err) {
         return;
     }
