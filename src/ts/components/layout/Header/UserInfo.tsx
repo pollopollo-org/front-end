@@ -135,6 +135,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                                 ${(!this.state.isMobile) ? "margin-right: 2rem;" : ""}
 
                                 ${this.state.isMobile ? "justify-content: space-between;" : ""}
+                                ${this.state.isMobile ? "margin-bottom: 0.5rem;" : ""}
 
                             }
                     `}</style>
