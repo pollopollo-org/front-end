@@ -17,6 +17,7 @@ import { UserTypes } from "src/ts/models/UserModel";
 import { UserModel } from "src/ts/models/UserModel";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
 import { DonorModel, fetchAvailableFunds } from "src/ts/models/DonorModel";
+import { BalanceModel } from "src/ts/models/BalanceModel";
 
 /**
  * Specification of props required to render <UserInfo />.
@@ -47,6 +48,9 @@ type UserInfoState = {
      * moment
      */
     isMobile: boolean;
+
+
+    balance?: BalanceModel;
 };
 
 /**
@@ -73,6 +77,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      */
     public componentDidMount(): void {
         this.onResize();
+        this.fetchAvailableFunds();
         window.addEventListener("resize", this.onResize);
         window.addEventListener("orientationchange", this.onResize);
     }
@@ -83,6 +88,61 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     public componentWillUnMount(): void {
         window.removeEventListener("resize", this.onResize);
         window.removeEventListener("orientationchange", this.onResize);
+    }
+
+
+    protected async fetchAvailableFunds() {
+        const balance = await fetchAvailableFunds("test", this.props.store);
+        if (balance) this.setState({ balance });
+    }
+
+    protected renderDonorBalance(): React.ReactNode {
+        if (this.props.store.user instanceof DonorModel && this.state.balance) {
+
+            // const balance = await fetchAvailableFunds("test", this.props.store);
+            // console.log(balance);
+            return (
+                <>
+                    <div className="balance-display">
+                        <div className="funds-label">
+                            <code className="currency">OUSD</code>
+
+                            <code><span className="currency-icon">$</span>{this.state.balance.balanceInUSD}</code>
+                        </div>
+                        <div className="funds-label">
+                            <code className="currency">BYTES</code>
+                            <code><span className="currency-icon">B</span>{this.state.balance.balanceInBytes}</code>
+                        </div>
+                    </div>
+
+                    <style jsx>{`
+                            .balance-display {
+                                display: flex;
+                                flex-direction: ${this.state.isMobile ? "column" : "row"};
+
+                                ${this.state.isMobile ? "min-width: 180px" : ""}
+                            }
+
+                            .currency {
+                                color: #DBD0EF;
+
+                            }
+
+                            .funds-label {
+                                display: flex;
+                                flex-direction: ${this.state.isMobile ? "row" : "column"};
+                                color: #FFF;
+                                ${(!this.state.isMobile) ? "margin-right: 2rem;" : ""}
+
+                                ${this.state.isMobile ? "justify-content: space-between;" : ""}
+
+                            }
+                    `}</style>
+                </>
+            );
+        } else {
+            return (<></>);
+        }
     }
 
     /**
@@ -127,7 +187,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                                 inversed={this.state.showDropdown}
                             />
                         </span>
-                        
+
 
                         {this.state.isMobile && this.renderInformation()}
                         {!this.state.isMobile && this.renderDropdown()}
@@ -478,7 +538,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                     .link :global(> a) {
                         width: auto;
-                        
+
                         /** Align icon and text within icon properly */
                         display: flex;
                         align-items: center;
@@ -569,68 +629,12 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
         // ... Otherwise return label based on user type
         if (this.props.store.user instanceof ProducerModel)
             return "Producer";
-        if (this.props.store.user instanceof ReceiverModel) 
+        if (this.props.store.user instanceof ReceiverModel)
             return "Reciever";
-        if (this.props.store.user instanceof DonorModel) 
+        if (this.props.store.user instanceof DonorModel)
             return "Donor";
         return "Unknown"
     }
-
-    protected renderDonorBalance(): React.ReactNode {
-        if (this.props.store.user instanceof DonorModel) {
-            this.state.balance = fetchAvailableFunds("test", this.props.store);
-            // const balance = await fetchAvailableFunds("test", this.props.store);
-            // console.log(balance);
-            return (
-                <>
-                    <span className="tmp">
-                        <code className="currency">OUSD</code>
-                        <br />
-                        <code><span className="currency-icon">$</span>{this.state.balance.BalanceInUSD}</code>
-                    </span>
-                    <span className="tmp">
-                        <code className="currency">BYTES</code>
-                        <br />
-                        <code><span className="currency-icon">B</span>{this.state.balance.BalanceInBytes}</code>
-                    </span>
-                
-                    <style jsx>{`
-                        .balance-display {
-                                display: flex;
-                            }
-
-                            .currency {
-                                color: #DBD0EF
-                            }
-
-                            .tmp {
-                                color: #FFF;
-                                margin-right: 2rem;
-                            }
-
-                            .balance-curency {
-                                margin-right: 0.3rem;
-                            }
-
-                            .balance-type {
-                                color: white;
-                                margin-right: 1rem;
-                            }
-
-                            .balance-type small {
-                                margin-right: 0.2rem;
-                            }
-                        `}          
-                    </style>
-                </>
-            );
-        } else {
-            console.log("fail!");
-            return (<></>);
-        }
-    }
-
-    
 
     /**
      * Method that'll be executed once the user wishes to log out in order to
