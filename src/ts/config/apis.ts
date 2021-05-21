@@ -201,6 +201,12 @@ export const apis = {
             errors: {
                 400: "Failed to authenticate user."
             }
+        },
+        getBalance: {
+            path: `${basePath}/donors/donorBalance/{aaDonorAccount}/placeholder`,
+            errors: {
+                404: "Failed to fetch funds",
+            }
         }
     }
 }

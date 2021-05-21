@@ -16,7 +16,7 @@ import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
 import { UserModel } from "src/ts/models/UserModel";
 import { ReceiverModel } from "src/ts/models/ReceiverModel";
-import { DonorModel } from "src/ts/models/DonorModel";
+import { DonorModel, fetchAvailableFunds } from "src/ts/models/DonorModel";
 
 /**
  * Specification of props required to render <UserInfo />.
@@ -97,9 +97,9 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 onClick={this.onUsernameClick}
                 role="button"
             >
-                <i className="icon">{getSVG("user", { strokeColor: colors.whiteSmoke })}</i>
                 {!this.props.store.user && (
                     <>
+                    <i className="icon">{getSVG("user", { strokeColor: colors.whiteSmoke })}</i>
                         <span className="loginButton" onClick={this.props.closeHeader} role="link">
                             <Link to={routes.login.path}>
                                 {userInfoJson.logIn}
@@ -116,6 +116,8 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 )}
                 {this.props.store.user && (
                     <>
+                        {this.renderDonorBalance()}
+                        <i className="icon">{getSVG("user", { strokeColor: colors.whiteSmoke })}</i>
                         <span className="name">{(this.props.store.user).firstName} {(this.props.store.user).surName}</span>
                         <span className="chevron">
                             <Chevron
@@ -125,6 +127,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                                 inversed={this.state.showDropdown}
                             />
                         </span>
+                        
 
                         {this.state.isMobile && this.renderInformation()}
                         {!this.state.isMobile && this.renderDropdown()}
@@ -134,7 +137,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 )}
 
                 <style jsx>{`
-                    div {
+                                        div {
                         /** Position unserinfo to the right */
                         position: absolute;
                         right: 10px;
@@ -223,7 +226,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                     /**
                      * Render an underline that will be displayed when hovering
-                     * the div by expanding form the middle out
+                     * the div by expanding from the middle out
                      */
                     .underline {
                         /** Position below the userInfo itself */
@@ -370,6 +373,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     /**
      * Internal helper that renders all information related to the user
      */
+    // tslint:disable-next-line max-func-body-length
     protected renderInformation(): JSX.Element {
         return (
             <React.Fragment>
@@ -571,6 +575,62 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
             return "Donor";
         return "Unknown"
     }
+
+    protected renderDonorBalance(): React.ReactNode {
+        if (this.props.store.user instanceof DonorModel) {
+            this.state.balance = fetchAvailableFunds("test", this.props.store);
+            // const balance = await fetchAvailableFunds("test", this.props.store);
+            // console.log(balance);
+            return (
+                <>
+                    <span className="tmp">
+                        <code className="currency">OUSD</code>
+                        <br />
+                        <code><span className="currency-icon">$</span>{this.state.balance.BalanceInUSD}</code>
+                    </span>
+                    <span className="tmp">
+                        <code className="currency">BYTES</code>
+                        <br />
+                        <code><span className="currency-icon">B</span>{this.state.balance.BalanceInBytes}</code>
+                    </span>
+                
+                    <style jsx>{`
+                        .balance-display {
+                                display: flex;
+                            }
+
+                            .currency {
+                                color: #DBD0EF
+                            }
+
+                            .tmp {
+                                color: #FFF;
+                                margin-right: 2rem;
+                            }
+
+                            .balance-curency {
+                                margin-right: 0.3rem;
+                            }
+
+                            .balance-type {
+                                color: white;
+                                margin-right: 1rem;
+                            }
+
+                            .balance-type small {
+                                margin-right: 0.2rem;
+                            }
+                        `}          
+                    </style>
+                </>
+            );
+        } else {
+            console.log("fail!");
+            return (<></>);
+        }
+    }
+
+    
 
     /**
      * Method that'll be executed once the user wishes to log out in order to
