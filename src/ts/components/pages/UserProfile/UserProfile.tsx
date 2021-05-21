@@ -979,22 +979,6 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         return (
             <div className="deposit">
 
-                <div className="balance-currency">
-                    <h3>{userProfileJson.availableFunds}: <code>$10000000000</code></h3>
-                </div>
-
-                <div className="balance-display">
-                    <div className="balance-type">
-                        <small>OUSD</small>
-                        <code><span className="balance-curency">$</span>9000000</code>
-                    </div>
-
-                    <div className="balance-type">
-                        <small>Bytes</small>
-                        <code><span className="balance-curency">$</span>80.000</code>
-                    </div>
-                </div>
-
                 <Button onClick={this.openDeposit} withThrobber={false} text={userProfileJson.addFundsButtonLabel} width={110} height={35} fontSize={12} />
                     <Lightbox active={this.state.showDepositLightbox} onClose={this.closeDeposit}>
                         <div className="deposit-wrapper">
