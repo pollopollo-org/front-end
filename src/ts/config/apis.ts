@@ -203,7 +203,7 @@ export const apis = {
             }
         },
         getBalance: {
-            path: `${basePath}/donors/donorBalance/{aaDonorAccount}`,
+            path: `${basePath}/donors/donorBalance/{aaDonorAccount}/placeholder`,
             errors: {
                 404: "Failed to fetch funds",
             }
