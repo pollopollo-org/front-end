@@ -26,7 +26,7 @@ export type DonorModelData = {
     country: string;
     userRole: "Donor";
 }
-
+//Class to transfer the data of the donor around between various front-end functionality components.
 export class DonorModel {
     public readonly id : number;
     public readonly AaAccount : string;
@@ -45,6 +45,7 @@ export class DonorModel {
     constructor(data: DonorModelData) {
         //Never used, only to support typescript polymorphism.
         this.id = 0;
+
         this.AaAccount = data.AaAccount;
         this.UID = data.UID;
         this.Password = data.Password;
@@ -80,8 +81,8 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             })
         });
 
-        // In case everything goes well and the user gets authenticated, then 
-        // store the token in the local storage, and insert the user into the
+        // In case everything goes well and the donor gets authenticated, then 
+        // store the token in the local storage, and insert the donor into the
         // store.
         if (response.ok) {
             const data = await response.json();
@@ -92,7 +93,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
-            // .. finally navigate the user back to the homepage, logged in.
+            // .. finally navigate the donor back to the homepage, logged in.
             //history.push(routes.root.path);
             history.push(path);
         } else {
