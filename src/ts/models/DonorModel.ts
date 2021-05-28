@@ -13,8 +13,8 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 // tslint:disable-next-line:completed-docs
 export type DonorModelData = {
     id : number;
-    AaAccount : string;
-    UID : string;
+    aaAccount : string;
+    uid : string;
     Password: string;
     email : string;
     firstName: string;
@@ -43,11 +43,12 @@ export class DonorModel {
 
 
     constructor(data: DonorModelData) {
+        console.log(data);
         //Never used, only to support typescript polymorphism.
         this.id = 0;
 
-        this.AaAccount = data.AaAccount;
-        this.UID = data.UID;
+        this.AaAccount = data.aaAccount;
+        this.UID = data.uid;
         this.Password = data.Password;
         this.email = data.email;
         this.DeviceAddress = data.DeviceAddress;
@@ -66,6 +67,8 @@ export class DonorModel {
         }
     }
 }
+
+
 export async function logIn(data: LoginFormState, store: Store, history: History, path:string) {
     const endPoint = apis.donors.authenticate.path;
 
