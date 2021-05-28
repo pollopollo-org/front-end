@@ -9,7 +9,6 @@ import { History } from "history";
 import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { LoginFormState } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterFormState } from "src/ts/components/pages/RegisterForm/RegisterForm";
-import { createDonor } from "src/ts/utils/createDonor";
 import { DonorModel } from "src/ts/models/DonorModel";
 
 export enum UserTypes {
@@ -153,13 +152,11 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             const { createUser } = await import("src/ts/utils/createUser");
 
             // check which type of user is created
-            
-            if(data.dto === undefined) store.user = createUser(data.userDTO);
-            else{
-                store.user = createDonor(data.dto);
-            }
+            console.log(data.dto);
 
-            //store.user = createUser(data.userDTO);
+            if(data.dto === undefined)  store.user = createUser(data.userDTO);
+            else                        store.user = createUser(data.dto);
+            
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
