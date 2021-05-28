@@ -173,7 +173,7 @@ export async function fetchUser(AaAccount: string, store: Store) {
 
 
 export async function fetchAvailableFunds(AaAccount: string, store: Store) {
-    const endPoint = apis.donors.getBalance.path.replace("{aaDonorAccount}", "ChristofferTest");
+    const endPoint = apis.donors.getBalance.path.replace("{aaDonorAccount}", AaAccount);
 
     try {
         const response = await fetch(endPoint, {
