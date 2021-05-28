@@ -153,13 +153,11 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             const { createUser } = await import("src/ts/utils/createUser");
 
             // check which type of user is created
-            
-            if(data.dto === undefined) store.user = createUser(data.userDTO);
-            else{
-                store.user = createDonor(data.dto);
-            }
+            //console.log(data.dto);
 
-            //store.user = createUser(data.userDTO);
+            if(data.dto === undefined) store.user = createUser(data.userDTO);
+            else store.user = createDonor(data.dto);
+            
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 

@@ -91,17 +91,18 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     }
 
     protected async fetchAvailableFunds() {
-        if(this.props.store.donor != null) {
-            const balance = await fetchAvailableFunds(this.props.store.donor.AaAccount, this.props.store);
-            if (balance) this.setState({ balance });
+        console.log(this.props.store.user)
+        if(this.props.store.user instanceof DonorModel) {
+            if(this.props.store.user.AaAccount != null) {
+                const balance = await fetchAvailableFunds(this.props.store.user.AaAccount, this.props.store);
+                if (balance) this.setState({ balance });
+            }
         }
     }
 
     protected renderDonorBalance(): React.ReactNode {
         if (this.props.store.user instanceof DonorModel && this.state.balance) {
 
-            // const balance = await fetchAvailableFunds("test", this.props.store);
-            // console.log(balance);
             return (
                 <>
                     <div className="balance-display">
