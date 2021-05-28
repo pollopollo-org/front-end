@@ -189,8 +189,12 @@ export async function fetchAvailableFunds(AaAccount: string, store: Store) {
         if(response.ok) {
             return await response.json();
         } else {
-            alertApiError(response.status, apis.donors.get.errors, store);
-            return;
+            // incase no aaAccount was found, return this instead of prompting user with
+            // constant erros
+            return  {
+                "balanceInUSD" : "0",
+                "balanceInBytes" : "0"
+            };
         }
     } catch (err) {
         return;
