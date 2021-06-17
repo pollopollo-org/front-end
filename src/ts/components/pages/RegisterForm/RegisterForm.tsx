@@ -11,6 +11,7 @@ import { injectStore } from "src/ts/store/injectStore";
 import { Store } from "src/ts/store/Store";
 import { Button } from "src/ts/components/utils";
 import { postUser, UserTypes } from "src/ts/models/UserModel";
+import { postDonor } from "src/ts/models/DonorModel";
 
 type RegisterFormProps = {
     /**
@@ -106,17 +107,17 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     public render(): JSX.Element {
         return (
             <div className="allSection">
-                <h1>{ registerFormJson.title }</h1>
-                <form onSubmit={this.onSubmit}>
+                <h1 className="register-heading">{ registerFormJson.title }</h1>
+                <form className="register-form" onSubmit={this.onSubmit}>
                     {this.props.inferredUserType === undefined ? this.renderRadioButtons() : this.renderPreinferredUserType()}
                     {this.renderInputFields()}
                     {this.renderSubmitButton()}
                 </form>
 
                 <style jsx>{`
-                    h1 {
-                        margin: 0 0 8px;
-                        line-height: 30px;
+
+                    .register-heading {
+                        margin-top: 3rem;
                         text-align: center;
                     }
 
@@ -128,18 +129,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     .allSection {
                         width: 540px;
                         height: calc(100% - 60px);
-                        display: flex;
-                        flex-direction: column;
-                        margin: 30px auto;
-                        justify-content: center;
-                    }
-
-                    /**
-                     * Layout for radio buttons
-                     */
-                    .grid {
-                        display: flex;
-                        width: 100%;
+                        margin: auto;
                     }
 
                     /**
@@ -163,11 +153,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         }
 
                         h2 {
-                            margin: 10px 0;
-                        }
-
-                        .grid {
-                            display: block;
+                            
                         }
                     }
                 `}</style>
@@ -183,19 +169,22 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
     private renderInputFields(): React.ReactNode {
         return (
             <React.Fragment>
-            {/* First and last name */}
-            <span className="leftInput">
-                <div className="required">
-                    <input
-                        placeholder={registerFormJson.firstName}
-                        maxLength={255}
-                        required
-                        aria-required={true}
-                        onChange={this.onFirstnameChanged}
-                    />
-                </div>
-            </span>
-            <div className="required">
+            {/* First */}
+            {this.state.userType !== UserTypes.DONOR &&
+            <div className="input-field">
+                <input
+                    placeholder={registerFormJson.firstName}
+                    maxLength={255}
+                    required
+                    aria-required={true}
+                    onChange={this.onFirstnameChanged}
+                />
+                <span className="required"></span>
+            </div>
+            }
+            {/* Lastname */}
+            {this.state.userType !== UserTypes.DONOR &&
+            <div className="input-field">
                 <input
                     placeholder={registerFormJson.lastName}
                     maxLength={255}
@@ -203,39 +192,45 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     aria-required={true}
                     onChange={this.onLastnameChanged}
                 />
+                <span className="required"></span>
             </div>
+            }
+
             {/* Email and country */}
-            <span className="leftInput">
-                <div className="required">
+            <div className="input-field">
+                <input
+                    type="email"
+                    placeholder={ registerFormJson.email }
+                    maxLength={255}
+                    required
+                    aria-required={true}
+                    onChange={this.onEmailChanged}
+                />
+                <span className="required"></span>
+            </div>
+
+            {this.state.userType !== UserTypes.DONOR &&
+            <div className="input-field">
+                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
+                <span className="required"></span>
+            </div>
+            }
+            
+            {/* Address - only if the user is producer */}
+            {this.state.userType === UserTypes.PRODUCER &&
+                <div className="input-field">
                     <input
-                        type="email"
-                        placeholder={ registerFormJson.email }
+                        placeholder={registerFormJson.street}
                         maxLength={255}
                         required
                         aria-required={true}
-                        onChange={this.onEmailChanged}
+                        onChange={this.onStreetChanged}
                     />
+                    <span className="required"></span>
                 </div>
-            </span>
-            <div className="required-select">
-                <SelectCountry onChange={this.newCountrySelected} currentCountry={this.state.country}/>
-            </div>
-            {/* Address - only if the user is producer */}
-            {this.state.userType === UserTypes.PRODUCER &&
-                <span className="leftInput">
-                    <div className="required">
-                        <input
-                            placeholder={registerFormJson.street}
-                            maxLength={255}
-                            required
-                            aria-required={true}
-                            onChange={this.onStreetChanged}
-                        />
-                    </div>
-                </span>
             }
             {this.state.userType === UserTypes.PRODUCER &&
-                <div className="required">
+                <div className="input-field">
                     <input
                         placeholder={registerFormJson.streetNumber}
                         maxLength={255}
@@ -243,19 +238,22 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         aria-required={true}
                         onChange={this.onStreetNumberChanged}
                     />
+                    <span className="required"></span>
                 </div>
             }
+            
+
             {this.state.userType === UserTypes.PRODUCER &&
-                <span className="leftInput">
+                <div className="input-field">
                     <input
                         placeholder={registerFormJson.zipcode}
                         maxLength={255}
                         onChange={this.onZipcodeChanged}
                     />
-                </span>
+                </div>
             }
             {this.state.userType === UserTypes.PRODUCER &&
-                <div className="required">
+                <div className="input-field">
                     <input
                         placeholder={registerFormJson.city}
                         maxLength={255}
@@ -263,11 +261,12 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         aria-required={true}
                         onChange={this.onCityChanged}
                     />
+                    <span className="required"></span>
                 </div>
             }
+
             {/* Password */}
-            <span className="leftInput">
-                <div className="required">
+            <div className="input-field">
                     <input
                         type="password"
                         placeholder={registerFormJson.password}
@@ -275,9 +274,11 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         aria-required={true}
                         onChange={this.onPasswordChanged}
                     />
-                </div>
-            </span>
-            <div className="required">
+                <span className="required"></span>
+            </div>
+
+            {/* Confirm Password */}
+            <div className="input-field">
                 <input
                     type="password"
                     placeholder={registerFormJson.confirmPassword}
@@ -285,13 +286,27 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     aria-required={true}
                     onChange={this.onValidationPasswordChanged}
                 />
+                <span className="required"></span>
             </div>
+
             <style jsx>{`
                     /**
                      * Text fields' standard styling for the project
                      */
+                    
+                    .register-form {
+                        display: flex;
+                    }
+
+                    .input-field {
+                        margin-bottom: 1rem;
+                    }
+
+                    .input-wrap {
+                        flex-wrap: wrap;
+                    }
+
                     input{
-                        margin: 15px auto;
                         box-shadow: none;
                         height: 39px;
                         width: 250px;
@@ -314,6 +329,10 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         }
                     }
 
+                    .input-label {
+                        color: ${ colors.gray };
+                    }
+
                     /* Set border styling when clicked on */
                     input:focus {
                         border: 1px solid ${ colors.secondary };
@@ -322,7 +341,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                     /**
                     * Three of the input fields have this classname,
                     * it allows us to keep a bit of distance between the inputs
-                    *to the left and those to the right
+                    * to the left and those to the right
                     */
                     .leftInput {
                         margin-right: 30px;
@@ -338,15 +357,11 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                         content: "*";
                         position: absolute;
                         right: 7px;
-                        top: 32px;
+                        top: 0px;
                         color: red;
                         z-index: 5;
                         font-size: 1em;
                         font-family: 'Cabin', helvetica, arial, sans-serif;
-                    }
-
-                    .required-select:after {
-                        top: 28px;
                     }
 
                     /**
@@ -354,7 +369,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                      */
                     @media only screen and (max-width: 768px) {
                         input {
-                            margin: 10px 0;
                             width: 100%;
                             box-sizing: border-box;
                             max-width: 400px;
@@ -369,7 +383,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
 
                         .required, .required-select {
                             display: initial;
-                            margin: auto;
                             max-width: 400px;
                         }
 
@@ -410,6 +423,21 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             <div>
                 <h2>{registerFormJson.userType__title}</h2>
                 <div className="radioSection">
+
+                    <div className="userType D">
+                        <input
+                            type="radio"
+                            className="userTypeButton"
+                            name="userType"
+                            id="Donor"
+                            value="Donor"
+                            aria-checked={this.state.userType === UserTypes.DONOR}
+                            checked={this.state.userType === UserTypes.DONOR}
+                            onChange={this.onUserTypeClick}
+                        />
+                        <label className="register-radio-button" htmlFor="Donor">{registerFormJson.userType__donor}</label>
+                    </div>
+
                     <div className="userType P">
                         <input
                             type="radio"
@@ -421,8 +449,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             checked={this.state.userType === "Producer"}
                             onChange={this.onUserTypeClick}
                         />
-                        <label htmlFor="Producer">{registerFormJson.userType__producer}</label>
+                        <label className="register-radio-button" htmlFor="Producer">{registerFormJson.userType__producer}</label>
                     </div>
+
                     <div className="userType R">
                         <input
                             type="radio"
@@ -434,7 +463,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
                             checked={this.state.userType === "Receiver"}
                             onChange={this.onUserTypeClick}
                         />
-                        <label htmlFor="Receiver">{registerFormJson.userType__reciever}</label>
+                        <label className="register-radio-button" htmlFor="Receiver">{registerFormJson.userType__reciever}</label>
                     </div>
                 </div>
 
@@ -446,30 +475,25 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
 
                     .radioSection {
                         text-align: center;
-                        
-                        margin: 0 0 10px 22px;
+                        margin-top: 3rem;
+                        margin-bottom: 1rem;
                     }
 
-                    /**
-                     * Radio buttons for usertype
-                     */
-                    input.userTypeButton {
-                        height: 17px;
-                        width: 17px;
-                        margin: 0px 10 0 0px;
+                    .userTypeButton{
+                        margin: 0px;
+                        margin-right: 5px;
                     }
 
+                    .register-radio-button {
+                        margin-right: 15px;
+                    }
+                    
                     /**
                      * Radio buttons
                      */
                     .userType {
                         display: inline-flex;
                         align-items: center;
-                    }
-
-                    label{
-                        font-size: 16px;
-                        margin-right: 30px;
                     }
 
                     h2::after {
@@ -495,11 +519,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
 
                         .userType.P {
                             margin-right: 15px;
-                        }
-
-                        label {
-                            margin-left: 7px;
-                            margin-right: 0;
                         }
                     }
                 `}</style>
@@ -589,7 +608,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         this.setState({ streetNumber: evt.currentTarget.value });
     }
 
-
     /**
      * Method that'll get triggered each time the input is changed, in order to
      * properly update state
@@ -638,7 +656,7 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
             this.props.store.currentErrorMessage = "Please choose a country.";
             return false;
         }
-        else if (!this.state.country || !this.state.country.match(/[^0-9]+/)) {
+        else if (this.state.userType !== UserTypes.DONOR && (!this.state.country || !this.state.country.match(/[^0-9]+/))) {
             this.props.store.currentErrorMessage = "There was an error with the selected country.";
 
             return false;
@@ -667,7 +685,9 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
         }
 
         this.setState({ isPending: true });
-        await postUser(this.state, this.props.store, this.props.history, this.props.redirectPath);
+
+        if(this.state.userType === UserTypes.DONOR) await postDonor(this.state, this.props.store, this.props.history, this.props.redirectPath);
+        else await postUser(this.state, this.props.store, this.props.history, this.props.redirectPath);
         this.setState({ isPending: false });
     }
 
@@ -676,7 +696,6 @@ class UnwrappedRegisterForm extends React.PureComponent<RegisterFormProps, Regis
      */
     private newCountrySelected = (newCountry:string) => {
         this.setState({country: newCountry,});
-        console.log(this.state.country);
     }
 }
 

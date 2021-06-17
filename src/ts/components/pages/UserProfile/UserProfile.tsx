@@ -5,23 +5,25 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { routes } from "src/ts/config/routes";
 
 import { getSVG } from "src/assets/svg";
-import { UserModel, UserTypes, fetchUser } from "src/ts/models/UserModel";
+import { UserModel,  fetchUser } from "src/ts/models/UserModel";
 import { injectStore } from "src/ts/store/injectStore";
-import { isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
+import { isDonorUser, isProducerUser, isReceiverUser } from "src/ts/utils/verifyUserModel";
 
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import userProfileJson from "src/assets/data/userProfile.json";
 import { ApplicationModel, fetchApplicationByReceiver, ApplicationStatus } from "src/ts/models/ApplicationModel";
 import { Store } from "src/ts/store/Store";
 import { Application } from "src/ts/components/elements/Application/Application";
-import { colors } from "src/ts/config";
+import { colors, fonts } from "src/ts/config";
 import { ProductModel, fetchProductByProducer, ProductStatus } from "src/ts/models/ProductModel";
 import { Product } from "src/ts/components/elements/Product/Product";
 import { getUserType } from "src/ts/utils/getUserType";
-import { Throbber } from "src/ts/components/utils";
+import { Button, Throbber } from "src/ts/components/utils";
 import { Fade } from "src/ts/components/transitions/Fade";
 import { asyncTimeout } from "src/ts/utils";
 import { Dropdown } from "src/ts/components/utils/Dropdown/Dropdown";
+import { DonorModel } from "src/ts/models/DonorModel";
+import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 
 export type UserProps = {
     /**
@@ -36,10 +38,12 @@ export type UserState = {
      */
     userId: number;
 
+    fundsInput: number;
+
     /**
      * Specifies the user to be rendered
      */
-    renderedUser?: UserModel;
+    renderedUser?: UserModel | DonorModel;
 
     /**
      * Specifies whether the rendered user is the user themself, which means
@@ -115,6 +119,8 @@ export type UserState = {
      */
     initialLoad?: boolean;
 
+    showDepositLightbox: boolean;
+
 
 }
 
@@ -129,14 +135,16 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      * Setup initial state
      */
     public state: UserState = {
-        userId: this.props.store.user ? this.props.store.user.id : 0,
+        fundsInput: 10000,
+        userId: this.props.store.user ? (this.props.store.user as UserModel).id : 0,
         isSelf: false,
         isSmall: false,
-        renderedUser: this.props.store.user,
+        renderedUser: this.props.store.user as UserModel,
         filterActiveProducts: true,
         filterApplications: ApplicationStatus.OPEN,
         isPending: true,
-        initialLoad: true
+        initialLoad: true,
+        showDepositLightbox: false
     }
 
 
@@ -146,7 +154,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
      */
     protected readonly wrapperRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-    /** 
+    /**
      * Reference to the div tag with class name fefefe
      */
     private readonly borderRef: React.RefObject<HTMLDivElement> = React.createRef();
@@ -182,7 +190,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
         if (readonlyUserId && Number(readonlyUserId) !== this.state.userId) {
             this.loadUser();
-        } else if (!readonlyUserId && this.props.store.user && this.props.store.user.id !== Number(this.state.userId)) {
+        } else if (!readonlyUserId && this.props.store.user && (this.props.store.user as UserModel).id !== Number(this.state.userId)) {
             this.loadUser();
         }
     }
@@ -246,12 +254,19 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
 
                                 {this.renderApplications()}
 
-                                {!this.state.isSelf && 
+                                {!this.state.isSelf &&
                                     <>
                                     <h2 className="pastDonations">{userProfileJson.pastDonations}</h2>
                                     {this.renderPastDonations()}
                                     </>
                                 }
+                            </>
+                        )}
+                        {isDonorUser(user) && (
+                            <>
+
+                                {this.renderDepositButton()}
+
                             </>
                         )}
                     </div>
@@ -342,7 +357,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                             /* Allign with h1 */
                             margin-bottom: -2px;
                         }
-                    } 
+                    }
 
                     /**
                      * List of user's products/applications,
@@ -454,7 +469,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         <p><span className="semibold">{userProfileJson.pastMonth}</span> {user.completedDonationsPastMonthNo} {userProfileJson.donationsWorth}{user.completedDonationsPastMonthPrice}</p>
                         <p><span className="semibold">{userProfileJson.allTime}</span> {user.completedDonationsAllTimeNo} {userProfileJson.donationsWorth}{user.completedDonationsAllTimePrice}</p>
                     </div>
-                    
+
                     <div className="statsblockleft">
                         <p><span className="bold">{userProfileJson.pendingDonationsStats}</span></p>
                         <div className="statsblock">
@@ -491,7 +506,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     }
 
                     .semibold {
-                        font-weight: 500; 
+                        font-weight: 500;
                     }
 
                     .statsblockleft {
@@ -503,7 +518,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 display: block;
                             }
                         }
-                    
+
                     @media only screen and (max-width: 800px) {
                         h2 {
                             margin-top: 15px;
@@ -514,7 +529,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         }
                     }
                 `}</style>
-            
+
             </>
         );
     }
@@ -569,7 +584,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         {products && products.map((product, index) => {
                             const isOnProducersPage = product.producerId === this.state.userId;
                             const isOwnProduct = this.props.store.user
-                                ? this.props.store.user.id === product.producerId
+                                ? (this.props.store.user as UserModel).id === product.producerId
                                 : false;
 
                             const updateProduct = this.updateProduct.bind(this, index);
@@ -581,7 +596,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                     isOnProducersPage={isOnProducersPage}
                                     isOwnProduct={isOwnProduct}
                                     updateProduct={updateProduct}
-                                    userType={getUserType(this.props.store.user, UserTypes.PRODUCER)}
+                                    userType={getUserType((this.props.store.user as UserModel))}
                                 />
                             );
                         })}
@@ -599,7 +614,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     }
 
     /**
-     * Internal render method that'll render the button that manage the 
+     * Internal render method that'll render the button that manage the
      * dropdown for filtering
      */
     private renderFilterDropdown() {
@@ -706,14 +721,14 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                     .show {
                         font-weight: bold;
                     }
-                    
+
                 `}</style>
             </div>
         );
     }
 
     /**
-     * Internal render method to render the options of filtering 
+     * Internal render method to render the options of filtering
      */
     private renderFilterButtons() {
         const { renderedUser: user } = this.state;
@@ -958,6 +973,164 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
         }
     }
 
+    // tslint:disable-next-line max-func-body-length
+    private renderDepositButton = () => {
+
+        return (
+            <div className="deposit">
+
+                <Button onClick={this.openDeposit} withThrobber={false} text={userProfileJson.addFundsButtonLabel} width={110} height={35} fontSize={12} />
+                    <Lightbox active={this.state.showDepositLightbox} onClose={this.closeDeposit}>
+                        <div className="deposit-wrapper">
+
+
+                            <div className="dialog">
+                                <h3>{userProfileJson.addFundsButtonTitle}</h3>
+                            </div>
+                            <div className="group">
+                                <div className="input-group">
+                                    <label className="input-label">{userProfileJson.specifyFundsLabel}</label>
+                                    <input
+                                        type="number"
+                                        className="input-funds"
+                                        aria-valuemin={10000}
+                                        aria-valuenow={10000}
+                                        aria-valuemax={Number.MAX_VALUE}
+                                        value={this.state.fundsInput}
+                                        defaultValue="10000"
+                                        id="input_funds"
+                                        aria-required={true}
+                                        onChange={this.updateFunds}
+                                    />
+                                </div>
+
+                                <div className="input-group">
+                                    <label className="input-label">{userProfileJson.specifyPaymentForm}</label>
+                                    <div className="dialog-buttons">
+                                        <Button
+                                            className="coinify-btn"
+                                            isPending={false}
+                                            throbberSize={24}
+                                            width="50%"
+                                            withThrobber={true}
+                                            text="Coinify"
+                                        />
+                                        <a className="btn" href={this.generateObyteURI(this.state.renderedUser as DonorModel, this.state.fundsInput)}>Obyte wallet</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </Lightbox>
+                    <style jsx>{`
+                    .balance-currency {
+                        margin-right: 2rem;
+                    }
+
+                    .balance-display {
+                        display: flex;
+                    }
+
+                    .balance-type {
+                        margin-right: 1rem;
+                    }
+
+                    .balance-type small {
+                        margin-right: 0.2rem;
+                    }
+
+                    h3 {
+                        margin: 0 0 10px 0;
+                    }
+
+                    .group {
+                        margin: 2rem 0;
+                    }
+
+                    .deposit-wrapper {
+                        margin: 1rem;
+                    }
+
+                    .dialog-buttons {
+                        display: flex;
+                    }
+
+                    .input-label {
+                        display:inline-block;
+                        margin-bottom: 0.4rem;
+                    }
+
+                    .input-group {
+                        margin-bottom: 1rem;
+                    }
+
+                    .dialog-buttons :global(.coinify-btn) {
+                        background-color: #F4C567;
+                        margin-right: 20px;
+                    }
+
+                    .input-funds {
+                        padding: 0.6rem 0;
+                        width: 100%;
+                        border: 1px solid ${ colors.pale };
+                        border-transition: border-color 0.15s linear;
+                        border-radius: 3px;
+                        font-family: ${ fonts.text};
+                        font-size: 16px;
+                    }
+
+                    .btn {
+                        text-align: center;
+                        font-weight: 300;
+                        width: 50%;
+                        text-decoration: none;
+                        padding: 10px 5px;
+                        background-color: ${ colors.secondary };
+                        color: ${ colors.white };
+                        transition: background-color 0.1s linear;
+                        border: none;
+                        border-radius: 2px;
+
+                        font-family: ${ fonts.text };
+                        cursor: pointer;
+                    }
+
+                    .btn:hover {
+                        background-color: ${ colors.primary };
+                    }
+
+                `}</style>
+            </div>
+        )
+    }
+
+    protected updateFunds = (evt: React.FormEvent<HTMLInputElement>) => {
+        var input = parseFloat(evt.currentTarget.value);
+        // a check for users having an aaacount should be implemented.
+
+        if(!isNaN(input) && input >= 10000) this.setState({fundsInput: input})
+        else return;
+    }
+
+    private generateObyteURI(user : DonorModel, amount = 10000, asset = "base") {
+        const data = {
+            donor: user.AaAccount
+        }
+        const stringified = JSON.stringify(data)
+        const base64_string = btoa(stringified)
+        const encoded_base64_string = encodeURIComponent(base64_string)
+        return `${process.env["REACT_APP_OBYTE_PROTOCOL"]}:${process.env["REACT_APP_AAADDRESS"]}?base64data=${encoded_base64_string}&amount=${amount}&asset=${asset}`
+    }
+
+    private openDeposit = async () => {
+        this.setState({ showDepositLightbox: true });
+    }
+
+
+    private closeDeposit = async () => {
+        this.setState({ showDepositLightbox: false });
+    }
+
     /**
      * Internal render method that'll render all applications associated to a user
      */
@@ -998,7 +1171,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                         {applications && applications.map((application, index) => {
                             const isOnReceiversPage = application.receiverId === this.state.userId;
                             const isOwnApplication = this.props.store.user
-                                ? this.props.store.user.id === application.receiverId
+                                ? (this.props.store.user as UserModel).id === application.receiverId
                                 : false;
 
                             const onApplicationDeleted = this.onApplicationDeleted.bind(this, index);
@@ -1008,7 +1181,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <Application
                                     key={index}
                                     isOwnApplication={isOwnApplication}
-                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    userType={getUserType((this.props.store.user as UserModel))}
                                     isOnReceiversPage={isOnReceiversPage}
                                     application={application}
                                     onApplicationDeleted={onApplicationDeleted}
@@ -1065,7 +1238,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                                 <Application
                                     key={index}
                                     isOwnApplication={false}
-                                    userType={getUserType(this.props.store.user, UserTypes.DONOR)}
+                                    userType={getUserType((this.props.store.user as UserModel))}
                                     isOnReceiversPage={true}
                                     application={application}
                                     pastDonation={true}
@@ -1142,9 +1315,9 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
     private loadUser = async () => {
         // tslint:disable-next-line completed-docs
         const readonlyUserId = (this.props.match.params as { userId: string }).userId;
-        let user: UserModel | undefined;
+        let user: UserModel | DonorModel | undefined;
 
-        // If we have a match on the route, that means we should attempt to 
+        // If we have a match on the route, that means we should attempt to
         // render the given user in readonly mode
         if (readonlyUserId) {
             user = await fetchUser(readonlyUserId, this.props.store);
@@ -1155,7 +1328,7 @@ export class UnwrappedUserProfile extends React.Component<UserProps, UserState>{
                 renderedUser: user,
             });
         } else {
-            user = this.props.store.user;
+            user = (this.props.store.user as UserModel);
 
             // ... however, if we doesn't match, then we should render our own
             // user

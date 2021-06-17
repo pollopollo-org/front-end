@@ -9,7 +9,7 @@ import { CreateApplicationState } from "src/ts/components/pages/CreateApplicatio
 import { asyncTimeout } from "src/ts/utils/index";
 import { routes } from "src/ts/config/index";
 import { History } from "history";
-
+import { UserModel } from "src/ts/models/UserModel";
 
 export enum ApplicationStatus {
     OPEN = "Open",
@@ -23,7 +23,7 @@ export enum ApplicationStatus {
 /**
  * Contains the path to the backend which is used to resolve images
  */
-const BACKEND_URL = "https://api.pollopollo.org";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 /**
  * Defines the data required to create an application model.
@@ -212,7 +212,7 @@ export async function postApplication(data: CreateApplicationState, store: Store
 
         // If either a user haven't been logged in or if we're currently missing
         // a token, then we cannot process this process, and hence we bail out.
-        if (!store.user || !token) {
+        if ((!store.user || !token) || !(store.user instanceof UserModel)) {
             return;
         }
 
@@ -534,7 +534,7 @@ export async function deleteApplication(applicationId: number, store: Store, cal
         // The user MUST be logged in in order to be able to delete the application!
         // (furthermore the logged in user must be the owner of
         // the application, else the backend will throw errors).
-        if (!token || !store.user) {
+        if ((!token || !store.user) || !(store.user instanceof UserModel)) {
             return;
         }
 
@@ -566,7 +566,8 @@ export async function deleteApplication(applicationId: number, store: Store, cal
  */
 export async function initiateDonation(applicationId: number, callback?: () => void) {
     //Redirect to the chatbot in wallet
-    window.location.href = `obyte:AymLnfCdnKSzNHwMFdGnTmGllPdv6Qxgz1fHfbkEcDKo@obyte.org/bb#${applicationId}`;
+    // console.log(`${process.env.REACT_APP_OBYTE_PROTOCOL}:${process.env.REACT_APP_OBYTE_PAIRING_CODE}#${applicationId}`);
+    window.location.href = `${process.env.REACT_APP_OBYTE_PROTOCOL}:${process.env.REACT_APP_OBYTE_PAIRING_CODE}#${applicationId}`;
     if (callback) {
         callback();
     }
@@ -582,7 +583,7 @@ export async function confirmReceival(application: ApplicationModel, store: Stor
         // The user MUST be logged in in order to be able to confirm the receival
         // (furthermore the logged in user must be the owner of the application, else 
         // the backend will throw errors).
-        if (!token || !store.user) {
+        if ((!token || !store.user) || !(store.user instanceof UserModel)) {
             return;
         }
 
@@ -625,7 +626,7 @@ export async function withdrawBytes(application: ApplicationModel, store: Store,
         const token = localStorage.getItem("userJWT");
 
         // The user MUST be logged in in order to be able to withdraw bytes
-        if (!token || !store.user) {
+        if ((!token || !store.user) || !(store.user instanceof UserModel) ) {
             return;
         }
 

@@ -1,3 +1,4 @@
+import { DonorModel } from "src/ts/models/DonorModel";
 import { observable } from "mobx";
 
 import { ApplicationModel } from "src/ts/models/ApplicationModel";
@@ -21,7 +22,8 @@ export enum DataProviders {
 // tslint:disable completed-docs
 type StoreArgs = {
     applications?: ApplicationModel[];
-    user?: UserModel;
+    user?: UserModel | DonorModel;
+    donor?: DonorModel;
 }
 // tslint:enable completed-docs
 
@@ -37,7 +39,7 @@ export class Store {
      * about a user - either a producer or a receiver.
      */
     @observable
-    public user?: UserModel;
+    public user?: UserModel | DonorModel;
 
     /**
      * Contains a reference to the ProductModel, which containts fetched data
@@ -60,6 +62,9 @@ export class Store {
      */
     @observable
     public currentErrorMessage: string;
+
+    @observable
+    public donor?: DonorModel;
 
     constructor(initial: StoreArgs) {
         this.user = initial.user;

@@ -7,6 +7,7 @@ import { easings, routes } from "src/ts/config";
 import { colors } from "src/ts/config/colors";
 import { Menu } from "src/ts/components/layout/Header/Menu";
 import { UserInfo } from "src/ts/components/layout/Header/UserInfo";
+import { BalanceModel } from "src/ts/models/BalanceModel";
 
 type HeaderState = {
     /**
@@ -29,6 +30,8 @@ type HeaderState = {
      * Specifies whether or not a transition is currently running
      */
     isTransitioning: boolean;
+    
+    balance?: BalanceModel;
 }
 
 /**

@@ -133,7 +133,7 @@ class UnwrappedCreateApplication extends React.PureComponent<CreateApplicationPr
             <div>
                 <Product
                     product={this.state.product}
-                    userType={getUserType(undefined, undefined)}
+                    userType={getUserType(undefined)}
                     isOnProducersPage={false}
                     isOwnProduct={false}
                 />

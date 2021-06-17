@@ -9,11 +9,13 @@ import { History } from "history";
 import { objectToFormData } from "src/ts/utils/objectToFormData";
 import { LoginFormState } from "src/ts/components/pages/LoginForm/LoginForm";
 import { RegisterFormState } from "src/ts/components/pages/RegisterForm/RegisterForm";
+import { DonorModel } from "src/ts/models/DonorModel";
 
 export enum UserTypes {
-    PRODUCER = "Producer",
-    RECEIVER = "Receiver",
-    DONOR = "Donor"
+    PRODUCER    = "Producer",
+    RECEIVER    = "Receiver",
+    DONOR       = "Donor",
+    UNDEFINED   = "Undefined"
 }
 
 /**
@@ -39,7 +41,7 @@ export type UserToken = {
 /**
  * Contains the path to the backend which is used to resolve images
  */
-const BACKEND_URL = "https://api.pollopollo.org";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 /**
  * Defines the data required to create a user model.
@@ -136,7 +138,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 password: data.password,
-                email: data.email,
+                email: data.email
             })
         });
 
@@ -146,9 +148,15 @@ export async function logIn(data: LoginFormState, store: Store, history: History
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem("userJWT", data.token);
-
+            
             const { createUser } = await import("src/ts/utils/createUser");
-            store.user = createUser(data.userDTO);
+
+            // check which type of user is created
+            console.log(data.dto);
+
+            if(data.dto === undefined)  store.user = createUser(data.userDTO);
+            else                        store.user = createUser(data.dto);
+            
 
             await asyncTimeout(Math.max(0, 500 - (performance.now() - startedAt)));
 
@@ -163,7 +171,7 @@ export async function logIn(data: LoginFormState, store: Store, history: History
     }
 }
 
-/**
+/*
  * Method that'll allow any user of the site to create a new user to the backend
  * while also reflecting the new user on the frontend
  */
@@ -211,7 +219,6 @@ export async function postUser(data: RegisterFormState, store: Store, history: H
         }
     } catch (err) {
         store.currentErrorMessage = "Something went wrong while sending your request, please try again later.";
-        console.log(err);
     }
 }
 
@@ -249,7 +256,7 @@ export async function fetchUser(userId: string, store: Store) {
  * This will only be possible if the user has already logged in previously,
  * since it relies on a token being stored in the localStorage.
  */
-export async function fetchSelf(): Promise<UserModel | undefined> {
+export async function fetchSelf(): Promise<UserModel | DonorModel | undefined> {
     const token = localStorage.getItem("userJWT");
 
     // It is only possible to fetch self when a token is stored since that is

@@ -4,6 +4,7 @@ import { Lightbox } from "src/ts/components/utils/Lightbox/Lightbox";
 import { UserDescription } from "src/ts/components/elements/UserDescription/UserDescription";
 import { Chevron } from "src/ts/components/utils";
 import { colors, fonts, routes } from "src/ts/config";
+import { DonorModel } from "src/ts/models/DonorModel";
 
 type UserLightboxProps = {
     /**
@@ -19,7 +20,7 @@ type UserLightboxProps = {
     /**
      * The user to display information about
      */
-    user: UserModel;
+    user: UserModel | DonorModel;
 
     /**
      * Does the application/product belong to the user themself

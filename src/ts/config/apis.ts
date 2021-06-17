@@ -1,4 +1,4 @@
-const basePath = "https://api.pollopollo.org/api";
+const basePath = process.env.REACT_APP_BACKEND_URL;
 
 export type Errors = {
     [key: number]: string;
@@ -174,5 +174,39 @@ export const apis = {
             path: `${basePath}/products/cities?country={country}`,
             errors: {}
         },
+    },
+    donors: {
+        create: {
+            path: `${basePath}/donors/`,
+            errors: {
+                400: "Invalid information passed, please correct your data and try again",
+                409: "A user with the given email already exists, please log in instead.",
+            }
+        },
+        get: {
+            path: `${basePath}/donors/{AaAccount}`,
+            errors: {
+                404: "Requested user doesn't exist!",
+            }
+        },
+        put: {
+            path: `${basePath}/donors/`,
+            errors: {
+                400: "Invalid information passed, please correct your data and try again",
+                403: "You are not authorized to edit this user!",
+            }
+        },
+        authenticate: {
+            path: `${basePath}/donors/authenticate`,
+            errors: {
+                400: "Failed to authenticate user."
+            }
+        },
+        getBalance: {
+            path: `${basePath}/donors/donorBalance/{aaDonorAccount}`,
+            errors: {
+                404: "Failed to fetch funds",
+            }
+        }
     }
 }

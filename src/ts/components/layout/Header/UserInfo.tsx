@@ -14,7 +14,10 @@ import userInfoJson from "src/assets/data/userInfo.json";
 import { Store } from "src/ts/store/Store";
 import { getUserType } from "src/ts/utils/getUserType";
 import { UserTypes } from "src/ts/models/UserModel";
-
+import { UserModel } from "src/ts/models/UserModel";
+import { ReceiverModel } from "src/ts/models/ReceiverModel";
+import { DonorModel, fetchAvailableFunds } from "src/ts/models/DonorModel";
+import { BalanceModel } from "src/ts/models/BalanceModel";
 
 /**
  * Specification of props required to render <UserInfo />.
@@ -45,6 +48,9 @@ type UserInfoState = {
      * moment
      */
     isMobile: boolean;
+
+
+    balance?: BalanceModel;
 };
 
 /**
@@ -71,6 +77,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      */
     public componentDidMount(): void {
         this.onResize();
+        this.fetchAvailableFunds();
         window.addEventListener("resize", this.onResize);
         window.addEventListener("orientationchange", this.onResize);
     }
@@ -81,6 +88,65 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     public componentWillUnMount(): void {
         window.removeEventListener("resize", this.onResize);
         window.removeEventListener("orientationchange", this.onResize);
+    }
+
+    protected async fetchAvailableFunds() {
+        
+        if(this.props.store.user instanceof DonorModel) {
+            if(this.props.store.user.AaAccount != null) {
+                const balance = await fetchAvailableFunds(this.props.store.user.AaAccount, this.props.store);
+                if (balance) this.setState({ balance });
+            }
+        }
+        
+    }
+
+    protected renderDonorBalance(): React.ReactNode {
+        if (this.props.store.user instanceof DonorModel && this.state.balance) {
+
+            return (
+                <>
+                    <div className="balance-display">
+                        <div className="funds-label">
+                            <code className="currency">OUSD</code>
+
+                            <code><span className="currency-icon">$</span>{this.state.balance.balanceInUSD}</code>
+                        </div>
+                        <div className="funds-label">
+                            <code className="currency">BYTES</code>
+                            <code><span className="currency-icon">B</span>{this.state.balance.balanceInBytes}</code>
+                        </div>
+                    </div>
+
+                    <style jsx>{`
+                            .balance-display {
+                                display: flex;
+                                flex-direction: ${this.state.isMobile ? "column" : "row"};
+
+                                ${this.state.isMobile ? "min-width: 180px" : ""}
+                            }
+
+                            .currency {
+                                color: #DBD0EF;
+
+                            }
+
+                            .funds-label {
+                                display: flex;
+                                flex-direction: ${this.state.isMobile ? "row" : "column"};
+                                color: #FFF;
+                                ${(!this.state.isMobile) ? "margin-right: 2rem;" : ""}
+
+                                ${this.state.isMobile ? "justify-content: space-between;" : ""}
+                                ${this.state.isMobile ? "margin-bottom: 0.5rem;" : ""}
+
+                            }
+                    `}</style>
+                </>
+            );
+        } else {
+            return (<></>);
+        }
     }
 
     /**
@@ -95,9 +161,9 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 onClick={this.onUsernameClick}
                 role="button"
             >
-                <i className="icon">{getSVG("user", { strokeColor: colors.whiteSmoke })}</i>
                 {!this.props.store.user && (
                     <>
+                    <i className="icon">{getSVG("user", { strokeColor: colors.whiteSmoke })}</i>
                         <span className="loginButton" onClick={this.props.closeHeader} role="link">
                             <Link to={routes.login.path}>
                                 {userInfoJson.logIn}
@@ -114,7 +180,9 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 )}
                 {this.props.store.user && (
                     <>
-                        <span className="name">{this.props.store.user.firstName} {this.props.store.user.surName}</span>
+                        {this.renderDonorBalance()}
+                        <i className="icon">{getSVG("user", { strokeColor: colors.whiteSmoke })}</i>
+                        <span className="name">{(this.props.store.user).firstName} {(this.props.store.user).surName}</span>
                         <span className="chevron">
                             <Chevron
                                 vertical
@@ -124,6 +192,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                             />
                         </span>
 
+
                         {this.state.isMobile && this.renderInformation()}
                         {!this.state.isMobile && this.renderDropdown()}
                         <span className="underline" />
@@ -132,7 +201,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                 )}
 
                 <style jsx>{`
-                    div {
+                                        div {
                         /** Position unserinfo to the right */
                         position: absolute;
                         right: 10px;
@@ -221,7 +290,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                     /**
                      * Render an underline that will be displayed when hovering
-                     * the div by expanding form the middle out
+                     * the div by expanding from the middle out
                      */
                     .underline {
                         /** Position below the userInfo itself */
@@ -368,6 +437,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
     /**
      * Internal helper that renders all information related to the user
      */
+    // tslint:disable-next-line max-func-body-length
     protected renderInformation(): JSX.Element {
         return (
             <React.Fragment>
@@ -385,7 +455,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
                         {userInfoJson.edit}
                     </Link>
                 </span>
-                {getUserType(this.props.store.user) === UserTypes.PRODUCER && <span className="link" onClick={this.onItemClick} role="link">
+                {getUserType(this.props.store.user as UserModel) === UserTypes.PRODUCER && <span className="link" onClick={this.onItemClick} role="link">
                     <Link to={routes.withdrawBytes.path}>
                         <i className="withdraw">{getSVG("dollar-sign")}</i>
                         {userInfoJson.withdraw}
@@ -472,7 +542,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
                     .link :global(> a) {
                         width: auto;
-                        
+
                         /** Align icon and text within icon properly */
                         display: flex;
                         align-items: center;
@@ -519,7 +589,7 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
 
         return (
             <div className="user">
-                <b>{this.props.store.user.firstName} {this.props.store.user.surName}</b><br />
+                <b>{(this.props.store.user).firstName} {(this.props.store.user).surName}</b><br />
                 {this.renderUserType()}
 
                 <style jsx>{`
@@ -561,11 +631,13 @@ export class UserInfoUnwrapped extends React.Component<UserInfoProps, UserInfoSt
      */
     protected renderUserType(): React.ReactNode {
         // ... Otherwise return label based on user type
-        if (this.props.store.user instanceof ProducerModel) {
+        if (this.props.store.user instanceof ProducerModel)
             return "Producer";
-        } else {
+        if (this.props.store.user instanceof ReceiverModel)
             return "Reciever";
-        }
+        if (this.props.store.user instanceof DonorModel)
+            return "Donor";
+        return "Unknown"
     }
 
     /**
